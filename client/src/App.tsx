@@ -8,6 +8,7 @@ import { CategoriesBrandsProvider } from "@/lib/categories-brands-context";
 import { useAuth } from "@/hooks/useAuth";
 import Home from "@/pages/home";
 import Landing from "@/pages/landing";
+import Suppliers from "@/pages/suppliers";
 import SupplierDetail from "@/pages/supplier-detail";
 import AddSupplier from "@/pages/add-supplier";
 import NotFound from "@/pages/not-found";
@@ -23,6 +24,7 @@ function Router() {
         <>
           <Layout>
             <Route path="/" component={Home} />
+            <Route path="/suppliers" component={Suppliers} />
             <Route path="/suppliers/:id" component={SupplierDetail} />
             <Route path="/add-supplier" component={AddSupplier} />
             <Route component={NotFound} />

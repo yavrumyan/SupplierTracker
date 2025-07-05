@@ -1,182 +1,214 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SearchFilters } from "@/components/search-filters";
-import { SupplierCard } from "@/components/supplier-card";
-import { Send, LogOut, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { LogOut, User, Building, TrendingUp, Users, Plus, Search } from "lucide-react";
 import type { Supplier } from "@shared/schema";
-import type { SearchFilters as SearchFiltersType } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
-  const { toast } = useToast();
   const { user } = useAuth();
-  const [filters, setFilters] = useState<SearchFiltersType>({});
-  const [selectedSuppliers, setSelectedSuppliers] = useState<Set<number>>(new Set());
-  const [inquiryMessage, setInquiryMessage] = useState("");
 
-  const { data: suppliers = [], isLoading, refetch } = useQuery<Supplier[]>({
-    queryKey: ["/api/suppliers", filters],
-    enabled: false, // Only search when explicitly triggered
+  // Fetch basic stats
+  const { data: suppliers = [] } = useQuery<Supplier[]>({
+    queryKey: ["/api/suppliers"],
   });
 
-  const handleSearch = () => {
-    refetch();
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
   };
 
-  const handleSupplierSelection = (supplierId: number, selected: boolean) => {
-    const newSelection = new Set(selectedSuppliers);
-    if (selected) {
-      newSelection.add(supplierId);
-    } else {
-      newSelection.delete(supplierId);
-    }
-    setSelectedSuppliers(newSelection);
+  const stats = {
+    totalSuppliers: suppliers.length,
+    countries: new Set(suppliers.map(s => s.country)).size,
+    avgReputation: suppliers.length > 0 
+      ? (suppliers.reduce((acc, s) => acc + (s.reputation || 0), 0) / suppliers.length).toFixed(1)
+      : '0.0',
+    topCategories: suppliers.flatMap(s => s.categories || [])
+      .reduce((acc, cat) => {
+        acc[cat] = (acc[cat] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>)
   };
 
-  const handleBulkInquiry = async () => {
-    if (selectedSuppliers.size === 0) {
-      toast({
-        title: "No suppliers selected",
-        description: "Please select at least one supplier to send inquiry.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!inquiryMessage.trim()) {
-      toast({
-        title: "No message provided",
-        description: "Please enter an inquiry message.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      await apiRequest("POST", "/api/inquiries", {
-        message: inquiryMessage,
-        supplierIds: Array.from(selectedSuppliers),
-      });
-
-      toast({
-        title: "Inquiry sent successfully",
-        description: `Inquiry sent to ${selectedSuppliers.size} suppliers.`,
-      });
-
-      setSelectedSuppliers(new Set());
-      setInquiryMessage("");
-    } catch (error) {
-      toast({
-        title: "Failed to send inquiry",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    }
-  };
+  const topCategories = Object.entries(stats.topCategories)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 5);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 -mx-6 -mt-6 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-slate-800">Search & Filter Suppliers</h1>
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-medium">JD</span>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Welcome back, {user?.firstName || user?.email || 'User'}
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              {user?.profileImageUrl ? (
+                <img 
+                  src={user.profileImageUrl} 
+                  alt="Profile" 
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+              ) : (
+                <User className="h-4 w-4 text-primary-foreground" />
+              )}
             </div>
-            <span className="text-sm font-medium text-slate-700">John Doe</span>
+            <span className="text-sm font-medium">
+              {user?.firstName || user?.email}
+            </span>
           </div>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
         </div>
       </div>
 
-      {/* Search filters */}
-      <SearchFilters
-        filters={filters}
-        onFiltersChange={setFilters}
-        onSearch={handleSearch}
-      />
-
-      {/* Search results */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Search Results</CardTitle>
-            <span className="text-sm text-slate-500">
-              {suppliers.length} suppliers found
-            </span>
-          </div>
-        </CardHeader>
-        
-        <CardContent>
-          {isLoading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-2 text-sm text-slate-500">Searching suppliers...</p>
-            </div>
-          ) : suppliers.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-slate-500">No suppliers found. Try adjusting your search criteria.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {suppliers.map((supplier) => (
-                <SupplierCard
-                  key={supplier.id}
-                  supplier={supplier}
-                  isSelected={selectedSuppliers.has(supplier.id)}
-                  onSelectionChange={(selected) => handleSupplierSelection(supplier.id, selected)}
-                  showMatches={!!filters.query}
-                />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Multi-supplier inquiry */}
-      {suppliers.length > 0 && (
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-6 bg-slate-50">
-            <h4 className="text-lg font-semibold text-slate-800 mb-4">
-              Send Inquiry to Selected Suppliers
-            </h4>
-            
-            <div className="space-y-4">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              <Building className="h-5 w-5 text-primary" />
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Inquiry Message
-                </label>
-                <Textarea
-                  value={inquiryMessage}
-                  onChange={(e) => setInquiryMessage(e.target.value)}
-                  rows={4}
-                  placeholder="Enter your inquiry details..."
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">
-                  {selectedSuppliers.size} suppliers selected
-                </span>
-                <Button 
-                  onClick={handleBulkInquiry}
-                  className="bg-emerald-600 hover:bg-emerald-700"
-                  disabled={selectedSuppliers.size === 0 || !inquiryMessage.trim()}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Send Inquiry
-                </Button>
+                <p className="text-sm text-muted-foreground">Total Suppliers</p>
+                <p className="text-2xl font-bold">{stats.totalSuppliers}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-      )}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Countries</p>
+                <p className="text-2xl font-bold">{stats.countries}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Avg. Reputation</p>
+                <p className="text-2xl font-bold">{stats.avgReputation}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              <Search className="h-5 w-5 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Categories</p>
+                <p className="text-2xl font-bold">{topCategories.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button asChild className="w-full justify-start">
+              <Link href="/suppliers">
+                <Search className="h-4 w-4 mr-2" />
+                Search & Filter Suppliers
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/add-supplier">
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Supplier
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link href="/suppliers">
+                <Building className="h-4 w-4 mr-2" />
+                View All Suppliers
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Categories</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {topCategories.length > 0 ? (
+              <div className="space-y-2">
+                {topCategories.map(([category, count]) => (
+                  <div key={category} className="flex items-center justify-between">
+                    <Badge variant="secondary">{category}</Badge>
+                    <span className="text-sm text-muted-foreground">{count} suppliers</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-sm">No suppliers added yet</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Getting Started */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Getting Started</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <p className="text-muted-foreground">
+              Welcome to SupHub! Here's how to get started with managing your suppliers:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 border rounded-lg">
+                <h3 className="font-semibold mb-2">1. Add Suppliers</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Start by adding your existing suppliers with their contact information and capabilities.
+                </p>
+                <Button size="sm" asChild>
+                  <Link href="/add-supplier">Add Supplier</Link>
+                </Button>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h3 className="font-semibold mb-2">2. Search & Filter</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Use advanced search to find suppliers by country, category, brand, and reputation.
+                </p>
+                <Button size="sm" variant="outline" asChild>
+                  <Link href="/suppliers">Search Suppliers</Link>
+                </Button>
+              </div>
+              <div className="p-4 border rounded-lg">
+                <h3 className="font-semibold mb-2">3. Manage Orders</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Create orders, track communications, and manage your procurement process.
+                </p>
+                <Button size="sm" variant="outline" disabled>
+                  Coming Soon
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
