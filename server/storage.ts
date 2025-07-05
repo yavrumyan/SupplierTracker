@@ -111,14 +111,32 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSupplier(supplier: InsertSupplier): Promise<Supplier> {
-    const [newSupplier] = await db.insert(suppliers).values(supplier).returning();
+    const [newSupplier] = await db.insert(suppliers).values({
+      name: supplier.name,
+      country: supplier.country,
+      website: supplier.website || null,
+      email: supplier.email || null,
+      phone: supplier.phone || null,
+      whatsapp: supplier.whatsapp || null,
+      reputation: supplier.reputation || null,
+      workingStyle: supplier.workingStyle || [],
+      categories: supplier.categories || [],
+      brands: supplier.brands || [],
+      comments: supplier.comments || null,
+    }).returning();
     return newSupplier;
   }
 
   async updateSupplier(id: number, supplier: Partial<InsertSupplier>): Promise<Supplier> {
     const [updatedSupplier] = await db
       .update(suppliers)
-      .set({ ...supplier, updatedAt: new Date() })
+      .set({
+        ...supplier,
+        workingStyle: supplier.workingStyle || [],
+        categories: supplier.categories || [],
+        brands: supplier.brands || [],
+        updatedAt: new Date()
+      })
       .where(eq(suppliers.id, id))
       .returning();
     return updatedSupplier;

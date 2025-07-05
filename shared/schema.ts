@@ -12,9 +12,9 @@ export const suppliers = pgTable("suppliers", {
   phone: text("phone"),
   whatsapp: text("whatsapp"),
   reputation: integer("reputation"), // 1-10 scale
-  workingStyle: jsonb("working_style").$type<string[]>().default([]), // Array of strings: B2B, PRICE-LISTS, INQUIRIES
-  categories: jsonb("categories").$type<string[]>().default([]), // Array of trading categories
-  brands: jsonb("brands").$type<string[]>().default([]), // Array of trading brands
+  workingStyle: jsonb("working_style").$type<string[]>(), // Array of strings: B2B, PRICE-LISTS, INQUIRIES
+  categories: jsonb("categories").$type<string[]>(), // Array of trading categories
+  brands: jsonb("brands").$type<string[]>(), // Array of trading brands
   comments: text("comments"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -151,6 +151,17 @@ export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  website: z.string().optional().refine(
+    (value) => {
+      if (!value || value.trim() === '') return true;
+      // Allow URLs with or without protocol, including www.domain.com format
+      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      return urlPattern.test(value);
+    },
+    { message: "Please enter a valid website URL" }
+  ),
+  email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
 });
 
 export const insertPriceListFileSchema = createInsertSchema(priceListFiles).omit({
