@@ -255,9 +255,12 @@ export default function SupplierDetail() {
         status: "draft"
       });
 
+      // Parse the JSON response to get the order data
+      const orderData_parsed = await orderResponse.json();
+
       // Add order items
       for (const item of orderData.items) {
-        await apiRequest("POST", `/api/orders/${orderResponse.id}/items`, {
+        await apiRequest("POST", `/api/orders/${orderData_parsed.id}/items`, {
           itemNumber: item.itemNumber,
           productName: item.productName,
           quantity: item.quantity,
@@ -267,7 +270,7 @@ export default function SupplierDetail() {
         });
       }
 
-      return orderResponse;
+      return orderData_parsed;
     },
     onSuccess: () => {
       toast({

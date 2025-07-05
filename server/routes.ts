@@ -275,6 +275,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // All orders route for dashboard stats - MUST come before /:id route
+  app.get("/api/orders/all", isAuthenticated, async (req, res) => {
+    try {
+      const orders = await storage.getAllOrders();
+      res.json(orders);
+    } catch (error) {
+      console.error("Error fetching all orders:", error);
+      res.status(500).json({ error: "Failed to fetch orders" });
+    }
+  });
+
   app.get("/api/orders/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -296,17 +307,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid order data", details: error.errors });
       }
       res.status(500).json({ error: "Failed to update order" });
-    }
-  });
-
-  // All orders route for dashboard stats
-  app.get("/api/orders/all", isAuthenticated, async (req, res) => {
-    try {
-      const orders = await storage.getAllOrders();
-      res.json(orders);
-    } catch (error) {
-      console.error("Error fetching all orders:", error);
-      res.status(500).json({ error: "Failed to fetch orders" });
     }
   });
 
