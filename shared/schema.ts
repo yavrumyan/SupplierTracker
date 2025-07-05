@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal, varchar, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -155,9 +155,9 @@ export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   website: z.string().optional().refine(
     (value) => {
       if (!value || value.trim() === '') return true;
-      // Allow URLs with or without protocol, including www.domain.com format
-      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-      return urlPattern.test(value);
+      // Allow all URL formats: http://www, https://www, www, domain.com
+      const urlPattern = /^(https?:\/\/)?(www\.)?[\da-z\.-]+\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+      return urlPattern.test(value.trim());
     },
     { message: "Please enter a valid website URL" }
   ),
@@ -212,17 +212,25 @@ export type CostCalculationFile = typeof costCalculationFiles.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
 
-// User table (keeping existing)
+// Session storage table for authentication
+export const sessions = pgTable("sessions", {
+  sid: varchar("sid").primaryKey(),
+  sess: jsonb("sess").notNull(),
+  expire: timestamp("expire").notNull(),
+});
+
+// User authentication table
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  id: varchar("id").primaryKey().notNull(),
+  email: varchar("email").unique().notNull(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  isAdmin: boolean("is_admin").default(false),
+  isApproved: boolean("is_approved").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
+export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;

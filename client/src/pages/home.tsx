@@ -6,14 +6,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SearchFilters } from "@/components/search-filters";
 import { SupplierCard } from "@/components/supplier-card";
-import { Send } from "lucide-react";
+import { Send, LogOut, User } from "lucide-react";
 import type { Supplier } from "@shared/schema";
 import type { SearchFilters as SearchFiltersType } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [filters, setFilters] = useState<SearchFiltersType>({});
   const [selectedSuppliers, setSelectedSuppliers] = useState<Set<number>>(new Set());
   const [inquiryMessage, setInquiryMessage] = useState("");
