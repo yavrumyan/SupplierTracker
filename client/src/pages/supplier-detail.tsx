@@ -27,7 +27,7 @@ import {
   Trash2
 } from "lucide-react";
 import { Link } from "wouter";
-import type { Supplier, PriceListFile, PriceListItem, Offer } from "@shared/schema";
+import type { Supplier, PriceListFile, PriceListItem, Offer, Order } from "@shared/schema";
 import { OrderTable } from "@/components/order-table";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -42,6 +42,7 @@ export default function SupplierDetail() {
   const [sendViaWhatsApp, setSendViaWhatsApp] = useState(true);
   const [sendViaEmail, setSendViaEmail] = useState(true);
   const [newOfferContent, setNewOfferContent] = useState("");
+  const [orderItems, setOrderItems] = useState<any[]>([]);
 
   const { data: supplier, isLoading } = useQuery<Supplier>({
     queryKey: [`/api/suppliers/${supplierId}`],
@@ -60,6 +61,11 @@ export default function SupplierDetail() {
 
   const { data: offers = [] } = useQuery<Offer[]>({
     queryKey: [`/api/suppliers/${supplierId}/offers`],
+    enabled: !!supplierId,
+  });
+
+  const { data: orders = [] } = useQuery<Order[]>({
+    queryKey: [`/api/suppliers/${supplierId}/orders`],
     enabled: !!supplierId,
   });
 
@@ -160,6 +166,123 @@ export default function SupplierDetail() {
     if (window.confirm("Are you sure you want to delete this offer? This action cannot be undone.")) {
       deleteOfferMutation.mutate(offerId);
     }
+  };
+
+  const deletePriceListMutation = useMutation({
+    mutationFn: async (priceListId: number) => {
+      await apiRequest("DELETE", `/api/price-lists/${priceListId}`);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Price list deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/price-lists`] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete price list",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDeletePriceList = (priceListId: number) => {
+    if (window.confirm("Are you sure you want to delete this price list?")) {
+      deletePriceListMutation.mutate(priceListId);
+    }
+  };
+
+  const deleteOrderMutation = useMutation({
+    mutationFn: async (orderId: number) => {
+      await apiRequest("DELETE", `/api/orders/${orderId}`);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Order deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/orders`] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to delete order",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDeleteOrder = (orderId: number) => {
+    if (window.confirm("Are you sure you want to delete this order?")) {
+      deleteOrderMutation.mutate(orderId);
+    }
+  };
+
+  const saveOrderMutation = useMutation({
+    mutationFn: async (orderData: { items: any[] }) => {
+      const orderNumber = `ORD-${Date.now()}`;
+      const totalAmount = orderData.items.reduce((sum, item) => sum + (item.sum || 0), 0);
+      const totalCost = orderData.items.reduce((sum, item) => sum + (item.approximateCost || 0), 0);
+      
+      const orderResponse = await apiRequest("POST", `/api/suppliers/${supplierId}/orders`, {
+        orderNumber,
+        totalAmount: totalAmount.toString(),
+        totalCost: totalCost.toString(),
+        status: "draft"
+      });
+
+      // Add order items
+      for (const item of orderData.items) {
+        await apiRequest("POST", `/api/orders/${orderResponse.id}/items`, {
+          itemNumber: item.itemNumber,
+          productName: item.productName,
+          quantity: item.quantity,
+          price: item.price.toString(),
+          sum: item.sum.toString(),
+          approximateCost: (item.approximateCost || 0).toString()
+        });
+      }
+
+      return orderResponse;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Order saved successfully",
+        description: "The order has been saved and is available in Documents.",
+      });
+      setOrderItems([]);
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/orders`] });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to save order",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSaveOrder = () => {
+    if (orderItems.length === 0) {
+      toast({
+        title: "No items to save",
+        description: "Please add items to the order before saving.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    saveOrderMutation.mutate({ items: orderItems });
+  };
+
+  const handleExportOrder = () => {
+    // Export functionality can be implemented later
+    toast({
+      title: "Export functionality",
+      description: "Export feature will be implemented soon.",
+    });
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -374,6 +497,15 @@ export default function SupplierDetail() {
                             <Download className="h-4 w-4 mr-1" />
                             Download
                           </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleDeletePriceList(file.id)}
+                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Delete
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -500,10 +632,11 @@ export default function SupplierDetail() {
 
         <TabsContent value="orders" className="space-y-4">
           <OrderTable
-            orderItems={[]}
-            onItemsChange={() => {}}
-            onSave={() => {}}
-            onExport={() => {}}
+            orderItems={orderItems}
+            onItemsChange={setOrderItems}
+            onSave={handleSaveOrder}
+            onExport={handleExportOrder}
+            isLoading={saveOrderMutation.isPending}
           />
         </TabsContent>
 
@@ -531,7 +664,28 @@ export default function SupplierDetail() {
                   <div className="border border-slate-200 rounded-lg p-4">
                     <h4 className="font-medium text-slate-800 mb-2">Orders</h4>
                     <div className="space-y-2">
-                      <div className="text-sm text-slate-500">No saved orders</div>
+                      {orders.length === 0 ? (
+                        <div className="text-sm text-slate-500">No saved orders</div>
+                      ) : (
+                        orders.map((order) => (
+                          <div key={order.id} className="flex items-center justify-between text-sm">
+                            <span>{order.orderNumber}</span>
+                            <div className="flex gap-2">
+                              <Button variant="ghost" size="sm">
+                                <Eye className="h-3 w-3" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="text-red-600 hover:text-red-700"
+                                onClick={() => handleDeleteOrder(order.id)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                   <div className="border border-slate-200 rounded-lg p-4">
@@ -591,7 +745,7 @@ export default function SupplierDetail() {
                     <label className="flex items-center space-x-2">
                       <Checkbox
                         checked={sendViaWhatsApp}
-                        onCheckedChange={setSendViaWhatsApp}
+                        onCheckedChange={(checked) => setSendViaWhatsApp(checked === true)}
                       />
                       <span className="text-sm text-slate-700">Send via WhatsApp</span>
                     </label>
@@ -601,7 +755,7 @@ export default function SupplierDetail() {
                     <label className="flex items-center space-x-2">
                       <Checkbox
                         checked={sendViaEmail}
-                        onCheckedChange={setSendViaEmail}
+                        onCheckedChange={(checked) => setSendViaEmail(checked === true)}
                       />
                       <span className="text-sm text-slate-700">Send via Email</span>
                     </label>

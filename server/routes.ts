@@ -228,6 +228,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete price list
+  app.delete("/api/price-lists/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deletePriceListFile(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete price list" });
+    }
+  });
+
+  // Delete order
+  app.delete("/api/orders/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteOrder(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete order" });
+    }
+  });
+
   // Order routes
   app.post("/api/suppliers/:id/orders", async (req, res) => {
     try {
@@ -283,6 +305,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const orders = await storage.getAllOrders();
       res.json(orders);
     } catch (error) {
+      console.error("Error fetching all orders:", error);
       res.status(500).json({ error: "Failed to fetch orders" });
     }
   });
