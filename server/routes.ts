@@ -350,18 +350,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Inquiry routes
-  app.post("/api/inquiries", async (req, res) => {
+  app.post("/api/inquiries", upload.array('attachments', 10), async (req, res) => {
     try {
-      const inquiryData = insertInquirySchema.parse(req.body);
+      const { message, supplierIds } = req.body;
+      const files = req.files as Express.Multer.File[];
+      
+      // Parse supplierIds from string to array
+      const parsedSupplierIds = JSON.parse(supplierIds);
+      
+      const inquiryData = insertInquirySchema.parse({
+        message,
+        supplierIds: parsedSupplierIds,
+      });
+      
       const inquiry = await storage.createInquiry(inquiryData);
       
-      // TODO: Implement actual WhatsApp and email sending
-      // For now, just return the inquiry
-      res.status(201).json(inquiry);
+      // TODO: Store file attachments and associate with inquiry
+      // TODO: Implement actual WhatsApp and email sending with attachments
+      // For now, just return the inquiry with file info
+      
+      const attachmentInfo = files ? files.map(file => ({
+        filename: file.filename,
+        originalName: file.originalname,
+        size: file.size,
+        path: file.path
+      })) : [];
+      
+      res.status(201).json({
+        ...inquiry,
+        attachments: attachmentInfo
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid inquiry data", details: error.errors });
       }
+      console.error("Error creating inquiry:", error);
       res.status(500).json({ error: "Failed to send inquiry" });
     }
   });

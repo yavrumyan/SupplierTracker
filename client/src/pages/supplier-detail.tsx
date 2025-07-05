@@ -43,6 +43,7 @@ export default function SupplierDetail() {
   const [sendViaEmail, setSendViaEmail] = useState(true);
   const [newOfferContent, setNewOfferContent] = useState("");
   const [orderItems, setOrderItems] = useState<any[]>([]);
+  const [attachmentFiles, setAttachmentFiles] = useState<FileList | null>(null);
 
   const { data: supplier, isLoading } = useQuery<Supplier>({
     queryKey: [`/api/suppliers/${supplierId}`],
@@ -70,8 +71,17 @@ export default function SupplierDetail() {
   });
 
   const sendInquiryMutation = useMutation({
-    mutationFn: async (data: { message: string; supplierIds: number[] }) => {
-      return await apiRequest("POST", "/api/inquiries", data);
+    mutationFn: async (formData: FormData) => {
+      const response = await fetch("/api/inquiries", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
     },
     onSuccess: () => {
       toast({
@@ -79,6 +89,10 @@ export default function SupplierDetail() {
         description: "Your inquiry has been sent to the supplier.",
       });
       setInquiryMessage("");
+      setAttachmentFiles(null);
+      // Reset the file input
+      const fileInput = document.getElementById('attachment-files') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
     },
     onError: () => {
       toast({
@@ -143,10 +157,18 @@ export default function SupplierDetail() {
       return;
     }
 
-    sendInquiryMutation.mutate({
-      message: inquiryMessage,
-      supplierIds: [supplierId],
-    });
+    const formData = new FormData();
+    formData.append('message', inquiryMessage);
+    formData.append('supplierIds', JSON.stringify([supplierId]));
+    
+    // Add attachment files if any
+    if (attachmentFiles) {
+      for (let i = 0; i < attachmentFiles.length; i++) {
+        formData.append('attachments', attachmentFiles[i]);
+      }
+    }
+
+    sendInquiryMutation.mutate(formData);
   };
 
   const handleAddOffer = () => {
@@ -342,9 +364,11 @@ export default function SupplierDetail() {
               </Link>
               <h1 className="text-2xl font-semibold text-slate-800">{supplier.name}</h1>
             </div>
-            <Button>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Supplier
+            <Button asChild>
+              <Link href={`/edit-supplier?id=${supplier.id}`}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Supplier
+              </Link>
             </Button>
           </div>
 
@@ -738,6 +762,41 @@ export default function SupplierDetail() {
                     rows={6}
                     placeholder="Enter your inquiry details..."
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="attachment-files">Attach Excel Files (Optional)</Label>
+                  <div className="mt-2">
+                    <input
+                      id="attachment-files"
+                      type="file"
+                      multiple
+                      accept=".xlsx,.xls,.csv"
+                      onChange={(e) => setAttachmentFiles(e.target.files)}
+                      className="block w-full text-sm text-slate-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-emerald-50 file:text-emerald-700
+                        hover:file:bg-emerald-100"
+                    />
+                    <p className="text-xs text-slate-500 mt-1">
+                      Attach Excel files with your product requirements (max 10MB per file)
+                    </p>
+                    {attachmentFiles && attachmentFiles.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        {Array.from(attachmentFiles).map((file, index) => (
+                          <div key={index} className="flex items-center text-sm text-slate-600">
+                            <svg className="w-4 h-4 mr-2 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.413V13H5.5z"/>
+                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z"/>
+                            </svg>
+                            {file.name} ({Math.round(file.size / 1024)} KB)
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

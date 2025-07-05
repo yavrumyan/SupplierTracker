@@ -59,6 +59,7 @@ export function OrderTable({ orderItems, onItemsChange, onSave, onExport, isLoad
     }
 
     setItems(newItems);
+    onItemsChange(newItems);
   };
 
   const addItem = () => {
@@ -70,7 +71,9 @@ export function OrderTable({ orderItems, onItemsChange, onSave, onExport, isLoad
       sum: 0,
       approximateCost: 0,
     };
-    setItems([...items, newItem]);
+    const newItems = [...items, newItem];
+    setItems(newItems);
+    onItemsChange(newItems);
   };
 
   const removeItem = (index: number) => {
@@ -80,6 +83,7 @@ export function OrderTable({ orderItems, onItemsChange, onSave, onExport, isLoad
       item.itemNumber = i + 1;
     });
     setItems(newItems);
+    onItemsChange(newItems);
   };
 
   const totalSum = items.reduce((total, item) => total + item.sum, 0);
