@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Microchip, Shield, Search, Users, BarChart, Zap } from "lucide-react";
+import supHubLogo from "@assets/SupHub_1751730375430.png";
 
 export default function Landing() {
   const handleLogin = () => {
@@ -13,9 +14,11 @@ export default function Landing() {
         {/* Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mr-4">
-              <Microchip className="h-8 w-8 text-primary-foreground" />
-            </div>
+            <img 
+              src={supHubLogo} 
+              alt="SupHub Logo" 
+              className="w-16 h-16 mr-4 rounded-2xl"
+            />
             <h1 className="text-5xl font-bold text-foreground">SupHub</h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">

@@ -12,6 +12,7 @@ import {
   Microchip
 } from "lucide-react";
 import { useState } from "react";
+import supHubLogo from "@assets/SupHub_1751730375430.png";
 
 const navigation = [
   { name: "Search & Filter", href: "/", icon: Search },
@@ -52,9 +53,11 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-border">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Microchip className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img 
+              src={supHubLogo} 
+              alt="SupHub Logo" 
+              className="w-8 h-8 rounded-lg"
+            />
             <h1 className="ml-3 text-lg font-semibold text-foreground">SupHub</h1>
           </div>
           <button

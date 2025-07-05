@@ -152,15 +152,7 @@ export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   createdAt: true,
   updatedAt: true,
 }).extend({
-  website: z.string().optional().refine(
-    (value) => {
-      if (!value || value.trim() === '') return true;
-      // Allow all URL formats: http://www, https://www, www, domain.com
-      const urlPattern = /^(https?:\/\/)?(www\.)?[\da-z\.-]+\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
-      return urlPattern.test(value.trim());
-    },
-    { message: "Please enter a valid website URL" }
-  ),
+  website: z.string().optional(),
   email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
 });
 
@@ -222,12 +214,10 @@ export const sessions = pgTable("sessions", {
 // User authentication table
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
-  email: varchar("email").unique().notNull(),
+  email: varchar("email").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
-  isAdmin: boolean("is_admin").default(false),
-  isApproved: boolean("is_approved").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
