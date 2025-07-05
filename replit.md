@@ -128,3 +128,4 @@ Preferred communication style: Simple, everyday language.
 Changelog:
 - July 05, 2025. Initial setup
 - July 05, 2025. Updated categories list with comprehensive computer hardware categories (96 categories covering laptops, desktops, servers, components, peripherals, accessories, software, cabling, networking, and specialized equipment)
+- July 05, 2025. Updated brands list with comprehensive computer hardware brands (166 brands covering major manufacturers from Access IS to ZOTAC, including processors, graphics cards, storage, peripherals, networking, and specialized equipment)
