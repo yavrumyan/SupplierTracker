@@ -24,15 +24,16 @@ import {
   type Inquiry, 
   type InsertInquiry,
   type User,
-  type UpsertUser 
+  type InsertUser 
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
 
 export interface IStorage {
-  // User methods - updated for authentication system
-  getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  // User methods
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
 
   // Supplier methods
   getSupplier(id: number): Promise<Supplier | undefined>;
@@ -65,7 +66,6 @@ export interface IStorage {
   // Order methods
   createOrder(order: InsertOrder): Promise<Order>;
   getOrders(supplierId: number): Promise<Order[]>;
-  getAllOrders(): Promise<Order[]>;
   getOrderWithItems(orderId: number): Promise<Order & { items: OrderItem[] }>;
   updateOrder(id: number, order: Partial<InsertOrder>): Promise<Order>;
   deleteOrder(id: number): Promise<void>;
@@ -83,24 +83,19 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  // User methods - updated for authentication system
-  async getUser(id: string): Promise<User | undefined> {
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    return user || undefined;
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
@@ -116,32 +111,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSupplier(supplier: InsertSupplier): Promise<Supplier> {
-    const [newSupplier] = await db.insert(suppliers).values({
-      name: supplier.name,
-      country: supplier.country,
-      website: supplier.website || null,
-      email: supplier.email || null,
-      phone: supplier.phone || null,
-      whatsapp: supplier.whatsapp || null,
-      reputation: supplier.reputation || null,
-      workingStyle: supplier.workingStyle || [],
-      categories: supplier.categories || [],
-      brands: supplier.brands || [],
-      comments: supplier.comments || null,
-    }).returning();
+    const [newSupplier] = await db.insert(suppliers).values(supplier).returning();
     return newSupplier;
   }
 
   async updateSupplier(id: number, supplier: Partial<InsertSupplier>): Promise<Supplier> {
     const [updatedSupplier] = await db
       .update(suppliers)
-      .set({
-        ...supplier,
-        workingStyle: supplier.workingStyle || [],
-        categories: supplier.categories || [],
-        brands: supplier.brands || [],
-        updatedAt: new Date()
-      })
+      .set({ ...supplier, updatedAt: new Date() })
       .where(eq(suppliers.id, id))
       .returning();
     return updatedSupplier;
@@ -259,11 +236,6 @@ export class DatabaseStorage implements IStorage {
   async getOrders(supplierId: number): Promise<Order[]> {
     return await db.select().from(orders)
       .where(eq(orders.supplierId, supplierId))
-      .orderBy(desc(orders.createdAt));
-  }
-
-  async getAllOrders(): Promise<Order[]> {
-    return await db.select().from(orders)
       .orderBy(desc(orders.createdAt));
   }
 

@@ -129,8 +129,3 @@ Changelog:
 - July 05, 2025. Initial setup
 - July 05, 2025. Updated categories list with comprehensive computer hardware categories (96 categories covering laptops, desktops, servers, components, peripherals, accessories, software, cabling, networking, and specialized equipment)
 - July 05, 2025. Updated brands list with comprehensive computer hardware brands (166 brands covering major manufacturers from Access IS to ZOTAC, including processors, graphics cards, storage, peripherals, networking, and specialized equipment)
-- July 05, 2025. Fixed critical frontend issues:
-  - Orders section save functionality: Fixed OrderTable component to properly sync item changes with parent component
-  - Order saving flow: Fixed JSON response parsing to correctly handle order creation and item creation
-  - Excel file attachments: Added complete file upload functionality to Send Inquiry with FormData handling, backend multer integration, and styled UI
-  - API route conflicts: Fixed `/api/orders/all` endpoint by reordering routes to prevent conflicts with parameterized routes

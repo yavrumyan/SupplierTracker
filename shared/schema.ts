@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal, varchar, index } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -12,9 +12,9 @@ export const suppliers = pgTable("suppliers", {
   phone: text("phone"),
   whatsapp: text("whatsapp"),
   reputation: integer("reputation"), // 1-10 scale
-  workingStyle: jsonb("working_style").$type<string[]>(), // Array of strings: B2B, PRICE-LISTS, INQUIRIES
-  categories: jsonb("categories").$type<string[]>(), // Array of trading categories
-  brands: jsonb("brands").$type<string[]>(), // Array of trading brands
+  workingStyle: jsonb("working_style").$type<string[]>().default([]), // Array of strings: B2B, PRICE-LISTS, INQUIRIES
+  categories: jsonb("categories").$type<string[]>().default([]), // Array of trading categories
+  brands: jsonb("brands").$type<string[]>().default([]), // Array of trading brands
   comments: text("comments"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -151,9 +151,6 @@ export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
-}).extend({
-  website: z.string().optional(),
-  email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
 });
 
 export const insertPriceListFileSchema = createInsertSchema(priceListFiles).omit({
@@ -204,23 +201,17 @@ export type CostCalculationFile = typeof costCalculationFiles.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
 
-// Session storage table for authentication
-export const sessions = pgTable("sessions", {
-  sid: varchar("sid").primaryKey(),
-  sess: jsonb("sess").notNull(),
-  expire: timestamp("expire").notNull(),
-});
-
-// User authentication table
+// User table (keeping existing)
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().notNull(),
-  email: varchar("email").unique(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
 });
 
-export type UpsertUser = typeof users.$inferInsert;
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;

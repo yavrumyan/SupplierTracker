@@ -23,11 +23,10 @@ import {
   Star,
   FileText,
   Download,
-  Eye,
-  Trash2
+  Eye
 } from "lucide-react";
 import { Link } from "wouter";
-import type { Supplier, PriceListFile, PriceListItem, Offer, Order } from "@shared/schema";
+import type { Supplier, PriceListFile, PriceListItem, Offer } from "@shared/schema";
 import { OrderTable } from "@/components/order-table";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -42,8 +41,6 @@ export default function SupplierDetail() {
   const [sendViaWhatsApp, setSendViaWhatsApp] = useState(true);
   const [sendViaEmail, setSendViaEmail] = useState(true);
   const [newOfferContent, setNewOfferContent] = useState("");
-  const [orderItems, setOrderItems] = useState<any[]>([]);
-  const [attachmentFiles, setAttachmentFiles] = useState<FileList | null>(null);
 
   const { data: supplier, isLoading } = useQuery<Supplier>({
     queryKey: [`/api/suppliers/${supplierId}`],
@@ -65,23 +62,9 @@ export default function SupplierDetail() {
     enabled: !!supplierId,
   });
 
-  const { data: orders = [] } = useQuery<Order[]>({
-    queryKey: [`/api/suppliers/${supplierId}/orders`],
-    enabled: !!supplierId,
-  });
-
   const sendInquiryMutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const response = await fetch("/api/inquiries", {
-        method: "POST",
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      return await response.json();
+    mutationFn: async (data: { message: string; supplierIds: number[] }) => {
+      return await apiRequest("POST", "/api/inquiries", data);
     },
     onSuccess: () => {
       toast({
@@ -89,10 +72,6 @@ export default function SupplierDetail() {
         description: "Your inquiry has been sent to the supplier.",
       });
       setInquiryMessage("");
-      setAttachmentFiles(null);
-      // Reset the file input
-      const fileInput = document.getElementById('attachment-files') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
     },
     onError: () => {
       toast({
@@ -127,26 +106,6 @@ export default function SupplierDetail() {
     },
   });
 
-  const deleteOfferMutation = useMutation({
-    mutationFn: async (offerId: number) => {
-      return await apiRequest("DELETE", `/api/offers/${offerId}`);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Offer deleted successfully",
-        description: "The offer has been removed.",
-      });
-      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/offers`] });
-    },
-    onError: () => {
-      toast({
-        title: "Failed to delete offer",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    },
-  });
-
   const handleSendInquiry = () => {
     if (!inquiryMessage.trim()) {
       toast({
@@ -157,18 +116,10 @@ export default function SupplierDetail() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('message', inquiryMessage);
-    formData.append('supplierIds', JSON.stringify([supplierId]));
-    
-    // Add attachment files if any
-    if (attachmentFiles) {
-      for (let i = 0; i < attachmentFiles.length; i++) {
-        formData.append('attachments', attachmentFiles[i]);
-      }
-    }
-
-    sendInquiryMutation.mutate(formData);
+    sendInquiryMutation.mutate({
+      message: inquiryMessage,
+      supplierIds: [supplierId],
+    });
   };
 
   const handleAddOffer = () => {
@@ -182,132 +133,6 @@ export default function SupplierDetail() {
     }
 
     addOfferMutation.mutate(newOfferContent);
-  };
-
-  const handleDeleteOffer = (offerId: number) => {
-    if (window.confirm("Are you sure you want to delete this offer? This action cannot be undone.")) {
-      deleteOfferMutation.mutate(offerId);
-    }
-  };
-
-  const deletePriceListMutation = useMutation({
-    mutationFn: async (priceListId: number) => {
-      await apiRequest("DELETE", `/api/price-lists/${priceListId}`);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Price list deleted successfully",
-      });
-      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/price-lists`] });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to delete price list",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleDeletePriceList = (priceListId: number) => {
-    if (window.confirm("Are you sure you want to delete this price list?")) {
-      deletePriceListMutation.mutate(priceListId);
-    }
-  };
-
-  const deleteOrderMutation = useMutation({
-    mutationFn: async (orderId: number) => {
-      await apiRequest("DELETE", `/api/orders/${orderId}`);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Order deleted successfully",
-      });
-      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/orders`] });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to delete order",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleDeleteOrder = (orderId: number) => {
-    if (window.confirm("Are you sure you want to delete this order?")) {
-      deleteOrderMutation.mutate(orderId);
-    }
-  };
-
-  const saveOrderMutation = useMutation({
-    mutationFn: async (orderData: { items: any[] }) => {
-      const orderNumber = `ORD-${Date.now()}`;
-      const totalAmount = orderData.items.reduce((sum, item) => sum + (item.sum || 0), 0);
-      const totalCost = orderData.items.reduce((sum, item) => sum + (item.approximateCost || 0), 0);
-      
-      const orderResponse = await apiRequest("POST", `/api/suppliers/${supplierId}/orders`, {
-        orderNumber,
-        totalAmount: totalAmount.toString(),
-        totalCost: totalCost.toString(),
-        status: "draft"
-      });
-
-      // Parse the JSON response to get the order data
-      const orderData_parsed = await orderResponse.json();
-
-      // Add order items
-      for (const item of orderData.items) {
-        await apiRequest("POST", `/api/orders/${orderData_parsed.id}/items`, {
-          itemNumber: item.itemNumber,
-          productName: item.productName,
-          quantity: item.quantity,
-          price: item.price.toString(),
-          sum: item.sum.toString(),
-          approximateCost: (item.approximateCost || 0).toString()
-        });
-      }
-
-      return orderData_parsed;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Order saved successfully",
-        description: "The order has been saved and is available in Documents.",
-      });
-      setOrderItems([]);
-      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/orders`] });
-    },
-    onError: () => {
-      toast({
-        title: "Failed to save order",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleSaveOrder = () => {
-    if (orderItems.length === 0) {
-      toast({
-        title: "No items to save",
-        description: "Please add items to the order before saving.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    saveOrderMutation.mutate({ items: orderItems });
-  };
-
-  const handleExportOrder = () => {
-    // Export functionality can be implemented later
-    toast({
-      title: "Export functionality",
-      description: "Export feature will be implemented soon.",
-    });
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -367,11 +192,9 @@ export default function SupplierDetail() {
               </Link>
               <h1 className="text-2xl font-semibold text-slate-800">{supplier.name}</h1>
             </div>
-            <Button asChild>
-              <Link href={`/edit-supplier?id=${supplier.id}`}>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Supplier
-              </Link>
+            <Button>
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Supplier
             </Button>
           </div>
 
@@ -464,11 +287,10 @@ export default function SupplierDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="price-lists" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="price-lists">Price Lists</TabsTrigger>
           <TabsTrigger value="offers">Offers</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="inquiry">Send Inquiry</TabsTrigger>
         </TabsList>
 
@@ -523,15 +345,6 @@ export default function SupplierDetail() {
                           <Button variant="outline" size="sm">
                             <Download className="h-4 w-4 mr-1" />
                             Download
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleDeletePriceList(file.id)}
-                            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
-                          >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Delete
                           </Button>
                         </div>
                       </div>
@@ -634,19 +447,9 @@ export default function SupplierDetail() {
                               </div>
                             )}
                           </div>
-                          <div className="flex gap-2">
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                              onClick={() => handleDeleteOffer(offer.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -659,94 +462,11 @@ export default function SupplierDetail() {
 
         <TabsContent value="orders" className="space-y-4">
           <OrderTable
-            orderItems={orderItems}
-            onItemsChange={setOrderItems}
-            onSave={handleSaveOrder}
-            onExport={handleExportOrder}
-            isLoading={saveOrderMutation.isPending}
+            orderItems={[]}
+            onItemsChange={() => {}}
+            onSave={() => {}}
+            onExport={() => {}}
           />
-        </TabsContent>
-
-        <TabsContent value="documents" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Documents & Files</CardTitle>
-                <Button>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload Document
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Document categories */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="border border-slate-200 rounded-lg p-4">
-                    <h4 className="font-medium text-slate-800 mb-2">Invoices</h4>
-                    <div className="space-y-2">
-                      <div className="text-sm text-slate-500">No invoices uploaded</div>
-                    </div>
-                  </div>
-                  <div className="border border-slate-200 rounded-lg p-4">
-                    <h4 className="font-medium text-slate-800 mb-2">Orders</h4>
-                    <div className="space-y-2">
-                      {orders.length === 0 ? (
-                        <div className="text-sm text-slate-500">No saved orders</div>
-                      ) : (
-                        orders.map((order) => (
-                          <div key={order.id} className="flex items-center justify-between text-sm">
-                            <span>{order.orderNumber}</span>
-                            <div className="flex gap-2">
-                              <Button variant="ghost" size="sm">
-                                <Eye className="h-3 w-3" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="text-red-600 hover:text-red-700"
-                                onClick={() => handleDeleteOrder(order.id)}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                  <div className="border border-slate-200 rounded-lg p-4">
-                    <h4 className="font-medium text-slate-800 mb-2">Other Documents</h4>
-                    <div className="space-y-2">
-                      <div className="text-sm text-slate-500">No documents uploaded</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Recent documents table */}
-                <div className="border border-slate-200 rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Document Name</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Size</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8 text-slate-500">
-                          No documents uploaded yet. Upload invoices, orders, and other files here.
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="inquiry" className="space-y-4">
@@ -767,47 +487,12 @@ export default function SupplierDetail() {
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="attachment-files">Attach Excel Files (Optional)</Label>
-                  <div className="mt-2">
-                    <input
-                      id="attachment-files"
-                      type="file"
-                      multiple
-                      accept=".xlsx,.xls,.csv"
-                      onChange={(e) => setAttachmentFiles(e.target.files)}
-                      className="block w-full text-sm text-slate-500
-                        file:mr-4 file:py-2 file:px-4
-                        file:rounded-full file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-emerald-50 file:text-emerald-700
-                        hover:file:bg-emerald-100"
-                    />
-                    <p className="text-xs text-slate-500 mt-1">
-                      Attach Excel files with your product requirements (max 10MB per file)
-                    </p>
-                    {attachmentFiles && attachmentFiles.length > 0 && (
-                      <div className="mt-2 space-y-1">
-                        {Array.from(attachmentFiles).map((file, index) => (
-                          <div key={index} className="flex items-center text-sm text-slate-600">
-                            <svg className="w-4 h-4 mr-2 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.413V13H5.5z"/>
-                              <path d="M9 13h2v5a1 1 0 11-2 0v-5z"/>
-                            </svg>
-                            {file.name} ({Math.round(file.size / 1024)} KB)
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="flex items-center space-x-2">
                       <Checkbox
                         checked={sendViaWhatsApp}
-                        onCheckedChange={(checked) => setSendViaWhatsApp(checked === true)}
+                        onCheckedChange={setSendViaWhatsApp}
                       />
                       <span className="text-sm text-slate-700">Send via WhatsApp</span>
                     </label>
@@ -817,7 +502,7 @@ export default function SupplierDetail() {
                     <label className="flex items-center space-x-2">
                       <Checkbox
                         checked={sendViaEmail}
-                        onCheckedChange={(checked) => setSendViaEmail(checked === true)}
+                        onCheckedChange={setSendViaEmail}
                       />
                       <span className="text-sm text-slate-700">Send via Email</span>
                     </label>

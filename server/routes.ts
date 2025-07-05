@@ -1,7 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertSupplierSchema, insertOfferSchema, insertOrderSchema, insertOrderItemSchema, insertInquirySchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
@@ -27,21 +26,6 @@ const storage_config = multer.diskStorage({
 const upload = multer({ storage: storage_config });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
-
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
-
   // Supplier routes
   app.get("/api/suppliers", async (req, res) => {
     try {
@@ -228,28 +212,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Delete price list
-  app.delete("/api/price-lists/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      await storage.deletePriceListFile(id);
-      res.status(204).send();
-    } catch (error) {
-      res.status(500).json({ error: "Failed to delete price list" });
-    }
-  });
-
-  // Delete order
-  app.delete("/api/orders/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      await storage.deleteOrder(id);
-      res.status(204).send();
-    } catch (error) {
-      res.status(500).json({ error: "Failed to delete order" });
-    }
-  });
-
   // Order routes
   app.post("/api/suppliers/:id/orders", async (req, res) => {
     try {
@@ -271,17 +233,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const orders = await storage.getOrders(supplierId);
       res.json(orders);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch orders" });
-    }
-  });
-
-  // All orders route for dashboard stats - MUST come before /:id route
-  app.get("/api/orders/all", isAuthenticated, async (req, res) => {
-    try {
-      const orders = await storage.getAllOrders();
-      res.json(orders);
-    } catch (error) {
-      console.error("Error fetching all orders:", error);
       res.status(500).json({ error: "Failed to fetch orders" });
     }
   });
@@ -350,41 +301,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Inquiry routes
-  app.post("/api/inquiries", upload.array('attachments', 10), async (req, res) => {
+  app.post("/api/inquiries", async (req, res) => {
     try {
-      const { message, supplierIds } = req.body;
-      const files = req.files as Express.Multer.File[];
-      
-      // Parse supplierIds from string to array
-      const parsedSupplierIds = JSON.parse(supplierIds);
-      
-      const inquiryData = insertInquirySchema.parse({
-        message,
-        supplierIds: parsedSupplierIds,
-      });
-      
+      const inquiryData = insertInquirySchema.parse(req.body);
       const inquiry = await storage.createInquiry(inquiryData);
       
-      // TODO: Store file attachments and associate with inquiry
-      // TODO: Implement actual WhatsApp and email sending with attachments
-      // For now, just return the inquiry with file info
-      
-      const attachmentInfo = files ? files.map(file => ({
-        filename: file.filename,
-        originalName: file.originalname,
-        size: file.size,
-        path: file.path
-      })) : [];
-      
-      res.status(201).json({
-        ...inquiry,
-        attachments: attachmentInfo
-      });
+      // TODO: Implement actual WhatsApp and email sending
+      // For now, just return the inquiry
+      res.status(201).json(inquiry);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid inquiry data", details: error.errors });
       }
-      console.error("Error creating inquiry:", error);
       res.status(500).json({ error: "Failed to send inquiry" });
     }
   });
