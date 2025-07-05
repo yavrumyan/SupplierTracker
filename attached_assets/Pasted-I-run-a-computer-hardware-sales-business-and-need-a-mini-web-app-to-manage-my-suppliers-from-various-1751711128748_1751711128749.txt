@@ -1,0 +1,55 @@
+I run a computer hardware sales business and need a mini web app to manage my suppliers from various countries. The app should include a database where each supplier has a dedicated, editable page with all relevant information, such as price lists, offers, stock lists, and contact details. Below are the key features I need, clearly outlined for clarity.
+
+**Core Requirements**:
+1. **Database and Supplier Pages**:
+   - Create a database to store supplier information, with each supplier having a unique page displaying:
+     - **Supplier Name**: Text field.
+     - **Main Info**: Website URL, phone numbers, email addresses, messaging apps (e.g., WhatsApp, Telegram).
+     - **Additional Info**: Reputation score (1-10), working style (Multi-Selectable list with predefined options: B2B, PRICE-LISTS, INQUIRIES), comment field (free text).
+     - **Trading Categories**: Selectable list (e.g., CPU, GPU, Motherboards, SSD) with predefined options, but the ability to add new categories later.
+     - **Trading Brands**: Selectable list (e.g., ASUS, Intel, AMD) with predefined options, but the ability to add new brands later.
+     - **Price Lists**: Upload Excel files, automatically converted to CSV for easy reading, stored and displayed on the supplier’s page.
+     - **Offers**: Text box for manually pasting supplier offers received via email or text.
+     - **WhatsApp Integration**: Automatically import offers sent via WhatsApp to the supplier’s page (e.g., link supplier’s WhatsApp number to their page and extract text messages).
+   - Supplier pages must be editable to update or add information (e.g., new price lists, offers, or contact details).
+   - Two methods to add suppliers:
+     - **Manual Entry**: Form to input all supplier details manually.
+     - **Google Form Integration**: Automatically add suppliers to the database when they submit a Google Form on my website, mapping form fields to the supplier page fields (e.g., name, main info, categories).
+
+2. **Inquiry Feature on Supplier Pages**:
+   - Each supplier page should have an “Inquiry” text box where I can input or paste an inquiry.
+   - Include a “Send Inquiry” button that automatically sends the inquiry to the supplier’s WhatsApp number and primary email (if available) with the fixed message: “Dear colleague, please quote us the following. Thanks in advance.”
+   - Ensure the inquiry is sent via both WhatsApp and email when both contact methods are provided.
+
+3. **Order Creation**: 
+Include an Excel-like table on each supplier page to create orders, with 6 columns: "#", "Name", "Quantity", "Price", "Sum", "App. Cost".
+       - Users can input order data manually or copy-paste from Excel.
+       - "Sum" is calculated as "Quantity" × "Price".
+       - "App. Cost" is calculated automatically based on "Price" and a cost calculation logic defined in a separate CSV file uploaded for each supplier (e.g., CSV specifies cost multipliers or formulas per product).
+       - Store and display orders on the supplier’s page, with the ability to edit or add new orders.
+
+4. **Main Page with Advanced Search and Filters**:
+   - Build a main page with a search interface that includes:
+     - A search box to input product names or keywords.
+     - Filters to narrow down suppliers by:
+       - Country (e.g., UAE, USA).
+       - Trading categories (e.g., CPU, Storage. Full list will provide you later).
+       - Trading brands (e.g., ASUS, Intel. Full list will provide you later).
+       - Reputation score (e.g. 8), working style (e.g. B2B).
+   - Search logic:
+     - Filter suppliers by country, category, and/or brand.
+     - Search through all supplier data (price lists, stock lists, offers) for matches to the input query.
+     - Display results with supplier names and relevant matches (e.g., products from their price lists or offers).
+   - Example: If I filter by “UAE,” “CPU,” and “AMD,” then search “Ryzen 9,” the app shows UAE-based suppliers offering AMD CPUs with “Ryzen 9” in their price lists, stock lists, or offers.
+
+5. **Multi-Supplier Inquiry on Main Page**:
+   - On the main page, after applying filters, display a list of matching suppliers with checkboxes next to each.
+   - Include a text box for an inquiry and a “Send Inquiry” button.
+   - When I select suppliers via checkboxes, input an inquiry, and click “Send Inquiry,” the app sends the inquiry to all selected suppliers’ WhatsApp numbers and primary emails with the fixed message: “Dear colleague, please quote us the following. Thanks in advance.”
+
+**Additional Notes**:
+- The app should have a clean, user-friendly GUI with easy navigation between the main page and supplier pages.
+- Ensure data security with user authentication and encryption for supplier data.
+- Host the app with a shareable URL for easy access.
+- Use Python (e.g., Flask, Django) for backend, SQLite or MongoDB for the database, and JavaScript (e.g., React) for the front-end. Use libraries like `pandas` for Excel-to-CSV conversion and APIs (e.g., Twilio for WhatsApp, SendGrid for email) for automation.
+- If any part of this prompt is unclear, please ask for clarification before building.
