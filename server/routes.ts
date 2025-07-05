@@ -348,6 +348,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add new category/brand endpoints
+  app.post("/api/categories", async (req, res) => {
+    try {
+      const { category } = req.body;
+      if (!category || typeof category !== 'string') {
+        return res.status(400).json({ error: "Category is required" });
+      }
+      // For now, just return success - in a production app, you'd update a database
+      res.json({ success: true, category: category.trim() });
+    } catch (error) {
+      console.error("Error adding category:", error);
+      res.status(500).json({ error: "Failed to add category" });
+    }
+  });
+
+  app.post("/api/brands", async (req, res) => {
+    try {
+      const { brand } = req.body;
+      if (!brand || typeof brand !== 'string') {
+        return res.status(400).json({ error: "Brand is required" });
+      }
+      // For now, just return success - in a production app, you'd update a database
+      res.json({ success: true, brand: brand.trim() });
+    } catch (error) {
+      console.error("Error adding brand:", error);
+      res.status(500).json({ error: "Failed to add brand" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
-import { COUNTRIES, CATEGORIES, BRANDS } from "@/lib/types";
+import { COUNTRIES } from "@/lib/types";
 import type { SearchFilters } from "@/lib/types";
+import { useCategoriesBrands } from "@/lib/categories-brands-context";
 
 interface SearchFiltersProps {
   filters: SearchFilters;
@@ -15,6 +16,8 @@ interface SearchFiltersProps {
 }
 
 export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFiltersProps) {
+  const { categories, brands } = useCategoriesBrands();
+  
   const handleFilterChange = (key: keyof SearchFilters, value: string | number | undefined) => {
     onFiltersChange({
       ...filters,
@@ -71,7 +74,7 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
                   </SelectItem>
@@ -88,7 +91,7 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Brands</SelectItem>
-                {BRANDS.map((brand) => (
+                {brands.map((brand) => (
                   <SelectItem key={brand} value={brand}>
                     {brand}
                   </SelectItem>

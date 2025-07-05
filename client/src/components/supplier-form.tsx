@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Save } from "lucide-react";
 import { insertSupplierSchema, type InsertSupplier } from "@shared/schema";
-import { COUNTRIES, CATEGORIES, BRANDS, WORKING_STYLES } from "@/lib/types";
+import { COUNTRIES, WORKING_STYLES } from "@/lib/types";
+import { useCategoriesBrands } from "@/lib/categories-brands-context";
 
 interface SupplierFormProps {
   onSubmit: (data: InsertSupplier) => void;
@@ -20,9 +21,12 @@ interface SupplierFormProps {
 }
 
 export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: SupplierFormProps) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(defaultValues?.categories || []);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>(defaultValues?.brands || []);
-  const [selectedWorkingStyles, setSelectedWorkingStyles] = useState<string[]>(defaultValues?.workingStyle || []);
+  const { categories, brands, addCategory, addBrand } = useCategoriesBrands();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(Array.isArray(defaultValues?.categories) ? defaultValues.categories : []);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(Array.isArray(defaultValues?.brands) ? defaultValues.brands : []);
+  const [selectedWorkingStyles, setSelectedWorkingStyles] = useState<string[]>(Array.isArray(defaultValues?.workingStyle) ? defaultValues.workingStyle : []);
+  const [newCategory, setNewCategory] = useState<string>("");
+  const [newBrand, setNewBrand] = useState<string>("");
 
   const form = useForm<InsertSupplier>({
     resolver: zodResolver(insertSupplierSchema),
@@ -73,6 +77,22 @@ export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: S
         ? [...prev, style]
         : prev.filter(s => s !== style)
     );
+  };
+
+  const addNewCategory = () => {
+    if (newCategory.trim() && !selectedCategories.includes(newCategory.trim())) {
+      addCategory(newCategory.trim()); // Add to global context
+      setSelectedCategories(prev => [...prev, newCategory.trim()]);
+      setNewCategory("");
+    }
+  };
+
+  const addNewBrand = () => {
+    if (newBrand.trim() && !selectedBrands.includes(newBrand.trim())) {
+      addBrand(newBrand.trim()); // Add to global context
+      setSelectedBrands(prev => [...prev, newBrand.trim()]);
+      setNewBrand("");
+    }
   };
 
   return (
@@ -211,8 +231,51 @@ export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: S
 
           <div>
             <Label>Trading Categories</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2">
-              {CATEGORIES.map((category) => (
+            
+            {/* Custom Category Input */}
+            <div className="flex gap-2 mt-2 mb-4">
+              <Input
+                placeholder="Add new category..."
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addNewCategory()}
+              />
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={addNewCategory}
+                disabled={!newCategory.trim()}
+              >
+                Add
+              </Button>
+            </div>
+
+            {/* Selected Categories Display */}
+            {selectedCategories.length > 0 && (
+              <div className="mb-4">
+                <Label className="text-sm font-medium">Selected Categories:</Label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {selectedCategories.map((category) => (
+                    <div key={category} className="flex items-center bg-blue-100 rounded-md px-2 py-1">
+                      <span className="text-sm">{category}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="ml-1 h-4 w-4 p-0"
+                        onClick={() => handleCategoryChange(category, false)}
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Category Checkboxes */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {categories.map((category) => (
                 <div key={category} className="flex items-center space-x-2">
                   <Checkbox
                     id={category}
@@ -229,8 +292,51 @@ export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: S
 
           <div>
             <Label>Trading Brands</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2">
-              {BRANDS.map((brand) => (
+            
+            {/* Custom Brand Input */}
+            <div className="flex gap-2 mt-2 mb-4">
+              <Input
+                placeholder="Add new brand..."
+                value={newBrand}
+                onChange={(e) => setNewBrand(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && addNewBrand()}
+              />
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={addNewBrand}
+                disabled={!newBrand.trim()}
+              >
+                Add
+              </Button>
+            </div>
+
+            {/* Selected Brands Display */}
+            {selectedBrands.length > 0 && (
+              <div className="mb-4">
+                <Label className="text-sm font-medium">Selected Brands:</Label>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {selectedBrands.map((brand) => (
+                    <div key={brand} className="flex items-center bg-green-100 rounded-md px-2 py-1">
+                      <span className="text-sm">{brand}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="ml-1 h-4 w-4 p-0"
+                        onClick={() => handleBrandChange(brand, false)}
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Brand Checkboxes */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {brands.map((brand) => (
                 <div key={brand} className="flex items-center space-x-2">
                   <Checkbox
                     id={brand}
