@@ -52,10 +52,10 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-slate-200">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Microchip className="h-4 w-4 text-white" />
             </div>
-            <h1 className="ml-3 text-lg font-semibold text-slate-800">SupplierHub</h1>
+            <h1 className="ml-3 text-lg font-semibold text-slate-800">SupHub</h1>
           </div>
           <button
             className="lg:hidden"
@@ -76,7 +76,7 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                   isActive
-                    ? "text-white bg-blue-600"
+                    ? "text-white bg-primary"
                     : "text-slate-700 hover:bg-slate-100"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}

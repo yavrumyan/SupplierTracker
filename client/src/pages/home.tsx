@@ -20,6 +20,25 @@ export default function Home() {
 
   const { data: suppliers = [], isLoading, refetch } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers", filters],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      
+      if (filters.query) params.append('query', filters.query);
+      if (filters.country) params.append('country', filters.country);
+      if (filters.category) params.append('category', filters.category);
+      if (filters.brand) params.append('brand', filters.brand);
+      if (filters.minReputation) params.append('minReputation', filters.minReputation.toString());
+      if (filters.workingStyle) params.append('workingStyle', filters.workingStyle);
+      
+      const url = `/api/suppliers${params.toString() ? `?${params.toString()}` : ''}`;
+      const res = await fetch(url, { credentials: "include" });
+      
+      if (!res.ok) {
+        throw new Error('Failed to fetch suppliers');
+      }
+      
+      return await res.json();
+    },
     enabled: false, // Only search when explicitly triggered
   });
 

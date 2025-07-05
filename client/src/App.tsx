@@ -8,6 +8,7 @@ import { CategoriesBrandsProvider } from "@/lib/categories-brands-context";
 import Home from "@/pages/home";
 import SupplierDetail from "@/pages/supplier-detail";
 import AddSupplier from "@/pages/add-supplier";
+import AllSuppliers from "@/pages/all-suppliers";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +17,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/suppliers/:id" component={SupplierDetail} />
+        <Route path="/suppliers" component={AllSuppliers} />
         <Route path="/add-supplier" component={AddSupplier} />
         <Route component={NotFound} />
       </Switch>

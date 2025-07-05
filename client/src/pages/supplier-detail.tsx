@@ -28,8 +28,10 @@ import {
 import { Link } from "wouter";
 import type { Supplier, PriceListFile, PriceListItem, Offer } from "@shared/schema";
 import { OrderTable } from "@/components/order-table";
+import { SupplierForm } from "@/components/supplier-form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import type { InsertSupplier } from "@shared/schema";
 
 export default function SupplierDetail() {
   const { toast } = useToast();
@@ -41,6 +43,7 @@ export default function SupplierDetail() {
   const [sendViaWhatsApp, setSendViaWhatsApp] = useState(true);
   const [sendViaEmail, setSendViaEmail] = useState(true);
   const [newOfferContent, setNewOfferContent] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const { data: supplier, isLoading } = useQuery<Supplier>({
     queryKey: [`/api/suppliers/${supplierId}`],
@@ -100,6 +103,27 @@ export default function SupplierDetail() {
     onError: () => {
       toast({
         title: "Failed to add offer",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateSupplierMutation = useMutation({
+    mutationFn: async (data: InsertSupplier) => {
+      return await apiRequest("PUT", `/api/suppliers/${supplierId}`, data);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Supplier updated successfully",
+        description: "The supplier information has been updated.",
+      });
+      setIsEditing(false);
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}`] });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to update supplier",
         description: "Please try again later.",
         variant: "destructive",
       });
@@ -178,6 +202,32 @@ export default function SupplierDetail() {
     );
   }
 
+  // If editing, show the supplier form
+  if (isEditing && supplier) {
+    return (
+      <div className="p-6">
+        <SupplierForm
+          defaultValues={{
+            name: supplier.name,
+            country: supplier.country,
+            website: supplier.website || "",
+            email: supplier.email || "",
+            phone: supplier.phone || "",
+            whatsapp: supplier.whatsapp || "",
+            reputation: supplier.reputation || 0,
+            categories: supplier.categories || [],
+            brands: supplier.brands || [],
+            workingStyle: supplier.workingStyle || [],
+            comments: supplier.comments || "",
+          }}
+          onSubmit={(data) => updateSupplierMutation.mutate(data)}
+          onCancel={() => setIsEditing(false)}
+          isLoading={updateSupplierMutation.isPending}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -192,7 +242,7 @@ export default function SupplierDetail() {
               </Link>
               <h1 className="text-2xl font-semibold text-slate-800">{supplier.name}</h1>
             </div>
-            <Button>
+            <Button onClick={() => setIsEditing(true)}>
               <Edit className="h-4 w-4 mr-2" />
               Edit Supplier
             </Button>
@@ -492,7 +542,7 @@ export default function SupplierDetail() {
                     <label className="flex items-center space-x-2">
                       <Checkbox
                         checked={sendViaWhatsApp}
-                        onCheckedChange={setSendViaWhatsApp}
+                        onCheckedChange={(checked) => setSendViaWhatsApp(checked === true)}
                       />
                       <span className="text-sm text-slate-700">Send via WhatsApp</span>
                     </label>
@@ -502,7 +552,7 @@ export default function SupplierDetail() {
                     <label className="flex items-center space-x-2">
                       <Checkbox
                         checked={sendViaEmail}
-                        onCheckedChange={setSendViaEmail}
+                        onCheckedChange={(checked) => setSendViaEmail(checked === true)}
                       />
                       <span className="text-sm text-slate-700">Send via Email</span>
                     </label>
