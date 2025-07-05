@@ -73,6 +73,38 @@ export default function Suppliers() {
     }
   }, [error, toast]);
 
+  // Delete supplier mutation
+  const deleteSupplierMutation = useMutation({
+    mutationFn: async (supplierId: number) => {
+      return apiRequest("DELETE", `/api/suppliers/${supplierId}`);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Supplier deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/suppliers"] });
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error as Error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to delete supplier. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Bulk inquiry mutation
   const inquiryMutation = useMutation({
     mutationFn: async (data: { message: string; supplierIds: number[] }) => {
@@ -119,6 +151,12 @@ export default function Suppliers() {
       newSelection.delete(supplierId);
     }
     setSelectedSuppliers(newSelection);
+  };
+
+  const handleDeleteSupplier = (supplierId: number, supplierName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${supplierName}"? This action cannot be undone.`)) {
+      deleteSupplierMutation.mutate(supplierId);
+    }
   };
 
   const handleBulkInquiry = () => {
@@ -174,6 +212,19 @@ export default function Suppliers() {
               <Link href={`/suppliers/${supplier.id}`}>
                 <Eye className="h-4 w-4" />
               </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/add-supplier?edit=${supplier.id}`}>
+                <Edit className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => handleDeleteSupplier(supplier.id, supplier.name)}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>

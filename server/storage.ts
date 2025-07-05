@@ -65,6 +65,7 @@ export interface IStorage {
   // Order methods
   createOrder(order: InsertOrder): Promise<Order>;
   getOrders(supplierId: number): Promise<Order[]>;
+  getAllOrders(): Promise<Order[]>;
   getOrderWithItems(orderId: number): Promise<Order & { items: OrderItem[] }>;
   updateOrder(id: number, order: Partial<InsertOrder>): Promise<Order>;
   deleteOrder(id: number): Promise<void>;
@@ -258,6 +259,11 @@ export class DatabaseStorage implements IStorage {
   async getOrders(supplierId: number): Promise<Order[]> {
     return await db.select().from(orders)
       .where(eq(orders.supplierId, supplierId))
+      .orderBy(desc(orders.createdAt));
+  }
+
+  async getAllOrders(): Promise<Order[]> {
+    return await db.select().from(orders)
       .orderBy(desc(orders.createdAt));
   }
 

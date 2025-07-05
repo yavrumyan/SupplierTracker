@@ -8,11 +8,21 @@ import type { Supplier } from "@shared/schema";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user } = useAuth() as { user: any };
 
   // Fetch basic stats
   const { data: suppliers = [] } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers"],
+  });
+
+  // Fetch all orders for total order volume calculation
+  const { data: allOrders = [] } = useQuery({
+    queryKey: ["/api/orders/all"],
+    queryFn: async () => {
+      const response = await fetch("/api/orders/all", { credentials: "include" });
+      if (!response.ok) throw new Error("Failed to fetch orders");
+      return response.json();
+    },
   });
 
   const handleLogout = () => {
@@ -22,9 +32,7 @@ export default function Home() {
   const stats = {
     totalSuppliers: suppliers.length,
     countries: new Set(suppliers.map(s => s.country)).size,
-    avgReputation: suppliers.length > 0 
-      ? (suppliers.reduce((acc, s) => acc + (s.reputation || 0), 0) / suppliers.length).toFixed(1)
-      : '0.0',
+    totalOrderVolume: allOrders.reduce((total: number, order: any) => total + (order.totalAmount || 0), 0),
     topCategories: suppliers.flatMap(s => s.categories || [])
       .reduce((acc, cat) => {
         acc[cat] = (acc[cat] || 0) + 1;
@@ -99,8 +107,8 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
               <div>
-                <p className="text-sm text-muted-foreground">Avg. Reputation</p>
-                <p className="text-2xl font-bold">{stats.avgReputation}</p>
+                <p className="text-sm text-muted-foreground">Total Order Volume</p>
+                <p className="text-2xl font-bold">${stats.totalOrderVolume.toLocaleString()}</p>
               </div>
             </div>
           </CardContent>

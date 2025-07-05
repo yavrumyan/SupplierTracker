@@ -23,7 +23,8 @@ import {
   Star,
   FileText,
   Download,
-  Eye
+  Eye,
+  Trash2
 } from "lucide-react";
 import { Link } from "wouter";
 import type { Supplier, PriceListFile, PriceListItem, Offer } from "@shared/schema";
@@ -106,6 +107,26 @@ export default function SupplierDetail() {
     },
   });
 
+  const deleteOfferMutation = useMutation({
+    mutationFn: async (offerId: number) => {
+      return await apiRequest("DELETE", `/api/offers/${offerId}`);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Offer deleted successfully",
+        description: "The offer has been removed.",
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/offers`] });
+    },
+    onError: () => {
+      toast({
+        title: "Failed to delete offer",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSendInquiry = () => {
     if (!inquiryMessage.trim()) {
       toast({
@@ -133,6 +154,12 @@ export default function SupplierDetail() {
     }
 
     addOfferMutation.mutate(newOfferContent);
+  };
+
+  const handleDeleteOffer = (offerId: number) => {
+    if (window.confirm("Are you sure you want to delete this offer? This action cannot be undone.")) {
+      deleteOfferMutation.mutate(offerId);
+    }
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,10 +314,11 @@ export default function SupplierDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="price-lists" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="price-lists">Price Lists</TabsTrigger>
           <TabsTrigger value="offers">Offers</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="inquiry">Send Inquiry</TabsTrigger>
         </TabsList>
 
@@ -447,9 +475,19 @@ export default function SupplierDetail() {
                               </div>
                             )}
                           </div>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button variant="ghost" size="sm">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              onClick={() => handleDeleteOffer(offer.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -467,6 +505,67 @@ export default function SupplierDetail() {
             onSave={() => {}}
             onExport={() => {}}
           />
+        </TabsContent>
+
+        <TabsContent value="documents" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Documents & Files</CardTitle>
+                <Button>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Document
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Document categories */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="border border-slate-200 rounded-lg p-4">
+                    <h4 className="font-medium text-slate-800 mb-2">Invoices</h4>
+                    <div className="space-y-2">
+                      <div className="text-sm text-slate-500">No invoices uploaded</div>
+                    </div>
+                  </div>
+                  <div className="border border-slate-200 rounded-lg p-4">
+                    <h4 className="font-medium text-slate-800 mb-2">Orders</h4>
+                    <div className="space-y-2">
+                      <div className="text-sm text-slate-500">No saved orders</div>
+                    </div>
+                  </div>
+                  <div className="border border-slate-200 rounded-lg p-4">
+                    <h4 className="font-medium text-slate-800 mb-2">Other Documents</h4>
+                    <div className="space-y-2">
+                      <div className="text-sm text-slate-500">No documents uploaded</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent documents table */}
+                <div className="border border-slate-200 rounded-lg">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Document Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Size</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                          No documents uploaded yet. Upload invoices, orders, and other files here.
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="inquiry" className="space-y-4">

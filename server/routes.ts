@@ -277,6 +277,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // All orders route for dashboard stats
+  app.get("/api/orders/all", isAuthenticated, async (req, res) => {
+    try {
+      const orders = await storage.getAllOrders();
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch orders" });
+    }
+  });
+
   // Order item routes
   app.post("/api/orders/:id/items", async (req, res) => {
     try {
