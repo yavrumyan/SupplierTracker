@@ -77,6 +77,10 @@ def apply_conversion_logic(df: pd.DataFrame, logic_content: str) -> Tuple[pd.Dat
         # Get the processed DataFrame
         if 'converted_df' in safe_globals:
             converted_df = safe_globals['converted_df']
+        elif 'convert_cs' in safe_globals:
+            # Handle legacy format with convert_cs function
+            convert_func = safe_globals['convert_cs']
+            converted_df = convert_func(df.copy())
         else:
             # If no converted_df is defined, assume df was modified in place
             converted_df = safe_globals['df']

@@ -7,6 +7,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import * as XLSX from "xlsx";
+import { spawn } from "child_process";
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
@@ -453,7 +454,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const logicContent = fs.readFileSync(conversionLogic.filePath, 'utf8');
 
       // Process the file using Python script
-      const { spawn } = require('child_process');
       const pythonScript = path.join(process.cwd(), 'server', 'file_processor.py');
       
       return new Promise((resolve, reject) => {
@@ -486,11 +486,13 @@ print(json.dumps(result))
           try {
             if (code !== 0) {
               console.error("Python script error:", errorOutput);
+              console.error("Python script output:", output);
+              console.error("Python script exit code:", code);
               // Delete the uploaded file
               if (fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
               }
-              return res.status(500).json({ error: "Error processing file with conversion logic" });
+              return res.status(500).json({ error: `Error processing file with conversion logic: ${errorOutput}` });
             }
 
             const result = JSON.parse(output);
