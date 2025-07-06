@@ -1,0 +1,11 @@
+Product Name,Brand,Category,Price,Stock Status,SKU
+MacBook Pro 16-inch,Apple,Laptops,$2499,In Stock,MBP16-001
+ThinkPad X1 Carbon,Lenovo,Laptops,$1899,In Stock,TP-X1C-001
+RTX 4090 Graphics Card,NVIDIA,Graphics Cards,$1599,Limited Stock,RTX4090-001
+Core i9-13900K,Intel,Processors,$589,In Stock,CI9-13900K
+32GB DDR5 RAM,Corsair,Memory,$299,In Stock,DDR5-32GB-001
+1TB NVMe SSD,Samsung,Storage,$149,In Stock,SSD-1TB-001
+Gaming Monitor 27",ASUS,Monitors,$349,In Stock,MON-27-001
+Mechanical Keyboard,Razer,Peripherals,$129,In Stock,KB-MECH-001
+Gaming Mouse,Logitech,Peripherals,$79,In Stock,MOUSE-G-001
+Webcam 4K,Logitech,Peripherals,$199,In Stock,CAM-4K-001

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { 
   ArrowLeft, 
   Edit, 
@@ -44,6 +45,11 @@ export default function SupplierDetail() {
   const [sendViaEmail, setSendViaEmail] = useState(true);
   const [newOfferContent, setNewOfferContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{type: 'logic' | 'price', progress: number} | null>(null);
+  const [previewData, setPreviewData] = useState<{html: string, rowCount: number, columns: string[]} | null>(null);
+  
+  const logicFileRef = useRef<HTMLInputElement>(null);
+  const priceFileRef = useRef<HTMLInputElement>(null);
 
   const { data: supplier, isLoading } = useQuery<Supplier>({
     queryKey: [`/api/suppliers/${supplierId}`],
@@ -130,6 +136,88 @@ export default function SupplierDetail() {
     },
   });
 
+  const uploadLogicMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('logic_file', file);
+      
+      const response = await fetch(`/api/suppliers/${supplierId}/upload-logic`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Logic file uploaded successfully",
+        description: "Conversion logic is now available for processing price lists.",
+      });
+      setUploadProgress(null);
+      if (logicFileRef.current) {
+        logicFileRef.current.value = '';
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to upload logic file",
+        description: error.message,
+        variant: "destructive",
+      });
+      setUploadProgress(null);
+    },
+  });
+
+  const uploadPriceMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('price_file', file);
+      
+      const response = await fetch(`/api/suppliers/${supplierId}/upload-price`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Price list processed successfully",
+        description: `Processed ${data.row_count} rows with ${data.column_count} columns.`,
+      });
+      setUploadProgress(null);
+      setPreviewData({
+        html: data.preview_html,
+        rowCount: data.row_count,
+        columns: data.columns
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/price-lists`] });
+      if (priceFileRef.current) {
+        priceFileRef.current.value = '';
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to process price list",
+        description: error.message,
+        variant: "destructive",
+      });
+      setUploadProgress(null);
+    },
+  });
+
   const handleSendInquiry = () => {
     if (!inquiryMessage.trim()) {
       toast({
@@ -159,17 +247,43 @@ export default function SupplierDetail() {
     addOfferMutation.mutate(newOfferContent);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogicFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
+      const allowedTypes = ['.py', '.txt'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
       
-      // TODO: Implement file upload
-      toast({
-        title: "File upload",
-        description: "File upload functionality will be implemented.",
-      });
+      if (!allowedTypes.includes(fileExtension)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload a .py or .txt file.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setUploadProgress({type: 'logic', progress: 0});
+      uploadLogicMutation.mutate(file);
+    }
+  };
+
+  const handlePriceFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const allowedTypes = ['.xlsx', '.xls', '.csv'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      
+      if (!allowedTypes.includes(fileExtension)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload an Excel (.xlsx, .xls) or CSV file.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setUploadProgress({type: 'price', progress: 0});
+      uploadPriceMutation.mutate(file);
     }
   };
 
@@ -345,32 +459,116 @@ export default function SupplierDetail() {
         </TabsList>
 
         <TabsContent value="price-lists" className="space-y-4">
+          {/* Upload Forms */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Conversion Logic Upload */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Conversion Logic</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-slate-600">
+                  Upload a Python (.py) or text (.txt) file containing the logic to convert price lists to a standardized format.
+                </p>
+                <div>
+                  <Label htmlFor="logic-file-upload">Select Logic File</Label>
+                  <Input
+                    id="logic-file-upload"
+                    type="file"
+                    accept=".py,.txt"
+                    ref={logicFileRef}
+                    onChange={handleLogicFileUpload}
+                    disabled={uploadLogicMutation.isPending}
+                    className="mt-1"
+                  />
+                </div>
+                {uploadProgress?.type === 'logic' && (
+                  <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div className="bg-primary h-2 rounded-full transition-all duration-300" style={{width: '50%'}}></div>
+                  </div>
+                )}
+                <Button 
+                  onClick={() => logicFileRef.current?.click()} 
+                  disabled={uploadLogicMutation.isPending}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {uploadLogicMutation.isPending ? 'Uploading...' : 'Upload Logic'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Price List Upload */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Price List File</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-slate-600">
+                  Upload an Excel (.xlsx, .xls) or CSV file containing the raw price list data.
+                </p>
+                <div>
+                  <Label htmlFor="price-file-upload">Select Price List File</Label>
+                  <Input
+                    id="price-file-upload"
+                    type="file"
+                    accept=".xlsx,.xls,.csv"
+                    ref={priceFileRef}
+                    onChange={handlePriceFileUpload}
+                    disabled={uploadPriceMutation.isPending}
+                    className="mt-1"
+                  />
+                </div>
+                {uploadProgress?.type === 'price' && (
+                  <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div className="bg-primary h-2 rounded-full transition-all duration-300" style={{width: '50%'}}></div>
+                  </div>
+                )}
+                <Button 
+                  onClick={() => priceFileRef.current?.click()} 
+                  disabled={uploadPriceMutation.isPending}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {uploadPriceMutation.isPending ? 'Processing...' : 'Upload & Process'}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Preview Section */}
+          {previewData && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Preview - Processed Data</CardTitle>
+                <p className="text-sm text-slate-600">
+                  Showing first 10 rows of {previewData.rowCount} total rows • {previewData.columns.length} columns
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <div dangerouslySetInnerHTML={{ __html: previewData.html }} />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Existing Price Lists */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Price Lists</CardTitle>
-                <Button>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload Price List
-                </Button>
+                <CardTitle>Uploaded Price Lists</CardTitle>
+                <Badge variant="secondary">{priceListFiles.length} files</Badge>
               </div>
             </CardHeader>
             <CardContent>
               {priceListFiles.length === 0 ? (
                 <div className="text-center py-8">
+                  <FileText className="h-12 w-12 text-slate-400 mx-auto mb-4" />
                   <p className="text-slate-500">No price lists uploaded yet.</p>
-                  <input
-                    type="file"
-                    accept=".xlsx,.xls,.csv"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="price-list-upload"
-                  />
-                  <label htmlFor="price-list-upload">
-                    <Button className="mt-4" asChild>
-                      <span>Upload First Price List</span>
-                    </Button>
-                  </label>
+                  <p className="text-sm text-slate-400 mt-1">Upload conversion logic first, then upload price list files for processing.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -380,19 +578,18 @@ export default function SupplierDetail() {
                         <div className="flex items-center">
                           <FileText className="h-5 w-5 text-emerald-600 mr-3" />
                           <div>
-                            <h4 className="font-medium text-slate-800">{file.originalName}</h4>
+                            <h4 className="font-medium text-slate-800">{file.filename}</h4>
                             <p className="text-sm text-slate-500">
-                              Uploaded {new Date(file.uploadedAt!).toLocaleDateString()} • 
-                              {file.fileSize ? `${(file.fileSize / 1024 / 1024).toFixed(1)} MB` : "Unknown size"}
+                              Uploaded {new Date(file.uploadedAt!).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Button variant="outline" size="sm">
-                            <Eye className="h-4 w-4 mr-1" />
-                            View
-                          </Button>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => window.open(`/api/suppliers/${supplierId}/download-price/${file.id}`, '_blank')}
+                          >
                             <Download className="h-4 w-4 mr-1" />
                             Download
                           </Button>

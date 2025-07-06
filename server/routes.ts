@@ -377,6 +377,204 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Price list file upload routes
+  app.post("/api/suppliers/:id/upload-logic", upload.single('logic_file'), async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const file = req.file;
+      
+      if (!file) {
+        return res.status(400).json({ error: "No logic file uploaded" });
+      }
+
+      // Validate file type
+      const allowedExtensions = ['.py', '.txt'];
+      const fileExtension = path.extname(file.originalname).toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+        // Delete the uploaded file
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+        return res.status(400).json({ error: "Invalid file type. Only .py and .txt files are allowed." });
+      }
+
+      // Read and validate the logic content
+      const logicContent = fs.readFileSync(file.path, 'utf8');
+      
+      // Store the conversion logic in the cost calculation files table for now
+      const costFile = await storage.createCostCalculationFile({
+        supplierId,
+        filename: file.originalname,
+        filePath: file.path,
+      });
+
+      res.status(201).json({ 
+        success: true, 
+        message: "Conversion logic uploaded successfully",
+        file: costFile 
+      });
+    } catch (error) {
+      console.error("Error uploading logic file:", error);
+      res.status(500).json({ error: "Failed to upload conversion logic file" });
+    }
+  });
+
+  app.post("/api/suppliers/:id/upload-price", upload.single('price_file'), async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const file = req.file;
+      
+      if (!file) {
+        return res.status(400).json({ error: "No price list file uploaded" });
+      }
+
+      // Validate file type
+      const allowedExtensions = ['.xlsx', '.xls', '.csv'];
+      const fileExtension = path.extname(file.originalname).toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+        // Delete the uploaded file
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+        return res.status(400).json({ error: "Invalid file type. Only .xlsx, .xls, and .csv files are allowed." });
+      }
+
+      // Check if conversion logic exists for this supplier
+      const conversionLogic = await storage.getCostCalculationFile(supplierId);
+      if (!conversionLogic) {
+        // Delete the uploaded file
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+        return res.status(400).json({ error: "No conversion logic found. Please upload conversion logic first." });
+      }
+
+      // Read the conversion logic
+      const logicContent = fs.readFileSync(conversionLogic.filePath, 'utf8');
+
+      // Process the file using Python script
+      const { spawn } = require('child_process');
+      const pythonScript = path.join(process.cwd(), 'server', 'file_processor.py');
+      
+      return new Promise((resolve, reject) => {
+        const python = spawn('python3', ['-c', `
+import sys
+import os
+sys.path.append('${path.join(process.cwd(), 'server')}')
+from file_processor import process_price_list
+import json
+
+file_path = sys.argv[1]
+logic_content = """${logicContent.replace(/"/g, '\\"')}"""
+
+result = process_price_list(file_path, logic_content)
+print(json.dumps(result))
+`, file.path]);
+
+        let output = '';
+        let errorOutput = '';
+
+        python.stdout.on('data', (data) => {
+          output += data.toString();
+        });
+
+        python.stderr.on('data', (data) => {
+          errorOutput += data.toString();
+        });
+
+        python.on('close', async (code) => {
+          try {
+            if (code !== 0) {
+              console.error("Python script error:", errorOutput);
+              // Delete the uploaded file
+              if (fs.existsSync(file.path)) {
+                fs.unlinkSync(file.path);
+              }
+              return res.status(500).json({ error: "Error processing file with conversion logic" });
+            }
+
+            const result = JSON.parse(output);
+            
+            if (!result.success) {
+              // Delete the uploaded file
+              if (fs.existsSync(file.path)) {
+                fs.unlinkSync(file.path);
+              }
+              return res.status(400).json({ error: result.error });
+            }
+
+            // Save the processed file to storage
+            const processedFilename = result.output_filename || 'converted_price_list.csv';
+            const processedFilePath = path.join(path.dirname(file.path), processedFilename);
+            fs.writeFileSync(processedFilePath, result.csv_content);
+
+            // Store the price list file in database
+            const priceListFile = await storage.createPriceListFile({
+              supplierId,
+              filename: processedFilename,
+              filePath: processedFilePath,
+            });
+
+            // Delete the original uploaded file
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path);
+            }
+
+            res.status(201).json({
+              success: true,
+              message: "Price list processed successfully",
+              file: priceListFile,
+              preview_html: result.preview_html,
+              row_count: result.row_count,
+              column_count: result.column_count,
+              columns: result.columns
+            });
+
+          } catch (error) {
+            console.error("Error processing result:", error);
+            // Delete the uploaded file
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path);
+            }
+            res.status(500).json({ error: "Failed to process file" });
+          }
+        });
+      });
+
+    } catch (error) {
+      console.error("Error uploading price file:", error);
+      // Delete the uploaded file if it exists
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(500).json({ error: "Failed to upload price list file" });
+    }
+  });
+
+  // Download processed price list
+  app.get("/api/suppliers/:id/download-price/:fileId", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const fileId = parseInt(req.params.fileId);
+      
+      const files = await storage.getPriceListFiles(supplierId);
+      const file = files.find(f => f.id === fileId);
+      
+      if (!file) {
+        return res.status(404).json({ error: "File not found" });
+      }
+
+      if (!fs.existsSync(file.filePath)) {
+        return res.status(404).json({ error: "File no longer exists on disk" });
+      }
+
+      res.download(file.filePath, file.filename);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      res.status(500).json({ error: "Failed to download file" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
