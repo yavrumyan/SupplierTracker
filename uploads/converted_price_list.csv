@@ -1,0 +1,1362 @@
+Supplier,Category,Brand,Model,Product Name,Price,Currency,Stock,Warranty,Notes
+CS,KVM-переключатели/USB,D-Link,KVM-221/C1A,KVM-Коммуникатор 2port D-Link KVM-221/RU,14200,AMD,1-5,,8409
+CS,Сетевое_оборудование HUB&Switch,LANBERG,SWV-HDMI-0003,"KVM-Коммуникатор 3port LANBERG SWV-HDMI-0003 (3xHDMI, Micro USB, Remote Controller)",4400,AMD,5+,,15998
+CS,Сетевое_оборудование HUB&Switch,D-Link,DKVM-4U/C1A,KVM-Коммуникатор 4port D-Link DKVM-4U/C1A,15400,AMD,1-5,,12017
+CS,ИБП 1000VA - 5000VA,SVEN,SV-014889,"Автоматический стабилизатор напряжения SVEN VR-L1500 (500W, 2xCEE7/4+1xІЕС 320)",11500,AMD,1-5,,16734
+CS,Сеть/Адаптеры/Bluetooth,Asus,90IG0070-BW0600,"Адаптер Bluetooth Asus USB-BT400 (USB, 10м)",4600,AMD,1-5,,15306
+CS,Сеть/Адаптеры/Bluetooth,ASUS,90IG05J0-MO0R00,"Адаптер Bluetooth ASUS USB-BT500 (USB, Bluetooth 5.0+EDR)",5400,AMD,1-5,,17040
+CS,Сеть/Адаптеры/Bluetooth,TP-Link,UB500,"Адаптер Bluetooth TP-Link UB500 (USB, BT 5.0+EDR, 20м)",5100,AMD,5+,,14991
+CS,"Кабели и переходники/VGA, DVI, HDMI",Buro,BU-DVI-VGA,Адаптер Buro BU-DVI-VGA DVI-D(M)->VGA(F) BLACK,2500,AMD,5+,,16284
+CS,"Кабели и переходники/VGA, DVI, HDMI",Buro,BU-HDMI(F)-DP(M),"Адаптер Buro BU-HDMI(F)-DP(M) DisplayPort(M) -> HDMI(F), Black",4600,AMD,5+,,16423
+CS,"Кабели и переходники/VGA, DVI, HDMI",CrownMicro,6970963381543,"Адаптер CrownMicro CMU3-21 (2xUSB 3.0, 3.5"", 20pin)",1600,AMD,5+,,11955
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0006-BK,Адаптер LANBERG AD-0006-BK DISPLAYPORT MINI(M)->VGA(F) BLACK,2000,AMD,5+,,11486
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0007-BK,Адаптер LANBERG AD-0007-BK DISPLAYPORT(M)->DVI-D(F) (24+5) DUAL LINK,2000,AMD,5+,,11480
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0009-BK,Адаптер LANBERG AD-0009-BK DISPLAYPORT(M)->HDMI(F) 10CM,1500,AMD,5+,,11487
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0015-BK,Адаптер LANBERG AD-0015-BK HDMI-A(F)->MICRO HDMI-D(M),400,AMD,5+,,11491
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0017-BK,Адаптер LANBERG AD-0017-BK HDMI-A(M)->VGA(F)+AUDIO ON CABLE,2000,AMD,5+,,11493
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0019-BK,Адаптер LANBERG AD-0019-BK HDMI-AM->HDMI-AF X2 SPLITTER 20CM,2500,AMD,5+,,11495
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0028-W,Адаптер LANBERG AD-0028-W USB->LPT 1.4M WHITE,1400,AMD,1-5,,11498
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0033-BK,"Адаптер LANBERG AD-0033-BK HDMI-AM->HDMI-AF (90 degrees, Down)",500,AMD,5+,,13448
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-0036-BK,"Адаптер LANBERG AD-0036-BK HDMI-AM->HDMI-AF (90 degrees, Right)",500,AMD,5+,,13449
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-LM-UM-01,Адаптер LANBERG AD-LM-UM-01 MICRO USB 2.0 TYPE-A(M)->TYPE-LIGHTNING(F) (Black),700,AMD,5+,,13447
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-LM-UM-02,Адаптер LANBERG AD-LM-UM-02 MICRO USB 2.0 TYPE-A(F)->TYPE-LIGHTNING(M) (Black),700,AMD,5+,,13446
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-OTG-UC-01,"Адаптер LANBERG AD-OTG-UC-01 USB 2.0 TYPE-C(M)->TYPE-A(F) (15cm, Black)",700,AMD,1-5,,13444
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-OTG-UM-01,"Адаптер LANBERG AD-OTG-UM-01 MICRO USB 2.0 TYPE-C(M)->TYPE-A(F) (15cm, Black)",700,AMD,5+,,13445
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,AD-UC-VG-01,Адаптер LANBERG AD-UC-VG-01 USB TYPE-C->VGA,3100,AMD,5+,,12890
+CS,USB-Hubs,Ugreen,20122,"Адаптер Ugreen 20122 (DVI(24+5)(M) to VGA(F), Black)",1100,AMD,5+,,16716
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,20415,"Адаптер Ugreen 20415 (DP(M)->VGA(F), Black)",2900,AMD,1-5,,16142
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,30843,"Адаптер Ugreen 30843 (USB Type-C (M) -> HDMI(F), VGA(F), White)",7700,AMD,1-5,,16143
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,40259,Адаптер Ugreen 40259 (DVI-D(M) to VGA(F)),3500,AMD,1-5,,15917
+CS,Карт-ридеры/Внешние,Ugreen,90813,"Адаптер Ugreen 90813 (HDMI(M)->VGA(F)+3.5m Audio, Black)",2600,AMD,1-5,,16945
+CS,"Кабели и переходники/VGA, DVI, HDMI",Genesis,NAG-1390,Адаптер игровой Genesis NAG-1390 TIN 200 FOR XONE/PS4/PS3/SWITCH CONSOLE,3900,AMD,5+,,12116
+CS,Аксессуары/Аккумуляторы,Armac,B/12V/7AH,"Аккумулятор для ИБП Armac 12V, 7AH",6000,AMD,5+,,14493
+CS,Аксессуары/Аккумуляторы,Armac,B/12V/9AH,"Аккумулятор для ИБП Armac 12V, 9AH",7400,AMD,5+,,15068
+CS,Аксессуары/Аккумуляторы,CrownMicro,CM000003024,"Аккумулятор для ИБП CrownMicro 12V, 12AH",12100,AMD,1-5,,15372
+CS,Аксессуары/Аккумуляторы,Crownmicro,CM000003025,"Аккумулятор для ИБП CrownMicro 12V, 18AH",18700,AMD,1-5,,15411
+CS,Аксессуары/Аккумуляторы,CrownMicro,CM000001652,"Аккумулятор для ИБП CrownMicro 12V, 5.0AH",4400,AMD,5+,,11845
+CS,Аксессуары/Аккумуляторы,CrownMicro,CM000001677,"Аккумулятор для ИБП CrownMicro 12V, 7.2AH",3500,AMD,5+,,11584
+CS,Аксессуары/Аккумуляторы,CrownMicro,CM000001678,"Аккумулятор для ИБП CrownMicro 12V, 9.2AH",3500,AMD,1-5,,11281
+CS,Аксессуары/Аккумуляторы,Lightwave,LW-12V/12AH,"Аккумулятор для ИБП Lightwave 12V, 12AH",8200,AMD,5+,,16911
+CS,Аксессуары/Аккумуляторы,Lightwave,LW-12V/18AH,"Аккумулятор для ИБП Lightwave 12V, 18AH",11400,AMD,5+,,16912
+CS,Аксессуары/Аккумуляторы,Lightwave,LW 12V/7.5AH,"Аккумулятор для ИБП Lightwave 12V, 7.5AH",5200,AMD,5+,,16909
+CS,Аксессуары/Аккумуляторы,Lightwave,LW-12V/9AH,"Аккумулятор для ИБП Lightwave 12V, 9AH",6400,AMD,5+,,16910
+CS,Аксессуары/Аккумуляторы,Mercury,MERCURY-7.5/12,Аккумулятор для ИБП Mercury 12V-7.5AH,6100,AMD,5+,,16657
+CS,Аксессуары/Аккумуляторы,Mercury,MERCURY-9/12,Аккумулятор для ИБП Mercury 12V-9AH,7500,AMD,5+,,16658
+CS,Аксессуары/Аккумуляторы,Powercom,PM-12-7.2,"Аккумулятор для ИБП Powercom PM-12-7.2 (12V, 7.2AH)",6400,AMD,5+,,16152
+CS,Аксессуары/Аккумуляторы,SVEN,SV-012335,"Аккумулятор для ИБП SVEN SV 1272 12V, 7.2AH",6000,AMD,5+,,16733
+CS,Аксессуары/Аккумуляторы,Contact,KNTKT1200072S48,"Аккумулятор для ИБП Контакт КТ 12-7.2 12V, 7.2AH",4800,AMD,5+,,16788
+CS,Мебель,Genesis,S.00000029,Амортизатор для игровых кресел Genesis Nitro 330/350/370/550/560/770/880/TRIT 600,0,AMD,1-5,,13772
+CS,Аксессуары/Аккумуляторы,Verbatim,49924,"Батарейка Verbatim 9V R9 6LR61 (Alkaline, 1pcs Blister)",1100,AMD,5+,,13778
+CS,Аксессуары/Аккумуляторы,Verbatim,49532,"Батарейка Verbatim CR2025 (Lithium, 4pcs Blister)",600,AMD,5+,,15643
+CS,Аксессуары/Аккумуляторы,Verbatim,LR03,"Батарейка Verbatim LR03 (Alkaline, 4pcs)",600,AMD,1-5,,209
+CS,Аксессуары/Аккумуляторы,Verbatim,49874,"Батарейка Verbatim LR03 AAA (Alkaline, 10pcs Blister)",1500,AMD,5+,,15640
+CS,Аксессуары/Аккумуляторы,Verbatim,49920,"Батарейка Verbatim LR03 AAA (Alkaline, 4pcs Blister)",700,AMD,5+,,13773
+CS,Аксессуары/Аккумуляторы,Verbatim,49500,"Батарейка Verbatim LR03 AAA (Alkaline, 4pcs Shrink)",700,AMD,5+,,13774
+CS,Аксессуары/Аккумуляторы,Verbatim,49875,"Батарейка Verbatim LR06 AA (Alkaline, 10pcs Blister)",1700,AMD,5+,,13775
+CS,Аксессуары/Аккумуляторы,Verbatim,49501,"Батарейка Verbatim LR06 AA (Alkaline, 4pcs Shrink)",700,AMD,5+,,13776
+CS,Аксессуары/Аккумуляторы,Verbatim,LR06,"Батарейка Verbatim LR06 AA (Alkaline, 4pcs)",600,AMD,1-5,,12895
+CS,Аксессуары/Аккумуляторы,Verbatim,49921,"Батарейка Verbatim LR6 AA (Alkaline, 4pcs Blister)",800,AMD,5+,,13779
+CS,Аксессуары/Аккумуляторы,Verbatim,49514,"Батарейка-аккумулятор Verbatim HR03 AAA (NIMH, 950mah, Blister of 4)",3100,AMD,1-5,,15642
+CS,Аксессуары/Аккумуляторы,Verbatim,49517,"Батарейка-аккумулятор Verbatim HR06 AA (NIMH, 2500mah, Blister of 4)",5300,AMD,5+,,15641
+CS,Аксессуары/Разное,Buro,704692,"Беспроводное зарядное устройство для смартфонов Buro Q5 (1.0A, Black)",1100,AMD,1-5,,12244
+CS,Аксессуары/Разное,Noname,8000137,Беспроводное зарядное устройство для смартфонов Noname 8000137 (Black),6500,AMD,1-5,,13298
+CS,Блоки питания/1000-1500 Watt,Gigabyte,GP-UD1000GM,Блок питания 1000W Gigabyte GP-UD1000GM PG5 80+ Gold (ATX),69600,AMD,1-5,,14808
+CS,Блоки питания/1000-1500 Watt,Thermaltake,PS-TPD-1050FNFAGE-H,Блок питания 1050W Thermaltake Toughpower GF A3 80+ Gold Full Modular (ATX),71000,AMD,1-5,,16482
+CS,Блоки питания/1000-1500 Watt,Gigabyte,GP-UD1300GM,Блок питания 1300W Gigabyte GP-UD1300GM PG5 80+ Gold (ATX),104500,AMD,1-5,,15710
+CS,Блоки питания/1000-1500 Watt,Seasonic,SSR-1300GD,Блок питания 1300W Seasonic Prime SSR-1300GD 80+ Gold (ATX),119700,AMD,1-5,,15499
+CS,Блоки питания/550-750 Watt,CrownMicro,CM000003062,Блок питания 300W CrownMicro CM-PSSFX305W SMART PLUS (SFX),3800,AMD,1-5,,12268
+CS,Блоки питания/400-550 Watt,Aerocool,CYLON 400,Блок питания 400W Aerocool CYLON 400 80+ (ATX),17000,AMD,1-5,,16207
+CS,Блоки питания/400-550 Watt,,6970963388894,Блок питания 450W CrownMicro CM-PS450W PLUS (ATX),7100,AMD,1-5,,13479
+CS,Блоки питания/400-550 Watt,CrownMicro,CM000003027,Блок питания 500W CrownMicro CM-PS500W OEM (ATX),8800,AMD,5+,,16432
+CS,Блоки питания/400-550 Watt,CrownMicro,CM000001923,Блок питания 500W CrownMicro CM-PS500W OFFICE (ATX),6800,AMD,1-5,,11680
+CS,Блоки питания/400-550 Watt,CrownMicro,CM000000637,Блок питания 500W CrownMicro CM-PS500W SMART (ATX),10500,AMD,1-5,,11102
+CS,Блоки питания/550-750 Watt,Xilence,XP550R7,Блок питания 550W Xilence XN056 (ATX),15200,AMD,1-5,,15121
+CS,Блоки питания,Accord,ACC-600W-12,Блок питания 600W Accord ACC-600W-12 (ATX),10500,AMD,1-5,,11625
+CS,Блоки питания/550-750 Watt,CrownMicro,CM000003018,Блок питания 600W CrownMicro CM-PS600W PLUS (ATX),11700,AMD,1-5,,12144
+CS,Блоки питания/550-750 Watt,Deepcool,PF600,Блок питания 600W Deepcool PF600 80+ (ATX),17700,AMD,1-5,,16985
+CS,Блоки питания/1000-1500 Watt,Thermaltake,PS-SPW-0600NNFAWE-1,Блок питания 600W Thermaltake Smart W3 80+ (ATX 3.1),25500,AMD,5+,,16487
+CS,Блоки питания/550-750 Watt,Xilence,XN044,Блок питания 600W Xilence Performance XP600R6 (ATX),17600,AMD,5+,,16059
+CS,Блоки питания/550-750 Watt,Aerocool,ACPG-KP65FEC.11,Блок питания 650W Aerocool KCAS PLUS GOLD 650W ARGB 80+ (ATX),32400,AMD,1-5,,14056
+CS,Блоки питания/550-750 Watt,Aerocool,VX-650 PLUS,Блок питания 650W Aerocool VX-650 PLUS (ATX),16000,AMD,1-5,,13413
+CS,Блоки питания,Cougar,ATLAS 650,Блок питания 650W Cougar Atlas 650 80+ Bronze (ATX),23600,AMD,1-5,,16451
+CS,Блоки питания,Thermaltake,PS-TPD-0650FNFAGE-H,Блок питания 650W Thermaltake Toughpower GF A3 GEN 5 80+ Gold (ATX),46600,AMD,1-5,,16888
+CS,Блоки питания,Cooler Master,MPE-7001-ACAAB,Блок питания 700W Cooler Master MPE-7001-ACAAB 80+ Bronze (ATX),26100,AMD,1-5,,16941
+CS,Блоки питания/550-750 Watt,Deepcool,PF700,Блок питания 700W Deepcool PF700 80+ (ATX),19900,AMD,1-5,,16711
+CS,Блоки питания/1000-1500 Watt,Thermaltake,PS-SPW-0700NNFAWE-1,Блок питания 700W Thermaltake Smart W3 80+ (ATX 3.1),30000,AMD,1-5,,16488
+CS,Блоки питания,Thermaltake,PS-TRS-0700NPCWEU-2,Блок питания 700W Thermaltake TR2 S 80+ (ATX),25000,AMD,5+,,14576
+CS,Блоки питания/550-750 Watt,Aerocool,ACPG-KP75FEC.11,Блок питания 750W Aerocool KCAS PLUS GOLD 750W RGB 80+ (ATX),36700,AMD,1-5,,14057
+CS,Блоки питания,Cougar,ATLAS 750,Блок питания 750W Cougar Atlas 750 80+ Bronze (ATX),25300,AMD,1-5,,16452
+CS,Блоки питания/550-750 Watt,Deepcool,PF750,Блок питания 750W Deepcool PF750 80+ (ATX),21300,AMD,1-5,,15213
+CS,Блоки питания/>750 Watt,Gigabyte,AORUS GP-AP750GM,Блок питания 750W Gigabyte AORUS GP-AP750GM 80+ Gold (ATX),53800,AMD,1-5,,15711
+CS,Блоки питания,Thermaltake,W0750RE,Блок питания 750W Thermaltake Berlin W0750RE 80+ White (ATX3.1),30700,AMD,5+,,16889
+CS,Блоки питания,Thermaltake,PS-SPD-0750NNFABE-3,Блок питания 750W Thermaltake SMART BX3 80+ Bronze (ATX),32800,AMD,5+,,16890
+CS,Блоки питания,Thermaltake,PS-TPT-0750FNFAGE-3,Блок питания 750W Thermaltake Toughpower GT Gen.5 80+ Gold (ATX3.1),41300,AMD,1-5,,16892
+CS,Блоки питания/550-750 Watt,Deepcool,PK800D,Блок питания 800W Deepcool PK800D 80+ (ATX),26500,AMD,1-5,,16986
+CS,Блоки питания,Cougar,GEX PRO 850,"Блок питания 850W Cougar Gex Pro 850 80+ Gold (ATX3.1, PCIe 5.1)",56200,AMD,1-5,,17025
+CS,Блоки питания,Thermaltake,PS-TPD-0850F3FAGE-1,Блок питания 850W Thermaltake Toughpower GF1 ARGB 80+ Gold (ATX),71000,AMD,1-5,,15234
+CS,Блоки питания,Thermaltake,PS-TPT-0850FNFAGE-W,Блок питания 850W Thermaltake Toughpower GT Snow Gen.5 80+ Gold (ATX3.1),47600,AMD,1-5,,16893
+CS,Блоки питания,Thermaltake,PS-TTP-0850NNFAGE-1,"Блок питания 850W Thermaltake Toughpower GX3 System Pack Gold (ATX, Bulk)",45200,AMD,1-5,,15866
+CS,Бумага,,P22-833997-12987,"Бумага A4, 500, 80g, Xerox Marathon",1600,AMD,1-5,,12727
+CS,Веб-камеры,Genius,32200003400,Веб-камера Genius Facecam 1000X V2 (с микрофоном),5400,AMD,5+,,12339
+CS,Веб-камеры,Logitech,960-001592,"Веб-камера Logitech Brio 105 Full HD (с микрофоном, 960-001592)",15400,AMD,5+,,16992
+CS,Веб-камеры,Logitech,960-001106,Веб-камера Logitech Brio 4K (с микрофоном),73500,AMD,1-5,,14482
+CS,Веб-камеры,Logitech,960-001360,"Веб-камера Logitech C920e Full HD (с микрофоном, 960-001360)",25000,AMD,1-5,,16993
+CS,Веб-камеры,Logitech,960-001076,"Веб-камера Logitech C925e Full HD (с микрофоном, 960-001076)",28100,AMD,1-5,,16994
+CS,Веб-камеры,Logitech,960-001063,Веб-камера Logitech HD Webcam C270 (с микрофоном),9000,AMD,5+,,10179
+CS,Веб-камеры,Logitech,960-001065,Веб-камера Logitech HD Webcam C310 (с микрофоном),9800,AMD,5+,,11872
+CS,Веб-камеры,Logitech,960-000715,Веб-камера Logitech HD Webcam C525 (с микрофоном),23700,AMD,1-5,,13111
+CS,Вентиляторы,Lanberg,AK-1501-B,"Вентилятор для стойки LANBERG AK-1501-B, 120x120x38MM, Black",3300,AMD,1-5,,11639
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-A30600E-10M,"Видеокарта 12GB Zotac GeForce RTX3060 Gaming Twin Edge (15000MHz, GDDR6, 192bit, HDMI/3xDP)",132600,AMD,5+,,14465
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-B50700J-10P,"Видеокарта 12GB Zotac GeForce RTX5070 SOLID OC (28000MHz, GDDR7, 192bit, HDMI/3xDP)",290600,AMD,5+,,16881
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-B50700E-10P,"Видеокарта 12GB Zotac GeForce RTX5070 Twin Edge (28000MHz, GDDR7, 192bit, HDMI/3xDP)",278900,AMD,5+,,16989
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-B50620E-10M,"Видеокарта 16GB Zotac GeForce RTX5060 Ti Twin Edge (28000MHz, GDDR7, 128bit, HDMI/3xDP)",220500,AMD,5+,,16987
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-B50710D3-10P,"Видеокарта 16GB Zotac GeForce RTX5070 Ti SOLID SFF (28000MHz, GDDR7, 192bit, HDMI/3xDP)",395500,AMD,5+,,16990
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN210D3S1GL1,"Видеокарта 1GB Arktek GeForce G210 AKN210D3S1GL1 (460MHz, DDR3, 64bit, VGA/DVI-I/HDMI)",10900,AMD,5+,,12607
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKR230D3S2GL1,"Видеокарта 2GB Arktek AMD R5 230 AKR230D3S2GL1 (1066MHz, GDDR3, 64bit, VGA/DVI/HDMI)",11700,AMD,5+,,16591
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN610D3S2GL1,"Видеокарта 2GB Arktek GeForce GT610 AKN610D3S2GL1 (810MHz, DDR3, 64bit, VGA/DVI-I/HDMI)",12900,AMD,5+,,12608
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN730D3S2GL1,"Видеокарта 2GB Arktek GeForce GT730 AKN730D3S2GL1 (810MHz, DDR3, 128bit, LP, VGA/DVI-I/HDMI)",18300,AMD,5+,,13824
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN740D3S2GL1,"Видеокарта 2GB Arktek GeForce GT740 AKN740D3S2GL1 (5000MHz, GDDR3, 128bit, VGA/DVI/HDMI)",19500,AMD,5+,,15533
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN750D5S2GH1,"Видеокарта 2GB Arktek GeForce GTX750 AKN750D5S2GH1 (5400MHz, DDR5, 128bit, VGA/DVI/HDMI)",30000,AMD,5+,,13825
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKR550D5S4GH1,"Видеокарта 4GB Arktek AMD RX550 AKR550D5S4GH1 (6000MHz, GDDR5, 128bit, VGA/DVI/HDMI)",30000,AMD,5+,,15534
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN1030D4S4GL1,"Видеокарта 4GB Arktek GeForce GT1030 AKN1030D4S4GL1 (6008MHz, GDDR4, 64bit, VGA/DVI/HDMI)",37100,AMD,5+,,14730
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKN740D5S4GH1,"Видеокарта 4GB Arktek GeForce GT740 AKN740D5S4GH1 (5000MHz, GDDR5, 128bit, VGA/DVI/HDMI)",29300,AMD,5+,,15432
+CS,Видеокарты AGP/PCI-Ex,Arktek,AKR580D5S8GH1,"Видеокарта 8GB Arktek AMD RX580 AKR580D5S8GH1 (GDDR5, 256bit, DVI/HDMI/DP)",48800,AMD,5+,,15804
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-A30500K-10M,"Видеокарта 8GB Zotac GeForce RTX3050 ECO (14000MHz, GDDR6, 128bit, HDMI/3xDP)",101000,AMD,5+,,15554
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-A30500R-10L,"Видеокарта 8GB Zotac GeForce RTX3050 ECO SOLO (14000MHz, GDDR6, 128bit, HDMI/3xDP)",97500,AMD,5+,,16016
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-D40600E-10M,"Видеокарта 8GB Zotac GeForce RTX4060 Twin Edge (17000MHz, GDDR6, 128bit, HDMI/3xDP)",140400,AMD,5+,,15637
+CS,Видеокарты AGP/PCI-Ex,Zotac,ZT-B50610E-10M,"Видеокарта 8GB Zotac GeForce RTX5060 Ti Twin Edge (28000MHz, GDDR7, 128bit, HDMI/3xDP)",191500,AMD,5+,,16988
+CS,Сетевые фильтры,Lightwave,LW-EB01,Воздуходувка Lightwave LW-EB01 600W Electric blower,3800,AMD,5+,,16920
+CS,Графические планшеты,Wacom,CTL-6100WLE-N,"Графический планшет WACOM Intuos S CTL-6100WLE-N Bluetooth (264 x 200 x 8.8 mm, Green)",85800,AMD,1-5,,13333
+CS,Графические планшеты,WACOM,CTL-472-N,"Графический планшет WACOM One CTL-472-N (210 x 146 x 8.7 mm, Black, USB)",23400,AMD,5+,,11927
+CS,Графические планшеты,Wacom,CTL-472-S,"Графический планшет WACOM One CTL-472-S (210 x 146 x 8.7 mm, Black, USB)",28900,AMD,1-5,,15273
+CS,Графические планшеты,WACOM,CTL-672-N,"Графический планшет WACOM One CTL-672-N (277 x 189 x 8.7 mm, Black, USB)",33500,AMD,5+,,11926
+CS,Mobile/Прочие,CrownMicro,CMDC-IP5-032,"Держатель автомобильный для смартфона CrownMicro CMDC-IP5-032 (2xUSB, 2.1A, Black)",400,AMD,5+,,11177
+CS,Mobile/Прочие,UGO,USM-1082,Держатель автомобильный для смартфона UGO USM-1082 (Black),1100,AMD,5+,,14680
+CS,Mobile/Прочие,CrownMicro,CMSS-001,"Держатель для селфи CrownMicro CMSS-001 (Bluetooth, Black)",2000,AMD,1-5,,11331
+CS,Mobile/Прочие,NATEC,SF-20W,Держатель для селфи NATEC SF-20W WIRED BLACK,1700,AMD,1-5,,14693
+CS,Манипуляторы/Джойстики,Genesis,NJG-0773,"Джойстик Genesis NJG-0773 P58 (For PS3/PC, Wired, USB)",6200,AMD,5+,,12115
+CS,Манипуляторы/Джойстики,Genesis,NJG-1425,"Джойстик Genesis NJG-1425 MANGAN 200 (For PC, Wired, USB)",4300,AMD,5+,,12113
+CS,Манипуляторы/Джойстики,Genesis,NJG-0692,"Джойстик беспроводной Genesis NJG-0692 Mangan PV58 (For PS3/PC, Wireless, USB)",8500,AMD,5+,,15969
+CS,Манипуляторы/Джойстики,Genesis,NJG-0739,"Джойстик беспроводной Genesis NJG-0739 PV65 (For PS3/PC, Wireless, USB)",9400,AMD,5+,,12114
+CS,Манипуляторы/Джойстики,Genesis,NJG-2100,"Джойстик беспроводной Genesis NJG-2100 Mangan 400 (For PC/Console, Wireless, USB, Black)",12800,AMD,1-5,,15967
+CS,Манипуляторы/Джойстики,Genesis,NJG-2102,"Джойстик беспроводной Genesis NJG-2102 Mangan 400 (For PC/Console, Wireless, USB, Red)",12700,AMD,5+,,15968
+CS,Джойстики,Logitech,940-000145,"Джойстик беспроводной Logitech Gamepad F710 (PC, USB, Silver)",15200,AMD,1-5,,15906
+CS,Джойстики,SVEN,SV-015985,"Джойстик беспроводной SVEN GC-2040 (For PS3/PC/Android, Wireless, USB)",8100,AMD,1-5,,16759
+CS,Манипуляторы/Джойстики,Genesis,NGK-1566,"Джойстик руль Genesis NGK-1566 SEABORG 350 (For PC/PS3, Wired, USB)",28500,AMD,5+,,13227
+CS,Манипуляторы/Джойстики,Genesis,NGK-1567,"Джойстик руль Genesis NGK-1567 SEABORG 400 (For PC/PS3, USB)",47200,AMD,1-5,,15016
+CS,Джойстики,SVEN,SV-017934,"Джойстик руль SVEN GC-W300 (For PC, Wired, USB)",14400,AMD,1-5,,16758
+CS,Дисководы/Внутренние DVD-ReWriter,ASUS,90DD01YX-B10010,"Дисковод DVD-RW ASUS DRW-24D5MT/BLK/B/GEN (SATA, 24x/16x, Black)",9500,AMD,5+,,17024
+CS,Дисководы/Внутренние DVD-ReWriter,LG,GH24NSD1,"Дисковод DVD-RW LG GH24NSD1 (SATA, 24x/16x, Black)",8700,AMD,1-5,,16191
+CS,Дисководы/Внутренние DVD-ReWriter,LG,GH24NSD5.ARAA10B,"Дисковод DVD-RW LG GH24NSD5 (SATA, 24x/16x, черный)",6900,AMD,1-5,,11735
+CS,Дисководы/Внешние DVD-ReWriter,LG,GP57EB40.AHLE10B,"Дисковод внешний DVD-RW LG GP57EB40 (USB, 24x/8x, Black)",12800,AMD,5+,,15011
+CS,Дисководы/Внешние DVD-ReWriter,LG,8806087132212,"Дисковод внешний DVD-RW LG GP57ES40 (USB, 24x/24x, Silver)",12800,AMD,5+,,12693
+CS,Дисководы/Внешние DVD-ReWriter,Asus,GP60NB60.AUAE12B,"Дисковод внешний DVD-RW LG GP60NB60 (USB, 24x/24x, Black)",11700,AMD,5+,,13124
+CS,Аксессуары для ноутбуков/Док-станции,Natec,NSD-0955,Док-станция HDD Natec Kangaroo Dual SATA USB 3.0,19700,AMD,1-5,,15648
+CS,Аксессуары для ноутбуков/Док-станции,Ugreen,50857,"Док-станция HDD Ugreen 50857 (2xSATA, USB 3.0)",13300,AMD,1-5,,16170
+CS,Переходники и переключатели,Lightwave,LW-DOCK-51A,Док-станция Lightwave LW-DOCK-51A (USB-C to 3xUSB-A 3.0; 1xHDMI 4K@30Hz; 1xUSB-C PD3.0 100W),6100,AMD,5+,,16926
+CS,Переходники и переключатели,Lightwave,LW-DOCK-61A,"Док-станция Lightwave LW-DOCK-61A (USB-C to 3xUSB-A 3.0; 1xHDMI 4K@30Hz; 1xRJ45 Gigabit, 1xUSB-C PD3.0 100W)",10400,AMD,1-5,,16927
+CS,Аксессуары для ноутбуков/Док-станции,Natec,NMP-1984,"Док-станция Natec FOWLER SLIM (2xUSB 3.0, HDMI 4K, USB-C)",15200,AMD,1-5,,15652
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,ST10000VN000,"Жесткий диск 10TB SATAIII SEAGATE ST10000VN000 NAS IRONWOLF (3.5"", 7200rpm, 256Mb)",117000,AMD,1-5,,14888
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,ST12000VN0008,"Жесткий диск 12TB SATAIII SEAGATE ST12000VN0008 NAS IRONWOLF (3.5"", 7200rpm, 256Mb)",127100,AMD,5+,,14531
+CS,Жесткие диски/Для ноутбуков,Seagate,ST1000LM048,"Жесткий диск 1TB Seagate Barracuda ST1000LM048 (2.5"", SATAIII, 5400rpm, 128Mb)",25100,AMD,5+,,11588
+CS,Жесткие диски/Для ноутбуков,Seagate,ST2000LM015,"Жесткий диск 2TB Seagate Barracuda ST2000LM015 (2.5"", SATAIII, 5400rpm, 128Mb)",34400,AMD,5+,,15519
+CS,Жесткие диски/Для настольных ПК SATA,Seagate,ST2000DM008,"Жесткий диск 2TB Seagate Original ST2000DM008 (3.5"", SATAIII, 7200rpm, 256Mb)",27300,AMD,5+,,11761
+CS,Жесткие диски/Для настольных ПК SATA,Toshiba,HDWD220UZSVA,"Жесткий диск 2TB Toshiba P300 HDWD220UZSVA (3.5"", SATAIII, 5400rpm, 128Mb)",25400,AMD,5+,,16148
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,ST4000VX016,"Жесткий диск 4TB SATAIII SEAGATE SkyHawk ST4000VX016 (3.5"", SATAIII, 5400rpm, 256MB)",41700,AMD,5+,,15883
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,ST4000DM004,"Жесткий диск 4TB SATAIII SEAGATE ST4000DM004 (3.5"", SATAIII, 5400rpm, 256MB)",42300,AMD,5+,,11923
+CS,Жесткие_диски IDE/SATAII/SATAIII,WD,WD43PURZ,"Жесткий диск 4TB SATAIII WD WD43PURZ, 5400rpm, 256Mb",44700,AMD,1-5,,15536
+CS,Жесткие диски/Для ноутбуков,Seagate,ST4000LM024,"Жесткий диск 4TB Seagate Barracuda ST4000LM024 (2.5"", SATAIII, 5400rpm, 128Mb)",57700,AMD,1-5,,15520
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,ST8000VN004,"Жесткий диск 8TB SATAIII SEAGATE ST8000VN004 NAS IRONWOLF (3.5"", 7200rpm, 256Mb)",87800,AMD,5+,,14484
+CS,Жесткие диски/Для настольных ПК SATA,Seagate,STKP10000400,"Жесткий диск внешний 10TB Seagate Expansion STKP10000400 (3.5"", USB 3.1, Black)",101800,AMD,5+,,15158
+CS,Жесткие диски/Для настольных ПК SATA,Seagate,STKP12000400,"Жесткий диск внешний 12TB Seagate Expansion STKP12000400 (3.5"", USB 3.1, Black)",118600,AMD,5+,,15159
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,STLC16000400,"Жесткий диск внешний 16TB Seagate One Touch Hub STLC16000400 (3.5"", USB 3.0, Black)",161900,AMD,1-5,,15010
+CS,Жесткие_диски IDE/SATAII/SATAIII,WD,WDBBGB0160HBK-EESN,"Жесткий диск внешний 16TB WD My Book WDBBGB0160HBK (3.5"", USB 3.0, Black)",166100,AMD,1-5,,16583
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,STKM1000400,"Жесткий диск внешний 1TB Seagate Expansion STKM1000400 (2.5"", USB 3.0, Black)",24000,AMD,5+,,14125
+CS,Жесткие_диски IDE/SATAII/SATAIII,Toshiba,HDTB410EK3AA,"Жесткий диск внешний 1TB Toshiba Canvio Basics HDTB410EK3AA (2.5"", USB 3.0, Black)",21500,AMD,1-5,,11450
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,STJL2000400,"Жесткий диск внешний 2TB Seagate Basic STJL2000400 (2.5"", USB 3.0, Black)",32600,AMD,1-5,,15418
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,STKM2000400,"Жесткий диск внешний 2TB Seagate Expansion STKM2000400 (2.5"", USB 3.0, Black)",32800,AMD,5+,,14483
+CS,Жесткие_диски IDE/SATAII/SATAIII,Toshiba,HDTB520EK3AA,"Жесткий диск внешний 2TB Toshiba Canvio Basics HDTB520EK3AA (2.5"", USB 3.0, Black)",31400,AMD,1-5,,15868
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,STKP4000400,"Жесткий диск внешний 4TB Seagate Expansion STKP4000400 (3.5"", USB 3.0, Black)",51100,AMD,1-5,,14212
+CS,Жесткие_диски IDE/SATAII/SATAIII,Toshiba,HDTB540EK3CA,"Жесткий диск внешний 4TB Toshiba Canvio Basics HDTB540EK3CA (2.5"", USB 3.2, Black)",48200,AMD,1-5,,15688
+CS,Внешние жесткие диски/Настольные,WD,WDBU6Y0050BBK-WESN,"Жесткий диск внешний 5TB WD Elements Portable (2.5"", USB 3.0)",58500,AMD,5+,,16617
+CS,Жесткие_диски IDE/SATAII/SATAIII,Seagate,STLC8000400,"Жесткий диск внешний 8TB Seagate One Touch Hub STLC8000400 (3.5"", USB 3.0, Black)",83500,AMD,1-5,,15170
+CS,Переходники и переключатели,Agestar,3UB2P2(BLACK),"Жесткий диск Внешний корпус для HDD AgeStar 3UB2P2 (SATA-3, 2.5"", Black, USB 3.0)",3300,AMD,5+,,13938
+CS,Переходники и переключатели,AgeStar,SUBCP1,"Жесткий диск Внешний корпус для HDD AgeStar SUBCP1 (SATA-3, 2.5"", Black, USB 2.0)",2600,AMD,5+,,16345
+CS,Переходники и переключатели,LC,LC-25BUB3,"Жесткий диск Внешний корпус для HDD LC-25BUB3 (SATA-3, 2.5"", Black, USB 3.0)",5500,AMD,1-5,,15340
+CS,Переходники и переключатели,Ugreen,70609,"Жесткий диск Внешний корпус для HDD Ugreen 70609 (SATA-3, 2.5"", Black, USB 3.0)",3000,AMD,1-5,,16412
+CS,Переходники и переключатели,Patriot,PV810UPNGM,"Жесткий диск внешний корпус для SSD Patriot TXD PV810UPNGM (M.2 NVMe, PCIe3.0, Alluminium, Dark Silver, USB-C)",5000,AMD,5+,,16307
+CS,Переходники и переключатели,Patriot,PV860UPRGM,"Жесткий диск внешний корпус для SSD Patriot VXD PV860UPRGM (M.2 NVMe, PCIe3.0, Alluminium, RGB, Silver, USB-C)",10900,AMD,1-5,,16306
+CS,Переходники и переключатели,Ugreen,90264,"Жесткий диск внешний корпус для SSD Ugreen 90264 (M.2 NVMe, PCIe3.0, Black, USB-C)",9300,AMD,1-5,,15803
+CS,Аксессуары/Разное,Baseus,GaN3 Pro 100W,Зарядное устройство Baseus GaN3 Pro 100W (QC4/PD3.0/Type-C - USB - 220V),0,AMD,1-5,,17031
+CS,Аксессуары/Разное,CrownMicro,CM000003325,"Зарядное устройство CrownMicro CMWC-3001 (1xMicro USB, 1xUSB, 1.2A, 100-240V, Black)",400,AMD,5+,,16073
+CS,Аксессуары/Разное,CrownMicro,CM000003616,"Зарядное устройство CrownMicro CMWC-3002 (2xUSB, 1-2.4A, 100-240V, White)",1300,AMD,1-5,,14818
+CS,Аксессуары/Разное,Digma,DGWC-1U-2.1A-WG,"Зарядное устройство Digma DGWC-1U-2.1A-WG 2.1A (USB, White)",1200,AMD,1-5,,13621
+CS,Аксессуары/Разное,Crownmicro,CM000002069,"Зарядное устройство для ноутбука CrownMicro CMLC-5006 (Universal, 65W, USB QC 3.0)",5900,AMD,1-5,,15409
+CS,Аксессуары/Разное,Natec,NZU-2035,"Зарядное устройство для ноутбука Natec GRAYLING (Universal, 90w, USB-C)",20300,AMD,1-5,,15653
+CS,Звуковые_карты,UGO,UKD-1085,Звуковая карта UGO UKD-1085 (USB),1600,AMD,1-5,,14694
+CS,Карт-ридеры/Внешние,Ugreen,30143,"Звуковая карта Ugreen 30143 (2x3.5mm, USB 2.0, 15cm, White)",2500,AMD,1-5,,16951
+CS,Карт-ридеры/Внешние,Ugreen,80864,"Звуковая карта Ugreen 80864 (1x3.5mm, USB 2.0)",3000,AMD,1-5,,16952
+CS,ИБП <1000VA,APC,BV1000I-GR,ИБП UPS 1000VA APC BV1000I-GR EASY UPS AVR,31000,AMD,5+,,15067
+CS,ИБП <1000VA,CrownMicro,CM000001503,ИБП UPS 1000VA CrownMicro CMU-1000X,29600,AMD,1-5,,15063
+CS,ИБП 1000VA - 5000VA,Lightwave,LW-UPS-1050,ИБП UPS 1050VA Lightwave LW UPS 1050,19700,AMD,5+,,16915
+CS,ИБП <1000VA,APC,BX1200MI-GR,ИБП UPS 1200VA APC BX1200MI-GR Back-UPS AVR,80000,AMD,1-5,,15635
+CS,ИБП 1000VA - 5000VA,Crownmicro,CM000001509,ИБП UPS 1200VA CrownMicro CMU-SP1200 COMBO,36100,AMD,1-5,,14077
+CS,ИБП 1000VA - 5000VA,Crownmicro,CM000001874,ИБП UPS 1200VA CrownMicro CMU-SP1200 COMBO USB,37100,AMD,1-5,,15471
+CS,ИБП 1000VA - 5000VA,Crownmicro,CM000001866,ИБП UPS 1200VA CrownMicro CMU-SP1200EURO USB,42100,AMD,1-5,,13982
+CS,ИБП 1000VA - 5000VA,Crownmicro,CM000001869,ИБП UPS 1200VA CrownMicro CMU-SP1200IEC LCD USB,38200,AMD,5+,,14708
+CS,ИБП 1000VA - 5000VA,CrownMicro,CM000001865,ИБП UPS 1200VA CrownMicro CMU-SP1200IEC USB,37400,AMD,1-5,,15373
+CS,ИБП 1000VA - 5000VA,Crownmicro,CM000003131,ИБП UPS 1500VA CrownMicro CMU-SP1500IEC USB,46800,AMD,1-5,,14709
+CS,ИБП 1000VA - 5000VA,Crownmicro,CM000003130,ИБП UPS 2000VA CrownMicro CMU-SP2000EURO USB,48900,AMD,1-5,,12724
+CS,ИБП <1000VA,Powercom,KIN-600AP RM (1U) USB,ИБП UPS 600VAPowercom King Pro RM KIN-600AP,58500,AMD,1-5,,14107
+CS,ИБП <1000VA,APC,BV650I-GR,ИБП UPS 650VA APC BV650I-GR EASY UPS AVR,24200,AMD,1-5,,15001
+CS,ИБП <1000VA,Crownmicro,CM000001507,ИБП UPS 650VA CrownMicro CMU-650XIEC,12900,AMD,1-5,,13200
+CS,ИБП <1000VA,Crownmicro, 6941141602859,ИБП UPS 650VA CrownMicro CMUS-255 EURO SMART,23400,AMD,1-5,,13201
+CS,ИБП <1000VA,CrownMicro,CM000003093,ИБП UPS 650VA CrownMicro CMU-SP650 COMBO,19500,AMD,1-5,,15061
+CS,ИБП <1000VA,CrownMicro,CM000003094,ИБП UPS 650VA CrownMicro CMU-SP650 COMBO USB,20300,AMD,1-5,,15060
+CS,ИБП <1000VA,Crownmicro,CM000001490,ИБП UPS 650VA CrownMicro CMU-SP650EURO,21300,AMD,5+,,13439
+CS,ИБП <1000VA,Crownmicro,CM000001861,ИБП UPS 650VA CrownMicro CMU-SP650EURO USB,20300,AMD,5+,,14425
+CS,ИБП <1000VA,CrownMicro,CM000001489,ИБП UPS 650VA CrownMicro CMU-SP650IEC,14800,AMD,1-5,,15059
+CS,ИБП <1000VA,CrownMicro,CM000001862,ИБП UPS 650VA CrownMicro CMU-SP650IEC USB,21600,AMD,1-5,,16225
+CS,ИБП 1000VA - 5000VA,Lightwave,LW-UPS-750,ИБП UPS 750VA Lightwave LW UPS 750,13500,AMD,5+,,16913
+CS,ИБП <1000VA,APC,BV800I-GR,ИБП UPS 800VA APC BV800I-GR EASY UPS AVR,28500,AMD,1-5,,15066
+CS,ИБП <1000VA,CrownMicro,CM000001494,ИБП UPS 800VA CrownMicro CMU-SP800COMBO,24200,AMD,5+,,14815
+CS,ИБП <1000VA,CrownMicro,CM000001493,ИБП UPS 800VA CrownMicro CMU-SP800EURO LCD,25400,AMD,5+,,13410
+CS,ИБП <1000VA,CrownMicro,6970963382120,ИБП UPS 800VA CrownMicro CMU-SP800EURO LCD USB,25500,AMD,1-5,,12613
+CS,ИБП <1000VA,Crownmicro,CM000001863,ИБП UPS 800VA CrownMicro CMU-SP800EURO USB,25000,AMD,5+,,12273
+CS,ИБП <1000VA,CrownMicro,CM000001868,ИБП UPS 800VA CrownMicro CMU-SP800IEC LCD USB,22200,AMD,5+,,14871
+CS,ИБП <1000VA,Powercom,RPT-800A EURO,ИБП UPS 800VA Powercom Raptor RPT-800A,22000,AMD,1-5,,14304
+CS,ИБП <1000VA,Powercom,RPT-800AP,ИБП UPS 800VA Powercom Raptor RPT-800AP,22000,AMD,1-5,,13958
+CS,ИБП <1000VA,Crownmicro,6941141602866,ИБП UPS 850VA CrownMicro CMUS-275 EURO SMART,27300,AMD,1-5,,13440
+CS,ИБП 1000VA - 5000VA,Lightwave,LW-UPS-850,ИБП UPS 850VA Lightwave LW UPS 850,16400,AMD,5+,,16914
+CS,Аксессуары/Аккумуляторы,UGO,URC-1172,"Игрушка автомобиль UGO SCOUT URC-1172 (1:16, 25KH/H)",10100,AMD,1-5,,14688
+CS,Сеть/Инструменты и принадлежности/Инструменты,GEMBIRD,T-WC-04,Инструмент GEMBIRD T-WC-04,4300,AMD,1-5,,14784
+CS,Сеть/Инструменты и принадлежности/Инструменты,Lanberg,NT-0001,Инструмент Insertion Tool LANBERG NT-0001 FOR LSA CONNECTION,600,AMD,5+,,11651
+CS,Сеть/Инструменты и принадлежности/Инструменты,Lanberg,NT-0101,Инструмент Stripping Tool LANBERG NT-0101 UNIVERSAL STRIPPING TOOL FOR UTP STP TELEFON AND DATA CABLE,600,AMD,5+,,11570
+CS,Сеть/Инструменты и принадлежности/Инструменты,Ugreen,80459,"Инструмент набор отверток Ugreen 80459 (38-in-1, Aluminum Alloy Handle, Magnetic Extension Bar, Screw Bits Dimension)",4200,AMD,1-5,,15924
+CS,Аксессуары/Источники питания,Buro,BP20A10PBK,"Источник питания Buro BP20A (20000mAh, 10W, 2A, 1xUSB-A/1xUSB-C/1xMicro USB, Black)",6400,AMD,1-5,,16429
+CS,Аксессуары/Источники питания,Buro,T4-10000-BK,"Источник питания Buro T4-10000 (10000mAh, 10W, 2A, 2xUSB-A, Black)",4700,AMD,1-5,,16428
+CS,Аксессуары/Источники питания,CrownMicro,1009223,"Источник питания CrownMicro CMPB-6200 (2600mAh, 1A, Blue&Yellow)",1700,AMD,5+,,11292
+CS,Аксессуары/Источники питания,CrownMicro,1009225,"Источник питания CrownMicro CMPB-6200 (2600mAh, 1A, Red&Yellow)",1700,AMD,1-5,,11294
+CS,Аксессуары/Источники питания,Hiper,EP 10000 BLACK,"Источник питания Hiper EP 10000 (10000mAh, 22.5W, 5A, 2xUSB-A/1xUSB-C, Black)",5500,AMD,1-5,,16431
+CS,Аксессуары/Источники питания,Hiper,SM20000 BLACK,"Источник питания Hiper SM20000 (20000mAh, 12W, 2.4A, 2xUSB-A/1xUSB-C, Black)",5900,AMD,1-5,,16430
+CS,Аксессуары/Источники питания,Lightwave,LW-PB-20K-B01,Источник питания Lightwave LW-PB-20K-B01 (20000mAh),7500,AMD,5+,,16923
+CS,Аксессуары/Источники питания,Noname,8000135,"Источник питания Noname 8000135 (5500mAh, Hand Warmer)",7600,AMD,1-5,,13291
+CS,Аксессуары/Источники питания,Noname,8000142,"Источник питания Noname 8000142 (5500mAh, Hand Warmer)",7600,AMD,1-5,,13292
+CS,Кабель шт.,CrownMicro,CM000001792,"Кабель CrownMicro CMPS-01 Power Cord Adapter (IEC to EURO, 16A, 15cm, black)",1200,AMD,5+,,16071
+CS,Кабель шт.,D-Link, DKVM-CU5/B1A,Кабель D-Link DKVM-CU5/B1A (5m),3900,AMD,5+,,12689
+CS,"Кабели и переходники/VGA, DVI, HDMI",Genesis,NKA-1993,"Кабель Genesis NKA-1993 HDMI-HDMI V2.1 8K (PS5/PS4, 3.0M)",3800,AMD,1-5,,15980
+CS,Кабель шт.,Lanberg,CA-C13C-11CC-0018-BK,Кабель LANBERG CA-C13C-11CC-0018-BK POWER CORD CEE 7/7->IEC 320 C13 1.8M VDE BLACK,1400,AMD,5+,,11515
+CS,Кабель шт.,Lanberg,CA-C13C-11CC-0030-BK,Кабель LANBERG CA-C13C-11CC-0030-BK POWER CORD CEE 7/7 / IEC 320 C13 3M VDE BLACK,2300,AMD,5+,,11514
+CS,Кабель шт.,Lanberg,CA-C13C-11CC-0050-BK,Кабель LANBERG CA-C13C-11CC-0050-BK POWER CORD CEE 7/7 / IEC 320 C13 5M VDE BLACK,3400,AMD,5+,,12894
+CS,Кабель шт.,Lanberg,CA-C13C-11CC-0100-BK,Кабель LANBERG CA-C13C-11CC-0100-BK POWER SUPPLY CEE 7/7->IEC 320 C13 10M VDE BLACK,4300,AMD,5+,,11518
+CS,Кабель шт.,LANBERG,CA-C13C-12CC-0018-BK,Кабель LANBERG CA-C13C-12CC-0018-BK POWER CORD CEE 7/7->IEC 320 C13 1.8M ANGLED RIGHT VDE BLACK,1400,AMD,5+,,16511
+CS,Кабель в метрах,LANBERG,CA-C5CA-15CC-0018-BK,Кабель LANBERG CA-C5CA-15CC-0018-BK POWER CORD LAPTOP (MIKI) IEC 320 C5 1.8M VDE BLACK,1400,AMD,5+,,16969
+CS,Кабель шт.,Lanberg,CA-C7CA-10CC-0018-BK,Кабель LANBERG CA-C7CA-10CC-0018-BK POWER SUPPLY EURO (RADIO) CEE 7/16->IEC 320 C7 1.8M BLACK,800,AMD,5+,,11519
+CS,Кабель в метрах,LANBERG,CA-CMHD-10CU-0018-BK,Кабель LANBERG CA-CMHD-10CU-0018-BK USB-C(M)->HDMI(M) CABLE 1.8M 4K 60HZ BLACK,4800,AMD,1-5,,16968
+CS,Кабель шт.,LANBERG,CA-CMHD-10CU-0030-BK,Кабель LANBERG CA-CMHD-10CU-0030-BK USB-C(M)->HDMI(M) CABLE 3M 4K 60HZ BLACK,5600,AMD,5+,,16001
+CS,"Кабели и переходники/VGA, DVI, HDMI",Մալուխ LANBERG CA-DP,CA-DPDP-10CC-0018-BK,Кабель LANBERG CA-DPDP-10CC-0018-BK DISPLAYPORT M/M 1.8M 4K BLACK,2100,AMD,5+,,11502
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DPDP-10CC-0030-BK,Кабель LANBERG CA-DPDP-10CC-0030-BK DISPLAYPORT M/M 3M 4K BLACK,2300,AMD,5+,,11503
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DPDP-20CU-0018-BK,Кабель LANBERG CA-DPDP-20CU-0018-BK DISPLAYPORT M/M 1.8M 8K 60HZ BLACK,3500,AMD,5+,,14668
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DPHD-11CC-0018-BK,Кабель LANBERG CA-DPHD-11CC-0018-BK DISPLAYPORT(M)->HDMI 1.8M BLACK,2300,AMD,5+,,15354
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DPHD-11CC-0030-BK,Кабель LANBERG CA-DPHD-11CC-0030-BK DISPLAYPORT(M)->HDMI 3M BLACK,2700,AMD,5+,,15353
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DPHD-11CC-0050-BK,Кабель LANBERG CA-DPHD-11CC-0050-BK DISPLAYPORT(M)->HDMI 5M BLACK,3800,AMD,1-5,,15355
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DVID-10CC-0018-BK,Кабель LANBERG CA-DVID-10CC-0018-BK DVI-D(M)(24+1)->DVI-D(M)(24+1) DUAL LINK 1.8M BLACK,2300,AMD,5+,,11793
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-DVID-10CC-0030-BK,Кабель LANBERG CA-DVID-10CC-0030-BK DVI-D(M)(24+1)->DVI-D(M)(24+1) DUAL LINK 3M BLACK,2100,AMD,5+,,11508
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg, CA-DVIS-10CC-0018-BK,Кабель LANBERG CA-DVIS-10CC-0018-BK DVI-D(M)(18+1)->DVI-D(M)(18+1) SINGLE LINK 1.8M BLACK,1300,AMD,1-5,,11507
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDDV-10CC-0005-BK,"Кабель LANBERG CA-HDDV-10CC-0005-BK HDMI(M)-DVI-D(M) (18+1) 0.5M, SINGLE LINK, BLACK",1200,AMD,5+,,12651
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDDV-20CU-0018-BK,"Кабель LANBERG CA-HDDV-20CU-0018-BK HDMI(M)-DVI-D(M) (24+1) 1.8M, DUAL LINK, 4K, Gold Plated, BLACK",1800,AMD,5+,,13755
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-10CC-0150-BK,Кабель LANBERG CA-HDMI-10CC-0150-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 15M,7400,AMD,1-5,,11795
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-10CC-0200-BK,Кабель LANBERG CA-HDMI-10CC-0200-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 20M,11100,AMD,5+,,11796
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-11CC-0005-BK,Кабель LANBERG CA-HDMI-11CC-0005-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 50CM,700,AMD,5+,,12462
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-11CC-0018-BK,Кабель LANBERG CA-HDMI-11CC-0018-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 1.8M,1000,AMD,5+,,11995
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,LANBERG CA-HDMI-11CC-0030-BK,Кабель LANBERG CA-HDMI-11CC-0030-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 3.0M,1200,AMD,5+,,12101
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-11CC-0050-BK,Кабель LANBERG CA-HDMI-11CC-0050-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 5M,1600,AMD,5+,,12215
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-13CC-0030-BK,Кабель LANBERG CA-HDMI-13CC-0030-BK HDMI-HDMI V1.4 HIGH SPEED ETHERNET 3.0M BLAСK,900,AMD,1-5,,14661
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-20CU-0018-BK,Кабель LANBERG CA-HDMI-20CU-0018-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 1.8M,1300,AMD,5+,,11797
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,B07N2XZ2NC,"Кабель LANBERG CA-HDMI-20CU-0018-BL HDMI-HDMI V2.0 HIGH SPEED ETHERNET 1.8M, CU, Premium, Black",2500,AMD,5+,,12649
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-20CU-0075-BK,"Кабель LANBERG CA-HDMI-20CU-0075-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 7.5M, 4K",3900,AMD,5+,,14667
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,B07QGZTCJY,"Кабель LANBERG CA-HDMI-20CU-0100-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 10M, 4K",9200,AMD,1-5,,13768
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-20CU-0150-BK,"Кабель LANBERG CA-HDMI-20CU-0150-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 15M, 4K",14800,AMD,1-5,,13767
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-20CU-0200-BK,"Кабель LANBERG CA-HDMI-20CU-0200-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 20M, 4K",19900,AMD,1-5,,13766
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-21CU-0018-BK,"Кабель LANBERG CA-HDMI-21CU-0018-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 1.8M, Flat, Black",1300,AMD,5+,,12650
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,05901969416640,"Кабель LANBERG CA-HDMI-21CU-0050-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 5M, Flat, Black",2500,AMD,5+,,12647
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-HDMI-22CU-0018-BK,"Кабель LANBERG CA-HDMI-22CU-0018-BK HDMI-HDMI V2.0 HIGH SPEED ETHERNET 1.8M, 4K SLIM BLACK",2700,AMD,5+,,14662
+CS,"Кабели и переходники/VGA, DVI, HDMI",LANBERG,CA-HDMI-30CU-0005-BK,Кабель LANBERG CA-HDMI-30CU-0005-BK HDMI-HDMI V2.1 8K 60Hz BLACK 0.5M,2800,AMD,1-5,,15977
+CS,"Кабели и переходники/VGA, DVI, HDMI",LANBERG,CA-HDMI-30CU-0010-BK,Кабель LANBERG CA-HDMI-30CU-0010-BK HDMI-HDMI V2.1 8K 60Hz BLACK 1M,3000,AMD,5+,,15979
+CS,"Кабели и переходники/VGA, DVI, HDMI",LANBERG,CA-HDMI-30CU-0018-BK,Кабель LANBERG CA-HDMI-30CU-0018-BK HDMI-HDMI V2.1 8K 60Hz BLACK 1.8M,3400,AMD,5+,,15978
+CS,Кабель шт.,Lanberg,CA-HDSA-10CU-0015,Кабель LANBERG CA-HDSA-10CU-0015 POWER SUPPLY MOLEX(F)->SATA(M) 15CM,400,AMD,5+,,11520
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-MJFJ-10CC-0050-BK,Кабель LANBERG CA-MJFJ-10CC-0050-BK STEREO MINIJACK(M)->MINIJACK(F) 5M,500,AMD,5+,,11626
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-MJMJ-10CC-0012-BK,"Кабель LANBERG CA-MJMJ-10CC-0012-BK MINIJACK 3.5MM M/M 3 PIN BLACK, 1.2M",300,AMD,5+,,11627
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-MJRC-10CC-0015-BK,Кабель LANBERG CA-MJRC-10CC-0015-BK MINIJACK 3.5MM(M) 3 PIN->2X RCA (CHINCH)(M) 1.5M,500,AMD,5+,,11631
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,CA-MJRC-10CC-0050-BK,Кабель LANBERG CA-MJRC-10CC-0050-BK MINIJACK 3.5MM(M) 3 PIN->2X RCA (CHINCH)(M) 5M,500,AMD,5+,,11629
+CS,Кабель шт.,Lanberg,CA-SASA-10CU-0050-R,Кабель LANBERG CA-SASA-10CU-0050-R SATA III (6GB/S) 50CM,300,AMD,5+,,11526
+CS,Кабель шт.,Lanberg,CA-SASA-12CU-0050-R,Кабель LANBERG CA-SASA-12CU-0050-R SATA III (6GB/S) 50CM,300,AMD,5+,,11525
+CS,Кабель шт.,Lanberg,CA-SASA-14CU-0050-R,Кабель LANBERG CA-SASA-14CU-0050-R SATA III (6GB/S) 50CM METAL CLIPS,400,AMD,5+,,11527
+CS,Кабель шт.,Lanberg,CA-US3M-10CC-0030-B,Кабель LANBERG CA-US3M-10CC-0030-B USB 3.0 A-PLUG MICRO 5PM BLUE 3.0M,1300,AMD,5+,,11539
+CS,Кабель шт.,Lanberg,CA-USBA-11CC-0018-BK,Кабель LANBERG CA-USBA-11CC-0018-BK USB 2.0 AM-BM FERRITE BLACK 1.8M,500,AMD,5+,,11532
+CS,Кабель шт.,Lanberg,CA-USBA-11CC-0050-BK,Кабель LANBERG CA-USBA-11CC-0050-BK USB 2.0 AM-BM FERRYT BLACK 5M,700,AMD,5+,,11534
+CS,Кабель шт.,Lanberg,B079ZMN5K6,Кабель LANBERG CA-USBA-12CC-0018-TR USB 2.0 AM-BM FERRITE BLACK 1.8M,600,AMD,5+,,12899
+CS,Кабель шт.,Lanberg,CA-USBA-12CC-0050-TR,Кабель LANBERG CA-USBA-12CC-0050-TR USB 2.0 AM-BM FERRITE BLACK 5M,700,AMD,5+,,12898
+CS,Кабель шт.,Lanberg,CA-USBM-10CC-0010-W,Кабель LANBERG CA-USBM-10CC-0010-W USB 2.0 MICRO AM-MBM5P WHITE 1M,300,AMD,5+,,11537
+CS,Кабель шт.,Lanberg,CA-USBM-10CC-0018-BK,Кабель LANBERG CA-USBM-10CC-0018-BK USB 2.0 MICRO AM-MBM5P BLACK 1.8M,600,AMD,5+,,11535
+CS,Кабель шт.,Lanberg,CA-USBM-10CC-0018-W,Кабель LANBERG CA-USBM-10CC-0018-W USB 2.0 MICRO AM-MBM5P WHITE 1.8M,400,AMD,5+,,11536
+CS,Кабель шт.,Lanberg,CA-USBO-10CC-0018-BK,Кабель LANBERG CA-USBO-10CC-0018-BK USB 2.0 TYPE-C(M)-AM BLACK 1.8M,900,AMD,1-5,,11538
+CS,Кабель шт.,Lanberg,CA-VGAC-10CC-0050-B,Кабель LANBERG CA-VGAC-10CC-0050-B VGA HD15M/HD15M DUAL-SHIELDED 2*FERRITE BLACK 5M,2000,AMD,5+,,11546
+CS,Кабель шт.,Lanberg,CA-VGAC-10CC-0100-B,Кабель LANBERG CA-VGAC-10CC-0100-B VGA HD15M/HD15M DUAL-SHIELDED 2*FERRITE BLACK 10M,3300,AMD,5+,,11543
+CS,Кабель шт.,Lanberg,CA-VGAC-10CC-0150-B,Кабель LANBERG CA-VGAC-10CC-0150-B VGA HD15M/HD15M DUAL-SHIELDED 2*FERRITE BLACK 15M,4300,AMD,1-5,,11544
+CS,"Сеть/Кабели и коннекторы/FTP, STP",Lanberg,FO-LULU-SS11-0100-YE,Кабель LANBERG FIBER FO-LULU-SS11-0100-YE OPTIC PATCHCORD SM LC/UPC-LC/UPC SIMPLEX 10M LSZH G657A1 3.0MM YELLOW,1400,AMD,1-5,,14839
+CS,"Сеть/Кабели и коннекторы/FTP, STP",Lanberg,FO-LULU-MD31-0010-TQ,Кабель LANBERG FO-LULU-MD31-0010-TQ FIBER OPTIC PATCHCORD MM LC/UPC-LC/UPC DUPLEX 1M LSZH OM3 50/125 3.0MM AQUA,1800,AMD,1-5,,14836
+CS,"Сеть/Кабели и коннекторы/FTP, STP",Lanberg,FO-LULU-MD31-0020-TQ,Кабель LANBERG FO-LULU-MD31-0020-TQ FIBER OPTIC PATCHCORD MM LC/UPC-LC/UPC DUPLEX 2M LSZH OM3 50/125 3.0MM AQUA,1800,AMD,1-5,,14837
+CS,"Сеть/Кабели и коннекторы/FTP, STP",Lanberg,FO-LULU-MD41-0050-VT,Кабель LANBERG FO-LULU-MD41-0050-VT FIBER OPTIC PATCHCORD MM LC/UPC-LC/UPC DUPLEX 5M LSZH OM4 50/125 3.0MM VIOLET,3300,AMD,1-5,,14838
+CS,"Сеть/Кабели и коннекторы/FTP, STP",Lanberg,FO-LULU-MD41-0100-VT,Кабель LANBERG FO-LULU-MD41-0100-VT FIBER OPTIC PATCHCORD MM LC/UPC-LC/UPC DUPLEX 10M LSZH OM4 50/125 3.0MM VIOLET,5000,AMD,1-5,,14835
+CS,"Сеть/Кабели и коннекторы/FTP, STP",Lanberg,FO-LULU-SS11-0050-YE,Кабель LANBERG FO-LULU-SS11-0050-YE FIBER OPTIC PATCHCORD SM LC/UPC-LC/UPC SIMPLEX 5M LSZH G657A1 3.0MM YELLOW,1300,AMD,1-5,,14840
+CS,Кабель в метрах,LANBERG, ‎LCF5-10CC-0305-S,"Кабель LANBERG LCF5-10CC-0305-S FTP SOLID GRAY CABLE, CCA, Cat.5, 100MHz",100,AMD,5+,,12937
+CS,Кабель в метрах,Lanberg,LCF5-10CC-0305-S,"Кабель LANBERG LCF5-10CC-0305-S FTP SOLID GRAY CABLE, CCA, Cat.5, 100MHz, 305M",23000,AMD,5+,,11573
+CS,Кабель в метрах,Lanberg,LCU5-10CC-0305-B,"Кабель LANBERG LCU5-10CC-0305-B UTP SOLID BLUE CABLE, CCA, CAT. 5E 305M",20300,AMD,1-5,,14699
+CS,Кабель в метрах,Lanberg,LCU5-10CC-0305-S,"Кабель LANBERG LCU5-10CC-0305-S UTP SOLID GRAY CABLE, CCA, CAT. 5E 305M",20300,AMD,5+,,11557
+CS,Кабель в метрах,LANBERG,LCU5-10CU-0305-S UTP,"Кабель LANBERG LCU5-10CU-0305-S UTP SOLID GRAY CABLE, CU, CAT. 5E",100,AMD,5+,,12938
+CS,Кабель в метрах,LANBERG,LCU6-10CU-0305-S,"Кабель LANBERG LCU6-10CU-0305-S UTP SOLID GRAY CABLE, CU, CAT. 6",100,AMD,5+,,12939
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,NSK-0415,Кабель LANBERG NSK-0415 DISPLAYPORT(M)->HDMI(F) (24+5) DUAL LINK 10cm BLACK,1900,AMD,5+,,12653
+CS,"Кабели и переходники/VGA, DVI, HDMI",Lanberg,OEM-0011,Кабель LANBERG OEM-0011 HDMI-HDMI V1.4 HIGH SPEED ETHERNET 4.5M BLAСK,1000,AMD,5+,,14660
+CS,Кабель шт.,Lanberg,PCU5-10CC-0025-BK,Кабель LANBERG PCU5-10CC-0025-BK UTP PATCHCORD CAT5E 0.25M BLACK,200,AMD,5+,,11561
+CS,Кабель шт.,Lanberg,PCU5-10CC-0100-BK,Кабель LANBERG PCU5-10CC-0100-BK UTP PATCHCORD CAT5E 1.0M BLACK,400,AMD,5+,,12657
+CS,Кабель шт.,LANBERG,PCU5-10CC-0100-Y,Кабель LANBERG PCU5-10CC-0100-Y UTP PATCHCORD CAT.5E 1.0M YELLOW,300,AMD,5+,,15015
+CS,Кабель шт.,Lanberg,PCU5-10CC-0200-BK,Кабель LANBERG PCU5-10CC-0200-BK UTP PATCHCORD CAT5E 2.0M BLACK,500,AMD,5+,,12901
+CS,Кабель шт.,LANBERG,PCU6-10CC-0300-G,Кабель LANBERG PCU5-10CC-0300-G UTP PATCHCORD CAT.5E 3.0M GREEN,600,AMD,5+,,15014
+CS,Кабель шт.,Lanberg,PCU5-10CC-0300-S,Кабель LANBERG PCU5-10CC-0300-S UTP PATCHCORD CAT5E 3.0M SILVER,600,AMD,5+,,15162
+CS,Кабель шт.,Lanberg,5901969406740,Кабель LANBERG PCU5-10CC-0500-BK UTP PATCHCORD CAT5E 5.0M BLACK,700,AMD,1-5,,14069
+CS,Кабель шт.,Lanberg,PCU5-10CC-1000-BK,Кабель LANBERG PCU5-10CC-1000-BK UTP PATCHCORD CAT5E 10M BLACK,1200,AMD,1-5,,11565
+CS,Кабель шт.,Lanberg,PCU5-10CC-1000-G,Кабель LANBERG PCU5-10CC-1000-G UTP PATCHCORD CAT5E 10M GREEN,1200,AMD,5+,,14649
+CS,Кабель шт.,Lanberg,PCU5-10CC-2000-BK,Кабель LANBERG PCU5-10CC-2000-BK UTP PATCHCORD CAT5E 20M BLACK,2000,AMD,1-5,,12897
+CS,Кабель шт.,Lanberg,PCU5-20CC-0050-BK,Кабель LANBERG PCU5-20CC-0050-BK UTP PATCHCORD CAT5E 0.5M BLACK,200,AMD,5+,,14505
+CS,Кабель шт.,Lanberg,PCU6-10CC-0050-BK,Кабель LANBERG PCU6-10CC-0050-BK UTP PATCHCORD CAT.6 0.5M Black,400,AMD,5+,,14826
+CS,Кабель в метрах,Lightwave,LW-CAT6-UTP,Кабель Lightwave LW CAT6 UTP 305m,15000,AMD,5+,,16928
+CS,Кабель шт.,Natec,NKA-1202,"Кабель Natec Prati NKA-1202 3-in-1 (Micro USB(M)+Lightning(M)+USB-C(M), 1m)",2700,AMD,5+,,15999
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,10129,"Кабель Ugreen 10129 HDMI-HDMI V1.4 (4K60Hz, 2m, Black/Yellow)",1500,AMD,5+,,16089
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,10135,"Кабель Ugreen 10135 HDMI-DVI (2K, 2m, Black)",2700,AMD,1-5,,16589
+CS,Кабели и переходники/USB,Ugreen,10306,"Кабель Ugreen 10306 (USB-C(M) to USB-C(M), 2m, Black)",1900,AMD,1-5,,17022
+CS,Кабели и переходники/USB,Ugreen,10309,"Кабель Ugreen 10309 (USB 2.0(M) to USB 2.0(M), 1m, Black)",900,AMD,5+,,15918
+CS,USB-Hubs,Ugreen,10355,"Кабель Ugreen 10355 (USB 2.0 A(M) to Mini USB(M), 1m, Black)",800,AMD,5+,,16718
+CS,Кабели и переходники/USB,Ugreen,10840,"Кабель Ugreen 10840 (USB 3.0 A(M) to Micro USB 3.0(F), 0.5m, 5GB/s, Black)",1200,AMD,1-5,,16045
+CS,USB-Hubs,Ugreen,11646,"Кабель Ugreen 11646 (VGA(M) to VGA(M), 2m, Black)",2100,AMD,1-5,,16717
+CS,Карт-ридеры/Внешние,Ugreen,15384,"Кабель Ugreen 15384 DP-DP V2.0 (16K@30Hz, 8K@240Hz, 2m, Black)",5100,AMD,5+,,16946
+CS,Кабели и переходники/USB,Ugreen,20816,Кабель Ugreen 20816 3.5mm Male to 2 Female Audio Cable 20cm,1500,AMD,1-5,,16414
+CS,Кабели и переходники/USB,Ugreen,20856,"Кабель Ugreen 20856 (USB-C(M) to USB 3.0(M), 1m, Space Grey)",1700,AMD,1-5,,16643
+CS,USB-Hubs,Ugreen,50363,"Кабель Ugreen 50363 (3.5mm(M) to 3.5mm(M), 2m, Black)",1400,AMD,1-5,,16723
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,50570,"Кабель Ugreen 50570 (USB-C (M) to HDMI (M), Thunderbolt, 1.5m, Grey/Black)",7100,AMD,1-5,,16092
+CS,Кабели и переходники/USB,Ugreen,50997,"Кабель Ugreen 50997 (USB-C(M) to USB-C(M), 1m, 60W, Black)",1700,AMD,1-5,,15928
+CS,Кабели и переходники/USB,Ugreen,60136,"Кабель Ugreen 60136 (USB-A(M) to Micro USB(M), 1m, 18W, Black)",1100,AMD,5+,,16340
+CS,Кабели и переходники/USB,Ugreen,60137,"Кабель Ugreen 60137 (USB-A(M) to Micro USB(M), 1.5m, 18W, Black)",1200,AMD,5+,,16731
+CS,Кабели и переходники/USB,Ugreen,60138,"Кабель Ugreen 60138 (USB-A(M) to Micro USB(M), 2m, 18W, Black)",1600,AMD,1-5,,16341
+CS,Кабели и переходники/USB,Ugreen,60146,"Кабель Ugreen 60146 (USB-A(M) to Micro USB(M), 1m, Aluminium, 18W, Black)",1700,AMD,1-5,,16342
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,80390,"Кабель Ugreen 80390 DP-DP V1.4 (FHD240Hz, 2K165Hz, 4K144Hz, 8K60Hz, 1m, Black)",2700,AMD,1-5,,17021
+CS,"Кабели и переходники/VGA, DVI, HDMI",Ugreen,80392,"Кабель Ugreen 80392 DP-DP V1.4 (FHD240Hz, 2K165Hz, 4K144Hz, 8K60Hz, 2m, Black)",3000,AMD,1-5,,16411
+CS,Кабель в метрах,Ugreen,80394,"Кабель Ugreen 80394 DP-DP V1.4 (FHD240Hz, 2K165Hz, 4K144Hz, 8K60Hz, 5m, Black)",4200,AMD,1-5,,16803
+CS,Кабель шт.,Cablexpert,PC-186-1M,"Кабель питания Cablexpert PC-186-1M (IEC C13 - Schuko, 6A, 1m, Black)",0,AMD,5+,,17039
+CS,Кабель шт.,Gembird,PC-184/2-1.8m,"Кабель питания Gembird PC-184/2-1.8m (Radio, Schuko, 1.8m, Black)",800,AMD,5+,,16942
+CS,Кабель шт.,Gembird,PC-184/2-1m,"Кабель питания Gembird PC-184/2-1m (Radio, Schuko, 1m, Black)",0,AMD,5+,,17029
+CS,Кабель шт.,Noname,0467369851245,"Кабель питания для ноутбука (Power Cord for Laptop, Schuko-C5, 1.8m, Black)",1100,AMD,5+,,15766
+CS,Сетевое_оборудование,Lanberg,AK-1101-B 19,"Кабельный ввод LANBERG AK-1101-B 19"" BRUSH PANEL 1U BLACK",2000,AMD,5+,,11648
+CS,Сетевое_оборудование,Lanberg,"AK-1102-B 19""","Кабельный ввод LANBERG AK-1102-B 19"" CABLE ENTRY BRUSH PANEL BLACK",1200,AMD,5+,,11641
+CS,Сетевое_оборудование,Lanberg,AK-1203-B,"Кабельный ввод LANBERG AK-1203-B 19"" CABLE MANAGEMENT BRUSH PANEL 5 RINGS TYPE B 1U BLACK",2600,AMD,5+,,11647
+CS,Сетевое_оборудование,Lanberg,AK-1203-S,"Кабельный ввод LANBERG AK-1203-S 19"" CABLE MANAGEMENT BRUSH PANEL 5 RINGS TYPE B 1U GREY",2600,AMD,1-5,,13455
+CS,Сетевое_оборудование,Lanberg,"AK-1204-B 19""","Кабельный ввод LANBERG AK-1204-B 19"" CABLE MANAGEMENT BRUSH PANEL 5 RINGS TYPE B 2U BLACK",2700,AMD,1-5,,11646
+CS,Сетевое_оборудование,,AK-1204-S,"Кабельный ввод LANBERG AK-1204-S 19"" CABLE MANAGEMENT BRUSH PANEL 10 RINGS TYPE B 2U GREY",4300,AMD,5+,,14648
+CS,Сетевое_оборудование,Lanberg,"AK-1401-B 19""","Кабельный ввод LANBERG AK-1401-B 19"" BLANKING PANEL 1U BLACK",600,AMD,5+,,11650
+CS,Сетевое_оборудование,Lanberg,"AK-1402-B 19""","Кабельный ввод LANBERG AK-1402-B 19"" BLANKING PANEL 2U BLACK",1000,AMD,5+,,11649
+CS,Кабели и переходники/USB,Ugreen,50320,Кабельный органайзер Ugreen 50320 (Black),1100,AMD,5+,,16415
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PEF256GEP31MCX,Карта памяти Micro SD Card PATRIOT 256GB PEF256GEP31MCX EP SDXC V30 (Class 10),7800,AMD,1-5,,13143
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PSF256GLX11MCX,Карта памяти Micro SD Card PATRIOT 256GB PSF256GLX11MCX (Class 10),11900,AMD,1-5,,12234
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PSF32GMCSDHC10,Карта памяти Micro SD Card PATRIOT 32GB PSF32GMCSDHC10 (Class 10),1500,AMD,1-5,,13420
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PSF32GMDC10,Карта памяти Micro SD Card PATRIOT 32GB PSF32GMDC10 LX Series UHS-I (Class 10),1500,AMD,5+,,13475
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",PATRIOT,PEF512GEP31MCX,Карта памяти Micro SD Card PATRIOT 512GB PEF512GEP31MCX EP SDXC V30 (Class 10),13500,AMD,5+,,16226
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",,PEF64GEP31MCX,Карта памяти Micro SD Card PATRIOT 64GB PEF64GEP31MCX EP SDXC V30 (Class 10),1600,AMD,5+,,13141
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PIF64GSHC10,Карта памяти Micro SD Card PATRIOT 64GB PIF64GSXC10 INSTA UHS-I (Class 10),2800,AMD,1-5,,15667
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PSF64GLX1MCX,Карта памяти Micro SD Card PATRIOT 64GB PSF64GLX1MCX (Class 10),2100,AMD,1-5,,12232
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PSF64GMDC10,Карта памяти Micro SD Card PATRIOT 64GB PSF64GMDC10 LX Series UHS-I (Class 10),1700,AMD,5+,,13540
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Samsung,MB-MC128KA/EU,Карта памяти Micro SD Samsung EVO Plus 128GB MB-MC128KA/EU (Class 10),6400,AMD,1-5,,15722
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Samsung,MB-MC256SA/EU,"Карта памяти Micro SD Samsung EVO Plus 256GB MB-MC256SA/EU (w/Adapter, Class 10)",12400,AMD,1-5,,16472
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Samsung,MB-MC64KA/EU,Карта памяти Micro SD Samsung EVO Plus 64GB MB-MC64KA/EU (Class 10),4000,AMD,1-5,,15723
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Samsung,MB-MC64SA/EU,"Карта памяти Micro SD Samsung EVO Plus 64GB MB-MC64SA/EU (w/Adapter, Class 10)",5500,AMD,5+,,16471
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Kingston,SDCS2/128GB,"Карта памяти SD Card Kingston 128GB Canvas Select Plus (SDXC, UHS-I, Class 10 + Adapter)",4400,AMD,5+,,16400
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Kingston,SDS2/256GB,"Карта памяти SD Card Kingston 256GB Canvas Select Plus (SDXC, UHS-I, Class 10)",10100,AMD,1-5,,15823
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Kingston,SDS2/512GB,"Карта памяти SD Card Kingston 512GB Canvas Select Plus (SDXC, UHS-I, Class 10)",19500,AMD,1-5,,15824
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PIF16GSHC10,Карта памяти SD Card PATRIOT 16GB PIF16GSHC10 INSTA UHS-I (Class 10),1300,AMD,1-5,,15665
+CS,Карт-ридеры/Внешние,Acorp,CRIP200-B,"Карт-ридер Acorp CRIP200-B (USB 2.0, Internal, Black)",3100,AMD,1-5,,13091
+CS,Карт-ридеры/Внешние,Rocketek,ROCKETEK-ID,"Карт-ридер Rocketek ID Card Reader (USB 2.0, Black)",4700,AMD,1-5,,16141
+CS,Карт-ридеры/Внешние,Ugreen,30333,"Карт-ридер Ugreen 30333 (USB 3.0, TF/SD/MS/CF 3.0, 50cm, Black)",4200,AMD,5+,,15921
+CS,Карт-ридеры/Внешние,Ugreen,35622,"Карт-ридер Ugreen 35622 (USB-C, TF/SD/MS, Black)",2700,AMD,1-5,,16950
+CS,USB-Hubs,Ugreen,45167,"Карт-ридер Ugreen 45167 (2xUSB 3.0, TF/SD/MS, Black)",3700,AMD,1-5,,16719
+CS,Карт-ридеры/Внешние,Ugreen,Ugreen,"Карт-ридер Ugreen 50541 (USB 3.0, TF/SD/MS/CF)",3600,AMD,1-5,,16949
+CS,Карт-ридеры/Внешние,Ugreen,60722,"Карт-ридер Ugreen 60722 (USB 3.0, TF/SD)",2100,AMD,5+,,16948
+CS,Карт-ридеры/Внешние,Ugreen,80798,"Карт-ридер Ugreen 80798 (USB-C, TF/SD/USB 2.0, Black)",5100,AMD,1-5,,15922
+CS,Картриджи для лазерных принтеров,CrownMicro,CROWN-CM-CE285A,Картридж CrownMicro CM-CE285A/125/325/725/925,3900,AMD,1-5,,11192
+CS,Картриджи для струйных принтеров,HP,3YM63AE,"Картридж HP 305XL 3YM63AE (Color, 200pages, 5ml, For DeskJet 2320/2710/2720)",8000,AMD,1-5,,13830
+CS,Клавиатуры/Проводные,A4,NEXMAIN.1105454078,"Клавиатура A4 Bloody Q100 (Multimedia, Gaming, Black, USB)",4300,AMD,1-5,,12302
+CS,Клавиатуры/Проводные,A4Tech,B120N,"Клавиатура A4Tech Bloody B120N (Multimedia, Gaming, Black, USB)",11200,AMD,1-5,,16040
+CS,Клавиатуры/Проводные,A4Tech,B150N,"Клавиатура A4Tech Bloody B150N (Gaming, Backlight, Black, USB)",12400,AMD,1-5,,16041
+CS,Клавиатуры/Проводные,A4Tech,Bloody B314,"Клавиатура A4Tech Bloody B314 (Multimedia, Gaming, Black, USB)",16300,AMD,1-5,,16035
+CS,Клавиатуры/Проводные,CrownMicro,CM000003331,"Клавиатура CrownMicro CMGK-404, RGB, Gaming (USB)",3900,AMD,1-5,,16593
+CS,Клавиатуры/Проводные,Crownmicro,CM000003332,"Клавиатура CrownMicro CMGK-900, Gaming (USB)",9800,AMD,1-5,,14323
+CS,Клавиатуры/Проводные,Crownmicro,CM000003334,"Клавиатура CrownMicro CMGK-902, Gaming (USB)",15600,AMD,1-5,,14324
+CS,Клавиатуры/Проводные,CrownMicro,CM000003428,Клавиатура CrownMicro CMK-157T (USB),2100,AMD,5+,,15374
+CS,Клавиатуры/Проводные,CrownMicro,CM000001744,Клавиатура CrownMicro CMK-F02B (USB),1600,AMD,1-5,,11691
+CS,Клавиатуры/Проводные,Fury,NFU-1697,"Клавиатура Fury NFU-1697 SkyRaider, Backlight, Gaming (USB, US Layout)",6500,AMD,5+,,16520
+CS,Клавиатуры/Проводные,Genesis,NKG-0939,"Клавиатура Genesis NKG-0939 RHOD 110, Backlight, Gaming (USB, US LAYOUT)",4600,AMD,5+,,16953
+CS,Клавиатуры/Проводные,Genesis,NKG-1419,"Клавиатура Genesis NKG-1419 LITH 400 RGB X-SCISSOR SLIM, Backlight, Gaming (USB)",19700,AMD,1-5,,14377
+CS,Клавиатуры/Проводные,Genesis,NKG-1528,"Клавиатура Genesis NKG-1528 RHOD 300 RGB, Backlight, Gaming (USB, US LAYOUT)",7900,AMD,5+,,16954
+CS,Клавиатуры/Проводные,Genesis,NKG-1727,"Клавиатура Genesis NKG-1727 RHOD 350 RGB, Backlight, Gaming (USB, US Layout)",8500,AMD,5+,,16521
+CS,Клавиатуры/Проводные,Genesis,NKG-1824,"Клавиатура Genesis NKG-1824 RHOD 350 RGB, Backlight, Gaming (USB)",7700,AMD,1-5,,14071
+CS,Клавиатуры/Проводные,Genesis,NKG-1877,"Клавиатура Genesis NKG-1877 THOR 303 RGB, Backlight, Mechanical, Gaming (USB, US Layout)",20500,AMD,5+,,16523
+CS,Клавиатуры/Проводные,Genesis,NKG-2071,"Клавиатура Genesis NKG-2071 THOR 404 TKL RGB, Backlight, Mechanical, Gaming (USB, US Layout)",27900,AMD,5+,,16524
+CS,Клавиатуры/Проводные,Genesis,NKG-2081,"Клавиатура Genesis NKG-2081 THOR 230 TKL RGB, Backlight, Mechanical, Gaming (USB, US Layout)",16000,AMD,1-5,,16522
+CS,Клавиатуры/Проводные,Genius,31310017402,"Клавиатура Genius SlimStar 126 (USB, Black)",3500,AMD,5+,,13537
+CS,Клавиатуры/Проводные,Genius,SLIMSTAR 126 WHITE,"Клавиатура Genius SlimStar 126 (USB, White)",3600,AMD,1-5,,17006
+CS,Наушники и микрофоны/Микрофоны,Logitech,920-010446,"Клавиатура Logitech G413 TKL SE, Gaming, Mechanical (USB, Black)",26300,AMD,1-5,,16537
+CS,Наушники и микрофоны/Микрофоны,Logitech,920-012872,"Клавиатура Logitech G515 TKL, Gaming, Mechanical (USB, Black)",40600,AMD,1-5,,16538
+CS,Клавиатуры/Проводные,Logitech,920-002508,"Клавиатура Logitech K120, (USB, Black)",3900,AMD,5+,,11873
+CS,Клавиатуры/Проводные,Logitech,920-005215,"Клавиатура Logitech K280E, (USB, Black)",9500,AMD,1-5,,11884
+CS,Клавиатуры/Проводные,MSI,S11-04RU230-CLA,"Клавиатура MSI VIGOR GK20 (Gaming, Black, USB)",13300,AMD,1-5,,13598
+CS,Клавиатуры/Проводные,Oklick,1875227,"Клавиатура Oklick 305M (White, Multimedia, USB)",2700,AMD,5+,,15773
+CS,Клавиатуры/Проводные,Oklick,1196547,"Клавиатура Oklick 505M (White, Slim, USB)",3000,AMD,5+,,15772
+CS,Клавиатуры/Проводные,Oklick,1061618,"Клавиатура Oklick 550ML (White, Slim, Multimedia LED, USB)",4500,AMD,1-5,,15771
+CS,Клавиатуры/Проводные,Razer,RZ03-04470800-R3R1,"Клавиатура Razer Ornata V3 X (Gaming, Black, USB)",24100,AMD,1-5,,16281
+CS,Клавиатуры/Проводные,SVEN,SV-017675,"Клавиатура SVEN KB-G8800 (Gaming, RGB)",7700,AMD,1-5,,16771
+CS,Клавиатуры/Проводные,SVEN,SV-018245,"Клавиатура SVEN KB-G9300 (Gaming, RGB, 20xFn keys)",9100,AMD,5+,,16772
+CS,Клавиатуры/Проводные,SVEN,SV-019594,"Клавиатура SVEN KB-G9400 (Gaming, RGB)",6900,AMD,5+,,16773
+CS,Клавиатуры/Проводные,SVEN,SV-018351,"Клавиатура SVEN KB-G9500 Gaming (Mechanical, Blue switches, USB, Black)",13100,AMD,1-5,,16774
+CS,Клавиатуры/Проводные,SVEN,SV-015831,"Клавиатура SVEN KB-G9700 Gaming (Mechanical, Red switches, USB, Black)",17400,AMD,1-5,,16775
+CS,Клавиатуры/Проводные,SVEN,SV-016647,"Клавиатура SVEN KB-S300 (USB, White)",2100,AMD,5+,,16776
+CS,Клавиатуры/Проводные,SVEN,SV-03100301UB,"Клавиатура SVEN Standard 301 (USB, Black)",2000,AMD,5+,,16777
+CS,Клавиатуры/Беспроводные,A4Tech,FBK11 WHITE,"Клавиатура беспроводная A4Tech Fstyler FBK11 Slim (2.4GHz/Bluetooth, White, USB)",8200,AMD,1-5,,16044
+CS,Клавиатуры/Беспроводные,A4Tech,FBK25 BLACK,"Клавиатура беспроводная A4Tech Fstyler FBK25 Slim (2.4GHz/Bluetooth, Multimedia, Black, USB)",16000,AMD,1-5,,16042
+CS,Клавиатуры/Проводные,Genesis,NKG-1844,"Клавиатура беспроводная Genesis NKG-1844 THOR 660 RGB, Backlight, Mechanical, Gaming (USB, US Layout)",26700,AMD,1-5,,16525
+CS,Клавиатуры/Беспроводные,Logitech,K380 Multi-Device,"Клавиатура беспроводная Logitech K380 Multi-Device (Bluetooth, US/RU Layout, Dark Grey)",17600,AMD,1-5,,16336
+CS,Клавиатуры/Проводные,Logitech,920-011851,"Клавиатура беспроводная Logitech K380S (Bluetooth, Tonal Graphite)",16200,AMD,1-5,,16539
+CS,Клавиатуры/Беспроводные,Logitech,920-010581,"Клавиатура беспроводная Logitech K580 Multi-Device (2.4GHz/Bluetooth, USB, Graphite, US Layout)",20300,AMD,5+,,16270
+CS,Клавиатуры/Беспроводные,Logitech,920-008042,"Клавиатура беспроводная Logitech K780 Multi-Device (2.4GHz/Bluetooth, USB, Dark Grey/Speckled White, US/RU Layout)",32400,AMD,5+,,16269
+CS,Клавиатуры/Проводные,Oklick,880S,Клавиатура беспроводная Oklick 880S (USB),3600,AMD,1-5,,11916
+CS,Клавиатуры/Беспроводные,Oklick,1875235,"Клавиатура беспроводная Oklick K225W (White, Multimedia, USB)",3200,AMD,5+,,15774
+CS,Клавиатуры/Проводные,SVEN,SV-020194,Клавиатура беспроводная SVEN KB-C2100W (Black),2700,AMD,1-5,,16778
+CS,Клавиатуры/Проводные,SVEN,SV-021474,Клавиатура беспроводная SVEN KB-C2300W (Black),2900,AMD,1-5,,16779
+CS,Клавиатуры/Проводные,Genius,31330007402,"Клавиатура+Мышь Genius SlimStar C126 (Black, USB)",4700,AMD,5+,,15900
+CS,Клавиатуры/Проводные,Genius,31330001430,"Клавиатура+Мышь Genius Smart KM-160 (Black, USB)",4400,AMD,5+,,15052
+CS,Клавиатуры/Проводные,Genius,31330003402,"Клавиатура+Мышь Genius Smart KM-200 (Black, USB)",5200,AMD,5+,,13954
+CS,Клавиатуры/Проводные,SVEN,SV-018436,"Клавиатура+Мышь SVEN GS-9100 Gaming (12xFn keys, 1600DPI, RGB, Black, USB)",5200,AMD,1-5,,16780
+CS,Клавиатуры/Проводные,Ugreen,90561,"Клавиатура+Мышь Ugreen 90561 (Black, USB)",3700,AMD,1-5,,16644
+CS,Клавиатуры/Беспроводные,A4Tech,FG1010 WHITE,"Клавиатура+мышь беспроводные A4Tech Fstyler FG1010 (Multimedia, White, USB)",13800,AMD,1-5,,16036
+CS,Клавиатуры/Проводные,Genius,31340014402,"Клавиатура+Мышь беспроводные Genius Smart KM-8101 (USB, black)",7400,AMD,5+,,15224
+CS,Клавиатуры/Беспроводные,Logitech,920-007948,Клавиатура+Мышь беспроводные Logitech MK235 (USB),10800,AMD,1-5,,11815
+CS,Клавиатуры/Беспроводные,Logitech,920-004509,"Клавиатура+Мышь беспроводные Logitech MK270 (US Layout, USB)",9400,AMD,5+,,15908
+CS,Клавиатуры/Беспроводные,Logitech,920-004518,Клавиатура+Мышь беспроводные Logitech MK270 (USB),11700,AMD,1-5,,11881
+CS,Клавиатуры/Проводные,Logitech,920-012077,"Клавиатура+Мышь беспроводные Logitech MK370 (US-Layout, Bluetooth, Graphite, USB)",17200,AMD,1-5,,16541
+CS,Клавиатуры/Проводные,Logitech,920-011004,"Клавиатура+Мышь беспроводные Logitech MK650 Signature (US-Layout, Bluetooth, Graphite, USB)",29300,AMD,1-5,,16542
+CS,Клавиатуры/Проводные,SVEN,SV-018221,"Клавиатура+Мышь+Коврик SVEN GS-9200 Gaming (2400DPI, Black, USB)",6400,AMD,1-5,,16781
+CS,Клавиатуры/Беспроводные,Fury,NFU-1676,"Клавиатура+Мышь+Наушники+Коврик Fury NFU-1676 (Thunderstreak 2.0, RGB, Black, USB)",7400,AMD,5+,,14382
+CS,Мыши/Коврики,Buro,BU-CLOTH/GREY,"Коврик для мыши BURO BU-CLOTH (230x180x3mm, Grey)",400,AMD,1-5,,16208
+CS,Мыши/Коврики,Crownmicro,CM000003336,"Коврик для мыши CrownMicro CMGMP-01 (350x250x4, RGB, USB)",3800,AMD,5+,,13707
+CS,Мыши/Коврики,Fury,NFU-1930,"Коврик для мыши Fury NFU-1930 CHALLENGER XXL, Gaming (800x400mm, Black)",3800,AMD,5+,,16518
+CS,Мыши/Коврики,Gembird,MP-GAME-M,"Коврик для мыши Gembird MP-GAME-M, Gaming (350x250mm)",1900,AMD,5+,,16183
+CS,Мыши/Коврики,Genesis,NPG-0658,"Коврик для мыши Genesis NPG-0658 CARBON 500 M LOGO, Gaming (300x250mm)",2300,AMD,5+,,12119
+CS,Мыши/Коврики,Genesis,NPG-0659,"Коврик для мыши Genesis NPG-0659 CARBON 500 L LOGO, Gaming (400x330mm)",3500,AMD,1-5,,16955
+CS,Мыши/Коврики,Genesis,NPG-0732,"Коврик для мыши Genesis NPG-0732 CARBON 500 M FIRE, Gaming (300x250mm)",2300,AMD,1-5,,12118
+CS,Мыши/Коврики,Genesis,NPG-1859,"Коврик для мыши Genesis NPG-1859 CARBON 400 M LOGO, Gaming (350x250mm)",2100,AMD,5+,,16956
+CS,Мыши/Коврики,Genesis,NPG-1932,Коврик для мыши Genesis NPG-1932 POLON 200 XL (500x400mm),3600,AMD,5+,,15992
+CS,Мыши/Коврики,Natec,NPO-1456,"Коврик для мыши Natec NPO-1456 Science Maxi, Gaming (800x400mm)",4900,AMD,1-5,,16957
+CS,Мыши/Коврики,Natec,NPO-1457,Коврик для мыши Natec NPO-1457 Discoveries Maxi (800x400mm),4900,AMD,5+,,15995
+CS,Мыши/Коврики,Natec,NPO-2085,"Коврик для мыши Natec NPO-2085 Colors series (Obsidian Black, 300x250mm)",1400,AMD,5+,,15993
+CS,Мыши/Коврики,NATEC,NPO-2243,"Коврик для мыши NATEC NPO-2243 World Deep Blue, Gaming (800x400mm)",4900,AMD,5+,,16958
+CS,Мыши/Коврики,Natec,NPP-2045,Коврик для мыши Natec NPP-2045 Evapad Black (235x205mm),400,AMD,5+,,15996
+CS,Мыши/Коврики,SVEN,SV-016272,"Коврик для мыши SVEN MP-G01S Soldier (Gaming, 230x200x2mm)",1200,AMD,1-5,,16756
+CS,Мыши/Коврики,Ugreen,25245,Коврик для мыши Ugreen 25245 (Ergonomic with wrist support),2100,AMD,1-5,,16732
+CS,Колонки,CrownMicro,CM000001826,Колонки CrownMicro 2.0 CMS-601 (6W),2500,AMD,5+,,11367
+CS,Колонки/2.1,CrownMicro,6291105918800,"Колонки CrownMicro CMBS-327 (Bluetooth, 3W, 400mAh, FM, CardReader, Plastic)",2000,AMD,1-5,,11733
+CS,Колонки,Genesis,NCS-1408,"Колонки Genesis NCS-1408 HELIUM 610 2.1 Gaming (Bluetooth, 60W)",33900,AMD,1-5,,12654
+CS,Колонки,Genesis, NCS-1772,"Колонки Genesis NCS-1772 HELIUM 800BT 2.1 Gaming (Bluetooth, 60W)",43100,AMD,1-5,,14697
+CS,Колонки/2.1,Genius,31730029401,Колонки Genius SP-HF180 Black,3800,AMD,1-5,,12824
+CS,Колонки/2.1,Genius,31730029400,Колонки Genius SP-HF180 Wood,3800,AMD,1-5,,12918
+CS,Колонки/2.1,Genius,31730028400,Колонки Genius SP-HF280 Wood,3900,AMD,5+,,13535
+CS,Колонки/2.1,Genius,SP-HF380BT Wood,Колонки Genius SP-HF380BT Wood,6600,AMD,1-5,,16317
+CS,Колонки/2.1,Genius,SW-G2.1 1000,"Колонки Genius SW-2.1 1000 (2.1, Black)",23400,AMD,1-5,,16319
+CS,Колонки/2.1,Genius,SW-HF2.1 2000,"Колонки Genius SW-2.1 2000 (2.1, Black)",32000,AMD,1-5,,13060
+CS,Колонки,Logitech,980-000814,"Колонки Logitech 2.0 Z150 (Black, USB)",13500,AMD,5+,,16491
+CS,Колонки,Logitech,980-000815,"Колонки Logitech 2.0 Z150 (White, USB)",13500,AMD,1-5,,16492
+CS,Колонки/2.1,Logitech,980-001054,"Колонки Logitech Z533 (2.1, Black)",49900,AMD,1-5,,14915
+CS,Колонки/2.1,Logitech,980-000403,"Колонки Logitech Z623 (2.1, THX 200W, Black)",70200,AMD,1-5,,16493
+CS,Колонки,Oklick,440404,"Колонки Oklick 2.0 OK-331 (6W, Black)",2100,AMD,1-5,,12440
+CS,Колонки/2.1,Oklick,440405,"Колонки Oklick 2.1 OK-420 (11W, Black)",4100,AMD,1-5,,15035
+CS,Колонки,SVEN,SV-020224,"Колонки SVEN 130 (2.0, 2x3W, USB, Black)",2700,AMD,1-5,,16764
+CS,Колонки,SVEN,SV-020231,"Колонки SVEN 135 (2.0, 2x3W, USB, Black)",3000,AMD,1-5,,16765
+CS,Колонки,SVEN,SV-012540,"Колонки SVEN 312 (2.0, 2x2W, USB, Black)",3400,AMD,5+,,16766
+CS,Колонки,SVEN,SV-016166,"Колонки SVEN SPS-575 (2.0, 2x3W, USB, Black)",8500,AMD,5+,,16769
+CS,Колонки,SVEN,SV-014230,"Колонки SVEN SPS-606 (2.0, 2x3W, USB, Black)",6600,AMD,5+,,16770
+CS,Колонки,Touchmate,4822012490480,Колонки Touchmate SP480P,8200,AMD,1-5,,12840
+CS,Колонки,Touchmate,4822023270750,Колонки Touchmate SP750,8800,AMD,1-5,,12841
+CS,Сеть/Коммуникаторы/8-ми портовые,D-Link,DGS-1210-10/E M,Коммуникатор 10port 10/100/1000 D-Link DGS-1210-10/E M,63200,AMD,1-5,,15502
+CS,Сеть/Коммуникаторы/8-ми портовые,TP-Link,TL-SG1210MPE,"Коммуникатор 10port 10/100/1000 TP-Link TL-SG1210MPE (8POE+, 1SFP)",66300,AMD,1-5,,14981
+CS,Сеть/Коммуникаторы/8-ми портовые,TP-Link,TL-SG1210P,"Коммуникатор 10port 10/100/1000 TP-Link TL-SG1210P (8POE+, 1SFP)",41300,AMD,1-5,,15106
+CS,Сеть/Коммуникаторы/16-ти портовые,D-Link,DGS-1100-24V2/E,Коммуникатор 16port 10/100/1000 D-Link DGS-1100-24V2/E M RM,72900,AMD,1-5,,15591
+CS,Сеть/Коммуникаторы/16-ти портовые,TP-Link,TL-SG1016D,Коммуникатор 16port 10/100/1000 TP-Link TL-SG1016D,28600,AMD,5+,,11079
+CS,Сеть/Коммуникаторы/16-ти портовые,TP-Link,TL-SG116E,Коммуникатор 16port 10/100/1000 TP-Link TL-SG116E,37800,AMD,1-5,,14671
+CS,Сеть/Коммуникаторы/16-ти портовые,TP-Link,TL-SG2218,"Коммуникатор 16port 10/100/1000 TP-Link TL-SG2218 (16G, 2xSFP)",60500,AMD,1-5,,14409
+CS,Сеть/Коммуникаторы/16-ти портовые,D-Link,DGS-1210-20/E,Коммуникатор 20port 10/100/1000 D-Link DGS-1210-20/E M RM,68300,AMD,1-5,,15588
+CS,Сетевое_оборудование HUB&Switch,D-Link,DES-1210-28/C1A,"Коммуникатор 24port 10/100 D-Link DES-1210-28/C1A (2xSFP, Smart)",38800,AMD,1-5,,14007
+CS,Сеть/Коммуникаторы/24-х и более портовые,TP-Link,TL-SF1024D,Коммуникатор 24port 10/100 TP-Link TL-SF1024D,18300,AMD,1-5,,11076
+CS,Сеть/Коммуникаторы/24-х и более портовые,TP-Link,TL-SF1024M,Коммуникатор 24port 10/100 TP-Link TL-SF1024M (Plastic),14800,AMD,1-5,,11077
+CS,Сеть/Коммуникаторы/24-х и более портовые,Mikrotik,CRS125-24G-1S-2HnD-IN,"Коммуникатор 24port 10/100/1000 Mikrotik CRS125-24G-1S-2HnD-IN M (24P+1, AR9344, 128mb RAM, 1xSFP, RauterOS L5, 24Ghz 802.11b/g/n wireless, PSU)",99800,AMD,1-5,,15593
+CS,Сеть/Коммуникаторы/24-х и более портовые,TP-Link,TL-SG1024,Коммуникатор 24port 10/100/1000 TP-Link TL-SG1024,42900,AMD,1-5,,11156
+CS,Сеть/Коммуникаторы/24-х и более портовые,TP-Link,TL-SG1024D,Коммуникатор 24port 10/100/1000 TP-Link TL-SG1024D,42900,AMD,1-5,,11080
+CS,Сеть/Коммуникаторы/24-х и более портовые,D-Link,DGS-1210-26/E,Коммуникатор 26port 10/100/1000 D-Link DGS-1210-26 M RM,85400,AMD,1-5,,15595
+CS,Сеть/Коммуникаторы/5-ти портовые,TP-Link,LS1005,Коммуникатор 5port 10/100 TP-Link LS1005,3100,AMD,5+,,14801
+CS,Сеть/Коммуникаторы/5-ти портовые,,790069388125,"Коммуникатор 5port 10/100/1000 D-Link DGS-1100-06/ME/A1B (1xSFP, 5x10/100/1000)",25500,AMD,1-5,,13234
+CS,Сеть/Коммуникаторы/5-ти портовые,TP-Link,LS1005G,Коммуникатор 5port 10/100/1000 TP-Link LS1005G,5000,AMD,1-5,,13495
+CS,Сетевое_оборудование HUB&Switch,TP-Link,TL-SG1005D,Коммуникатор 5port 10/100/1000 TP-Link TL-SG1005D (Plastic),5200,AMD,1-5,,11155
+CS,Сетевое_оборудование HUB&Switch,TP-Link,f,Коммуникатор 8port 10/100 TP-Link TL-LS1008,3400,AMD,5+,,14800
+CS,Сетевое_оборудование HUB&Switch,TP-Link,TL-SF1008D,Коммуникатор 8port 10/100 TP-Link TL-SF1008D (Plastic),6200,AMD,5+,,7852
+CS,Сеть/Коммуникаторы/8-ми портовые,TP-Link,6935364021160,Коммуникатор 8port 10/100/1000 TP-Link TL-SG1008P,23800,AMD,1-5,,11172
+CS,Сеть/Коммуникаторы/8-ми портовые,TP-Link,TL-SG2008,Коммуникатор 8port 10/100/1000 TP-Link TL-SG2008,37100,AMD,1-5,,14984
+CS,Сеть/Коммуникаторы/8-ми портовые,TP-Link,TL-SG2008P,Коммуникатор 8port 10/100/1000 TP-Link TL-SG2008P,46000,AMD,1-5,,14983
+CS,Сетевое_оборудование HUB&Switch,TP-Link,TL-SG3210,Коммуникатор 8port 10/100/1000 TP-Link TL-SG3210,48800,AMD,5+,,14746
+CS,Переходники и переключатели,Lightwave,LW-HUB-A104-4,Коммуникатор Lightwave LW-HUB-A104-4 (USB Type-A to 4xUSB 2.0 Type-A),1500,AMD,5+,,16925
+CS,Переходники и переключатели,Lightwave,LW-HUB-C304-4,Коммуникатор Lightwave LW-HUB-C304-4 (USB Type-C to 1xUSB 3.0/2xUSB 2.0 Type-A/1xType-C Ports),1500,AMD,5+,,16924
+CS,USB-Hubs,Ugreen,60554,Коммуникатор USB 3.0 to 1xGbLAN; 3-Port USB 3.0 HUB Ugreen 60554,7400,AMD,1-5,,15764
+CS,USB-Hubs,Ugreen,15531,Коммуникатор USB Type-C to 1xHDMI; 1xUSB-C; 2xUSB 2.0 HUB; 1xSD; 1xTF Ugreen 15531,14700,AMD,1-5,,16715
+CS,USB-Hubs,Natec,NHU-1557,"Коммуникатор USB-HUB Natec Mantis 2 (4port, USB 3.0, AC adapter)",10100,AMD,5+,,15649
+CS,USB-Hubs,Natec,NHU-2023,"Коммуникатор USB-HUB Natec MAYFLY (4port, USB-C 3.0, USB-A adapter)",4900,AMD,5+,,15650
+CS,USB-Hubs,Natec,NHU-1343,"Коммуникатор USB-HUB Natec SILKWORM (4port, USB-C 3.0, Black)",5500,AMD,5+,,15651
+CS,Системные_блоки AMD Athlon/Phenom/Phenom II,,CS_A3000G-4120,"Компьютер CS A3000G-4120 (Athlon 3000G, 4GB RAM, 120GB SSD, 500W)",72200,AMD,1-5,,15255
+CS,Системные_блоки AMD Athlon/Phenom/Phenom II,CS,CS A4100-4120,"Компьютер CS A4100-4120 (Ryzen 3 4100, 4GB RAM, 120GB SSD, 2GB GT610, 500W)",94000,AMD,1-5,,15759
+CS,Системные_блоки AMD Athlon/Phenom/Phenom II,CS,,"Компьютер CS I10100-4120 (i3 10105, 4GB RAM, 120GB SSD, 500W)",89900,AMD,1-5,,15760
+CS,Коннекторы,Lanberg,PLS-5000,"Коннектор LANBERG PLS-5000 FTP, CAT5E, RJ-45 PLUG 8P8C (100PCS)",4000,AMD,5+,,15532
+CS,Коннекторы,Lanberg,PLU-5000EZ,"Коннектор LANBERG PLU-5000EZ UTP, CAT5E, RJ-45 PLUG 8P8C (100PCS)",3300,AMD,1-5,,15530
+CS,Коннекторы,Lanberg,PLU-5020,"Коннектор LANBERG PLU-5020 UTP, CAT5E, RJ-45 PLUG 8P8C (20PCS)",800,AMD,1-5,,12902
+CS,Коннекторы,Lanberg,PLU-6020,"Коннектор LANBERG PLU-6020 UTP, CAT6, RJ-45 PLUG 8P8C (20PCS)",900,AMD,1-5,,12903
+CS,Веб-камеры,Logitech,960-001102,Конференц-камера Logitech MeetUp Video Conference Camera (960-001102),257400,AMD,1-5,,16796
+CS,Корпуса/MidiTower,Crownmicro,CM000003170,"Корпус Desktop CrownMicro CM-1907-3 black (ITX, 300W)",9800,AMD,1-5,,14423
+CS,Корпуса/MidiTower,Aerocool,Lite-G-BK-V2,Корпус MidiTower Aerocool ATOMIC Lite-G-BK-V2 WINDOWS w/o black (MidiATX),21500,AMD,1-5,,15566
+CS,Корпуса/MidiTower,Aerocool,ATOMIC-G-BK-V1,Корпус MidiTower Aerocool ATOMIC-G-BK-V1 WINDOWS w/o black (MidiATX),27500,AMD,1-5,,15477
+CS,Корпуса/MidiTower,Cooler Master,MPW-5001-ACABN1-EU,Корпус MidiTower Cooler Master Elite V3 (mATX),23400,AMD,1-5,,14884
+CS,Корпуса/MidiTower,Cooler Master,MCB-NR600-KGNN-S00,Корпус MidiTower Cooler Master MasterBox NR600 w/o black (MidiATX),37400,AMD,1-5,,16247
+CS,Корпуса/MidiTower,Coolermaster,FOR-500-KKN1,Корпус MidiTower Coolermaster CM Force 500 w/o black (MidiATX),27500,AMD,1-5,,16494
+CS,Корпуса/MidiTower,Coolermaster,MCB-Q300L-KANN-S00,Корпус MidiTower Coolermaster MasterBox Q300L w/o black (MidiATX),27300,AMD,1-5,,15478
+CS,Корпуса/MidiTower,Coolermaster,TD300-KGNN-S00,Корпус MidiTower Coolermaster MasterBox TD300 Mesh w/o black (MidiATX),38400,AMD,5+,,15483
+CS,Корпуса/MidiTower,Cougar,COUGAR AIRFACE PRO RGB BLACK,Корпус MidiTower Cougar AirFace Pro RGB w/o black (MidiATX),42300,AMD,1-5,,16251
+CS,Корпуса/MidiTower,Cougar,COUGAR AIRFACE RGB BLACK,Корпус MidiTower Cougar AirFace RGB w/o black (MidiATX),30200,AMD,1-5,,16249
+CS,Корпуса/MidiTower,Cougar,ARCHON 2 MESH RGB(BLACK),Корпус MidiTower Cougar Archon 2 Mesh RGB w/o black (MidiATX),27700,AMD,1-5,,16625
+CS,Корпуса/MidiTower,Cougar,COUGAR MX360 RGB,Корпус MidiTower Cougar MX360 RGB w/o black (MidiATX),23400,AMD,1-5,,16248
+CS,Корпуса/MidiTower,Crownmicro,CM000003112,"Корпус MidiTower CrownMicro CMC-4103 black (mATX, 450W)",12900,AMD,1-5,,12719
+CS,Корпуса/MidiTower,CrownMicro,6970963387774,"Корпус MidiTower CrownMicro CMC-GS10B black (mATX, w/o)",26300,AMD,1-5,,12042
+CS,Корпуса/MidiTower,Deepcool,CC560 Limited V2,Корпус MidiTower Deepcool CC560 Limited V2 (MidiATX),17200,AMD,1-5,,16984
+CS,Корпуса/MidiTower,,R-CH370-BKNAM1-G-1,Корпус MidiTower Deepcool CH370 (mATX),27800,AMD,1-5,,15571
+CS,Корпуса/MidiTower,Deepcool,DP-ATX-MATREXX50,"Корпус MidiTower Deepcool Matrexx 50 w/o black (MidiATX, E-ATX)",19700,AMD,1-5,,15201
+CS,Корпуса/MidiTower,Deepcool,DP-ATX-MATREXX55-MESH,"Корпус MidiTower Deepcool Matrexx 55 MESH w/o black (MidiATX, E-ATX)",21500,AMD,1-5,,15366
+CS,Корпуса/MidiTower,Deepcool,MATREXX 55 V4,"Корпус MidiTower Deepcool Matrexx 55 V4 w/o Black (MidiATX, ATX)",24600,AMD,1-5,,16811
+CS,Корпуса/MidiTower,Deepcool,DP-MATX-DPWAVE2,Корпус MidiTower Deepcool WAVE V2 (MicroATX),10800,AMD,1-5,,15656
+CS,Корпуса/MidiTower,Formula,S1302B,Корпус MidiTower Formula S1302B w/o black (MidiATX),11700,AMD,5+,,15034
+CS,Корпуса/MidiTower,Formula,V-LINE 2052,Корпус MidiTower Formula V-LINE 2052 w/o black (MidiATX),22200,AMD,1-5,,14062
+CS,Корпуса/MidiTower,Fractal,FD-CA-CORE-1000-USB3-BL,Корпус MidiTower Fractal Design Core 1000 w/o Black (MidiATX),26500,AMD,5+,,15377
+CS,Корпуса/MidiTower,Genesis,NPC-1131,"Корпус MidiTower Genesis NPC-1131 IRID 300 w/o Red (USB 3.0, Window, MidiATX)",27300,AMD,1-5,,14360
+CS,Корпуса/MidiTower,Genesis,NPC-1517,Корпус MidiTower Genesis NPC-1517 IRID 505 V2 Window w/o Black (MidiATX),26700,AMD,5+,,15529
+CS,Корпуса/MidiTower,Genesis,NPC-1518,Корпус MidiTower Genesis NPC-1518 IRID 505 V2 ARGB Window w/o Black (MidiATX),38400,AMD,5+,,15526
+CS,Корпуса/MiniTower,Genesis,NPC-1558,Корпус MidiTower Genesis NPC-1558 IRID 503 V2 Window w/o Black (MiniATX),22600,AMD,5+,,15528
+CS,Корпуса/MidiTower,Genesis,NPC-1872,Корпус MidiTower Genesis NPC-1872 IRID 505 V2 ARGB Window w/o White (MidiATX),38200,AMD,5+,,15527
+CS,Корпуса/MidiTower,Hiper,Hiper BH34-1,"Корпус MidiTower Hiper BH34-1 w/o black (MidiATX, ATX)",18600,AMD,1-5,,16210
+CS,Корпуса/MidiTower,Hiper,Hiper DCB,"Корпус MidiTower Hiper DCB w/o black (MidiATX, ATX)",23900,AMD,1-5,,16213
+CS,Корпуса/MidiTower,Thermal Master,TM-C708,Корпус MidiTower Thermal Master C708 Black (600W),11700,AMD,1-5,,16982
+CS,Корпуса/MidiTower,Thermaltake,CA-1S2-00M1WN-00,Корпус MidiTower ThermalTake Divider 300 TG w/o black (MidiATX),42900,AMD,1-5,,15481
+CS,Корпуса/MidiTower,Thermaltake,CA-1D3-00S1NN-00,Корпус MidiTower ThermalTake Versa H13 w/o black (MidiATX),21300,AMD,1-5,,14302
+CS,Корпуса/MidiTower,Thermaltake,CA-1J4-00S1WN-00,Корпус MidiTower ThermalTake Versa H18 window w/o black (MidiATX),24200,AMD,1-5,,13930
+CS,Корпуса/MidiTower,ThermalTake,CA-1C1-00M1NN-00,Корпус MidiTower ThermalTake Versa H24 black (MidiATX),20700,AMD,1-5,,15398
+CS,Корпуса/MidiTower,Thermaltake,CA-1R8-00M1WN-00,Корпус MidiTower ThermalTake Versa H330 TG w/o black (MidiATX),30000,AMD,1-5,,14637
+CS,Корпуса/MidiTower,Zalman,S5 BLACK,Корпус MidiTower Zalman S5 w/o black (MidiATX),33700,AMD,1-5,,13083
+CS,Корпуса/MidiTower,Zalman,8809213765773,Корпус MidiTower Zalman ZM-T3 w/o black (MidiATX),23000,AMD,1-5,,15231
+CS,Корпуса/MidiTower,Zalman,8809213765766,Корпус MidiTower Zalman ZM-T4 w/o black (MidiATX),23400,AMD,1-5,,15232
+CS,Корпуса/MidiTower,CrownMicro,6941141600466,"Корпус MiniTower CrownMicro CMC-245-103 black (ITX, 300W)",11500,AMD,1-5,,12426
+CS,Корпуса/MidiTower,Deepcool,DP-MATX-MATREXX30,"Корпус MiniTower Deepcool Matrexx 30 (MiniATX, mATX)",15200,AMD,1-5,,15783
+CS,Корпуса/MidiTower,Deepcool,MATREXX 30 SI,Корпус MiniTower Deepcool Matrexx 30 SI (MiniATX),11700,AMD,1-5,,16708
+CS,Корпуса/MidiTower,Supermicro,CSE-512F-350B1,"Корпус Rack SuperMicro CSE-512F-350B1 black (Rack, 1U, 350W)",81500,AMD,1-5,,14219
+CS,Корпуса/MidiTower,Lanberg,SC01-4504-10B,"Корпус RackTower Lanberg SC01-4504-10B w/o black (Rack, 450/10, 19"", 4U)",54600,AMD,1-5,,15161
+CS,Мебель,Fury,NFF-1710,Кресло игровое Fury NFF-1710 AVENGER M+ Black/White,48800,AMD,5+,,15017
+CS,Мебель,Genesis,NFG-0751,Кресло игровое Genesis NFG-0751 Nitro 770 Black/Red,76100,AMD,5+,,13215
+CS,Мебель,Genesis,NFG-0752,Кресло игровое Genesis NFG-0752 Nitro 330 Black/Red,56600,AMD,5+,,13771
+CS,Мебель,Genesis,NFG-0782,Кресло игровое Genesis NFG-0782 Nitro 330 Black/Blue,52700,AMD,5+,,12211
+CS,Мебель,Genesis,NFG-1141,Кресло игровое Genesis NFG-1141 Nitro 330 Military LE,52700,AMD,1-5,,13218
+CS,Мебель,Genesis,NFG-1532,Кресло игровое Genesis NFG-1532 Nitro 560 Black/Military,70200,AMD,1-5,,13769
+CS,Мебель,Genesis,NFG-1576,Кресло игровое Genesis NFG-1576 TRIT 500 RGB Black,78000,AMD,5+,,14373
+CS,Мебель,Genesis,NFG-1577,Кресло игровое Genesis NFG-1577 Trit 600 RGB Black,81500,AMD,1-5,,16516
+CS,Мебель,Genesis,NFG-1848,Кресло игровое Genesis NFG-1848 NITRO 650 Onyx Black,82700,AMD,1-5,,14375
+CS,Мебель,Genesis,NFG-1945,Кресло игровое Genesis NFG-1945 Astat 700 G2 Black,108400,AMD,1-5,,16512
+CS,Мебель,Genesis,NFG-1944,Кресло игровое Genesis NFG-1945 Astat 700 G2 Red,104500,AMD,1-5,,16513
+CS,Мебель,Genesis,NFG-2068,Кресло игровое Genesis NFG-2068 Nitro 550 G2 Black,71600,AMD,1-5,,16514
+CS,Мебель,Genesis,NFG-2096,Кресло игровое Genesis NFG-2096 NITRO 720 Black-Grey,87200,AMD,1-5,,16963
+CS,Мебель,Genesis,NFG-2112,Кресло игровое Genesis NFG-2112 Nitro 550 G2 Grey,72500,AMD,1-5,,16515
+CS,Проекторы,Arm Media,LCD-T01,"Кронштейн для мониторов Arm Media LCD-T01 (15""-32"", Black)",9800,AMD,1-5,,16282
+CS,Проекторы,Armmedia,LCD-T43,"Кронштейн для мониторов Arm Media LCD-T43 (15""-32"", Black)",18100,AMD,1-5,,13576
+CS,Проекторы,Arm Media,10168,"Кронштейн для мониторов Arm Media LCD-T52 (15""-32"", Black)",29600,AMD,1-5,,12714
+CS,Проекторы,LogiLink,BP0045,"Кронштейн для мониторов LogiLink BP0045 (13""-32"", Black)",15900,AMD,5+,,15297
+CS,Проекторы,Buro,PR07-W,"Кронштейн для проектора Buro PR07-W (White, Up to 12kg)",4100,AMD,1-5,,13962
+CS,Проекторы,Holder,PR-103-W,Кронштейн для проектора Holder PR-103-W (White),6200,AMD,1-5,,11665
+CS,Проекторы,Holder,PR-104-W,Кронштейн для проектора Holder PR-104-W (White),11300,AMD,1-5,,15563
+CS,Проекторы,Arm Media,LCD-01,"Кронштейн для телевизора Arm Media LCD-01 (15''-32'', up to 15kg, Black)",1600,AMD,1-5,,12641
+CS,Охлаждение/Кулеры универсальные,Arctic,ACALP00041A,Кулер Arctic Alpine 17 CO (S-1700),4000,AMD,5+,,16699
+CS,Охлаждение/Кулеры универсальные,Arctic,ACALP00036A,Кулер Arctic Alpine 23 CO (S-AM4/AM5),4600,AMD,5+,,16192
+CS,Охлаждение/Кулеры универсальные,Cooler Master,RR-2V2L-18PA-R1,"Кулер Cooler Master Hyper 212 ARGB (Universal socket INTEL/AMD, 27Db, RGB)",18600,AMD,1-5,,14523
+CS,Охлаждение/Кулеры универсальные,Cooler Master,RR-212S-20PK-R2,"Кулер Cooler Master Hyper 212 Black Edition (Universal socket INTEL/AMD, 27Db, RGB)",24500,AMD,1-5,,14641
+CS,Охлаждение/Кулеры универсальные,CrownMicro,CM000001649,"Кулер Crown CM-5 (Universal socket INTEL/AMD, Copper tubes, TDP up to 187w)",7400,AMD,5+,,11096
+CS,Охлаждение/Кулеры универсальные,CrownMicro,CM000001644,"Кулер Crown CM-80 (Universal socket INTEL/AMD, TDP up to 65w)",1600,AMD,1-5,,11092
+CS,Охлаждение/Кулеры универсальные,Crown,CM000003693,"Кулер Crown CM-80 v2 (Universal socket INTEL + S1700/AMD, TDP up to 65w)",1800,AMD,5+,,16224
+CS,Охлаждение/Кулеры универсальные,CrownMicro,CM000001645,"Кулер Crown CM-82 (Universal socket INTEL/AMD, TDP up to 80w)",2300,AMD,1-5,,11093
+CS,Охлаждение/Кулеры AMD,Deepcool,R-AG200-BKNNMN-G,"Кулер Deepcool AG200 (Universal socket INTEL/AMD, R-AG200-BKNNMN-G)",5500,AMD,1-5,,15276
+CS,Охлаждение/Кулеры AMD,Deepcool,R-AG500-BKNDMN-G-2,"Кулер Deepcool AG500 (Universal socket INTEL/AMD, 240W)",17600,AMD,1-5,,16288
+CS,Охлаждение/Кулеры AMD,Deepcool,ARCHER.BIGPRO,"Кулер Deepcool ARCHER BIGPRO (Universal socket INTEL/AMD, 125W, ARCHER.BIGPRO)",5900,AMD,1-5,,15475
+CS,Охлаждение/Кулеры AMD,Deepcool,DP-MCH4-GMX400EX,Кулер Deepcool GAMMAXX 400 EX (Universal socket INTEL/AMD),14000,AMD,1-5,,15246
+CS,Охлаждение/Кулеры AMD,Deepcool,R-AS500-WHNLMP-G,"Кулер Deepcool GAMMAXX AS500 PLUS White (Universal socket INTEL/AMD, TDP up to 220w)",33300,AMD,1-5,,15657
+CS,Охлаждение/Кулеры AMD,Deepcool, DP-MCH4-GMX-GTEV2,Кулер Deepcool GAMMAXX GTE V2 (Universal socket INTEL/AMD),12800,AMD,5+,,15368
+CS,Охлаждение/Кулеры AMD,Deepcool,ICEEDGEMINIFSV2.0 1700 NATIVE,"Кулер Deepcool ICE EDGE MINI FS V2.0 (Universal socket INTEL/AMD, 100W, ICEEDGEMINIFSV2.0 1700 NATIVE)",5100,AMD,1-5,,15485
+CS,Охлаждение/Кулеры универсальные,Deepcool,THETA 9 PWM 1700,"Кулер Deepcool Theta 9 (Socket 1700, PWM, 4-pin, 40.1dB, TDP up to 65w)",3100,AMD,1-5,,16106
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,DK-071 RAINBOW,"Кулер ID-Cooling DK-071 RAINBOW (Socket 1700, PWM, 4-pin, 14.2-25.6dB, TDP up to 125w)",4100,AMD,1-5,,16673
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,DK-19 PWM,"Кулер ID-Cooling DK-19 PWM (Socket 1700, PWM, 4-pin, 14-26dB, TDP up to 95w)",3100,AMD,5+,,16105
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,FROZN A610 ARGB White,"Кулер ID-Cooling Frozn A610 ARGB White (Universal socket INTEL/AMD, PWM, TDP up to 250w)",17100,AMD,1-5,,16448
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,FROZN A620 BLACK,"Кулер ID-Cooling Frozn A620 Black (Universal socket INTEL/AMD, PWM, TDP up to 270w)",18300,AMD,1-5,,16449
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-206-XT,"Кулер ID-Cooling SE-206-XT (Universal socket INTEL/AMD, PWM, TDP up to 250w)",13500,AMD,1-5,,16581
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-207-XT ADVANCED,"Кулер ID-Cooling SE-207-XT ADVANCED (Universal socket INTEL/AMD, PWM, TDP up to 280w)",21200,AMD,1-5,,16244
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-207-XT ARGB,"Кулер ID-Cooling SE-207-XT ARGB (Universal socket INTEL/AMD, PWM, TDP up to 280w)",19600,AMD,1-5,,16245
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-225-XT Black V2,"Кулер ID-Cooling SE-225-XT Black V2 (Universal socket INTEL/AMD, PWM, TDP up to 220w)",19300,AMD,1-5,,16032
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-226-XT ARGB,"Кулер ID-Cooling SE-226-XT ARGB (Universal socket INTEL/AMD, PWM, TDP up to 250w)",21500,AMD,1-5,,16027
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-226-XT ARGB WHITE,"Кулер ID-Cooling SE-226-XT ARGB White (Universal socket INTEL/AMD, PWM, TDP up to 250w)",23000,AMD,1-5,,16188
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-226-XT BLACK,"Кулер ID-Cooling SE-226-XT BLACK (Universal socket INTEL/AMD, PWM, TDP up to 250w)",15100,AMD,1-5,,16031
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-903-SD V3,"Кулер ID-Cooling SE-903-SD V3 (Universal socket INTEL/AMD, TDP up to 130w)",4200,AMD,5+,,16450
+CS,Охлаждение/Кулеры универсальные,ID-Cooling,SE-903-XT,"Кулер ID-Cooling SE-903-XT (Universal socket INTEL/AMD, PWM, TDP up to 130w)",5200,AMD,5+,,15943
+CS,Охлаждение/Кулеры универсальные,Thermaltake,CL-P065-AL12SW-A,"Кулер Thermaltake UX200 (Universal socket INTEL/AMD, TDP up to 130w)",16800,AMD,1-5,,15704
+CS,Охлаждение/Кулеры универсальные,Thermaltake,CL-P116-AL12SW-A,"Кулер Thermaltake UX200 SE ARGB (Universal socket INTEL/AMD, TDP up to 170w, White)",13300,AMD,5+,,15546
+CS,Охлаждение/Кулеры универсальные,TITAN,DC-156V925X/R,Кулер TITAN DC-156V925X/R,2800,AMD,1-5,,11598
+CS,Охлаждение/Кулеры универсальные,TITAN,TTC-NC25TZ,Кулер TITAN TTC-NC25TZ,8200,AMD,5+,,11215
+CS,Охлаждение/Кулеры универсальные,TITAN,TTC-NK96TZ/NPW,Кулер TITAN TTC-NK96TZ/NPW,8600,AMD,1-5,,11275
+CS,Охлаждение/Кулеры универсальные,Xilence,XC129,"Кулер Xilence XC129 M403 ARGB (Universal socket INTEL/AMD, TDP up to 150w)",11100,AMD,1-5,,15545
+CS,Охлаждение/Кулеры универсальные,Zalman,CNPS10X OPTIMA II BLACK RGB,"Кулер Zalman CNPS10X Optima II Black RGB (Universal socket INTEL/AMD, RBG, PWM, TDP up to 180w)",16000,AMD,1-5,,15479
+CS,Охлаждение/Кулеры универсальные,Zalman,CNPS10X PERFORMA BLACK,"Кулер Zalman CNPS10X Performa Black (Universal socket INTEL/AMD, PWM, TDP up to 180w)",13200,AMD,1-5,,15942
+CS,Охлаждение/Кулеры универсальные,Zalman,CNPS9X Optima RGB,"Кулер Zalman CNPS9X Optima RGB (Universal socket INTEL/AMD, PWM, TDP up to 180w)",12300,AMD,1-5,,15631
+CS,Охлаждение/Кулеры универсальные,Zalman,CNPS9X PERFORMA,"Кулер Zalman CNPS9X Performa Black (Universal socket INTEL/AMD, PWM, TDP up to 180w, CNPS9X PERFORMA)",14600,AMD,1-5,,15487
+CS,Охлаждение/Вентиляторы для корпусов,CrownMicro,CM000002218,"Кулер вентилятор для корпуса CrownMicro CMCF-12025S-1200 (120x120x25, 1500rpm, 35CFM, 20Db)",1100,AMD,1-5,,11838
+CS,Охлаждение/Вентиляторы для корпусов,CrownMicro,CM000002219,"Кулер вентилятор для корпуса CrownMicro CMCF-12025S-1210 (120x120x25, 1500rpm, 35CFM, 20Db, RED Backlight)",1200,AMD,5+,,11839
+CS,Охлаждение/Вентиляторы для корпусов,Crownmicro,CM000002222,"Кулер вентилятор для корпуса CrownMicro CMCF-12025S-1213 (120x120x25, 1500rpm, 35CFM, 20Db, ORANGE Backlight)",1200,AMD,5+,,13039
+CS,Охлаждение/Вентиляторы для корпусов,Crownmicro,CM000003099,"Кулер вентилятор для корпуса CrownMicro CMCF-14025S-1400 (140x140x25, 800-1300rpm, 56CFM, 27Db)",1200,AMD,5+,,12721
+CS,Охлаждение/Вентиляторы для корпусов,CrownMicro,CM000002217,"Кулер вентилятор для корпуса CrownMicro CMCF-8025S-800 (80x80x25, 2000rpm, 40CFM, 28Db)",600,AMD,5+,,11837
+CS,Охлаждение/Вентиляторы для корпусов,Crownmicro,CM000003103,"Кулер вентилятор для корпуса CrownMicro CMCF-9225S-920 (92x92x25, 800-1800rpm, 27CFM, 22.5Db)",600,AMD,5+,,12720
+CS,Охлаждение/Вентиляторы для корпусов,Genesis,NGF-1168,"Кулер вентилятор для корпуса Genesis NGF-1168 Hydrion 120 (120x120x25, 1000rpm, 42CFM, 19Db, GREEN Backlight)",2100,AMD,1-5,,14500
+CS,Охлаждение/Вентиляторы для корпусов,Genesis,NGF-2043,"Кулер вентилятор для корпуса Genesis NGF-2043 Oxal 120 3-Pack (120mm, 1300rpm, 46.1CFM, 22.1Db)",4700,AMD,5+,,16517
+CS,Охлаждение/Вентиляторы для корпусов,ID-Cooling,AS-120-ARGB-K TRIO,"Кулер вентилятор для корпуса ID-Cooling AS-120-ARGB-K TRIO 3-Pack (120x120x25mm, 300-2000rpm, 58CFM, 27.2Db)",5400,AMD,1-5,,16807
+CS,Охлаждение/Вентиляторы для корпусов,ID-Cooling,ZF-14025-ARGB,"Кулер вентилятор для корпуса ID-Cooling ZF-14025-ARGB (140x140x25, 17-37Db, LED)",6200,AMD,5+,,15789
+CS,Аксессуары для ноутбуков/Подставки и охладители,CrownMicro,CM000001377,"Кулер для ноутбука CrownMicro CMLC-1101 (up to 17"", Blue backlight, 2xCooler)",3900,AMD,1-5,,11372
+CS,Аксессуары для ноутбуков/Подставки и охладители,CrownMicro,CM000003233,"Кулер для ноутбука CrownMicro CMLS-130 (up to 19"", Red backlight, 1xCooler)",6800,AMD,1-5,,13407
+CS,Аксессуары для ноутбуков/Подставки и охладители,CrownMicro,CM000003235,"Кулер для ноутбука CrownMicro CMLS-132 (up to 19"", Green backlight, 1xCooler)",7000,AMD,1-5,,13409
+CS,Аксессуары для ноутбуков/Подставки и охладители,Crownmicro,CM000003236,"Кулер для ноутбука CrownMicro CMLS-133 (up to 19"", Orange backlight, 1xCooler)",5500,AMD,5+,,14705
+CS,Аксессуары для ноутбуков/Подставки и охладители,Crownmicro,CM000003306,"Кулер для ноутбука CrownMicro CMLS-400 (up to 17"", 1xCooler)",2100,AMD,5+,,14424
+CS,Аксессуары для ноутбуков/Подставки и охладители,Genesis,NHG-1678,"Кулер для ноутбука Genesis NHG-1678 OXID 450 RGB (up to 15.6"", LED Light, 1xUSB, 1xCooler)",10500,AMD,5+,,15986
+CS,Аксессуары для ноутбуков/Подставки и охладители,Genesis,NHG-1858,"Кулер для ноутбука Genesis NHG-1858 OXID 850 RGB (up to 17.3"", LED Light, 5xCooler)",13200,AMD,1-5,,15987
+CS,Аксессуары для ноутбуков/Подставки и охладители,Genesis,NHG-2075,"Кулер для ноутбука Genesis NHG-2075 OXID 260 (up to 17.3"", LED Light, 2xUSB, 4xCooler)",7700,AMD,1-5,,15985
+CS,Аксессуары для ноутбуков/Подставки и охладители,Natec,NPL-2252,"Кулер для ноутбука Natec NPL-2252 Dipper 2 (up to 17.3"", LED Light, 1xUSB, 1xCooler)",6200,AMD,5+,,16965
+CS,Аксессуары для ноутбуков/Подставки и охладители,Natec,NPL-1926,"Кулер для ноутбука Natec Oriole NPL-1926 (up to 17.3"", LED Light, 2xUSB, 3xCooler)",7800,AMD,5+,,15989
+CS,Охлаждение/Кулеры универсальные,Arctic,ACFRE00134A,"Кулер система жидкостного охлаждения Arctic Liquid Freezer III 240 Black  (Universal socket INTEL, PWM)",28500,AMD,1-5,,16392
+CS,Охлаждение/Кулеры универсальные,Arctic,ACFRE00145A,"Кулер система жидкостного охлаждения Arctic Liquid Freezer III 420 A-RGB Black  (Universal socket INTEL, PWM)",41200,AMD,1-5,,16395
+CS,Охлаждение/Кулеры универсальные,Cougar,POSEIDON ELITE ARGB 360 BLACK,Кулер система жидкостного охлаждения Cougar Poseidon Elite ARGB 360 Black (INTEL/AMD),37400,AMD,1-5,,16595
+CS,Охлаждение/Кулеры универсальные,Deepcool,LT720,Кулер система жидкостного охлаждения Deepcool LT720 (INTEL/AMD),59700,AMD,1-5,,16709
+CS,Охлаждение/Кулеры универсальные,Thermaltake,V2CL-W362-PL12SW-A,"Кулер система жидкостного охлаждения Thermaltake TH360 ARGB Sync  (Universal socket INTEL, PWM)",51500,AMD,1-5,,16396
+CS,Охлаждение/Кулеры универсальные,Thermaltake,CL-W369-PL14SW-A,"Кулер система жидкостного охлаждения Thermaltake TH420 ARGB Sync  (Universal socket INTEL, PWM)",54600,AMD,1-5,,16397
+CS,Охлаждение/Кулеры универсальные,Zalman,Reserator5 Z24,"Кулер система жидкостного охлаждения Zalman Reserator5 Z24 Black (Universal socket INTEL, AMD, S1700, AM5, PWM, 37Db)",40400,AMD,1-5,,15692
+CS,Охлаждение/Кулеры универсальные,Zalman,RESERATOR5 Z24 WHITE ARGB,"Кулер система жидкостного охлаждения Zalman Reserator5 Z24 White (Universal socket INTEL, AMD, S1700, AM5, PWM, 37Db)",40400,AMD,1-5,,15786
+CS,Аксессуары для ноутбуков/Подставки и охладители,CrownMicro,CM000001325,"Кулер/Столик для ноутбука CrownMicro CMLS-100 (up to 17"", 2xCooler, adjustable height, Silver)",11700,AMD,5+,,12286
+CS,Аксессуары для ноутбуков/Подставки и охладители,CrownMicro,CM000002061,"Кулер/Столик для ноутбука CrownMicro CMLS-115B (up to 17"", 2xCooler, adjustable height)",6600,AMD,1-5,,11731
+CS,Аксессуары для ноутбуков/Подставки и охладители,CrownMicro,CM000002062,"Кулер/Столик для ноутбука CrownMicro CMLS-116G (up to 17"", 2xCooler, adjustable height)",8200,AMD,5+,,11732
+CS,Мат.платы/Socket 1155,Arktek,AK-G41M EL,"Мат. плата Arktek G41 AK-G41M EL (S-775, G41, VGA, 2DDR3, PCI-E, COM, SATA3, LAN)",13800,AMD,5+,,15252
+CS,Мат.платы/Socket 1155,Arktek,AK-H81M EL,"Мат. плата Arktek H81 AK-H81M EL (S-1150, H81, VGA, HDMI, PCI-E, 2DDR3, PCI, SATA3, GbLAN)",18700,AMD,5+,,15253
+CS,Мат.платы/Socket AM4,Asrock,90-MXBE60-A0UAYZ,"Мат. плата Asrock A520M-HVS (S-AM4, A520, VGA, DVI, HDMI, 2xPCI-E, 2DDR4, M.2, SATAIII RAID, PCI, SATA3, GbLAN)",25300,AMD,1-5,,15458
+CS,Мат.платы/Socket 1200,ASROCK,90-MXBM00-A0UAYZ,"Мат. плата ASROCK H510M-HDV/M.2 SE (S-1200, H510, VGA, DVI, HDMI, 2xPCI-E, 2DDR4, M.2, SATA3, GbLAN)",28300,AMD,1-5,,15862
+CS,Мат.платы/Socket AM4,ASUS,90MB1500-M0EAY0,"Мат. плата ASUS PRIME A520M-K (S-AM4, A520, VGA, HDMI, 3xPCI-E, 2DDR4, SATAIII RAID, PCI, SATA3, GbLAN)",29300,AMD,1-5,,13574
+CS,Мат.платы/Socket 1151,,PRIME H310M-R R2.0,"Мат. плата ASUS PRIME H310M-R (S-1151v2, H310, VGA, HDMI, PCI-E, 2DDR4, PCI, SATA3, GbLAN)",22000,AMD,1-5,,11817
+CS,Мат.платы/Socket 1200,Asus,PRIME H510M-K,"Мат. плата ASUS PRIME H510M-K (S-1200, H510, VGA, HDMI, PCI-E, 2DDR4, PCI, SATA3, GbLAN)",29400,AMD,1-5,,13949
+CS,Мат.платы/Socket 1200,ASUS,H510M-R R2.0-SI,"Мат. плата ASUS PRIME H510M-R R2.0-SI (S-1200, H470, VGA, HDMI, PCI-E, 2DDR4, SATA3, GbLAN)",28900,AMD,5+,,15939
+CS,Мат.платы/Socket 1200,ASUS,90MB1CU0-M0EAY0,"Мат. плата ASUS PRIME H770-PLUS D4 (S-1700, H770, HDMI, DP, 5xPCI-E, 4DDR5, 3xM.2, 4xSATA3, GbLAN)",80700,AMD,1-5,,16206
+CS,Мат.платы/Socket AM4,Asus,PRIME X570-P,"Мат. плата ASUS PRIME X570-P (S-AM4, X570, HDMI, 2xPCI-E, 4DDR4, SATAIII RAID, PCI, SATA3, GbLAN)",86400,AMD,1-5,,13130
+CS,Мат.платы/Socket 1200,ASUS,90MB1CN0-M0EAY0,"Мат. плата ASUS ROG STRIX Z790-A GAMING WIFI D4 (S-1700, Z790, HDMI, DP, 4xPCI-E, 4DDR4, 4xM.2, SATA3, Wi-Fi 6e, GbLAN)",142400,AMD,1-5,,16679
+CS,Мат.платы/Socket 1200,ASUS,90MB1GU0-M0EAY0,"Мат. плата ASUS TUF GAMING Z790-BTF WIFI (S-1700, Z790, HDMI, DP, 3xPCI-E, 4DDR5, 4xM.2, SATA3, Wi-Fi 7, GbLAN)",145900,AMD,1-5,,16681
+CS,Мат.платы/Socket AM4,Gigabyte,A520MKV2,"Мат. плата Gigabyte A520M-K V2 (S-AM4, A520, VGA, DVI, HDMI, 3xPCI-E, 2DDR4, SATAIII RAID, M.2, PCI, SATA3, GbLAN)",26500,AMD,1-5,,15445
+CS,Мат.платы/Socket AM4,Gigabyte,B550M DS3H,"Мат. плата Gigabyte B550M DS3H (S-AM4, B550, DVI, HDMI, DP, 3xPCI-E, 4xDDR4, 2xM.2, SATAIII RAID, PCI, SATA3, GbLAN)",46000,AMD,1-5,,15413
+CS,Мат.платы/Socket 1151,Gigabyte,B650M DS3H,"Мат. плата Gigabyte B650M DS3H (S-AM5, B650, HDMI/DP, 2xPCI-E, 4DDR5, 2xM.2, GbLAN)",56900,AMD,1-5,,16383
+CS,Мат.платы/Socket 1200,Gigabyte,B760M DS3H,"Мат. плата Gigabyte B760M DS3H (S-1700, B760, VGA, HDMI, 2xDP, 3xPCI-E, 4DDR5, 2xM.2, SATA3, GbLAN)",53800,AMD,1-5,,16500
+CS,Мат.платы/Socket 1200,Gigabyte,B760MGAMINGDDR4,"Мат. плата Gigabyte B760M Gaming (S-1700, B760, HDMI, DP, 3xPCI-E, 2DDR4, 2xM.2, SATAIII RAID, SATA3, GbLAN, B760MGAMINGDDR4)",49500,AMD,1-5,,15289
+CS,Мат.платы/Socket 1200,Gigabyte,B760M GAMING X DDR4,"Мат. плата Gigabyte B760M Gaming X (S-1700, B760, HDMI, DP, 3xPCI-E, 4DDR4, 3xM.2, SATAIII RAID, SATA3, GbLAN)",56900,AMD,1-5,,15586
+CS,Мат.платы/Socket AM4,Gigabyte,B850M D3HP,"Мат. плата Gigabyte B850M D3HP (S-AM5, B850, HDMI/2xDP, 2xPCI-E, 4DDR5, 2xM.2, GbLAN)",71800,AMD,1-5,,16996
+CS,Мат.платы/Socket 1151,Gigabyte,B850M DS3H,"Мат. плата Gigabyte B850M DS3H (S-AM5, B850, HDMI/2xDP, 2xPCI-E, 4DDR5, 2xM.2, GbLAN)",95900,AMD,1-5,,16703
+CS,Мат.платы/Socket AM4,Gigabyte,X870 GAMING WF6,"Мат. плата Gigabyte X870 GAMING WF6 (S-AM5, X870, HDMI/2xUSB4 DP, 1xPCI-E 5.0 x16, 2xPCI-E 3.0 x1, 4DDR5, 3xM.2, 2.5GbE LAN, Wi-Fi 6)",108800,AMD,1-5,,16995
+CS,Мат.платы/Socket 1200,Gigabyte,Z790 EAGLE,"Мат. плата Gigabyte Z790 EAGLE (S-1700, Z790, HDMI, DP, 4xPCI-E, 4DDR5, 3xM.2, 2.5GbLAN)",95200,AMD,1-5,,16790
+CS,Мат.платы/Socket 1200,Gigabyte,Z790 UD,"Мат. плата Gigabyte Z790 UD (S-1700, Z790, HDMI, DP, 3xPCI-E, 4DDR5, 4xM.2, SATAIII RAID SATA3, GbLAN)",97500,AMD,1-5,,15337
+CS,Мат.платы/Socket 1200,MSI,MSI 7D48-008R,"Мат. плата MSI PRO B760M-E (S-1700, B760, VGA, HDMI, 2xPCI-E, 2DDR4, M.2, SATAIII RAID, PCI, SATA3, GbLAN)",44700,AMD,1-5,,15572
+CS,Мат.платы/Socket 1200,MSI,7E02-009R,"Мат. плата MSI PRO B760M-P (S-1700, B760, VGA, HDMI, DP, 3xPCI-E, 4DDR5, 2xM.2, SATA3, GbLAN)",56400,AMD,1-5,,16501
+CS,Мат.платы/Socket 1200,MSI,PRO H510M-B,"Мат. плата MSI PRO H510M-B (S-1700, H510, VGA, HDMI, PCI-E, 2DDR4, M.2, SATA3, GbLAN)",27300,AMD,5+,,16457
+CS,Мат.платы/Socket 1200,MSI,PRO H610M-E DDR4,"Мат. плата MSI PRO H610M-E DDR4 (S-1700, H610, VGA, HDMI, 2PCI-E, 2DDR4, SATA3, GbLAN)",29600,AMD,5+,,16504
+CS,Наушники и микрофоны/Микрофоны,Genesis,NGM-1377,Микрофон Genesis NGM-1377 Radium 400 Studio USB Arm Popfilter (USB),21300,AMD,1-5,,16519
+CS,Наушники и микрофоны/Микрофоны,Natec,NMI-0776,"Микрофон Natec Adder NMI-0776 (3.5mm Jack, Black)",3800,AMD,5+,,15990
+CS,Наушники и микрофоны/Микрофоны,SVEN,SV-0430200,Микрофон SVEN MK-200,1300,AMD,1-5,,16757
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KVR32N22S8/16,"Модуль памяти DIMM 16GB DDR4 Kingston KVR32N22S8/16 (3200MHz, 1.2v)",19500,AMD,1-5,,16205
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD416G32002,Модуль памяти DIMM 16GB DDR4 PATRIOT PSD416G32002 (3200MHz),18700,AMD,5+,,14618
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSP416G320081H1,"Модуль памяти DIMM 16GB DDR4 PATRIOT PSP416G320081H1 (3200MHz, Heatsink)",18900,AMD,1-5,,15390
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PV416G300C6K,Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER 4 PV416G300C6K (3000MHz),22400,AMD,1-5,,15095
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVB416G400C9K,Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER Black PVB416G400C9K (4000MHz),25000,AMD,1-5,,12468
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVB416G413C8K,Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER Black PVB416G413C8K (4133MHz),25700,AMD,1-5,,14558
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVE2416G400C0,Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER Elite II PVE2416G400C0 (4000MHz),21600,AMD,5+,,14078
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVS416G300C6K,"Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER Steel PVS416G300C6K (PC24000, 3000MHz)",21600,AMD,1-5,,12157
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVS416G360C8K,Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER Steel PVS416G360C8K KIT (3600MHz),22000,AMD,1-5,,13901
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVSR416G360C0K,Модуль памяти DIMM 16GB DDR4 PATRIOT VIPER Steel RGB PVSR416G360C0K (3600MHz),25700,AMD,5+,,15089
+CS,Модули памяти/DDRAM-IV для настольных ПК,Crucial,CT16G48C40U5,Модуль памяти DIMM 16GB DDR5 CRUCIAL CT16G48C40U5 (4800MHz),20200,AMD,5+,,15601
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD516G480081,"Модуль памяти DIMM 16GB DDR5 PATRIOT PSD516G480081 (PC21330, 4800MHz)",17600,AMD,5+,,14559
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD516G560081,Модуль памяти DIMM 16GB DDR5 PATRIOT PSD516G560081 (5600MHz),19100,AMD,5+,,15612
+CS,Модули памяти/DDRAM-III для ноутбуков,Patriot,PSD31G133381,Модуль памяти DIMM 1GB DDR3 PATRIOT PSD31G133381 (1333MHz),2000,AMD,5+,,15323
+CS,Модули памяти/DDRAM-III для настольных ПК,Patriot,PSD32G16002,"Модуль памяти DIMM 2GB DDR3 PATRIOT PSD32G16002 (PC12800, 1600MHz)",4100,AMD,1-5,,12223
+CS,Модули памяти/DDRAM-II для настольных ПК,Patriot,PSD22G80026,"Модуль памяти DIMM 2GB DDRII PATRIOT PSD22G80026 (PC6400, 800MHz)",4600,AMD,5+,,10909
+CS,Модули памяти/DDRAM-IV для настольных ПК,Hynix,HMAA4GU6MJR8N-VKN0,"Модуль памяти DIMM 32GB DDR4 Hynix HMAA4GU6MJR8N-VKN0 (3200MHz, 1.2v)",33200,AMD,1-5,,13942
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD432G26662,"Модуль памяти DIMM 32GB DDR4 PATRIOT PSD432G26662 (2666MHz, 1.2v)",35300,AMD,1-5,,13835
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD432G32002,"Модуль памяти DIMM 32GB DDR4 PATRIOT PSD432G32002 (3200MHz, 1.2v)",37100,AMD,5+,,14419
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVE2432G360C0,Модуль памяти DIMM 32GB DDR4 PATRIOT VIPER Elite II PVE2432G360C0 (3600MHz),39200,AMD,1-5,,15092
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVS432G320C6,Модуль памяти DIMM 32GB DDR4 PATRIOT VIPER Steel PVS432G320C6 (3200MHz),38200,AMD,1-5,,12843
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVS432G360С8,Модуль памяти DIMM 32GB DDR4 PATRIOT VIPER Steel PVS432G360C8 (3600MHz),39400,AMD,5+,,13976
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVS432G360C8K,"Модуль памяти DIMM 32GB DDR4 PATRIOT VIPER Steel PVS432G360C8K (2x16GB, 3600MHz)",40600,AMD,1-5,,16785
+CS,Модули памяти/DDRAM-IV для настольных ПК,PATRIOT,PVSR432G360C0K,"Модуль памяти DIMM 32GB DDR4 PATRIOT VIPER Steel PVSR432G360C0K (2x16GB, 3600MHz)",42100,AMD,1-5,,16568
+CS,Модули памяти/DDRAM-IV для настольных ПК,Samsung,M378A4G43AB2-CWE,Модуль памяти DIMM 32GB DDR4 Samsung M378A4G43AB2-CWE (3200MHz),39400,AMD,1-5,,16010
+CS,Модули памяти/DDRAM-IV для настольных ПК,Crucial,CT2K16G56C46U5,"Модуль памяти DIMM 32GB DDR5 Crucial CT2K16G56C46U5 (2x16GB, 5600MHz)",40000,AMD,1-5,,17013
+CS,Модули памяти/DDRAM-IV для настольных ПК,Crucial,CT32G48C40U5,Модуль памяти DIMM 32GB DDR5 Crucial CT32G48C40U5 (4800MHz),43700,AMD,1-5,,16011
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KF556C40BBK2-32,"Модуль памяти DIMM 32GB DDR5 Kingston FURY Beast KF556C40BBK2-32 (2x16GB, 5600MHz)",44900,AMD,5+,,16884
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KF560C30BBEK2-32,Модуль памяти DIMM 32GB DDR5 Kingston Fury Beast KF560C30BBEK2-32 (6000MHz),58900,AMD,1-5,,17020
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD532G48002,Модуль памяти DIMM 32GB DDR5 PATRIOT PSD532G48002 (4800MHz),35900,AMD,5+,,15893
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD532G4800K,"Модуль памяти DIMM 32GB DDR5 PATRIOT PSD532G4800K (2x16GB, 4800MHz)",33700,AMD,1-5,,15750
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD532G56002,Модуль памяти DIMM 32GB DDR5 PATRIOT PSD532G56002 (5600MHz),37400,AMD,5+,,15426
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVXR532G76C36K,"Модуль памяти DIMM 32GB DDR5 PATRIOT VIPER Xtreme RGB PVXR532G76C36K (2x16GB, 7600MT/s)",67100,AMD,1-5,,15538
+CS,Модули памяти/DDRAM-III для настольных ПК,Patriot,PSD34G160081,"Модуль памяти DIMM 4GB DDR3 PATRIOT PSD34G160081 (PC12800, 1600MHz)",3200,AMD,1-5,,12224
+CS,Модули памяти/DDRAM-IV для настольных ПК,AMD,R744G2400U1S-UO,Модуль памяти DIMM 4GB DDR4 AMD R744G2400U1S-UO (2400MHz),6000,AMD,1-5,,13806
+CS,Модули памяти/DDRAM-IV для настольных ПК,Hynix,HMA851U6DJR6N-VKN0,"Модуль памяти DIMM 4GB DDR4 Hynix HMA851U6DJR6N-VKN0 (2666MHz, 1.2v)",5100,AMD,1-5,,13967
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD44G266681,"Модуль памяти DIMM 4GB DDR4 PATRIOT PSD44G266681 (PC21330, 2666MHz)",4800,AMD,5+,,12125
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD44G266681H,"Модуль памяти DIMM 4GB DDR4 PATRIOT PSD44G266681H (PC21330, 2666MHz)",5200,AMD,1-5,,15098
+CS,Модули памяти/DDRAM-II для настольных ПК,Patriot,PSD24G800K,"Модуль памяти DIMM 4GB DDRII PATRIOT PSD24G800K (2x2GB, 800MHz)",11300,AMD,1-5,,14079
+CS,Модули памяти/DDRAM-IV для настольных ПК,PATRIOT,PVSR464G320C6K,"Модуль памяти DIMM 64GB DDR4 PATRIOT VIPER Steel PVS464G320C6K (2x32GB, 3200MHz)",69000,AMD,1-5,,16343
+CS,Модули памяти/DDRAM-IV для настольных ПК,Crucial,CT2K32G56C46U5,"Модуль памяти DIMM 64GB DDR5 Crucial CT2K32G56C46U5 (2x32GB, 5600MHz)",78600,AMD,1-5,,17014
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KF560C36BBEK2-64,"Модуль памяти DIMM 64GB DDR5 Kingston FURY Beast Black KF560C36BBEK2-64 (2x32GB, 6000MHz)",96300,AMD,1-5,,16390
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KF556C40BBK2-64,"Модуль памяти DIMM 64GB DDR5 Kingston FURY Beast KF556C40BBK2-64 (2x32GB, 5600MHz)",83300,AMD,5+,,16012
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KF560C36BBEAK2-64,"Модуль памяти DIMM 64GB DDR5 Kingston FURY Beast RGB KF560C36BBEAK2-64 (2x32GB, 6000MHz)",109200,AMD,1-5,,16391
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVV564G560C40K,"Модуль памяти DIMM 64GB DDR5 PATRIOT VIPER Venom PVV564G560C40K (2x32GB, 5600MHz)",78000,AMD,1-5,,16786
+CS,Модули памяти/DDRAM-IV для настольных ПК,Crucial,CT8G4DFRA32A,"Модуль памяти DIMM 8GB DDR4 CRUCIAL CT8G4DFRA32A (3200MHz, 1.2v)",9900,AMD,1-5,,13927
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KVR32N22S6/8,"Модуль памяти DIMM 8GB DDR4 Kingston KVR32N22S6/8 (3200MHz, 1.2v)",9200,AMD,1-5,,15880
+CS,Модули памяти/DDRAM-IV для настольных ПК,Kingston,KVR32N22S8/8,"Модуль памяти DIMM 8GB DDR4 Kingston KVR32N22S8/8 (3200MHz, 1.2v)",9900,AMD,1-5,,16885
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD48G266682,"Модуль памяти DIMM 8GB DDR4 PATRIOT PSD48G266682 (PC21330, 2666MHz)",10700,AMD,1-5,,12475
+CS,Модули памяти/DDRAM-IV для настольных ПК,PATRIOT,PSD48G32002,Модуль памяти DIMM 8GB DDR4 PATRIOT PSD48G32002 (3200MHz),9000,AMD,5+,,16130
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD48G320081,Модуль памяти DIMM 8GB DDR4 PATRIOT PSD48G320081 (3200MHz),9000,AMD,5+,,14617
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PVS48G360C8,"Модуль памяти DIMM 8GB DDR4 PATRIOT VIPER PVS48G360C8 (PC25600, 3600MHz)",9900,AMD,1-5,,15539
+CS,Модули памяти/DDRAM-IV для настольных ПК,Samsung,M378A1K43EB2-CWE,"Модуль памяти DIMM 8GB DDR4 Samsung M378A1K43EB2-CWE (3200MHz, 1.2v)",11700,AMD,1-5,,15827
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD58G560041,Модуль памяти DIMM 8GB DDR5 PATRIOT PSD58G560041 (5600MHz),11700,AMD,1-5,,15611
+CS,Модули памяти/DDRAM-IV для настольных ПК,PATRIOT,PSD58G560081,Модуль памяти DIMM 8GB DDR5 PATRIOT PSD58G560081 (5600MHz),11700,AMD,5+,,16199
+CS,Модули памяти/DDRAM-IV для настольных ПК,Hynix,HMA82GR7CJR4N-XNTG,"Модуль памяти SERVER RAM DIMM 16GB DDR4 Hynix HMA82GR7CJR4N-XNTG (3200MHz, 1.2v)",26900,AMD,1-5,,13909
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD416G320081S,Модуль памяти SODIMM 16GB DDR4 PATRIOT PSD416G320081S (3200MHz),17600,AMD,5+,,14823
+CS,Модули памяти/DDRAM-IV для ноутбуков,Samsung,M471A2K43EB1-CWE,Модуль памяти SODIMM 16GB DDR4 Samsung M471A2K43EB1-CWE (3200MHz),19500,AMD,1-5,,16013
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD516G480081S,Модуль памяти SODIMM 16GB DDR5 PATRIOT PSD516G480081S (4800MHz),17900,AMD,1-5,,15891
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD516G560081S,Модуль памяти SODIMM 16GB DDR5 PATRIOT PSD516G560081S (5600MHz),19800,AMD,1-5,,15614
+CS,Модули памяти/DDRAM-II для настольных ПК,Patriot,PSD21G6672S,Модуль памяти SODIMM 1GB DDR2 PATRIOT PSD21G6672S (667MHz),2000,AMD,5+,,15322
+CS,Модули памяти/DDRAM-III для настольных ПК,Patriot,PSD32G160081S,"Модуль памяти SODIMM 2GB DDR3 PATRIOT PSD32G160081S (PC12800, 1600MHz)",4100,AMD,1-5,,15097
+CS,Модули памяти/DDRAM-IV для ноутбуков,Patriot,PSD432G32002S,Модуль памяти SODIMM 32GB DDR4 PATRIOT PSD432G32002S (3200MHz),36900,AMD,5+,,14468
+CS,Модули памяти/DDRAM-IV для ноутбуков,Samsung,M471A4G43AB1-CWE,Модуль памяти SODIMM 32GB DDR4 Samsung M471A4G43AB1-CWE (3200MHz),39000,AMD,1-5,,16015
+CS,Модули памяти/DDRAM-IV для настольных ПК,Crucial,CT32G48C40S5,Модуль памяти SODIMM 32GB DDR5 Crucial CT32G48C40S5 (4800MHz),36700,AMD,1-5,,16014
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD532G48002S,Модуль памяти SODIMM 32GB DDR5 PATRIOT PSD532G48002S (4800MHz),36500,AMD,5+,,15615
+CS,Модули памяти/DDRAM-III для ноутбуков,Patriot,PSD34G16002S,"Модуль памяти SODIMM 4GB DDR3 PATRIOT PSD34G16002S (1600MHz, 1.5V)",3200,AMD,5+,,13719
+CS,Модули памяти/DDRAM-III для ноутбуков,Patriot,PSD34G160081S,"Модуль памяти SODIMM 4GB DDR3 PATRIOT PSD34G160081S (PC12800, 1600MHz)",3200,AMD,1-5,,12222
+CS,Модули памяти/DDRAM-III для ноутбуков,Patriot,PSD34G1600L2S,"Модуль памяти SODIMM 4GB DDR3 PATRIOT PSD34G1600L2S SL (1600MHz, 1.35V)",3300,AMD,5+,,12590
+CS,Модули памяти/DDRAM-IV для ноутбуков,Patriot,PSD44G266681S,Модуль памяти SODIMM 4GB DDR4 PATRIOT PSD44G266681S (2666MHz),4600,AMD,5+,,12418
+CS,Модули памяти/DDRAM-III для ноутбуков,Patriot,PSD38G16002S,"Модуль памяти SODIMM 8GB DDR3 PATRIOT PSD38G16002S (PC12800, 1600MHz)",4700,AMD,1-5,,12282
+CS,Модули памяти/DDRAM-III для ноутбуков,Patriot,PSD38G1600L2S,"Модуль памяти SODIMM 8GB DDR3 PATRIOT PSD38G1600L2S SL (1600MHz, 1.35V)",4700,AMD,5+,,12591
+CS,Модули памяти/DDRAM-IV для ноутбуков,Kingston,KVR32S22S8/8,Модуль памяти SODIMM 8GB DDR4 Kingston KVR32S22S8/8 (3200MHz),7800,AMD,1-5,,16626
+CS,Модули памяти/DDRAM-IV для ноутбуков,Patriot,PSD48G266682S,"Модуль памяти SODIMM 8GB DDR4 PATRIOT PSD48G266682S (PC21330, 2666MHz)",9200,AMD,1-5,,12473
+CS,Модули памяти/DDRAM-IV для ноутбуков,Patriot,PSD48G320081S,Модуль памяти SODIMM 8GB DDR4 PATRIOT PSD48G320081S (3200MHz),9200,AMD,1-5,,15275
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD58G480041S,Модуль памяти SODIMM 8GB DDR5 PATRIOT PSD58G480041S (4800MHz),11700,AMD,5+,,15892
+CS,Модули памяти/DDRAM-IV для настольных ПК,Patriot,PSD58G560041S,Модуль памяти SODIMM 8GB DDR5 PATRIOT PSD58G560041S (5600MHz),12700,AMD,5+,,15613
+CS,Мониторы/LCD мониторы,Dell,P2219H,"Монитор LED 22"" Dell P2219H (22"", 8ms, VGA/HDMI/DP/4xUSB, Black)",65800,AMD,1-5,,12599
+CS,Мониторы/LED мониторы,AOC,24B20JH2,"Монитор LED 24"" AOC 24B20JH2 (FHD IPS, 100Hz, 1ms, VGA/HDMI)",40200,AMD,5+,,16347
+CS,Мониторы/LCD мониторы,Dell,P2423,"Монитор LED 24"" Dell P2423 (FHD, IPS, 8ms, 16:10, HDMI/DP/DVI/VGA/USB 3.2 Gen 1 hub, Black/Silver)",87800,AMD,1-5,,15626
+CS,Мониторы/LCD мониторы,Dell,P2423DE,"Монитор LED 24"" Dell P2423DE (2K, 2560x1440, IPS, 8ms, 16:9, HDMI/DP/4xUSB/USB-C, Pivot, Black/Silver)",126400,AMD,1-5,,16569
+CS,Мониторы/LCD мониторы,Dell,DELL-P2425H,"Монитор LED 24"" Dell P2425H (Full HD, IPS, 100Hz, 5ms, HDMI/VGA/DP/USB-C)",74500,AMD,5+,,16496
+CS,Мониторы/LED мониторы,HP,1FH48AA#ABB,"Монитор LED 24"" HP EliteDisplay E243 23.8"" (FHD IPS, 5ms, Web-Camera, VGA/HDMI/USB Hub, Black-Silver)",76100,AMD,1-5,,15300
+CS,Мониторы/LED мониторы,HP,M24f,"Монитор LED 24"" HP M24f (FHD IPS, 75Hz, 5ms, AMD FreeSync, VGA/HDMI, Silver)",57700,AMD,1-5,,16119
+CS,Мониторы/LED мониторы,LG,24BK450H-B,"Монитор LED 24"" LG 24BK450H-B (IPS, 1920x1080, 5000000:1, 5ms, VGA/HDMI)",54600,AMD,5+,,15208
+CS,Мониторы/LED мониторы,LG,24BK550Y-I.ARUB,"Монитор LED 24"" LG 24BK550Y-I (IPS, 1920x1080, 5000000:1, 75Hz, 5ms, VGA/DVI/HDMI/DP/USB, HAS Pivot, Speakers)",0,AMD,1-5,,16178
+CS,Мониторы/LED мониторы,LG,24BN550Y-B,"Монитор LED 24"" LG 24BN550Y-B (IPS, 1920x1080, 5000000:1, 5ms, DVI/HDMI)",58500,AMD,5+,,15209
+CS,Мониторы/LED мониторы,LG,24M38A-B,"Монитор LED 24"" LG 24M38A-B (FHD, 5ms, VGA)",31200,AMD,5+,,16543
+CS,Мониторы/LED мониторы,LG,24MR400,"Монитор LED 24"" LG 24MR400 (FHD IPS, 100Hz, 5ms, sRGB 99%, AMD FreeSync, VGA/HDMI)",40400,AMD,5+,,16349
+CS,Мониторы/LED мониторы,Philips,241V8B,"Монитор LED 24"" Philips 241V8B (IPS, 16:9, 1920x1080, 100Hz, 1300:1, 4ms, VGA/HDMI)",37200,AMD,1-5,,15912
+CS,Мониторы/LCD мониторы,Samsung,LS24C310EAEXXS,"Монитор LED 24"" Samsung LS24C310EAEXXS (IPS, Full HD, 5ms, 75Hz, AMD FreeSync, VGA/HDMI, Black)",38600,AMD,5+,,16544
+CS,Мониторы/LED мониторы,Samsung,LS24C310EAMXUE,"Монитор LED 24"" Samsung LS24C310EAMXUE (IPS, Full HD, 5ms, 75Hz, VGA/HDMI, Black)",38800,AMD,1-5,,15910
+CS,Мониторы/LED мониторы,Samsung,LS24A336NHUXEN,"Монитор LED 24"" Samsung S24A336NHU (VA, 1920x1080, 5ms, 3000:1, VGA/HDMI, Black)",50700,AMD,1-5,,14582
+CS,Мониторы/LCD мониторы,Viewsonic,VA2445-LED,"Монитор LED 24"" Viewsonic VA2445 (23.6"", LED, Black, 5ms)",44800,AMD,1-5,,11590
+CS,Мониторы/LED мониторы,AOC,27B2DA,"Монитор LED 27"" AOC 27B2DA (IPS, 4ms, VGA/DVI/HDMI, Black)",60100,AMD,1-5,,15301
+CS,Мониторы/LED мониторы,AOC,27B2H/EU,"Монитор LED 27"" AOC 27B2H/EU (IPS, 8ms, VGA/HDMI, Black)",58500,AMD,1-5,,14133
+CS,Мониторы/LED мониторы,AOC,27G2SAE/BK,"Монитор LED 27"" AOC Gaming 27G2SAE/BK (VA, 1920x1080, 165Hz, 80000000:1, 1ms, 2xHDMI/DP, Speakers)",77600,AMD,1-5,,15600
+CS,Мониторы/LED мониторы,AOC,CQ27G2S/BK,"Монитор LED 27"" AOC Gaming CQ27G2S/BK (2K VA Curved, 2560x1440, 165Hz, 4000:1, 4ms, HDR10, 2xHDMI/DP)",99100,AMD,1-5,,16894
+CS,Мониторы/LED мониторы,AOC,Q27G2E/BK,"Монитор LED 27"" AOC Gaming Q27G2E/BK (2K VA, 2560x1440, 155hz, 3000:1, 1ms, 2HDMI//DP, Black/Red)",87800,AMD,1-5,,15707
+CS,Мониторы/LED мониторы,AOC,Q27G2U/BK,"Монитор LED 27"" AOC Gaming Q27G2U/BK (2K VA, 2560x1440, 155hz, 3000:1, 1ms, 2HDMI//DP/4xUSB, Black/Red)",103000,AMD,1-5,,16310
+CS,Мониторы/LCD мониторы,Dell,P2720D,"Монитор LED 27"" Dell P2720D (2K IPS, 2560x1080, 8ms, HDMI/DP/2xUSB, Silver)",148200,AMD,1-5,,15080
+CS,Мониторы/LCD мониторы,Dell,2722-5236,"Монитор LED 27"" Dell P2722H (27"", IPS, 8ms, VGA/HDMI/DP/USB, Black)",78000,AMD,5+,,14607
+CS,Мониторы/LED мониторы,HP,6N4E2AS,"Монитор LED 27"" HP E27 G5 (FHD IPS, 75Hz, 5ms, HDMI/DP/USB, HAS Pivot, Black)",80000,AMD,5+,,16507
+CS,Мониторы/LED мониторы,HP,64W41AA,"Монитор LED 27"" HP P27h G5 (FHD IPS, 75Hz, 5ms, VGA/HDMI/DP, Black)",64000,AMD,5+,,16506
+CS,Мониторы/LED мониторы,LG,27BN55UP-B,"Монитор LED 27"" LG 27BN55UP-B (4K IPS, 3840x2160, 1000:1, 5ms, HDR10, 2xHDMI/DP, Pivot)",114700,AMD,5+,,16975
+CS,Мониторы/LED мониторы,LG,27BN65YP-B,"Монитор LED 27"" LG 27BN65YP-B (IPS, 1920x1080, 5000000:1, 5ms, DVI/HDMI/DP/USB, Pivot, Speaker)",73500,AMD,1-5,,15860
+CS,Мониторы/LCD мониторы,LG,27MR400-B,"Монитор LED 27"" LG 27MR400-B (FHD IPS, 100Hz, 5ms, sRGB 99%, AMD FreeSync, VGA/HDMI)",45200,AMD,5+,,16545
+CS,Мониторы/LED мониторы,LG,27UP850K-W,"Монитор LED 27"" LG 27UP850K-W (4K IPS, 3840x2160, 1200:1, 5ms, HDR10, 2xHDMI/DP, USB-C, Speakers, White)",148600,AMD,5+,,16974
+CS,Мониторы/LED мониторы,LG,27US550-W,"Монитор LED 27"" LG 27US550-W (IPS, 3840x2160, 5000000:1, 5ms, HDR10, 2xHDMI/DP, Black/White)",103500,AMD,1-5,,16895
+CS,Мониторы/LCD мониторы,Philips,271V8,"Монитор LED 27"" Philips 271V8 (IPS, 16:9, 1920x1080, 75Hz, 1300:1, 4ms, VGA/HDMI)",42500,AMD,1-5,,16640
+CS,Мониторы/LED мониторы,Philips,271V8B,"Монитор LED 27"" Philips 271V8B (IPS, 16:9, 1920x1080, 100Hz, 1300:1, 4ms, VGA/HDMI)",46000,AMD,5+,,15913
+CS,Мониторы/LED мониторы,Samsung,LS27CG554EUXEN,"Монитор LED 27"" Samsung Odyssey G5 Gaming G55C S27CG554EU (2K VA Curved, 2560x1440, 165Hz, 1000:1, 1ms, FreeSync Premium, HDR10, HDMI/DP)",93400,AMD,5+,,16497
+CS,Мониторы/LED мониторы,Samsung,LS27AG320NIXCI,"Монитор LED 27"" Samsung S27AG320NI (FHD, VA, 165Hz, 1ms, FreeSync Premium, HAS Pivot, HDMI/DP, Black)",78000,AMD,1-5,,15841
+CS,Мониторы/LED мониторы,Samsung,LS27D700EAU,"Монитор LED 27"" Samsung ViewFinity S7 S70D LS27D700EAU (4K IPS, 3480x2160, 1000:1, 5ms, HDR10, HDMI/DP)",101800,AMD,1-5,,16976
+CS,Мониторы/LED мониторы,LG,29BN650-B.AUB,"Монитор LED 29"" LG 29BN650-B (2K IPS, 2560x1080, 5000000:1, 5ms, 2xHDMI, Black)",95600,AMD,1-5,,14798
+CS,Мониторы/LED мониторы,LG,29WP500-B.AEU,"Монитор LED 29"" LG 29WP500-B (IPS, 2560x1080, 5000000:1, 5ms, 2xHDMI, Black)",87400,AMD,1-5,,14317
+CS,Мониторы/LED мониторы,Xiaomi,BHR5116GL,"Монитор LED 30"" Xiaomi BHR5116GL Curved (VA, 2560x1080, 200Hz, 1000000:1, 4ms, HDMI/DP, Black)",128100,AMD,1-5,,16291
+CS,Мониторы/LED мониторы,AOC,CQ32G4VE,"Монитор LED 32"" AOC CQ32G4VE (QHD VA, 2560x1440, 3500:1, 0.5ms, HDR10, 2xHDMI/DP, Curved, Black)",121700,AMD,1-5,,16979
+CS,Мониторы/LED мониторы,LG,32UP55NP-W,"Монитор LED 32"" LG 32UP55NP-W (4K VA, 3840x2160, 3000:1, 4ms, HDR10, 2xHDMI/DP/USB-C, Speakers, White)",168100,AMD,1-5,,16977
+CS,Мониторы/LED мониторы,Samsung,S32CG552EU,"Монитор LED 32"" Samsung Odyssey G5 S32CG552EU (QHD VA, 2560x1440, 2500:1, 1ms, HDR10, HDMI/DP, Curved, Black)",122500,AMD,1-5,,16980
+CS,Мониторы/LED мониторы,LG,34WL500-B.ARUZ,"Монитор LED 34"" LG 34WL500-B (IPS, 2560x1080, 5000000:1, 5ms, 2xHDMI)",124800,AMD,1-5,,12639
+CS,Мониторы/LED мониторы,LG,34WP500-B,"Монитор LED 34"" LG 34WP500-B (2K IPS, 2560x1080, 10000000:1, 5ms, 2xHD, DP)",126000,AMD,5+,,14739
+CS,Ноутбуки/Нетбуки,Acer,DQ.BL0MC.002,"Моноблок Acer Aspire C24-1300 23.8"" (IPS FHD, Ryzen 5 7520U, 8GB DDR4, 512GB SSD, Radeon 610M Graphics, Black)",238300,AMD,1-5,,16784
+CS,Системные_блоки Intel Core i3/i5/i7,ASUS,90AB1ATB-MB3200,"Моноблок ASUS NUC Atlas Canyon RNUC12WSKi50Z00 (Celeron N5105, 2xSODIMM DDR4, M.2 NVMe, DP/HDMI, GbLAN, WiFi+BT, 7.1 Sound)",80500,AMD,5+,,17002
+CS,Системные_блоки Intel Core i3/i5/i7,Gigabyte,GB-BRI3H-10110,"Моноблок Gigabyte BRIX GB-BRI3H-10110 (Core i3-10110U, 2xSODIMM DDR4, M.2 NVMe/2.5"" SATA, 2xHDMI, Type-C, GbLAN, WiFi+BT)",105300,AMD,1-5,,17016
+CS,Системные_блоки Intel Core i3/i5/i7,Gigabyte,GB-BRR5-4500,"Моноблок Gigabyte Brix GB-BRR5-4500 (Ryzen 5-4500U, 2xSODIMM DDR4, M.2 NVMe, mDP/HDMI/2xType-C, GbLAN, WiFi+BT)",90500,AMD,1-5,,16627
+CS,Системные_блоки Intel Core i3/i5/i7,Intel,RNUC12WSHI30000,"Моноблок Intel NUC Wallstreet RNUC12WSHI30000 (Core i3-1220P, 2xSODIMM DDR4, M.2 NVMe, DP/HDMI, GbLAN, WiFi+BT, 7.1 Sound)",168100,AMD,1-5,,16112
+CS,Системные_блоки Intel Core i3/i5/i7,Intel,90AROOD1-M00060,"Моноблок Intel NUC Wallstreet RNUC12WSKl500002I (Core i5-1240P, 2xSODIMM DDR4, M.2 NVMe, DP/HDMI, GbLAN, WiFi+BT, 7.1 Sound, EU Cord)",198900,AMD,5+,,16398
+CS,Корпуса/MidiTower,Crownmicro,CM000003640,Монтажное кольцо для кулера CM-RING1700 (для кулеров с клипсами на сокет 1700),1100,AMD,5+,,15470
+CS,Мыши/Проводные,A4,OP-720,"Мышь A4 OP-720 (800dpi, Black, PS/2)",1200,AMD,5+,,12297
+CS,Мыши/Проводные,A4Tech,ES9 PLUS,"Мышь A4Tech Bloody ES9 Plus (10000dpi, 7 Button, Black, USB)",11700,AMD,1-5,,15830
+CS,Мыши/Проводные,Crownmicro,CM000003326,"Мышь CrownMicro CMGM-900, Gaming (7xButtons, 3200dpi, 125Hz, Backlight, USB)",2800,AMD,1-5,,13704
+CS,Мыши/Проводные,Crownmicro,CM000003327,"Мышь CrownMicro CMGM-901, Gaming (8xButtons, 4800dpi, 1000Hz, Backlight, USB)",3800,AMD,1-5,,13703
+CS,Мыши/Проводные,Crownmicro,CM000003328,"Мышь CrownMicro CMGM-902, Gaming (6xButtons, 7200dpi, 1000Hz, Backlight, USB)",4500,AMD,5+,,14814
+CS,Мыши/Проводные,Crownmicro,CM000003329,"Мышь CrownMicro CMGM-903, Gaming (7xButtons, 7000dpi, 1000Hz, Backlight, USB)",6200,AMD,1-5,,13705
+CS,Мыши/Проводные,Crownmicro,CM000003330,"Мышь CrownMicro CMGM-904, Gaming (7xButtons, 7000dpi, 1000Hz, Backlight, USB)",5200,AMD,1-5,,13706
+CS,Мыши/Проводные,CrownMicro,6291105910965,"Мышь CrownMicro CMM-20 (4button, 1600dpi, White, USB)",1200,AMD,1-5,,11124
+CS,Мыши/Проводные,CrownMicro,CM000001475,"Мышь CrownMicro CMM-31 (3button, 1000dpi, Black, USB)",1500,AMD,1-5,,11585
+CS,Мыши/Проводные,CrownMicro,6970963380072,"Мышь CrownMicro CMM-502 Silent (3button, 1000dpi, White, USB)",1100,AMD,1-5,,11587
+CS,Мыши/Проводные,Fury,NFU-1198,"Мышь Fury NFU-1198 Brawler Gaming (1600DPI, USB, Optical)",1400,AMD,5+,,15972
+CS,Мыши/Проводные,Fury,NFU-1654,"Мышь Fury NFU-1654 Gaming (6400DPI, USB, Optical)",2700,AMD,1-5,,15166
+CS,Мыши/Проводные,Fury,NFU-1698,"Мышь Fury NFU-1698 Hustler Gaming (6400DPI, RGB, USB, Optical)",5200,AMD,5+,,15973
+CS,Мыши/Проводные,Genesis,NMG-1162,"Мышь Genesis NMG-1162 XENON 750, Gaming (10200Dpi, RGB, USB)",13100,AMD,1-5,,13210
+CS,Мыши/Проводные,Genesis,NMG-1321,"Мышь Genesis NMG-1321 ZIRCON 330, Gaming (USB)",6600,AMD,5+,,12106
+CS,Мыши/Проводные,Genesis,NMG-1629,"Мышь Genesis NMG-1629 XENON 800, Gaming (16000Dpi, RGB, USB)",12800,AMD,5+,,13225
+CS,Мыши/Проводные,Genesis,NMG-1640,"Мышь Genesis NMG-1640 Krypton 510 Gaming (7200DPI, USB, Optical)",6900,AMD,5+,,15975
+CS,Мыши/Проводные,Genesis,NMG-1680,"Мышь Genesis NMG-1680 KRYPTON 550, Gaming, Black, RGB (8000DPI, USB)",5500,AMD,5+,,16526
+CS,Мыши/Проводные,Genesis,NMG-1713,"Мышь Genesis NMG-1713 KRYPTON 200, Gaming (6400Dpi, RGB, USB)",4500,AMD,1-5,,15264
+CS,Мыши/Проводные,Genesis,NMG-1770,"Мышь Genesis NMG-1770 KRYPTON 220, Gaming (6400Dpi, RGB, USB)",5800,AMD,5+,,14365
+CS,Мыши/Проводные,Genesis,NMG-1839,"Мышь Genesis NMG-1839 KRYPTON 555, Gaming, Black, RGB (8000DPI, USB)",9400,AMD,5+,,16527
+CS,Мыши/Проводные,Genesis,NMG-1840,"Мышь Genesis NMG-1840 KRYPTON 555, Gaming, White, RGB (8000DPI, USB)",9400,AMD,5+,,16528
+CS,Мыши/Проводные,Genesis,NMG-2113,"Мышь Genesis NMG-2113 Zircon 500 Gaming (10000DPI, USB)",9900,AMD,5+,,15976
+CS,Мыши/Проводные,Genius,31010001401,"Мышь Genius NetScroll 100 V2 (USB, Black)",1700,AMD,5+,,14076
+CS,Мыши/Проводные,Genius,31010009400,"Мышь Genius NetScroll DX-110 (USB, Black)",1800,AMD,5+,,12281
+CS,Мыши/Проводные,Genius,31010010400,"Мышь Genius NetScroll DX-120 (USB, Black)",1800,AMD,5+,,12919
+CS,Мыши/Проводные,Genius,31010011400,"Мышь Genius NetScroll DX-125 (USB, Black)",1600,AMD,1-5,,15896
+CS,Мыши/Проводные,Genius,31010106100,"Мышь Genius NetScroll DX-125 (USB, Black)",1600,AMD,1-5,,12920
+CS,Мыши/Проводные,Genius,31010239100,"Мышь Genius NetScroll DX-180 (USB, Black)",2900,AMD,5+,,13068
+CS,Мыши/Проводные,Genius,31010233100,Мышь Genius Xscroll V3 (USB),1700,AMD,5+,,13073
+CS,Мыши/Проводные,Logitech,910-005808,"Мышь Logitech G102 LIGHTSYNC (5 Button, 8000dpi, Gaming, USB, Black)",9300,AMD,1-5,,16295
+CS,Мыши/Проводные,Logitech,910-004070,"Мышь Logitech G402 Hyperion Fury (7 Button, 4000dpi, Gaming, USB, Black)",18300,AMD,1-5,,16296
+CS,Мыши/Проводные,Logitech,910-004067,"Мышь Logitech G402 Hyperion Fury (Gaming, USB, Black)",20200,AMD,1-5,,16375
+CS,Мыши/Проводные,Logitech,910-005632,"Мышь Logitech G403 HERO (Gaming, USB, Black)",23700,AMD,1-5,,14620
+CS,Мыши/Проводные,Logitech,910-005470,"Мышь Logitech G502 HERO (Gaming, USB, Black)",22200,AMD,1-5,,14917
+CS,Мыши/Проводные,Logitech,910-006147,"Мышь Logitech G502 X, Gaming (USB, White)",28100,AMD,1-5,,16547
+CS,Мыши/Проводные,Logitech,910-005003,"Мышь Logitech M100 (USB, Gray)",2600,AMD,1-5,,11895
+CS,Мыши/Проводные,Logitech,910-005784,"Мышь Logitech M500s Advanced (Laser, USB, Black)",10700,AMD,5+,,16372
+CS,Мыши/Проводные,Logitech,910-001793,"Мышь Logitech M90 (USB, Black/Dark Gray)",2100,AMD,5+,,11870
+CS,Мыши/Проводные,MSI,S12-0401800-CLA,"Мышь MSI Clutch GM08, Gaming (4200dpi, Black, USB)",7500,AMD,5+,,16473
+CS,Мыши/Проводные,Oklick,1868746,"Мышь Oklick 147M (4button, 2000dpi, White, USB)",1400,AMD,5+,,15775
+CS,Мыши/Проводные,Oklick,1869103,"Мышь Oklick 310M (3button, 2400dpi, White/Grey, USB)",1400,AMD,5+,,15776
+CS,Мыши/Проводные,Oklick,MG-1907,"Мышь Oklick 708G MYSTERY (7button, 2000dpi, Black, USB)",2300,AMD,1-5,,14068
+CS,Мыши/Проводные,Razer,RZ01-03850100-R3M1,"Мышь Razer DeathAdder Essential (5button, 6400dpi, Black, USB)",11400,AMD,1-5,,16294
+CS,Мыши/Проводные,Razer,RZ01-03850100-R3M1,"Мышь Razer DeathAdder Essential (Gaming, USB, Black)",9900,AMD,1-5,,16377
+CS,Мыши/Беспроводные,SVEN,SV-03200112UB,"Мышь SVEN RX-112 (USB, Black)",1000,AMD,5+,,16745
+CS,Мыши/Беспроводные,SVEN,SV-018214,"Мышь SVEN RX-30 (USB, Black)",700,AMD,5+,,16747
+CS,Мыши/Беспроводные,SVEN,SV-017262,"Мышь SVEN RX-70 Gaming (1200DPI, RGB, 1.5m, Black)",1200,AMD,5+,,16744
+CS,Мыши/Беспроводные,SVEN,SV-020644,"Мышь SVEN RX-90 (1000 DPI, USB, Black)",1000,AMD,5+,,16748
+CS,Мыши/Беспроводные,SVEN,SV-021641,"Мышь SVEN RX-G730 Gaming (5+1 keys, 3400DPI, RGB)",2100,AMD,1-5,,16749
+CS,Мыши/Беспроводные,SVEN,SV-021467,"Мышь SVEN RX-G735 Gaming (5+1 keys, 4000DPI, RGB)",2100,AMD,1-5,,16750
+CS,Мыши/Беспроводные,SVEN,SV-020057,"Мышь SVEN RX-G815 Gaming (6+1 keys, 8000DPI, SoftTouch, RGB)",3900,AMD,1-5,,16751
+CS,Мыши/Беспроводные,SVEN,SV-020798,"Мышь SVEN RX-G975 Gaming (9+1 keys, 10000DPI, RGB)",7600,AMD,1-5,,16752
+CS,Мыши/Беспроводные,SVEN,SV-021757,"Мышь SVEN RX-G990 Gaming (8+1 keys, 12400DPI, RGB)",7900,AMD,1-5,,16753
+CS,Мыши/Беспроводные,A4Tech,FB10C BABY PINK,"Мышь беспроводная A4Tech Fstyler FB10C (2000dpi, 4 Button, Pink, USB/Bluetooth)",6500,AMD,5+,,15836
+CS,Мыши/Беспроводные,A4Tech,FB10C GRAYISH WHITE,"Мышь беспроводная A4Tech Fstyler FB10C (2000dpi, 4 Button, White/Grey, USB/Bluetooth)",6500,AMD,5+,,15835
+CS,Мыши/Беспроводные,CrownMicro,CM000001193,"Мышь беспроводная CrownMicro CMM-930W (USB, Black)",1800,AMD,5+,,15214
+CS,Мыши/Беспроводные,CrownMicro,CM000003406,"Мышь беспроводная CrownMicro CMM-935W (USB, Black)",2000,AMD,1-5,,11285
+CS,Мыши/Беспроводные,Fury,NFU-1320,"Мышь беспроводная Fury NFU-1320 Stalker Gaming (2000DPI, USB)",3100,AMD,1-5,,15974
+CS,Мыши/Проводные,Genesis,NMG-2191,"Мышь беспроводная Genesis NMG-2191 ZIRCON 660, Gaming (12000DPI, USB, Black)",12300,AMD,5+,,16529
+CS,Мыши/Проводные,Genesis,NMG-2192,"Мышь беспроводная Genesis NMG-2192 ZIRCON 660, Gaming (12000DPI, USB, White)",12300,AMD,1-5,,16530
+CS,Мыши/Беспроводные,Genius,31030029401,"Мышь беспроводная Genius Ergo 8200S (USB, Gray)",4600,AMD,5+,,16579
+CS,Мыши/Проводные,Logitech,910-004913,"Мышь беспроводная Logitech B330 Silent Plus (USB, Black)",12000,AMD,5+,,16548
+CS,Мыши/Проводные,Logitech,910-005273,"Мышь беспроводная Logitech G PRO (Gaming, USB, Black)",47400,AMD,1-5,,16549
+CS,Мыши/Проводные,Logitech,910-005567,"Мышь беспроводная Logitech G502 Lightspeed (Gaming, USB, Black)",43700,AMD,1-5,,16369
+CS,Мыши/Беспроводные,Logitech,910-004642,"Мышь беспроводная Logitech M170 (USB, Gray/Black)",3900,AMD,5+,,11858
+CS,Мыши/Беспроводные,Logitech,910-004424,"Мышь беспроводная Logitech M171 (USB, Black)",4000,AMD,5+,,12097
+CS,Мыши/Беспроводные,Logitech,910-002238,"Мышь беспроводная Logitech M185 (USB, Swift Gray)",5100,AMD,5+,,11993
+CS,Мыши/Беспроводные,Logitech,910-005906,"Мышь беспроводная Logitech M190 (USB, Grey)",5000,AMD,1-5,,16355
+CS,Мыши/Проводные,Logitech,910-004878,"Мышь беспроводная Logitech M220 Silent (USB, Dark/Gray)",6900,AMD,5+,,11865
+CS,Мыши/Проводные,Logitech,910-006510,"Мышь беспроводная Logitech M221 Silent (USB, Charcoal)",6400,AMD,5+,,16550
+CS,Мыши/Проводные,Logitech,‎910-002201,"Мышь беспроводная Logitech M235 (USB, Black/Gray)",9000,AMD,5+,,11877
+CS,Мыши/Проводные,Logitech,910-001826,"Мышь беспроводная Logitech M510 (USB, Black)",13800,AMD,5+,,16373
+CS,Мыши/Проводные,Logitech,910-004530,"Мышь беспроводная Logitech M535 (Bluetooth, Grey)",21500,AMD,1-5,,16338
+CS,Мыши/Проводные,Logitech,910-001949,"Мышь беспроводная Logitech M705 Marathon (USB, Grey/Black)",15600,AMD,5+,,16313
+CS,Мыши/Проводные,Logitech,910-006929,"Мышь беспроводная Logitech MX Anywhere 3S (USB, Graphite)",31600,AMD,1-5,,16551
+CS,Мыши/Проводные,Logitech,910-006958,"Мышь беспроводная Logitech MX Anywhere 3S for Business (USB, Black)",41900,AMD,1-5,,16374
+CS,Мыши/Проводные,Logitech,910-006559,"Мышь беспроводная Logitech MX Master 3S (USB, Graphite)",44100,AMD,1-5,,16635
+CS,Мыши/Беспроводные,Logitech,910-006253,"Мышь беспроводная Logitech Signature M650 (USB, Graphite)",12900,AMD,5+,,16140
+CS,Мыши/Беспроводные,Philips,SPK7307B/00,Мышь беспроводная Philips SPK7307B/00,3500,AMD,5+,,16185
+CS,Мыши/Беспроводные,SVEN,SV-020637,"Мышь беспроводная SVEN RX-210W (3+1 keys, 1400DPI, Black)",1700,AMD,5+,,16754
+CS,Мыши/Беспроводные,SVEN,SV-03200325WW,Мышь беспроводная SVEN RX-325 (White),1900,AMD,1-5,,16755
+CS,КПК и смартфоны/Карманные компьютеры,Wacom AC60,AC60,Наконечники Wacom AC60,4100,AMD,1-5,,13387
+CS,Накопители SSD,Patriot,PBE120GS25SSDR,"Накопитель SSD 120GB PATRIOT PBE120GS25SSDR (2.5"", SATA3, TLC 3D, 450/320Mbps)",5000,AMD,5+,,13740
+CS,Накопители SSD,PATRIOT,P220S128G25,"Накопитель SSD 128GB PATRIOT P220S128G25 P220 (2.5"", SATA3, TLC 3D, 550/480Mbps)",5400,AMD,5+,,16171
+CS,Накопители SSD,Crucial,CT1000BX500SSD1,"Накопитель SSD 1TB Crucial BX500 2.5"", SATA3, 3D, 540/500Mbps)",26900,AMD,1-5,,14857
+CS,Накопители SSD,Patriot,P210S1TB25,"Накопитель SSD 1TB PATRIOT P210S1TB25 P210 (2.5"", SATA3, TLC 3D, 520/430Mbps)",24200,AMD,1-5,,13139
+CS,Накопители SSD,PATRIOT,P220S1TB25,"Накопитель SSD 1TB PATRIOT P220S1TB25 P220 (2.5"", SATA3, TLC 3D, 550/500Mbps)",24900,AMD,5+,,16880
+CS,Накопители SSD,SAMSUNG,MZ-77E1T0B/EU,"Накопитель SSD 1TB SAMSUNG EVO 870 MZ-77E1T0B/EU (2.5"", SATA3, TLC 3D, 560/530Mbps)",44700,AMD,5+,,15220
+CS,Накопители SSD,Samsung,MZ-77Q1T0BW,"Накопитель SSD 1TB SAMSUNG QVO 870 MZ-77Q1T0BW (2.5"", SATA3, TLC 3D, 560/530Mbps)",41900,AMD,1-5,,13760
+CS,Накопители SSD,Crucial,CT240BX500SSD1,"Накопитель SSD 240GB CRUCIAL CT240BX500SSD1 (2.5"", SATA3, TLC 3D, 540/500Mbps)",8700,AMD,5+,,13519
+CS,Накопители SSD,Kingston,SA400S37/240G,Накопитель SSD 240GB Kingston SA400S37/240G,12500,AMD,5+,,11893
+CS,Накопители SSD,Patriot,PBE240GS25SSDR,"Накопитель SSD 240GB PATRIOT PBE240GS25SSDR (2.5"", SATA3, TLC 3D, 450/320Mbps)",7800,AMD,5+,,13741
+CS,Накопители SSD,Samsung,MZ-77E250B/EU,"Накопитель SSD 250GB SAMSUNG EVO 870 MZ-77E250B/EU (2.5"", SATA3, TLC 3D, 560/530Mbps)",20700,AMD,5+,,15328
+CS,Накопители SSD,Patriot,P210S256G25,"Накопитель SSD 256GB PATRIOT P210S256G25 P210 (2.5"", SATA3, TLC 3D, 500/400Mbps)",8100,AMD,5+,,13137
+CS,Накопители SSD,PATRIOT,P220S256G25,"Накопитель SSD 256GB PATRIOT P220S256G25 P220 (2.5"", SATA3, TLC 3D, 550/490Mbps)",8200,AMD,5+,,16172
+CS,Накопители SSD,Patriot,P210S2TB25,"Накопитель SSD 2TB PATRIOT P210S2TB25 P210 (2.5"", SATA3, TLC 3D, 520/430Mbps)",46400,AMD,1-5,,13979
+CS,Накопители SSD,Samsung,MZ-77E2T0B/EU,"Накопитель SSD 2TB SAMSUNG EVO 870 MZ-77E2T0B/EU (2.5"", SATA3, TLC 3D, 560/530Mbps)",78000,AMD,1-5,,14779
+CS,Накопители SSD,Kingston,SA400S37/480G,Накопитель SSD 480GB Kingston SA400S37/480G,17400,AMD,5+,,11743
+CS,Накопители SSD,Patriot,PBE480GS25SSDR,"Накопитель SSD 480GB PATRIOT PBE480GS25SSDR (2.5"", SATA3, TLC 3D, 450/320Mbps)",12800,AMD,1-5,,13903
+CS,Накопители SSD,Samsung,MZ-77E4T0B/EU,"Накопитель SSD 4TB SAMSUNG 870 EVO MZ-77E4T0B/EU (2.5"", SATA3, TLC 3D, 560/530Mbps)",143300,AMD,1-5,,15433
+CS,Накопители SSD,Samsung,MZ-77Q4T0BW,"Накопитель SSD 4TB SAMSUNG 870 QVO MZ-77Q4T0BW (2.5"", SATA3, QLC 3D, 560/530Mbps)",138800,AMD,1-5,,15889
+CS,Накопители SSD,Crucial,CT500BX500SSD1,"Накопитель SSD 500GB CRUCIAL CT500BX500SSD1 (2.5"", SATA3, TLC 3D, 540/500Mbps)",15000,AMD,5+,,15521
+CS,Накопители SSD,Samsung,MZ-77E500B/EU,"Накопитель SSD 500GB SAMSUNG EVO 870 MZ-77E500B/EU (2.5"", SATA3, TLC 3D, 560/530Mbps)",28100,AMD,5+,,15320
+CS,Накопители SSD,PATRIOT,P220S512G25,"Накопитель SSD 512GB PATRIOT P220S512G25 P220 (2.5"", SATA3, TLC 3D, 550/500Mbps)",13400,AMD,5+,,16197
+CS,Накопители SSD,Patriot,9SE00166-P400LP1KGM28H,"Накопитель SSD M.2 1000GB Patriot P400LP1KGM28H P400 Lite (M.2 2280 PCI-E, Reading 3500 MB/s, Writing 2700 Mb/s)",33200,AMD,1-5,,16410
+CS,Накопители SSD,Patriot,P300P128GM28,"Накопитель SSD M.2 128GB Patriot P300P128GM28 P300 (M.2 2280 PCI-E, Reading 1600 MB/s, Writing 600 Mb/s)",6100,AMD,5+,,13140
+CS,Накопители SSD,Crucial,CT1000P3PSSD8,"Накопитель SSD M.2 1TB CRUCIAL CT1000P3PSSD8 (M.2 2280 PCI-E, Reading 5000 MB/s, Writing 3600 Mb/s)",28900,AMD,1-5,,16660
+CS,Накопители SSD,Patriot,VP4300-1TBM28H,"Накопитель SSD M.2 1TB Patriot Viper VP4300-1TBM28H VP4300 (M.2 2280 PCI-E, Reading 7400 MB/s, Writing 5500 Mb/s)",45600,AMD,1-5,,14469
+CS,Накопители SSD,Patriot,VPN110-1TBM28H,"Накопитель SSD M.2 1TB Patriot VPN110-1TBM28H VPN110 (M.2 2280 PCI-E, Reading 3300 MB/s, Writing 3000 Mb/s)",30700,AMD,1-5,,14422
+CS,Накопители SSD,Patriot,VPR400-1TB28H,"Накопитель SSD M.2 1TB Patriot VPR400-1TBM28H VPR400 (M.2 2280 PCI-E, RGB, Reading 4600 MB/s, Writing 4400 Mb/s)",43900,AMD,1-5,,15094
+CS,Накопители SSD,Samsung,MZ-V8V1T0BW,"Накопитель SSD M.2 1TB SAMSUNG 980 MZ-V8V1T0BW (M.2 2280, PCI-E x 4, Reading 3500 MB/s, Writing 3000 Mb/s)",41900,AMD,5+,,14479
+CS,Накопители SSD,Samsung,MZ-V7S1T0BW,"Накопитель SSD M.2 1TB SAMSUNG EVO MZ-V7S1T0BW 970 EVO Plus (M.2 2280 PCI-E, Reading 3500 MB/s, Writing 3200 Mb/s)",43700,AMD,1-5,,14457
+CS,Накопители SSD,Samsung,MZ-V7S1T0BW,"Накопитель SSD M.2 1Tb SAMSUNG MZ-V7S1T0BW 970 EVO Plus (M.2 2280 PCI-E, Reading 3500 MB/s, Writing 3300 Mb/s)",44900,AMD,1-5,,13655
+CS,Накопители SSD,Samsung,MZ-V9P1T0BW,"Накопитель SSD M.2 1TB SAMSUNG MZ-V9P1T0BW 990 PRO (M.2 2280, PCI-E x 4, Reading 7450 MB/s, Writing 6900 Mb/s)",52500,AMD,5+,,15602
+CS,Накопители SSD,Samsung,MZ-V9P1T0CW,"Накопитель SSD M.2 1TB SAMSUNG MZ-V9P1T0CW 990 PRO (M.2 2280, w/Heatsink, PCI-E x 4, Reading 7450 MB/s, Writing 6900 Mb/s)",58900,AMD,1-5,,15724
+CS,Накопители SSD,WD,WDS100T3X0E,"Накопитель SSD M.2 1TB WD Black SN770 (M.2 2280 PCI-E, Reading 5150 MB/s, Writing 4900 Mb/s)",34900,AMD,1-5,,15812
+CS,Накопители SSD,WD,WDS100T2X0E,"Накопитель SSD M.2 1TB WD Black SN850X (M.2 2280 PCI-E, Reading 7300 MB/s, Writing 6300 Mb/s)",43900,AMD,1-5,,16005
+CS,Накопители SSD,Samsung,MZ-V8V250BW,"Накопитель SSD M.2 250GB SAMSUNG 980 MZ-V8V250BW (M.2 2280, PCI-E x 4, Reading 2900 MB/s, Writing 1300 Mb/s)",20600,AMD,1-5,,14477
+CS,Накопители SSD,Patriot,P300P256GM28,"Накопитель SSD M.2 256GB Patriot P300P256GM28 P300 (M.2 2280 PCI-E, Reading 1700 MB/s, Writing 1100 Mb/s)",9500,AMD,1-5,,12686
+CS,Накопители SSD,Patriot,P400P2TBM28H,"Накопитель SSD M.2 2TB Patriot P400 (M.2 2280 PCI-E, Reading 7000 MB/s, Writing 4800 Mb/s)",54300,AMD,5+,,16195
+CS,Накопители SSD,Samsung,MZ-V9P2T0BW,"Накопитель SSD M.2 2TB SAMSUNG MZ-V9P2T0BW 990 PRO (M.2 2280, PCI-E x 4, Reading 7450 MB/s, Writing 6900 Mb/s)",80900,AMD,1-5,,15603
+CS,Накопители SSD,,MZ-V9P2T0CW,"Накопитель SSD M.2 2TB SAMSUNG MZ-V9P2T0CW 990 PRO (M.2 2280, PCI-E x 4, Reading 7450 MB/s, Writing 6900 Mb/s)",88900,AMD,1-5,,15685
+CS,Накопители SSD,WD,WDS200T3X0E,"Накопитель SSD M.2 2TB WD Black SN770 (M.2 2280 PCI-E, Reading 5150 MB/s, Writing 4850 Mb/s)",59100,AMD,1-5,,15813
+CS,Накопители SSD,Patriot,P310P480GM28,"Накопитель SSD M.2 480GB Patriot P310P480GM28 P310 (M.2 2280 PCI-E, Reading 1700 MB/s, Writing 1500 Mb/s)",13100,AMD,5+,,14825
+CS,Накопители SSD,Samsung,MZ-V9P4T0GW,"Накопитель SSD M.2 4TB SAMSUNG MZ-V9P4T0GW 990 PRO (M.2 2280, PCI-E x 4, Reading 7450 MB/s, Writing 6900 Mb/s)",162200,AMD,1-5,,16261
+CS,Накопители SSD,Crucial,CT500P3PSSD8,"Накопитель SSD M.2 500GB CRUCIAL CT500P3PSSD8 (M.2 2280 PCI-E, Reading 4700 MB/s, Writing 1900 Mb/s)",16800,AMD,1-5,,15488
+CS,Накопители SSD,Kingston,SNV2S/500G,"Накопитель SSD M.2 500GB Kingston SNV2S/500G (M.2 2280 NVMe PCI-E, Reading 3500 MB/s, Writing 2100 Mb/s)",17900,AMD,1-5,,15890
+CS,Накопители SSD,Kingston,SNV3S/500G,"Накопитель SSD M.2 500GB Kingston SNV3S/500G NV3 (M.2 2280 PCI-E, Reading 6000 MB/s, Writing 3000 Mb/s)",18400,AMD,5+,,16702
+CS,Накопители SSD,Samsung,MZ-V8V500BW,"Накопитель SSD M.2 500Gb SAMSUNG MZ-V8V500BW 980 (M.2 2280, PCI-E x 3, Reading 3100 MB/s, Writing 2600 Mb/s)",23900,AMD,5+,,15489
+CS,Накопители SSD,WD,WDS500G3X0E,"Накопитель SSD M.2 500GB WD Black SN770 (M.2 2280 PCI-E, Reading 5000 MB/s, Writing 4000 Mb/s)",27500,AMD,1-5,,15815
+CS,Накопители SSD,WD,WDBBDL5000ANC-WRSN,"Накопитель SSD M.2 500GB WD Black SN770 (M.2 2280 PCI-E, Reading 5000 MB/s, Writing 4000 Mb/s, WDBBDL5000ANC)",24600,AMD,5+,,16695
+CS,Накопители SSD,Patriot,P300P512GM28,"Накопитель SSD M.2 512GB Patriot P300P512GM28 P300 (M.2 2280 PCI-E, Reading 1700 MB/s, Writing 1200 Mb/s)",14500,AMD,1-5,,12687
+CS,Накопители SSD,Patriot,VPN110-512GM28H,"Накопитель SSD M.2 512GB Patriot VPN110-512GM28H VPN110 (M.2 2280 PCI-E, Reading 3100 MB/s, Writing 2300 Mb/s)",21200,AMD,1-5,,14284
+CS,Накопители SSD,Patriot,VPR400-512GM28H,"Накопитель SSD M.2 512GB Patriot VPR400-512GM28H VPR400 (M.2 2280 PCI-E, RGB, Reading 4600 MB/s, Writing 3600 Mb/s)",27600,AMD,1-5,,15093
+CS,Накопители SSD,Crucial,CT1000X6SSD9,"Накопитель SSD внешний 1TB Crucial X6 (2.5"", 800/480Mbps, USB 3.2, Black)",42200,AMD,1-5,,15725
+CS,Накопители SSD,Patriot,PVP301TB28UDG,"Накопитель SSD внешний 1TB Patriot Duo Compact PVP30 PVP301TB28UDG (1000Mbps, USB-A/USB-C, Black)",32300,AMD,1-5,,16981
+CS,Накопители SSD,Patriot,PTPL1TBPEC,"Накопитель SSD внешний 1TB Patriot Transporter Lite PTPL1TBPEC (2.5"", 1000Mbps, USB-C, Black)",32700,AMD,1-5,,16305
+CS,Накопители SSD,Samsung,MU-PC1T0T/WW,"Накопитель SSD внешний 1TB SAMSUNG Portable T7 MU-PC1T0T/WW (2.5"", 1050/1000Mbps, USB 3.2, Grey)",48900,AMD,1-5,,14456
+CS,Накопители SSD,SanDisk,SDSSDE30-1T00-G26,"Накопитель SSD внешний 1TB SanDisk Portable SDSSDE30-1T00-G26 (2.5"", 800Mbps, USB-C, Black)",40400,AMD,1-5,,16006
+CS,Накопители SSD,Crucial,CT2000X6SSD9,"Накопитель SSD внешний 2TB Crucial X6 (2.5"", 800/480Mbps, USB 3.2, Black)",58500,AMD,1-5,,16618
+CS,Накопители SSD,SAMSUNG,MU-PC2T0T/WW,"Накопитель SSD внешний 2TB SAMSUNG Portable T7 MU-PC2T0T/WW (2.5"", 1050/1000Mbps, Touch, USB 3.2, Titan Grey)",75700,AMD,1-5,,16380
+CS,Накопители SSD,SAMSUNG,MU-PH2T0S/EU,"Накопитель SSD внешний 2TB SAMSUNG T5 EVO Portable T5 MU-PH2T0S/EU (2.5"", 460/460Mbps, USB-C, Black)",62400,AMD,1-5,,16619
+CS,Накопители SSD,SanDisk,SDSSDE30-2T00-G26,"Накопитель SSD внешний 2TB SanDisk Portable SDSSDE30-2T00-G26 (2.5"", 800Mbps, USB-C, Black)",61200,AMD,1-5,,16007
+CS,Накопители SSD,Patriot,PTPL512GPEC,"Накопитель SSD внешний 512GB Patriot Transporter Lite PTPL512GPEC (2.5"", 1000Mbps, USB-C, Black)",20100,AMD,5+,,16304
+CS,Накопители SSD,Patriot,PTP512GPEC,"Накопитель SSD внешний 512GB Patriot Transporter PTP512GPEC (2.5"", 1000Mbps, USB-C, Black)",20100,AMD,1-5,,16302
+CS,Наушники и микрофоны/Наушники,Oklick,BE216,Наушники беспроводные Oklick BT-S-120 Black (Bluetooth),2900,AMD,1-5,,12432
+CS,Наушники и микрофоны/Наушники с микрофоном,A4 Tech,HS-30,"Наушники с микрофоном A4 Tech HS-30 (Black, 3.5mm)",6200,AMD,1-5,,12926
+CS,Наушники и микрофоны/Наушники с микрофоном,CrownMicro,CM000001741,"Наушники с микрофоном CrownMicro CMGH-101T (Black/Blue, 3.5mm)",3100,AMD,1-5,,11683
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003071,"Наушники с микрофоном CrownMicro CMGH-2000 (Black/Red, 3.5mm)",5500,AMD,1-5,,12146
+CS,Наушники и микрофоны/Наушники с микрофоном,CrownMicro,CM000003072,"Наушники с микрофоном CrownMicro CMGH-2001 (Black/Blue, 1x3.5mm + adapter 2x3.5mm)",4300,AMD,5+,,16069
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003075,"Наушники с микрофоном CrownMicro CMGH-3100 (Black/Red, 7.1, USB)",10500,AMD,1-5,,12148
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003083,"Наушники с микрофоном CrownMicro CMGH-3101 (Black/Blue, 7.1, USB)",7800,AMD,1-5,,13637
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003085,"Наушники с микрофоном CrownMicro CMGH-3102 (Black/Green, 7.1, USB)",7800,AMD,1-5,,15408
+CS,Наушники и микрофоны/Наушники с микрофоном,CrownMicro,CMH-941,"Наушники с микрофоном CrownMicro CMH-941 (Rose, 3.5mm)",800,AMD,1-5,,11243
+CS,Наушники и микрофоны/Наушники с микрофоном,Fury,NFU-0863,Наушники с микрофоном Fury NFU-0863 Hellcat Gaming (Mini-Jack),4300,AMD,1-5,,15167
+CS,Наушники и микрофоны/Наушники с микрофоном,Fury,NFU-1585,"Наушники с микрофоном Fury NFU-1585 Warhawk, Gaming (RGB, 3.5mm)",9500,AMD,5+,,14499
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-0687,"Наушники с микрофоном Genesis NSG-0687 H59, Gaming (Mini-Jack)",6500,AMD,1-5,,12109
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesi,NSG-0901,"Наушники с микрофоном Genesis NSG-0901 ARGON 200 BLACK-BLUE, Gaming (2xMini-Jack)",5400,AMD,5+,,14678
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-0943,"Наушники с микрофоном Genesis NSG-0943 NEON 350, Gaming (2xMini-Jack)",8900,AMD,1-5,,14362
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1107,"Наушники с микрофоном Genesis NSG-1107 NEON 360 (Backlight, Vibration, USB)",8500,AMD,1-5,,13211
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1434,"Наушники с микрофоном Genesis NSG-1434 ARGON 100 BLACK, Gaming (1xMini-Jack)",4000,AMD,1-5,,14364
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1435,"Наушники с микрофоном Genesis NSG-1435 ARGON 100 Black-Green, Gaming (Mini-Jack)",3600,AMD,1-5,,16966
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1437,"Наушники с микрофоном Genesis NSG-1437 Argon 110 Black-Red, Gaming (Mini-Jack)",2300,AMD,5+,,16531
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1578,"Наушники с микрофоном Genesis NSG-1578 RADON 300 VIRTUAL 7.1 BLACK-RED, Gaming (USB)",8300,AMD,1-5,,15984
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1992,"Наушники с микрофоном Genesis NSG-1992 RADON 210 BLACK-RED, Gaming (USB)",7500,AMD,1-5,,15983
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-2117,"Наушники с микрофоном Genesis NSG-2117 Toron 531 Black, Gaming (Mini-Jack)",14700,AMD,5+,,16533
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-2307,"Наушники с микрофоном Genesis NSG-2307 NEON 613 G2 RGB ILLUMINATION Black, Gaming (Mini-Jack)",10100,AMD,5+,,16967
+CS,Наушники и микрофоны/Наушники с микрофоном,Genius,31710037100,Наушники с микрофоном Genius HS-02B (3.5mm),2800,AMD,1-5,,4776
+CS,Наушники и микрофоны/Наушники с микрофоном,Creative,31710025100,Наушники с микрофоном Genius HS-04S,4800,AMD,1-5,,6801
+CS,Наушники и микрофоны/Наушники с микрофоном,Genius,HS-400A,Наушники с микрофоном Genius HS-400A,4100,AMD,1-5,,16315
+CS,Наушники и микрофоны/Наушники с микрофоном,HyperX,4P5L7AB#UUF,"Наушники с микрофоном HyperX Cloud Stinger (Gaming, 3.5mm, 1.3m, Black)",21100,AMD,1-5,,16287
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000818,"Наушники с микрофоном Logitech G PRO X Gaming (USB, Black)",44900,AMD,1-5,,16553
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000978,"Наушники с микрофоном Logitech G335 Gaming (1x3.5mm/2x3.5mm, Black)",22900,AMD,1-5,,16554
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000770,"Наушники с микрофоном Logitech G432, 7.1 Gaming (USB, Leatherette)",25700,AMD,1-5,,16555
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000593,"Наушники с микрофоном Logitech H111 (3.5mm, Gray)",4700,AMD,5+,,11868
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000475,"Наушники с микрофоном Logitech H340 (USB, Black)",9900,AMD,5+,,11879
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000406,"Наушники с микрофоном Logitech H390 (USB, Black)",12300,AMD,5+,,12671
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-001286,"Наушники с микрофоном Logitech H390 (USB, Off-White)",12700,AMD,5+,,16556
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000480,"Наушники с микрофоном Logitech H540 (USB, Black)",16800,AMD,5+,,15196
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-000575,"Наушники с микрофоном Logitech H570E Stereo (USB, Black)",17900,AMD,5+,,16557
+CS,Наушники и микрофоны/Наушники с микрофоном,Razer,RZ04-03240100-R3M1,"Наушники с микрофоном Razer BlackShark V2 X (Gaming, 3.5mm audio jack, Black)",22200,AMD,1-5,,16378
+CS,Наушники и микрофоны/Наушники с микрофоном,Razer,RZ04-02950100-R381,"Наушники с микрофоном Razer Kraken X Lite (Gaming, 1.3m, 3.5mm audio jack)",15900,AMD,1-5,,16379
+CS,Наушники и микрофоны/Наушники с микрофоном,SVEN,SV-0410010MV,"Наушники с микрофоном SVEN AP-010MV (2x3.5mm, Black)",1300,AMD,5+,,16760
+CS,Наушники и микрофоны/Наушники с микрофоном,SVEN,SV-015411,"Наушники с микрофоном SVEN AP-151MV (1x3.5mm, Black)",2300,AMD,5+,,16761
+CS,Наушники и микрофоны/Наушники с микрофоном,SVEN,SV-015374,"Наушники с микрофоном SVEN AP-320M (1x3.5mm, Black)",2300,AMD,1-5,,16762
+CS,Наушники и микрофоны/Наушники с микрофоном,SVEN,SV-0410680MV,"Наушники с микрофоном SVEN AP-680MV (2x3.5mm, Black)",3100,AMD,5+,,16763
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003178,"Наушники с микрофоном беспроводные CrownMicro CMBH-5098 (Bluetooth 5.0, Black)",2000,AMD,1-5,,14162
+CS,Наушники и микрофоны/Наушники с микрофоном,CrownMicro,6941141601708,"Наушники с микрофоном беспроводные CrownMicro CMTWS-5001 (Bluetooth, Black)",6200,AMD,1-5,,12614
+CS,Наушники и микрофоны/Наушники с микрофоном,CrownMicro,6941141601708,"Наушники с микрофоном беспроводные CrownMicro CMTWS-5001 (Bluetooth, White)",2300,AMD,5+,,12615
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,6941141602798,"Наушники с микрофоном беспроводные CrownMicro CMTWS-5002 (Bluetooth 5.0, White)",6600,AMD,1-5,,13044
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003185,"Наушники с микрофоном беспроводные CrownMicro CMTWS-5005 (Bluetooth 5.0, White)",3700,AMD,1-5,,13043
+CS,Наушники и микрофоны/Наушники с микрофоном,Crownmicro,CM000003304,"Наушники с микрофоном беспроводные CrownMicro CMTWS-5006 (Bluetooth 5.0, White)",4900,AMD,1-5,,14164
+CS,Наушники и микрофоны/Наушники с микрофоном,Digma,BT-05,"Наушники с микрофоном беспроводные Digma BT-05 (Bluetooth, Black/Red)",3500,AMD,1-5,,12481
+CS,Наушники и микрофоны/Наушники с микрофоном,Genesis,NSG-1673,"Наушники с микрофоном беспроводные Genesis NSG-1673 Selen 400 Black-Red, Gaming (USB)",10500,AMD,5+,,16532
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-001050,"Наушники с микрофоном беспроводные Logitech G435 Lightspeed, Gaming (USB, Black)",27300,AMD,1-5,,16558
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-001074,"Наушники с микрофоном беспроводные Logitech G435 Lightspeed, Gaming (USB, White)",27300,AMD,1-5,,16559
+CS,Наушники и микрофоны/Наушники с микрофоном,Logitech,981-001213,"Наушники с микрофоном беспроводные Logitech Zone Vibe 100 (Bluetooth, Graphite)",39800,AMD,1-5,,16561
+CS,Наушники и микрофоны/Наушники с микрофоном,Ugreen,35757,"Наушники с микрофоном беспроводные Ugreen 35757 (HiTune Max5c, Bluetooth 5.4, Black)",13300,AMD,1-5,,16802
+CS,Ноутбуки/Нетбуки,Acer,A314-36P-3772,"Ноутбук Acer Aspire 3 A314-36P-3772 14"" (FHD, Core i3-N305, 8GB LPDDR5, 128GB SSD, Intel UHD Graphics, Windows 11 Home, Silver)",118400,AMD,1-5,,16682
+CS,Ноутбуки/Нетбуки,Acer,"NX.KN4EX,00X","Ноутбук Acer Aspire 5 A515-57-713N 15.6"" (FHD IPS, i7-12650H, 16GB DDR4, 512GB SSD, Intel UHD, Dark Gray, DOS, NX.KN4EX,00X)",248000,AMD,1-5,,16634
+CS,Ноутбуки/Нетбуки,Acer,NH.QNCEM.005,"Ноутбук Acer Nitro V 15 ANV15-51 15.6"" (FHD IPS 144Hz, i5-13420H,  8GB DDR4, 512GB SSD, 6GB RTX 3050, Black, Windows 11)",333800,AMD,1-5,,16510
+CS,Ноутбуки/Нетбуки,ASUS,E410KA-PM464,"Ноутбук ASUS E410KA-PM464 14"" (FHD, Pentium N6000, 4GB LPDDR4, 64GB eMMC, Intel UHD Graphics, Windows 11 Home, Star Black)",73500,AMD,1-5,,16683
+CS,Ноутбуки/Нетбуки,ASUS,F1504ZA-WH52,"Ноутбук ASUS VivoBook F1504ZA-WH52 15.6"" (FHD, Core i5-1235U, 8GB DDR4, 256GB SSD, Intel Iris Xe Graphics, Windows 11 Home, Quiet Blue)",177800,AMD,1-5,,16685
+CS,Ноутбуки/Нетбуки,ASUS,E1504GA-WB31,"Ноутбук ASUS VivoBook Go 15 E1504GA-WB31 15.6"" (FHD, Core i3-N305, 8GB, 128GB UFS, Intel UHD Graphics, Black, Windows 11)",127100,AMD,1-5,,16940
+CS,Ноутбуки/AMD Phenom,ASUS,90NB0ZT2-M00ZZ0,"Ноутбук ASUS VivoBook Go 15 E1504GA-WS36 15.6"" (FHD, Core i3-N305, 8GB DDR4, 256GB SSD, Intel UHD, Black, Windows 11)",131000,AMD,1-5,,16631
+CS,Ноутбуки/Нетбуки,ASUS,90NB14E2-M00080,"Ноутбук ASUS VivoBook S 15 S5506MA-WS76 15.6"" (3K OLED 120Hz, Core Ultra 7-155H Evo Edition, 16GB, 1TB SSD, Intel Arc Graphics, Mist Blue, Windows 11)",365400,AMD,1-5,,16938
+CS,Ноутбуки/Нетбуки,ASUS,X1404ZA-I38128,"Ноутбук Asus VivoBook X1404ZA-I38128 14"" (FHD, Core i3 1215U, 8GB DDRAM, 128GB SSD, Intel UHD, Quiet Blue, Windows 11s)",124800,AMD,1-5,,16324
+CS,Ноутбуки/Нетбуки,ASUS,90NB0W96-M00WH0,"Ноутбук ASUS ZenBook 14 OLED UM3402YA-WS74T 14"" (2.8K Touch, Ryzen 7-7730U, 16GB LPDDR4, 512GB SSD, AMD Radeon Graphics, Windows 11 Home, Jade Black)",351000,AMD,1-5,,16687
+CS,Ноутбуки/Нетбуки,ASUS,90NB0W96M00WH0,"Ноутбук ASUS Zenbook 14 UM3402YA-WS74T 14"" (2.8K OLED Touchscreen, Ryzen 7 7730U, 16GB LPDDR4, 512GB SSD, Jade Black, Windows 11)",362700,AMD,1-5,,16435
+CS,Ноутбуки/Нетбуки,ASUS,Q415MA-U5512,"Ноутбук ASUS ZenBook Q415MA-U5512 14"" (OLED WUXGA Touch, Core Ultra 5 125H, 8GB, 512GB SSD, Intel Arc Graphics, Jasper Gray, Windows 11, Q415MA-U5512)",279600,AMD,1-5,,16936
+CS,Ноутбуки/Нетбуки,Dell,i7440-7304BLU-PUS,"Ноутбук Dell Inspiron 14 7440 14"" (WUXGA IPS Touch 2-in-1, Core 7 150U, 16GB DDR5, 1TB SSD, Iris Xe Graphics, Ice Blue, Windows 11 Home)",396200,AMD,1-5,,16604
+CS,Ноутбуки/Intel Core i5,Dell,I3520-5124BLK-PUS,"Ноутбук Dell Inspiron 15 3520 15.6"" (FHD Touch, Core i5-1235U, 8GB DDR4, 512GB SSD, Intel UHD, Black, Windows 11)",205100,AMD,1-5,,16325
+CS,Ноутбуки/Нетбуки,Dell,I7445-7326BLU-PUS,"Ноутбук Dell lnspiron 14 7445 14"" (WUXGA IPS Touch 2-in-1, Ryzen 7-8840HS, 16GB DDR5, 1TB SSD, AMD Radeon 780M, Windows 11 Home, Midnight Blue, I7445-7326BLU-PUS)",329700,AMD,1-5,,16688
+CS,Ноутбуки/Intel Core i3,Dell,VOSTRO 3520-1215,"Ноутбук Dell Vostro 3520 (15.6"" FHD, i3 1215U, 8GB DDR4, 512GB SSD, Intel Iris XE, BT, Webcam, Black, DOS)",138500,AMD,5+,,16116
+CS,Ноутбуки/Intel Core i3,Dell,V3520N,"Ноутбук Dell Vostro 3520 (15.6"" FHD, i5 1235U, 8GB DDR4, 512GB SSD, Intel Iris XE, BT, Webcam, Black, DOS)",186000,AMD,1-5,,16509
+CS,Ноутбуки/Intel Core i7,Dell,VOSTRO 3520-1255,"Ноутбук Dell Vostro 3520 (15.6"" FHD, i7 1255U, 8GB DDR4, 512GB SSD, Intel Iris XE, BT, Webcam, Black, DOS)",242600,AMD,5+,,16115
+CS,Ноутбуки/Нетбуки,HP,B5TH5UA#ABA,"Ноутбук HP 15-fc0041wm 15.6 (FHD, Ryzen 5 7520U, 8GB, 512GB SSD, AMD Radeon 610M Graphics, Natural Silver, Windows 11, B5TH5UA#ABA)",161500,AMD,5+,,16935
+CS,Ноутбуки/Нетбуки,HP,7X8S7UA#ABA,"Ноутбук HP 15-fd0025st 15.6"" (FHD, Core i5-1335U, 8GB DDR4, 256GB SSD, Intel Iris Xe Graphics, Windows 11 Home, Natural Silver)",184500,AMD,1-5,,16690
+CS,Ноутбуки/Нетбуки,HP,9T8G5UA#ABA,"Ноутбук HP 15-fd1085cl 15.6"" (FHD Touch, Core 5 120U, 12GB, 512GB SSD, Intel Graphics, Black, Windows 11, 9T8G5UA#ABA)",214500,AMD,1-5,,16931
+CS,Ноутбуки/Intel Core i7,HP,7C190PA,"Ноутбук HP 250 G9 15.6"" (FHD, Core i7 1255U, 8GB DDR4, 512GB SSD, Intel Iris Xe, Silver, DOS, w/Bag)",255800,AMD,1-5,,16508
+CS,Ноутбуки/AMD Phenom,HP,9R8R3UA#ABA,"Ноутбук HP Envy X360 14"" (FHD Touch, Core 7 150U, 16GB, 512GB SSD, Intel Graphics, Silver, Windows 11)",361500,AMD,1-5,,16329
+CS,Ноутбуки/Нетбуки,HP,9S1R3UA#ABA,"Ноутбук HP Envy x360 14-fa0013dx 14"" (WUXGA Touchscreen, Ryzen 5 8640HS, 16GB DDR5, 512GB SSD, AMD Radeon Graphics, Glacier Silver, Windows 11)",287800,AMD,1-5,,16445
+CS,Ноутбуки/AMD Phenom,HP,9R1K0UA#ABA,"Ноутбук HP Envy X360 15-fe1082wm 15.6"" (FHD Touch, Core Ultra 7 155U, 16GB, 512GB SSD, Intel Graphics, Silver, Windows 11)",384500,AMD,1-5,,16632
+CS,Ноутбуки/Нетбуки,HP,A7QR7UA#ABA,"Ноутбук HP OMEN 16-WF0083DX 16.1"" (FHD 165Hz, Core i9 13900HX, 16GB DDR5, 1TB SSD, 6GB RTX4060, Shadow Black, Windows 11)",585000,AMD,1-5,,16436
+CS,Ноутбуки/Нетбуки,HP,15-fa0033dx,"Ноутбук HP Victus 15-fa0033dx 15.6"" (FHD IPS 144Hz, Core i5 12450H, 8GB DDR5, 512GB SSD, 4GB RTX3050, Performance Blue, Windows 11)",292900,AMD,5+,,16441
+CS,Ноутбуки/Нетбуки,HP,8Y487UA#ABA,"Ноутбук HP Victus 16-r0085cl 16.1"" (FHD IPS 144Hz, Core i7 13700H, 16GB DDR5, 1TB SSD, 8GB RTX4070, Mica Silver, Windows 11)",641900,AMD,1-5,,16440
+CS,"Ноутбуки/AMD Athlon, Turion",HP,A14MNUA#ABA,"Ноутбук HP Victus Gaming 15.6"" (IPS FHD, 144Hz, Ryzen 5 8645HS, 8GB DDR5, 512GB SSD, 6GB RTX4050, Silver, Windows 11)",327600,AMD,1-5,,16330
+CS,Ноутбуки/Нетбуки,Lenovo,82QD00DMUE,"Ноутбук Lenovo IdeaPad 1 15.6"" (FHD, i3 1215U, 8GB DDR4, 256GB SSD, Intel UHD Graphics, Grey, DOS)",138500,AMD,5+,,16562
+CS,Ноутбуки/Нетбуки,Lenovo,82V60065US,"Ноутбук Lenovo Ideapad 1 82V60065US 14"" (1366x768, Celeron N4020, 4GB DDR4, 128GB eMMC, UHD, Grey, Windows 11)",84200,AMD,1-5,,15732
+CS,Ноутбуки/Нетбуки,Lenovo,82LV0075US,"Ноутбук Lenovo IdeaPad 1i 14IJL7 14"" (HD, Celeron N4500, 4GB, 128GB eMMC, Intel UHD Graphics, Grey, Windows 11, 82LV0075US)",83500,AMD,1-5,,16933
+CS,Ноутбуки/Нетбуки,Lenovo,82RK017QUS,"Ноутбук Lenovo IdeaPad 3 15IAU7 15.6"" (FHD IPS Touch, i7 1255U, 16GB DDR4, 512GB SSD, Intel IRIS XE, Grey, Windows 11)",253500,AMD,5+,,16607
+CS,Ноутбуки/Нетбуки,Lenovo,82RK00YDUS,"Ноутбук Lenovo IdeaPad 3 15IAU7 15.6"" (FHD IPS Touch, i7 1255U, 8GB DDR4, 512GB SSD, Intel IRIS XE, Grey, Windows 11)",248000,AMD,1-5,,16085
+CS,Ноутбуки/Нетбуки,Lenovo,81LW006SEU,"Ноутбук Lenovo Ideapad L340-15API 15.6"" (FHD, Ryzen 3-3200U, 8GB DDR4, 256GB SSD, Vega 3, Grey, DOS)",116600,AMD,5+,,16972
+CS,Ноутбуки/Нетбуки,Lenovo,82YT00Q3US,"Ноутбук Lenovo ThinkBook V14 G4 AMN 14"" (FHD, Ryzen 5 7520U, 8GB DDR4, 256GB SSD, AMD Radeon Graphics, Black, Windows 11 Pro)",178600,AMD,1-5,,16102
+CS,Ноутбуки/Intel Core i3,Lenovo,83A1004SUE,"Ноутбук Lenovo V15 15.6"" (FHD, i3 1315U, 8GB DDR4, 256GB SSD, Intel UHD, Business Black, DOS, 83A1004SUE)",155200,AMD,5+,,16639
+CS,Ноутбуки/Нетбуки,Lenovo,83A1008WEU,"Ноутбук Lenovo V15 15.6"" (FHD, i5 13420H, 8GB DDR4, 512GB SSD, Intel HD, Dark Grey, DOS, 83A1008WEU)",195000,AMD,5+,,16158
+CS,Ноутбуки/Нетбуки,Lenovo,V15-1255U,"Ноутбук Lenovo V15 15.6"" (FHD, i7 1255U, 16GB DDR4, 512GB SSD, Intel Iris Xe, Dark Grey, DOS)",226200,AMD,5+,,16121
+CS,Ноутбуки/Нетбуки,Lenovo,V15-7520U,"Ноутбук Lenovo V15 15.6"" (FHD, Ryzen 5 7520U, 8GB DDR4, 256GB SSD, AMD Radeon Graphics, Dark Grey, DOS)",148200,AMD,5+,,16123
+CS,Ноутбуки/Нетбуки,Lenovo,82QY00PHAK,"Ноутбук Lenovo V15 G2 IJL 15.6"" (FHD, Celeron N4500, 4GB DDR4, 256GB SSD, Intel HD, Black, DOS, 82QY00PHAK)",101400,AMD,1-5,,16351
+CS,Ноутбуки/Нетбуки,Lenovo,82QY00PHUE,"Ноутбук Lenovo V15 G2 IJL 15.6"" (FHD, Celeron N4500, 4GB DDR4, 256GB SSD, Intel UHD Graphics, Black, DOS)",101400,AMD,5+,,16564
+CS,Ноутбуки/Нетбуки,MSI,KATANAA15430,"Ноутбук MSI Katana A15 15.6"" (FHD IPS 144Hz, Ryzen 7 8845HS, 16GB DDR5, 1TB SSD, 8GB RTX4070, Black, Windows 11)",616600,AMD,1-5,,16332
+CS,Ноутбуки/AMD Phenom,MSI,THIN15131000,"Ноутбук MSI Thin 15.6"" (IPS FHD 144Hz, Core i5 13420H, 16GB DDR4, 512GB SSD, 4GB RTX3050, Black, Windows 11)",300300,AMD,1-5,,16630
+CS,Ноутбуки/Нетбуки,Samsung,NP750XGK-KS2US,"Ноутбук Samsung Galaxy Book4 15.6"" (FHD, Core 7-150U, 16GB LPDDR4, 512GB SSD, Intel Graphics, Windows 11 Home, Silver, NP750XGK-KS2US)",314700,AMD,1-5,,16693
+CS,Сетевое_оборудование,Lanberg,PPS6-0024-B,Патч-панель LANBERG PPS6-0024-B 24 PORT 0.5U CAT.6 SHIELDED BLACK,14500,AMD,5+,,12457
+CS,Сетевое_оборудование,Lanberg,PPS6-0024-S,Патч-панель LANBERG PPS6-0024-S 24 PORT 0.5U CAT.6 SHIELDED GREY,16800,AMD,5+,,11636
+CS,Сетевое_оборудование,Lanberg,PPS6-1024-B,Патч-панель LANBERG PPS6-1024-B 24 PORT 1U CAT.6 SHIELDED BLACK,17500,AMD,5+,,11633
+CS,Сетевое_оборудование,Lanberg,PPU5-1048-B,Патч-панель LANBERG PPU5-1048-B 48 PORT 1U CAT.5E BLACK,14600,AMD,1-5,,11632
+CS,Сетевое_оборудование,Lanberg, PPU5-9012-B,"Патч-панель LANBERG PPU5-9012-B 12 PORT 1U CAT.5E 10"" BLACK",3500,AMD,5+,,11800
+CS,Сетевое_оборудование,Lanberg,PPU6-1024-B,Патч-панель LANBERG PPU6-1024-B 24 PORT 1U CAT.6 BLACK,9600,AMD,5+,,11634
+CS,Сетевое_оборудование,Lanberg,PPU6-1024-S,Патч-панель LANBERG PPU6-1024-S 24 PORT 1U CAT.6 GRAY,7600,AMD,5+,,12646
+CS,Переходники и переключатели,CrownMicro,CMH01,Переходник CrownMicro CM-H-01 для HDD 5.25-3.5,400,AMD,5+,,11601
+CS,Переходники и переключатели,Lanberg,AD-0031-S,"Переходник LANBERG AD-0031-S MOUNTING FRAME FOR 3.5"" HDD IN 5.25"" BAY",200,AMD,1-5,,11638
+CS,Переходники и переключатели,Noname,Molex-8pin,Переходник Molex - 8Pin PCIe Graphic Card,2300,AMD,1-5,,15829
+CS,USB-Hubs,Ugreen,10396,"Переходник Ugreen 10396 (Micro USB(M) to USB-A(F), OTG, 15cm, Black)",600,AMD,5+,,16730
+CS,USB-Hubs,Ugreen,10739,"Переходник Ugreen 10739 (3.5mm (M) to 2x3.5mm(F), 20cm, White)",1400,AMD,1-5,,16724
+CS,USB-Hubs,Ugreen,20611,Переходник Ugreen 20611 (USB 3.0 to SATA HDD Converter),5800,AMD,1-5,,16721
+CS,Переходники и переключатели,Ugreen,30453,Переходник Ugreen 30453 (USB 3.0 to Micro USB(M)+USB Type-C(M)),1400,AMD,1-5,,16800
+CS,Карт-ридеры/Внешние,Ugreen,50533,Переходник Ugreen 50533 (USB 3.0 to USB Type-C),1900,AMD,1-5,,16947
+CS,Сетевые фильтры,Noname,ADPT-EU-UN-WT,"Переходник сетевой (Euro -> Universal socket, White)",3700,AMD,1-5,,16896
+CS,Аксессуары для ноутбуков/Подставки и охладители,Ugreen,90849,Подставка для ноутбука/планшета Ugreen 90849 (Alluminium),15700,AMD,1-5,,16801
+CS,Аксессуары/Папки CD-DVD,Logitech,910-001356,Презентационный пульт Logitech R400 (Black),10500,AMD,1-5,,12670
+CS,Аксессуары/Папки CD-DVD,Logitech,910-006520,Презентационный пульт Logitech R500S (Gray),16000,AMD,1-5,,14573
+CS,Принтеры и МФУ лазерные,Canon,LBP6030B,Принтер лазерный Canon ImageCLASS LBP6030,63200,AMD,5+,,15507
+CS,Принтеры и МФУ/Лазерные принтеры,HP,7MD67A,Принтер лазерный HP LaserJet M111a (A4),46000,AMD,5+,,14590
+CS,Принтеры и МФУ лазерные,Canon,IMAGECLASS MF3010,Принтер лазерный МФУ Canon imageCLASS MF3010,97500,AMD,5+,,16456
+CS,Принтеры и МФУ лазерные,Canon,,Принтер лазерный МФУ Canon i-SENSYS MF3010,96900,AMD,5+,,16650
+CS,Принтеры и МФУ/Лазерные принтеры,HP,7MD73A,Принтер лазерный МФУ HP LaserJet M141a (A4),58700,AMD,1-5,,15405
+CS,Принтеры и МФУ/Лазерные МФУ,HP,M236SDN,"Принтер лазерный МФУ HP LaserJet M236SDN (Принтер/Сканер/Копир, ADF, Duplex, A4)",115200,AMD,1-5,,15508
+CS,Принтеры и МФУ/Лазерные принтеры,HP,3G631A,Принтер лазерный МФУ HP LaserJet Pro 3103fdn (A4),127100,AMD,1-5,,16463
+CS,Принтеры и МФУ/Лазерные принтеры,HP,3G632A,Принтер лазерный МФУ HP LaserJet Pro 3103fdw (A4),137700,AMD,1-5,,16464
+CS,Принтеры и МФУ/Лазерные МФУ,HP,4ZB97A,Принтер лазерный цветной МФУ HP Color Laser 179fnw (A4),128700,AMD,5+,,16466
+CS,Принтеры и МФУ струйные,Canon,0727C007,"Принтер струйный МФУ Canon PIXMA MG2540S, A4",22600,AMD,5+,,11818
+CS,Принтеры и МФУ струйные,Canon,MG2541S,"Принтер струйный МФУ Canon PIXMA MG2541S, A4",22600,AMD,5+,,16273
+CS,Принтеры и МФУ струйные,Canon,MG2546S,"Принтер струйный МФУ Canon PIXMA MG2546S, A4",22000,AMD,5+,,16274
+CS,Принтеры и МФУ струйные,HP,7WN42B,"Принтер струйный МФУ HP DeskJet 2320 (7WN42B, A4, White)",23600,AMD,5+,,13497
+CS,Программы/Операционные системы,Microsoft,FQC-10528,Программа Microsoft Win Pro 11 32-bit/64-bit Eng Int DVD,0,AMD,1-5,,14614
+CS,Проекторы,Acer,X1226AH,"Проектор Acer X1226AH (DLP, max 10000h., 4000lm, 20000:1, 1024x768, USB, HDMI, VGA, Component, RCA, Audio In/Out)",130700,AMD,5+,,16124
+CS,Проекторы,Viewsonic,VS16905,"Проектор Viewsonic PA503S (DLP, макс 15000ч., 3600lm, 22000:1, макс 800x600, USB, RS-232, HDMI, 2xVGA, Component, RCA, Audio In/Out)",136500,AMD,5+,,11465
+CS,Процессоры/AMD Athlon,AMD,AD877BAGM44AB,"Процессор AMD A10 8770 (S-AM4, TRAY)",14000,AMD,1-5,,13847
+CS,Процессоры/AMD Athlon,AMD,AD9500AHM23AB,"Процессор AMD A6 9500E (S-AM4, 3.0GHz, R5, TRAY)",9800,AMD,5+,,14114
+CS,Процессоры/AMD Athlon,AMD,100-100000510BOX,"Процессор AMD Ryzen 3 4100 (S-AM4, BOX)",29300,AMD,5+,,14854
+CS,Процессоры/AMD Athlon,AMD,100-000000457,"Процессор AMD Ryzen 5 5500 (S-AM4, TRAY)",29800,AMD,5+,,16364
+CS,Процессоры/AMD Athlon,AMD,100-000000927,"Процессор AMD Ryzen 5 5600 (S-AM4, TRAY)",41000,AMD,1-5,,16356
+CS,Процессоры/AMD Athlon,AMD,100-000000252,"Процессор AMD Ryzen 5 5600G (S-AM4, TRAY)",55600,AMD,5+,,14231
+CS,Процессоры/AMD Athlon,AMD,100-000000252,"Процессор AMD Ryzen 5 5600X (S-AM4, TRAY)",44500,AMD,5+,,16257
+CS,Процессоры/AMD Athlon,AMD,100-000000593,"Процессор AMD Ryzen 5 7600X (S-AM5, TRAY)",90300,AMD,1-5,,16277
+CS,Процессоры/AMD Athlon,AMD,100-00000591,"Процессор AMD Ryzen 5 8400F (S-AM5, TRAY)",49100,AMD,1-5,,16359
+CS,Процессоры/AMD Athlon,AMD,100-100000931BOX,"Процессор AMD Ryzen 5 8500G (S-AM5, BOX)",65900,AMD,1-5,,16360
+CS,Процессоры/AMD Athlon,AMD,100-000000926,"Процессор AMD Ryzen 7 5700X (S-AM4, TRAY)",53200,AMD,1-5,,15887
+CS,Процессоры/AMD Athlon,AMD,100-000000592,"Процессор AMD Ryzen 7 7700 (S-AM5, TRAY)",92400,AMD,1-5,,15412
+CS,Процессоры/AMD Athlon,AMD,100-000000591,"Процессор AMD Ryzen 7 7700X (S-AM5, TRAY)",126800,AMD,1-5,,15885
+CS,Процессоры/AMD Athlon,AMD,100-100001236BOX,"Процессор AMD Ryzen 7 8700G (S-AM5, BOX)",119000,AMD,5+,,16362
+CS,Процессоры/AMD Athlon,AMD,100-100000590BOX,"Процессор AMD Ryzen 9 7900 (S-AM5, BOX)",149800,AMD,1-5,,15221
+CS,Процессоры/AMD Athlon,AMD,100-000000589,"Процессор AMD Ryzen 9 7900X (S-AM5, TRAY)",152500,AMD,1-5,,16991
+CS,Процессоры/Intel Core i3,Intel,CM8071504651012,"Процессор Intel Core i3 12100 (3.3GHz, 6Mb, 8GT/s, GPU, S1700, TRAY)",41500,AMD,5+,,14441
+CS,Процессоры/Intel Core i3,Intel,CM8071505092202,"Процессор Intel Core i3 13100 (3.4GHz, 12Mb, 8GT/s, GPU, S1700, TRAY)",58500,AMD,1-5,,15718
+CS,Процессоры/Intel Core i3,Intel,CM8071505092206,"Процессор Intel Core i3 14100 (4.7GHz, 12Mb, 8GT/s, GPU, S1700, TRAY)",50700,AMD,1-5,,15877
+CS,Процессоры/Intel Core i3,Intel,i3-1400F-TRAY,"Процессор Intel Core i3 14100F (4.7GHz, 12Mb, 8GT/s, S1700, TRAY)",33300,AMD,1-5,,16787
+CS,Процессоры/Intel Core i3,Intel,i3 9100F OEM,"Процессор Intel Core i3 9100F (3.6GHz, 6Mb, 8GT/s, GPU, S1151v2, TRAY)",31200,AMD,1-5,,12182
+CS,Процессоры/Intel Core i5,Intel,CM8071504650608,"Процессор Intel Core i5 12400 (2.5GHz, 12Mb, 8GT/s, GPU, S1700, TRAY)",58100,AMD,5+,,14443
+CS,Процессоры/Intel Core i5,Intel,BX8071512400F,"Процессор Intel Core i5 12400F (2.5GHz, 12Mb, 8GT/s, S1700, TRAY)",44700,AMD,1-5,,15516
+CS,Процессоры/Intel Core i5,Intel,CM8071504821106,"Процессор Intel Core i5 13400 (2.5GHz, 20Mb, GPU, S1700, TRAY)",70200,AMD,1-5,,15555
+CS,Процессоры/Intel Core i5,Intel,CM8071505093005,"Процессор Intel Core i5 13400F (2.5GHz, 20Mb, 8GT/s, S1700, TRAY)",49100,AMD,5+,,16586
+CS,Процессоры/Intel Core i5,Intel,CM8071505093012,"Процессор Intel Core i5 14400 (4.7GHz, 20Mb, 8GT/s, GPU, S1700, TRAY)",65900,AMD,5+,,15878
+CS,Процессоры/Intel Core i5,Intel,CM8071504821014,"Процессор Intel Core i5 14600KF (2.6GHz, 24Mb, 8GT/s, S1700, TRAY)",84200,AMD,1-5,,15658
+CS,Процессоры/Intel Core i7,Intel,CM8071504553828,"Процессор Intel Core i7 12700K (3.6GHz, 25Mb, 8GT/s, GPU, S1700, TRAY)",106700,AMD,1-5,,15084
+CS,Процессоры/Intel Core i7,Intel,BX8071513700K,"Процессор Intel Core i7 13700K (3.4GHz, 30Mb, GPU, S1700, BOX)",163400,AMD,5+,,15720
+CS,Процессоры/Intel Core i7,Intel,CM8071504820706,"Процессор Intel Core i7 13700KF (3.4GHz, 30Mb, 8GT/s, S1700, TRAY)",136500,AMD,1-5,,16587
+CS,Процессоры/Intel Core i7,Intel,CM8071504820721,"Процессор Intel Core i7 14700K (2.5GHz, 33Mb, 8GT/s, GPU, S1700, TRAY)",188800,AMD,5+,,15767
+CS,Процессоры/Intel Core i7,Intel,CM8071504820722,"Процессор Intel Core i7 14700KF (2.5GHz, 33Mb, 8GT/s, S1700, TRAY)",154800,AMD,1-5,,15659
+CS,Процессоры/Intel Core i7,Intel,CM8071504549230,"Процессор Intel Core i9 12900K (3.2GHz, 30Mb, 8GT/s, S1700, TRAY)",154400,AMD,1-5,,15085
+CS,Процессоры/Intel Core i7,Intel,BX8071512900KF,"Процессор Intel Core i9 12900KF (3.2GHz, 30Mb, 8GT/s, S1700, BOX)",158000,AMD,1-5,,14885
+CS,Процессоры/Intel Core i7,Intel,CM8071505094017,"Процессор Intel Core i9 14900K (3.2GHz, 36Mb, 8GT/s, GPU, S1700, TRAY)",214500,AMD,5+,,15768
+CS,Процессоры/Intel Core i7,Intel,CM8071505094018,"Процессор Intel Core i9 14900KF (3.2GHz, 36Mb, 8GT/s, S1700, TRAY)",193400,AMD,1-5,,15769
+CS,Процессоры/Intel Core i3,Intel,BX80701G6405,"Процессор Intel Pentium Gold G6405 (4.1GHz, 4Mb, 8GT/s, GPU, S1200, BOX)",26500,AMD,1-5,,14820
+CS,Процессоры/Intel Core i3,Intel,G7400TRAY,"Процессор Intel Pentium Gold G7400 (3.7GHz, 6Mb, 8GT/s, GPU, S1700, OEM)",32000,AMD,1-5,,15875
+CS,Аксессуары/Папки CD-DVD,ICESHARK,RAD.02,Радиатор охлаждения M.2 NVME IceShark RAD.02,0,AMD,1-5,,17049
+CS,Сеть/Антенны/<10dBi,D-Link,0790069275227,"Сетевая антенна D-Link ANT24-0501 (Indoor, 5dbi, gain)",7000,AMD,1-5,,11044
+CS,Сеть/Антенны/>10dBi,Intellinet,500449_I230,"Сетевая антенна Intellinet 500449 (Directional, 14dbi, gain)",7800,AMD,1-5,,9690
+CS,Сеть/Антенны/>10dBi,Intellinet,502313,"Сетевая антенна Intellinet 502313 (Directional, 18dbi, gain)",14400,AMD,1-5,,9691
+CS,Сеть/Адаптеры/Внешние WiFi,ASUS,90IG07A0-MO0B00,"Сетевая карта Asus PCE-AX1800 (PCI-E, WiFi 6, Bluetooth 5.2)",13300,AMD,5+,,16675
+CS,Сетевое_оборудование LAN Cards,D-Link,DFE-530TX/E1A,"Сетевая карта D-Link DFE-530TX (10/100Mbit), PCI",2900,AMD,1-5,,3213
+CS,Сетевое_оборудование LAN Cards,Lanberg,NC-1000-01,"Сетевая карта Lanberg NC-1000-01 (10/100/1000, USB3.0)",6100,AMD,1-5,,14647
+CS,Сетевое_оборудование LAN Cards,Lenovo,4X90S91831,Сетевая карта Lenovo USB-C > GigaBit-Lan RJ45,11700,AMD,5+,,15597
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,ARCHER T2U NANO,"Сетевая карта TP-Link Archer T2U NANO (AC600, Nano, USB)",5400,AMD,5+,,12024
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,6935364050863,"Сетевая карта TP-Link Archer T4U (AC1300, Dual, External antennas, USB)",12100,AMD,1-5,,11146
+CS,Сетевое_оборудование LAN Cards,TP-Link,ARCHER TXE75E,"Сетевая карта TP-Link Archer TXE75E (AXE5400, Wi-Fi 6e, Bluetooth, PCI-E)",24800,AMD,5+,,16906
+CS,Сетевое_оборудование LAN Cards,TP-Link,TG-3468,"Сетевая карта TP-Link TG-3468 (10/100/1000Mbps, PCI-E)",4600,AMD,5+,,11071
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,TL-WN725N,Сетевая карта TP-Link TL-WN725N (USB),3100,AMD,5+,,11084
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,TL-WN781ND,Сетевая карта TP-Link TL-WN781ND (PCI-E),5100,AMD,5+,,12858
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,6935364050542,Сетевая карта TP-Link TL-WN822N (USB),5500,AMD,5+,,11086
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,TL-WN823N,Сетевая карта TP-Link TL-WN823N (USB),4400,AMD,5+,,11244
+CS,Сеть/Адаптеры/Внешние WiFi,TP-Link,TL-WN881ND,Сетевая карта TP-Link TL-WN881ND (PCI-E),6700,AMD,5+,,11161
+CS,Сетевое_оборудование LAN Cards,TP-Link,UE300,"Сетевая карта TP-Link UE300 (10/100/1000, USB)",6800,AMD,5+,,12164
+CS,USB-Hubs,Ugreen,50340,"Сетевая карта Ugreen 50340 (AC1300 , USB)",7900,AMD,1-5,,16726
+CS,Сетевое_оборудование LAN Cards,Ugreen,50737,"Сетевая карта Ugreen 50737 (10/100/1000, USB-C, Space Grey)",6500,AMD,1-5,,16804
+CS,USB-Hubs,90340,90340,"Сетевая карта Ugreen 90340 (Wi-Fi 6 X1800, USB)",10400,AMD,1-5,,16727
+CS,Внешние жесткие диски/Сетевые накопители,QNAP,TS-231K,Сетевое хранилище QNAP TS-231K 2-BAY,120500,AMD,1-5,,15343
+CS,Сетевые фильтры,CrownMicro,CM000003670,"Сетевой фильтр CrownMicro CMPS-06 (6 Euro Sockets, 5.0m, Black, 2500W)",2000,AMD,5+,,15916
+CS,Сетевые фильтры,Lanberg,PDU-04E04I-0200-BK,"Сетевой фильтр LANBERG PDU-04E04I-0200-BK (4xFRENCH, 4xIEC SOCKETS 2M 1U 10A, BLACK)",9000,AMD,5+,,14646
+CS,Сетевые фильтры,Lanberg,PDU-04E04I-0200-IEC-BK,"Сетевой фильтр LANBERG PDU-04E04I-0200-IEC-BK (8 SOCKETS 2M 1U 10A, BLACK)",9700,AMD,5+,,11790
+CS,Сетевые фильтры,Lanberg,PS0-05F-0150-BK,"Сетевой фильтр LANBERG PS0-05F-0150-BK (5 SOCKETS 1.5M, SCHUKO, BLACK)",2500,AMD,5+,,15270
+CS,Сетевые фильтры,Lanberg,PS0-05F-0150-W,"Сетевой фильтр LANBERG PS0-05F-0150-W (5 SOCKETS 1.5M, SCHUKO, WHITE)",2500,AMD,5+,,15267
+CS,Сетевые фильтры,Lanberg,PS0-05F-0300-W,"Сетевой фильтр LANBERG PS0-05F-0300-W (5 SOCKETS 3M, SCHUKO, WHITE)",3500,AMD,5+,,15266
+CS,Сетевые фильтры,Lightwave,LW-EXT-52U-2P,"Сетевой фильтр Lightwave LW EXT 52U-2P (5 Universal Sockets, 2xUSB (2.1A), 3.0m, Black)",3400,AMD,5+,,16916
+CS,Сетевые фильтры,Lightwave,LW-EXT-72UC-2P,"Сетевой фильтр Lightwave LW EXT 72UC-2P (7 Universal Sockets, 1xUSB, 1xType-C (2.1A), 3.0m, Black)",3900,AMD,5+,,16917
+CS,Сетевые фильтры,Lightwave,LW-EXT-43U-2P,"Сетевой фильтр Lightwave LW-EXT-43U-2P (4 Universal Sockets, 3xUSB, Black)",9100,AMD,5+,,16921
+CS,Сетевые фильтры,Lightwave,LW-EXT-44MW-2P,"Сетевой фильтр Lightwave LW-EXT-44MW-2P (4 Universal Sockets, 3xUSB, 1xType-C, Black)",10800,AMD,1-5,,16922
+CS,Сетевые фильтры,Lightwave,LW-EXT-44U-2P,"Сетевой фильтр Lightwave LW-EXT-44U-2P (4 Universal Sockets, 4xUSB, 2.0m, Black)",4300,AMD,5+,,16918
+CS,Сетевые фильтры,Lightwave,LW-EXT-64U-2P,"Сетевой фильтр Lightwave LW-EXT-64U-2P (6 Universal Sockets, 4xUSB, 2.0m, Black)",5000,AMD,5+,,16919
+CS,Сетевые фильтры,SRK,SRK-5E-3A-10M,"Сетевой фильтр SRK (5 Sockets, 3xUSB-A, 10m)",0,AMD,1-5,,17038
+CS,Сетевые фильтры,SVEN,SV-021016,"Сетевой фильтр SVEN Optima 6 1.8 (6 Euro Sockets, 1.8m, Black, 2300W)",2700,AMD,5+,,16739
+CS,Сетевые фильтры,SVEN,SV-021023,"Сетевой фильтр SVEN Optima 6 3.0 (6 Euro Sockets, 3.0m, Black, 2300W)",2900,AMD,5+,,16740
+CS,Сетевые фильтры,SVEN,SV-021030,"Сетевой фильтр SVEN Optima 6 5.0 (6 Euro Sockets, 5.0m, Black, 2300W)",3600,AMD,5+,,16741
+CS,Сетевые фильтры,SVEN,SV-021764,"Сетевой фильтр SVEN SF-05E 1.0 (5 Euro Sockets, 1.0m, Black, 2300W)",2100,AMD,1-5,,16736
+CS,Сетевые фильтры,SVEN,SV-018832,"Сетевой фильтр SVEN SF-05LU 1.8 (5 Euro Sockets, 2xUSB (2.4А), 1.8m, Black, 2300W)",5100,AMD,1-5,,16742
+CS,Сетевые фильтры,SVEN,SV-018849,"Сетевой фильтр SVEN SF-05LU 3.0 (5 Euro Sockets, 2xUSB (2.4А), 3.0m, Black, 2300W)",5800,AMD,1-5,,16743
+CS,Сетевые фильтры,SVEN,SV-022051,"Сетевой фильтр SVEN SF-06E 3.0 (6 Euro Sockets, 3.0m, Black, 2300W)",2700,AMD,5+,,16737
+CS,Сетевые фильтры,SVEN,SV-022068,"Сетевой фильтр SVEN SF-06E 5.0 (6 Euro Sockets, 5.0m, Black, 2300W)",3200,AMD,1-5,,16738
+CS,Торговое оборудование/Сканеры штрих-кодов,Deli,E14953W,"Сканер штрих-кодов Deli E14953W 1D (USB, беспроводной, черный)",13800,AMD,1-5,,14224
+CS,Телефоны,Smarterra,1205456,"Смарт-браслет Smarterra FitMaster 5 SMFT-05WBL (IPS, Color, White)",7800,AMD,1-5,,12775
+CS,Телефоны,Digma,1155445,"Смарт-часы Digma Smartline D2E (1.3"", Black)",5900,AMD,1-5,,12509
+CS,Телефоны,Smarterra,FMAUR,"Смарт-часы Smarterra FitMaster Aura FMAUR (1.3"" IPS, Red)",3500,AMD,1-5,,12872
+CS,Телефоны,Smarterra,SMZORG,"Смарт-часы Smarterra Zen SMZORG (0.96"", Orange)",2700,AMD,1-5,,12875
+CS,Коннекторы,Lanmaster,TWT-SLC-UY2,Соединитель Lanmaster TWT-SLC-UY2 (100PCS),1600,AMD,1-5,,13952
+CS,Коннекторы,Ugreen,NW162,"Соединитель Ugreen NW162 (Cat.6, Unshielded)",1000,AMD,1-5,,15048
+CS,Проекторы,Cactus,CS-VM-PT01,"Стол для проектора Cactus CS-VM-PT01 (424x374mm, height 675-1000mm, max. 10kg, floor stand, Black)",25500,AMD,1-5,,15780
+CS,Мебель,Genesis,NDS-1550,Стол игровой Genesis NDS-1550 Holm 300 RGB (Black),68300,AMD,5+,,12887
+CS,Мебель,Genesis,NDS-1606,Стол игровой Genesis NDS-1606 Holm 200 RGB (Black),52700,AMD,1-5,,12888
+CS,Сумки для ноутбуков/Сумки,Belkin,F8N161EAJIR,"Сумка для ноутбука 10.2"" Belkin Нетбук Carry Case F8N161EAJIR (Jetset Red)",8000,AMD,1-5,,9184
+CS,"Сумки, портфели и чехлы",Golla,G1163,"Сумка для ноутбука 11.6"" Golla DIP G1163 (Lime Green)",0,AMD,1-5,,10956
+CS,Сумки для ноутбуков/Сумки,Canyon,CNL-NB08J,"Сумка для ноутбука 13.3"" Canyon CNL-NB08J",0,AMD,1-5,,12982
+CS,Сумки для ноутбуков/Чехлы,RivaCase,RIVA 7704,"Сумка для ноутбука 14"" RivaCase 7704 (Sleeve, Black)",5000,AMD,1-5,,15840
+CS,Сумки для ноутбуков/Чехлы,Manhattan,439350,"Сумка для ноутбука 14.1"" Manhattan Reversible 439350 (Purple/Cream)",2100,AMD,5+,,9716
+CS,Сумки для ноутбуков/Сумки,Belkin,F8N060EAKHK,"Сумка для ноутбука 15.4"" Belkin Laptop Hideaway F8N060EAKHK (Dove/Tarragon)",8900,AMD,5+,,9182
+CS,Сумки для ноутбуков/Сумки,IXA,S735BN,"Сумка для ноутбука 15.4"" IXA Montago S735BN (Multicolor)",10700,AMD,1-5,,9244
+CS,Сумки для ноутбуков/Чехлы,IXA,S852RD,"Сумка для ноутбука 15.4"" IXA Sleeves S852RD (Red)",3000,AMD,1-5,,9258
+CS,Сумки для ноутбуков/Сумки,IXA,S740BN,"Сумка для ноутбука 15.4"" IXA Tango S740BN (Multicolor)",8500,AMD,1-5,,9253
+CS,Сумки для ноутбуков/Сумки,Manhattan,355001,"Сумка для ноутбука 15.4"" Manhattan Chelsea Ladies 355001 (Black)",6600,AMD,1-5,,9723
+CS,Сумки для ноутбуков/Сумки,Targus,TLT059EU,"Сумка для ноутбука 15.4"" Targus TLT059EU (Ladies Leather)",19900,AMD,1-5,,7830
+CS,Сумки для ноутбуков/Сумки,Targus,TSM05601EU,"Сумка для ноутбука 15.4"" Targus TSM05601EU (RS Vertical Messenger Blue/Teal)",9700,AMD,1-5,,7425
+CS,Сумки для ноутбуков/Сумки,Digma,R270BK,"Сумка для ноутбука 15.6"" Digma R-270 (Black)",4800,AMD,5+,,17005
+CS,Сумки для ноутбуков/Сумки,Digma,R270GBK,"Сумка для ноутбука 15.6"" Digma R-270 (Grey/Black)",4800,AMD,5+,,17004
+CS,Сумки для ноутбуков/Сумки,Innovation IT,S0 501859 COMPUTER,"Сумка для ноутбука 15.6"" Innovation IT NT15 Black",4100,AMD,1-5,,15628
+CS,Сумки для ноутбуков/Сумки,NATEC,NTO-2056,"Сумка для ноутбука 15.6"" NATEC Beira NTO-2056 (Black)",4900,AMD,5+,,16962
+CS,Сумки для ноутбуков/Сумки,NATEC,NTO-0768,"Сумка для ноутбука 15.6"" NATEC Doberman NTO-0768 (Black)",6600,AMD,5+,,16961
+CS,Сумки для ноутбуков/Сумки,Natec,NTO-2055,"Сумка для ноутбука 15.6"" Natec GOA NTO-2055 (Black)",4000,AMD,5+,,15645
+CS,Сумки для ноутбуков/Сумки,Natec,NTO-2228,"Сумка для ноутбука 15.6"" Natec IMPALA 2 NTO-2228 (Onyx Black)",4600,AMD,5+,,16959
+CS,Сумки для ноутбуков/Сумки,NATEC,NTO-2027,"Сумка для ноутбука 15.6"" NATEC Nanger NTO-2027 (Black)",7500,AMD,5+,,16960
+CS,Сумки для ноутбуков/Сумки,Natec,NTO-2031,"Сумка для ноутбука 15.6"" Natec Taruca NTO-2031 (Black)",4400,AMD,5+,,15351
+CS,Сумки для ноутбуков/Сумки,Natec,NTO-2051,"Сумка для ноутбука 15.6"" Natec WALLAROO NTO-2051 (With wireless Mouse, Black)",5500,AMD,5+,,15647
+CS,Сумки для ноутбуков/Сумки,PC Pet,PCPKB0115BN,"Сумка для ноутбука 15.6"" PC Pet PCPKB0115BN (Рюкзак, Brown/Orange)",2500,AMD,1-5,,15791
+CS,Сумки для ноутбуков/Сумки,PC Pet,PCP-A1317GY,"Сумка для ноутбука 17.3"" PC Pet 600D (PCP-A1317GY, Grey/Black)",4600,AMD,1-5,,16791
+CS,Сумки для ноутбуков/Для фото-видеокамер,Targus,DCCP00,Сумка для фотоаппарата Targus DCCP00 (Micro Camera Case),2600,AMD,5+,,7720
+CS,Сумки для ноутбуков/Для фото-видеокамер,Targus,TPT024EU,Сумка для фотоаппарата Targus TPT024EU (Elegant Small),3300,AMD,5+,,7160
+CS,Сумки для ноутбуков/Для фото-видеокамер,Targus,TPT025EU,Сумка для фотоаппарата Targus TPT025EU (Elegant Medium),3500,AMD,5+,,7159
+CS,Сумки для ноутбуков/Сумки,Genesis,NBG-1947,"Сумка/Рюкзак для ноутбука 15.6"" Genesis PALLAD 410 NBG-1947 (Black)",9800,AMD,1-5,,15644
+CS,Сумки для ноутбуков/Сумки,Riva,7903,"Сумка/Чехол для ноутбука 13.3"" Riva 7903 (Blue)",7100,AMD,1-5,,13425
+CS,Телефоны,Hiper,P-01BKL,Телефон sPhone Hiper Card Black P-01BLK,3500,AMD,1-5,,11470
+CS,Телефоны,Hiper,270621431497,Телефон sPhone Hiper Vinyl Black C-01BLK,3500,AMD,1-5,,11468
+CS,Аксессуары/Папки CD-DVD,Aerocool,BARAF SYRINGE 1GR,"Термопаста Aerocool Baraf (1g, Syringe)",900,AMD,5+,,14632
+CS,Аксессуары/Папки CD-DVD,Aerocool,BARAF-S SYRINGE 3.5GR,"Термопаста Aerocool Baraf-S (3.5g, Syringe)",1700,AMD,1-5,,12266
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00001B,"Термопаста Arctic MX-4 (20g, syringe)",4700,AMD,1-5,,15741
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00024A,"Термопаста Arctic MX-4 (45g, syringe)",8200,AMD,5+,,15743
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00008B,"Термопаста Arctic MX-4 (8g, syringe)",2300,AMD,5+,,15744
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00079A,"Термопаста Arctic MX-6 (2g, syringe)",1400,AMD,5+,,16066
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00084A,"Термопаста Arctic MX-6 (4g, syringe + 5 x Cleaning wipes)",2800,AMD,5+,,16067
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00080A,"Термопаста Arctic MX-6 (4g, syringe)",2300,AMD,5+,,15745
+CS,Аксессуары/Папки CD-DVD,Arctic,ACTCP00081A,"Термопаста Arctic MX-6 (8g, syringe)",2900,AMD,5+,,15746
+CS,Аксессуары/Папки CD-DVD,Deepcool,SILVERTIM.Z5.R,"Термопаста Deepcool Z5 (3g, Syringe)",2300,AMD,5+,,13324
+CS,Аксессуары/Папки CD-DVD,ID-Cooling,FROST X05 5G,"Термопаста ID-Cooling Frost X05 (5g, Syringe)",2500,AMD,5+,,15778
+CS,Аксессуары/Папки CD-DVD,Zalman,ZM-STC9,"Термопаста Zalman ZM-STC9 (3.5g, Syringe)",4200,AMD,1-5,,15777
+CS,USB-Hubs,Ugreen,10950,Тестер кабеля Ugreen 10950 (RJ-11/-45),3400,AMD,1-5,,16729
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,ASUS,RP-N12,"Точка доступа/Router Asus RP-N12 (N300, Repeater)",11900,AMD,1-5,,13114
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,ASUS,90IG08T0-MU2H00,"Точка доступа/Router ASUS RT-AX52 (AX1800, Wi-Fi 6, Dual Band, 4xAntennas)",17100,AMD,1-5,,17009
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,ASUS,90IG06P0-MO3510,"Точка доступа/Router ASUS RT-AX53U (AX1800, Wi-Fi 6, Dual Band, 4xAntennas)",21500,AMD,1-5,,17010
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,D-Link,DIR-825/AC/G1A,Точка доступа/Router D-Link DIR-825/AC/G1A (10/100/1000),17700,AMD,1-5,,11171
+CS,Сеть/Коммуникаторы/5-ти портовые,MikroTik,RB2011UIAS-RM,"Точка доступа/Router MikroTik RB2011UIAS-RM (10/100/1000, SFP, Black)",49400,AMD,1-5,,15136
+CS,Сеть/Коммуникаторы/5-ти портовые,MikroTik,RB4011iGS+RM,Точка доступа/Router MikroTik RB4011iGS+RM,102200,AMD,1-5,,15438
+CS,Сеть/Точки доступа и роутеры/Роутеры,Mikrotik,RB750UPR2,"Точка доступа/Router MikroTik RB750UPR2 hEX POE lite (10/100, White)",26100,AMD,1-5,,14542
+CS,Сеть/Точки доступа и роутеры/Роутеры,MikroTik,RB760IGS HEX S,"Точка доступа/Router MikroTik RB760IGS HEX S (10/100/1000, SFP)",35700,AMD,1-5,,16223
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,MikroTik,RB941-2ND,"Точка доступа/Router MikroTik RB941-2ND (10/100, White)",11700,AMD,1-5,,13334
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,MikroTik,RB941-2ND-TC,"Точка доступа/Router MikroTik RB941-2ND-TC (10/100, White)",11700,AMD,1-5,,14083
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER AX10,"Точка доступа/Router TP-Link Archer AX10 (AX1500, 10/100/1000)",28500,AMD,5+,,14391
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,04,ARCHER AX55,"Точка доступа/Router TP-Link Archer AX55 (AX3000, 10/100/1000)",42300,AMD,1-5,,14260
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,AX6000,"Точка доступа/Router TP-Link Archer AX6000 (AX6000, 10/100/1000)",131000,AMD,1-5,,14978
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER AX72,"Точка доступа/Router TP-Link Archer AX72 (AX5400, 10/100/1000)",52800,AMD,1-5,,14982
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER AX73,"Точка доступа/Router TP-Link Archer AX73 (AX5400, 10/100/1000)",67100,AMD,1-5,,13851
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER C20,"Точка доступа/Router TP-Link Archer C20 (AC733, 3G support)",10900,AMD,5+,,11141
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER C50(RU),Точка доступа/Router TP-Link Archer C50 (AC1200),12100,AMD,5+,,11065
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER C60,Точка доступа/Router TP-Link Archer C60 (AC1350),14400,AMD,5+,,11066
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,ARCHER C80,Точка доступа/Router TP-Link Archer C80 (AC1900),23800,AMD,1-5,,13551
+CS,Сеть/Точки доступа и роутеры/Роутеры,TP-Link,ARCHER MR200,"Точка доступа/Router TP-Link Archer MR200 AC750 (Dual, 3G/4G, Sim)",34300,AMD,5+,,14052
+CS,Сеть/Точки доступа и роутеры/Роутеры,TP-Link,ARCHER MR505,"Точка доступа/Router TP-Link Archer MR505 AC1200 (4G LTE, 10/100/1000 Cat.6)",35900,AMD,5+,,16905
+CS,Сеть/Точки доступа и роутеры/Роутеры,TP-Link,Archer MR600,"Точка доступа/Router TP-Link Archer MR600 AC1200 (4G LTE, 10/100/1000 Cat.6)",60300,AMD,1-5,,15599
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,CPE-510,Точка доступа/Router TP-Link CPE-510 (802.11n),26300,AMD,1-5,,11148
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,DECO E4(2-PACK),"Точка доступа/Router TP-Link Deco E4 (Mesh, 2xPack, AC1200, 10/100)",40400,AMD,1-5,,13852
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,DECO E4(3-PACK),"Точка доступа/Router TP-Link Deco E4 (Mesh, 3xPack, AC1200, 10/100)",47600,AMD,1-5,,14673
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,6935364084394,"Точка доступа/Router TP-Link Deco M4 (Mesh, 1xPack, AC1200, 10/100/1000)",28900,AMD,1-5,,14994
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,EAP245,Точка доступа/Router TP-Link EAP-245 (802.11n),46400,AMD,1-5,,15464
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,M7200,Точка доступа/Router TP-Link M7200 4G LTE Mobile Wi-Fi,28500,AMD,1-5,,15594
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,M7350,Точка доступа/Router TP-Link M7350 (4G),35100,AMD,1-5,,14999
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,6957939000424,Точка доступа/Router TP-Link MERCUSYS MW325R,7500,AMD,5+,,11581
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,RE205,"Точка доступа/Router TP-Link RE205 (AC750) (802.11ac/ab/g/n, Repeater, Powerline, up to 733Mbps)",11900,AMD,5+,,16907
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,RE305,"Точка доступа/Router TP-Link RE305 (AC1200, Repeater, Powerline, up to 1200Mbps)",16600,AMD,1-5,,14670
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,RE450,"Точка доступа/Router TP-Link RE450 (AC1750) (802.11ac/ab/g/n, Repeater, Powerline, up to 733Mbps)",26100,AMD,5+,,16908
+CS,Сеть/Точки доступа и роутеры/Роутеры,TP-Link,TL-MR3420,Точка доступа/Router TP-Link TL-MR3420 (3G/4G),12300,AMD,1-5,,14692
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,TL-WA801N,Точка доступа/Router TP-Link TL-WA801N (802.11n),10500,AMD,5+,,14136
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,TL-WA855RE,"Точка доступа/Router TP-Link TL-WA855RE (N300, Repeater, Powerline)",9500,AMD,5+,,11158
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,TL-WA860RE,"Точка доступа/Router TP-Link TL-WA860RE (N300, Repeater, Powerline)",10100,AMD,5+,,11082
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,TL-WR840N,Точка доступа/Router TP-Link TL-WR840N (802.11n),7700,AMD,5+,,11087
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,6935364090586,Точка доступа/Router TP-Link TL-WR841N (802.11n),9000,AMD,5+,,11088
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,TP-Link,TL-WR844N,Точка доступа/Router TP-Link TL-WR844N (802.11n),6400,AMD,5+,,14299
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,Ubiquiti,LTU-LR,Точка доступа/Router Ubiquiti ISP (LTU-LR),72200,AMD,1-5,,14003
+CS,Сеть/Точки доступа и роутеры/WiFi роутеры,Ubuquiti,LTU-PRO,Точка доступа/Router Ubiquiti ISP (LTU-PRO),95600,AMD,1-5,,14004
+CS,Кабели и переходники/USB,Lanberg,CA-C13E-10CC-0018-BK,Удлинитель LANBERG CA-C13E-10CC-0018-BK POWER SUPPLY CABLE IEC 320 C13-> C14 1.8M BLACK,1200,AMD,5+,,11555
+CS,Кабель в метрах,LANBERG,CA-C13E-11CC-0018-BK,Удлинитель LANBERG CA-C13E-11CC-0018-BK POWER SUPPLY CABLE IEC 320 C13-> C14 1.8M BLACK,1400,AMD,5+,,16970
+CS,Кабель в метрах,LANBERG,CA-C13E-11CC-0050-BK,Удлинитель LANBERG CA-C13E-11CC-0050-BK POWER SUPPLY CABLE IEC 320 C13-> C14 5.0M BLACK,2800,AMD,5+,,16971
+CS,Кабели и переходники/USB,Lanberg,CA-C14E-10CC-0018-BK,Удлинитель LANBERG CA-C14E-10CC-0018-BK POWER SUPPLY CABLE IEC 320 C14->SCHUKO(F) 20CM BLACK,2000,AMD,1-5,,11640
+CS,Кабели и переходники/USB,Lanberg,CA-US3E-10CC-0018-B,Удлинитель LANBERG CA-US3E-10CC-0018-B CABLE USB 3.0 AM-AF BLUE 1.8M,1200,AMD,5+,,11552
+CS,Кабели и переходники/USB,Lanberg,CA-USBE-10CC-0018-BK,Удлинитель LANBERG CA-USBE-10CC-0018-BK CABLE USB 2.0 AM-AF BLACK 1.8M,600,AMD,5+,,11550
+CS,Кабели и переходники/USB,LANBERG,CA-USBE-10CC-0030-B,Удлинитель LANBERG CA-USBE-10CC-0030-B CABLE USB 2.0 AM-AF 2.0 BLUE 3M,1600,AMD,5+,,16592
+CS,Кабели и переходники/USB,Lanberg,CA-USBE-10CC-0030-BK,Удлинитель LANBERG CA-USBE-10CC-0030-BK CABLE USB 2.0 AM-AF 2.0 BLACK 3M,800,AMD,5+,,11549
+CS,Кабели и переходники/USB,Lanberg,5901969413762,Удлинитель LANBERG CA-USBE-10CC-0050-BK CABLE USB 2.0 AM-AF BLACK 5M,1000,AMD,5+,,11551
+CS,Кабели и переходники/USB,Lanberg,CA-VGAC-10CC-0018-B+,Удлинитель LANBERG CA-VGAC-10CC-0018-B+ CABLE VGA HD15M/HD15F DUAL-SHIELDED 2*FERRITE BLACK 1.8M,1200,AMD,5+,,11554
+CS,Кабели и переходники/USB,Ugreen,10387,"Удлинитель Ugreen 10387 USB-C/M to USB-C/F Gen2 Extension Cable (5A, 1M, Black)",4900,AMD,1-5,,16314
+CS,Сетевые фильтры,Xiaomi,ZNCZ04CM,Умная розетка Xiaomi Mija Mi Smart (White),7600,AMD,1-5,,13018
+CS,"Карты памяти, флешки/USB флешки",Kingston,DT70/128GB,"Флешка USB 128GB Kingston DataTraveler 70 (USB-C, Black)",3300,AMD,5+,,16806
+CS,"Карты памяти, флешки/USB флешки",Kingston,DT80M/128GB,"Флешка USB 128GB Kingston DataTraveler 80M (USB-C, Black)",4800,AMD,1-5,,15819
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTX/128GB,"Флешка USB 128GB Kingston DataTraveler Exodia (USB 3.2, Black)",3600,AMD,5+,,15023
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTDUO3CG3/128GB,"Флешка USB 128GB Kingston DataTraveler MicroDUO 3C Dual (USB 3.2 + USB-C, Purple)",5900,AMD,5+,,15821
+CS,"Карты памяти, флешки/USB флешки",Patriot,PE128GR550DSAD,"Флешка USB 128GB Patriot PE128GR550DSAD RAGE R550 (USB-C/USB 3.2, Dark Shadow)",4600,AMD,5+,,16645
+CS,"Карты памяти, флешки/USB флешки",Patriot,PEF128GSRE3USB,"Флешка USB 128GB Patriot PEF128GSRE3USB SS RAGE (USB 3.0, Black)",4600,AMD,1-5,,14911
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF128GBITB32U,"Флешка USB 128GB Patriot PSF128GBITB32U BIT (USB 3.2, Black)",5500,AMD,1-5,,14081
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF128GT300DS3U,"Флешка USB 128GB Patriot PSF128GT300DS3U TAB300 (USB 3.2, Dark Shadow)",3600,AMD,5+,,16646
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF128GX3B3U,"Флешка USB 128GB Patriot PSF128GX3B3U XPORTER 3 Slider (USB 3.2, Black)",3600,AMD,5+,,15753
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF128GXRB3U,"Флешка USB 128GB Patriot PSF128GXRB3U Xporter Core (USB 3.2, Black)",3100,AMD,5+,,16647
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-128BE3/APC,"Флешка USB 128GB Samsung Bar Plus (USB 3.1, Silver)",9400,AMD,1-5,,16259
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-128BE4/APC,"Флешка USB 128GB Samsung Bar Plus (USB 3.1, Titan Grey)",10300,AMD,1-5,,16055
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-128AB/APC,"Флешка USB 128GB Samsung FIT Plus (USB 3.1, Black)",11000,AMD,1-5,,16053
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-128DA/APC,"Флешка USB 128GB Samsung USB Type-C (USB-C, Blue)",10100,AMD,1-5,,16057
+CS,"Карты памяти, флешки/USB флешки",Kingston,DT80M/256GB,"Флешка USB 256GB Kingston DataTraveler 80M (USB-C, Black)",8100,AMD,5+,,15820
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTX/256GB,"Флешка USB 256GB Kingston DataTraveler Exodia (USB 3.2, Black)",7300,AMD,5+,,15024
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTXON/256GB,"Флешка USB 256GB Kingston DataTraveler Exodia Onyx (USB 3.2, Black)",7300,AMD,1-5,,15817
+CS,"Карты памяти, флешки/USB флешки",Patriot,PEF256GRGPB32U,"Флешка USB 256GB Patriot PEF256GRGPB32U SS Rage Pro (USB 3.2, Black)",17700,AMD,1-5,,14968
+CS,"Карты памяти, флешки/USB флешки",Patriot,PEF256GRLB32U,"Флешка USB 256GB Patriot PEF256GRLB32U SS Rage Lite (USB 3.2, Black)",6600,AMD,5+,,14561
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF256GX3B3U,"Флешка USB 256GB Patriot PSF256GX3B3U XPORTER 3 Slider (USB 3.2, Black)",6500,AMD,5+,,15754
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-256BE4/APC,"Флешка USB 256GB Samsung Bar Plus (USB 3.1, Titan Grey)",16200,AMD,1-5,,16056
+CS,"Карты памяти, флешки/USB флешки",Patriot,PEF32GRLB32U,"Флешка USB 32GB Patriot PEF32GRLB32U SS RAGE LITE (USB 3.2, Black)",1700,AMD,5+,,15349
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF32GX3B3U,"Флешка USB 32GB Patriot PSF32GX3B3U XPORTER 3 Slider (USB 3.2, Black)",1600,AMD,5+,,16227
+CS,"Карты памяти, флешки/USB флешки",Kingston,DT70/64GB,"Флешка USB 64GB Kingston DataTraveler 70 (USB-C, Black)",2300,AMD,5+,,15021
+CS,"Карты памяти, флешки/USB флешки",Kingston,DT80/64GB,"Флешка USB 64GB Kingston DataTraveler 80 (USB-C, Black)",4300,AMD,1-5,,14936
+CS,"Карты памяти, флешки/USB флешки",Kingston,DT80M/64GB,"Флешка USB 64GB Kingston DataTraveler 80M (USB-C, Black)",3000,AMD,5+,,16611
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTX/64GB,"Флешка USB 64GB Kingston DataTraveler Exodia (USB 3.2, Black)",2300,AMD,5+,,14938
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTXM/64GB,"Флешка USB 64GB Kingston DataTraveler Exodia M (USB 3.2, Black)",2300,AMD,5+,,15026
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTXON/64GB,"Флешка USB 64GB Kingston DataTraveler Exodia Onyx (USB 3.2, Black)",2600,AMD,5+,,15818
+CS,"Карты памяти, флешки/USB флешки",Kingston,DTDUO3CG3/64GB,"Флешка USB 64GB Kingston DataTraveler MicroDUO 3C Dual  (USB 3.2 + USB-C, Purple)",4600,AMD,1-5,,15033
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PEF64GRLB32,"Флешка USB 64GB Patriot PEF64GRLB32U SS RAGE LITE (USB 3.2, Black)",2200,AMD,1-5,,14830
+CS,"Карты памяти, флешки/USB флешки",Patriot,PEF64GSBUSB,"Флешка USB 64GB Patriot PEF64GSBUSB SUPERSONIC BOOST (USB 3.0, 150/30, Black)",5300,AMD,1-5,,13476
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PEF64GTRI3USB,"Флешка USB 64GB Patriot PEF64GTRI3USB Trinity (USB 3.1, USB-C, USB Micro-B)",5600,AMD,1-5,,15668
+CS,"Карты памяти, флешки/SD, Mini SD, Micro SD",Patriot,PIF64GSTRCOTG,"Флешка USB 64GB Patriot PIF64GSTRCOTG Insta Strellar (USB 3.2, USB-C)",3500,AMD,1-5,,15670
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF64GT300DS3U,"Флешка USB 64GB Patriot PSF64GT300DS3U TAB300 (USB 3.2, Dark Shadow)",2300,AMD,5+,,16648
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF64GX3B3U,"Флешка USB 64GB Patriot PSF64GX3B3U XPORTER 3 Slider (USB 3.2, Black)",2100,AMD,5+,,15752
+CS,"Карты памяти, флешки/USB флешки",Patriot,PSF64GXRB3U,"Флешка USB 64GB Patriot PSF64GXRB3U Xporter Core (USB 3.2, Black)",2000,AMD,5+,,16649
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-64BE3/APC,"Флешка USB 64GB Samsung Bar Plus (USB 3.1, Silver)",6600,AMD,5+,,16054
+CS,"Карты памяти, флешки/USB флешки",Samsung,MUF-64AB/APC,"Флешка USB 64GB Samsung FIT Plus (USB 3.1, Black)",6200,AMD,5+,,16052
+CS,Аксессуары/Папки CD-DVD,Cactus,CS-AIR400,Чистящие средства пневматический очиститель Cactus CS-AIR400,1400,AMD,5+,,14630
+CS,Аксессуары/Папки CD-DVD,Cactus,CS-AIR750,Чистящие средства пневматический очиститель Cactus CS-AIR750,2200,AMD,5+,,16426
+CS,Аксессуары/Чистящие средства,Cactus,CS-WB250,Чистящий спрей Cactus CS-WB250,800,AMD,5+,,12632
+CS,Сетевое_оборудование,Lanberg,FF01-8842-12B,"Шкаф настенный LANBERG FF01-8842-12B 19"" FREE-STANDING RACK 42U/800X800 FLAT PACK BLACK",342000,AMD,1-5,,15250
+CS,Сетевое_оборудование,Lanberg,FF02-6637L-23B,"Шкаф настенный LANBERG FF02-6637L-23B 19"" WALL-MOUNTED RACK 37U/600X600 DEMOUNTED FLAT PACK WITH MESH DOOR BLACK",183300,AMD,1-5,,14497
+CS,Сетевое_оборудование,Lanberg,LANBERG WF01-6404-10B,"Шкаф настенный LANBERG WF01-6404-10B 19"" WALL-MOUNTED RACK 4U/600X450 DEMOUNTED FLAT PACK BLACK",41000,AMD,1-5,,11642
+CS,Сетевое_оборудование,Lanberg,WF01-6406-10B,"Шкаф настенный LANBERG WF01-6406-10B 19"" WALL-MOUNT RACK 6U/600X450 FLAT PACK BLACK V2",47200,AMD,1-5,,15261
+CS,Сетевое_оборудование,Lanberg,WF01-6418-10S,"Шкаф настенный LANBERG WF01-6418-10S 19"" WALL-MOUNT RACK 18U/600X450 FLAT PACK GREY V2",78400,AMD,1-5,,15251
+CS,Сетевое_оборудование,Lanberg,WF02-6606-10B,"Шкаф настенный LANBERG WF02-6606-10B 19"" WALL-MOUNTED DOUBLE SECTION RACK 6U/600X600 DEMOUNTED FLAT PACK BLACK",55000,AMD,1-5,,11643
+CS,Сетевое_оборудование,Lanberg,WFFA-5606-10S,"Шкаф настенный LANBERG WFFA-5606-10S 19"" WALL-MOUNTED RACK 6U/570X600 FLAT PACK GREY",65900,AMD,1-5,,15262
+CS,Сетевое_оборудование,Lanberg,AK-1002-B,"Шкаф полка LANBERG AK-1002-B (19"" FIXED SHELF 1U/465X300mm, Max load 120kg, Black)",5100,AMD,1-5,,14495
+CS,Сетевое_оборудование,Lanberg,AK-1002-B,"Шкаф полка LANBERG AK-1003-B (19"" FIXED SHELF 1U/465X515mm, Max load 120kg, Black)",6400,AMD,1-5,,14494
+CS,ЗИП Копиры,Buro,BU-S050C,"Шредер Buro Home BU-S050C (5 list, 13ltr, pl.cards)",22600,AMD,1-5,,16219
+CS,ЗИП Копиры,Buro,BU-S601S,"Шредер Buro Home BU-S601S (6 list, 10ltr, pl.cards)",11100,AMD,1-5,,15574
+CS,Сетевое_оборудование,Lanberg,AK-1303-S,"Шурупы LANBERG AK-1303-S 19"" MOUNTING SCREWS SET 20PCS",1400,AMD,5+,,11645
+CS,Проекторы,ANC,ANC M180x180,"Экран для проектора ANC Manual Screen M180x180 (180x180cm, 1:1, настенный)",27300,AMD,5+,,16636
+CS,Проекторы,ANC,ANC M200x200,"Экран для проектора ANC Manual Screen M200x200 (200x200cm, 1:1, настенный)",31200,AMD,5+,,16637
+CS,Проекторы,ANC,ANC M240x180,"Экран для проектора ANC Manual Screen M240x180 (240x180cm, 1:1, настенный)",38200,AMD,5+,,16638
+CS,Проекторы,Cactus,CS-PSM-183x244,"Экран для проектора Cactus Motoscreen CS-PSM-183x244 (183x244cm, 4:3, wall, motorized, remote)",56900,AMD,1-5,,12174
+CS,Проекторы,CACTUS,CS-PSW-104X186,"Экран для проектора Cactus Wallscreen CS-PSW-104x186 (104x186cm, 16:9, настенный)",36100,AMD,1-5,,12061
+CS,Проекторы,CACTUS,CS-PSW-150x150,"Экран для проектора Cactus Wallscreen CS-PSW-150x150 (150x150cm, 1:1, настенный)",27300,AMD,1-5,,12056
+CS,Проекторы,Cactus,CS-PSW-183X244,"Экран для проектора Cactus Wallscreen CS-PSW-183x244 (183x244cm, 4:3, настенный)",50300,AMD,1-5,,11769
+CS,Проекторы,Cactus,CS-PSW-213X213,"Экран для проектора Cactus Wallscreen CS-PSW-213x213 (213x213cm, 1:1, настенный)",45600,AMD,1-5,,13735
+CS,Проекторы,Lumien,LEV-100102,"Экран для проектора Lumien Eco View LEV-100102 (180x180cm, 1:1, черный, напольный)",46000,AMD,1-5,,16792
+CS,Проекторы,Lumien,LEV-100109,"Экран для проектора Lumien Eco View LEV-100109 (220x220cm, 1:1, черный, напольный)",70200,AMD,1-5,,16793
+CS,Веб-камеры,Digma,DC235,Экшн-камера Digma DiCam 235 (Black),11100,AMD,1-5,,12500

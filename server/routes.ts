@@ -505,16 +505,18 @@ print(json.dumps(result))
               return res.status(400).json({ error: result.error });
             }
 
-            // Save the processed file to storage
+            // Save the processed file to storage with UTF-8 encoding
             const processedFilename = result.output_filename || 'converted_price_list.csv';
             const processedFilePath = path.join(path.dirname(file.path), processedFilename);
-            fs.writeFileSync(processedFilePath, result.csv_content);
+            fs.writeFileSync(processedFilePath, result.csv_content, 'utf8');
 
             // Store the price list file in database
             const priceListFile = await storage.createPriceListFile({
               supplierId,
               filename: processedFilename,
+              originalName: file.originalname,
               filePath: processedFilePath,
+              fileSize: file.size,
             });
 
             // Delete the original uploaded file

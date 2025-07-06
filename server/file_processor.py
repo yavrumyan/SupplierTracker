@@ -29,15 +29,28 @@ def read_price_list_file(file_path: str) -> pd.DataFrame:
         _, ext = os.path.splitext(file_path.lower())
         
         if ext in ['.xlsx', '.xls']:
-            # Read Excel file
-            df = pd.read_excel(file_path, engine='openpyxl' if ext == '.xlsx' else None)
-        elif ext == '.csv':
-            # Read CSV file with common delimiters
+            # Read Excel file with proper encoding support
             try:
-                df = pd.read_csv(file_path)
-            except:
-                # Try with semicolon delimiter
-                df = pd.read_csv(file_path, delimiter=';')
+                df = pd.read_excel(file_path, engine='openpyxl' if ext == '.xlsx' else None)
+            except Exception as e:
+                raise Exception(f"Error reading Excel file: {str(e)}")
+        elif ext == '.csv':
+            # Read CSV file with UTF-8 encoding support
+            encodings = ['utf-8', 'cp1251', 'latin-1', 'iso-8859-1']
+            df = None
+            for encoding in encodings:
+                try:
+                    df = pd.read_csv(file_path, encoding=encoding)
+                    break
+                except (UnicodeDecodeError, UnicodeError):
+                    continue
+            
+            if df is None:
+                # Try with different delimiter
+                try:
+                    df = pd.read_csv(file_path, delimiter=';', encoding='utf-8')
+                except:
+                    raise Exception("Could not read CSV file with any supported encoding")
         else:
             raise Exception(f"Unsupported file format: {ext}")
         
@@ -121,7 +134,7 @@ def process_price_list(file_path: str, logic_content: str) -> Dict[str, Any]:
         # Generate preview HTML
         preview_html = converted_df.head(10).to_html(classes='table table-striped', table_id='price-list-preview')
         
-        # Create CSV content
+        # Create CSV content (string will be UTF-8 encoded when written to file)
         csv_content = converted_df.to_csv(index=False)
         
         return {
