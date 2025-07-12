@@ -344,18 +344,23 @@ export class DatabaseStorage implements IStorage {
   }): Promise<SearchIndex[]> {
     let whereConditions = [];
 
-    // Full-text search across product fields
+    // Triple keyword search with AND logic
     if (query) {
-      const searchTerm = `%${query.toLowerCase()}%`;
-      whereConditions.push(
-        or(
-          ilike(searchIndex.productName, searchTerm),
-          ilike(searchIndex.model, searchTerm),
-          ilike(searchIndex.brand, searchTerm),
-          ilike(searchIndex.category, searchTerm),
-          ilike(searchIndex.notes, searchTerm)
-        )
-      );
+      const keywords = query.split(' ').filter(k => k.trim()).map(k => k.trim().toLowerCase());
+      
+      // Each keyword must match at least one of the searchable fields
+      for (const keyword of keywords) {
+        const searchTerm = `%${keyword}%`;
+        whereConditions.push(
+          or(
+            ilike(searchIndex.productName, searchTerm),
+            ilike(searchIndex.model, searchTerm),
+            ilike(searchIndex.brand, searchTerm),
+            ilike(searchIndex.category, searchTerm),
+            ilike(searchIndex.notes, searchTerm)
+          )
+        );
+      }
     }
 
     // Apply filters

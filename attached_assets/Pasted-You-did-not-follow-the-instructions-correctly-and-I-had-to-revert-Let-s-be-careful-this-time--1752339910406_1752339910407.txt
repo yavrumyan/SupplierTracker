@@ -1,0 +1,71 @@
+You did not follow the instructions correctly and I had to revert.
+
+Let's be careful this time.
+
+!Important! - Keep the "Search Supplier" search in Dashboard unchanged. It is a separate search that searches only Suppliers.
+
+!Important! - Rename "Dashboard" to "Search Suppliers" on the left-side menu.
+
+!Important! - Do not do any other changes on the left-side menu, it is already fine. All updates must happen only inside the "Product Search" tab.
+
+---
+### 🔍 Search Results Changes:
+
+3. **Update columns in the search result table**.
+   New column structure must be:
+
+   ```
+   Source | Supplier | Category | Brand | Model | Name | Price | Currency | Stock | MOQ | Notes
+   ```
+
+   * `"Source"` column (e.g., `price_list` or `offer`) stays first — keep it as-is.
+   * `"Model"` = model or part number
+   * `"Name"` = product name
+   * `"MOQ"` = minimum order quantity (if not available, leave empty)
+   * Do **not truncate** or cut long texts — allow line wrapping or overflow display.
+
+---
+
+### 🎯 Filters and Search Bar Update:
+
+4. **Remove the following filters**:
+
+   * `"Trading Categories"`
+   * `"Trading Brands"`
+   * `"Min. Reputation"`
+
+5. **Add new dropdown filters** for:
+
+   * `"Source"` (`price_list`, `offer`)
+   * `"Supplier"` (based on list of suppliers in the system)
+   * `"Category"` (from standardized price-lists)
+   * `"Brand"` (from standardized price-lists)
+
+6. **Add three keyword search input fields at the top** (instead of just one):
+
+   * These are independent keyword inputs.
+   * Search logic must be **AND / AND / AND** — a row is shown only if it matches all 3 keywords.
+   * All 3 search fields must search across these 4 columns:
+
+     * `"Category"`
+     * `"Brand"`
+     * `"Model"`
+     * `"Name"`
+   * Also search within saved offers if stored.
+
+---
+
+### 🚫 Deduplication Requirement:
+
+7. **Ensure rows are not duplicated in results**.
+   Example: if the same row matches multiple columns (e.g., “Ryzen” in both `"Category"` and `"Name"`), show it **only once**.
+
+---
+
+### 💾 Technical Notes:
+
+* Keep the backend route efficient and compatible with SQLite or the current database setup.
+* Maintain styling and responsiveness of the existing GUI.
+* Keep pagination if already present, or use lazy loading if results are large.
+
+---

@@ -1,28 +1,28 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Layout } from "@/components/layout";
-import { SearchFilters } from "@/components/search-filters";
+import { ProductSearchFilters, type ProductSearchFilters as ProductSearchFiltersType } from "@/components/product-search-filters";
 import { SearchResults } from "@/components/search-results";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, X } from "lucide-react";
-import type { SearchFilters as SearchFiltersType } from "@/lib/types";
 
 export default function SearchPage() {
-  const [filters, setFilters] = useState<SearchFiltersType>({});
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<ProductSearchFiltersType>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(50);
-  const [appliedFilters, setAppliedFilters] = useState<SearchFiltersType>({});
+  const [appliedFilters, setAppliedFilters] = useState<ProductSearchFiltersType>({});
 
   // Build search parameters
   const searchParams = new URLSearchParams();
-  if (searchQuery) searchParams.append('query', searchQuery);
-  if (appliedFilters.country) searchParams.append('country', appliedFilters.country);
+  if (appliedFilters.keyword1) searchParams.append('keyword1', appliedFilters.keyword1);
+  if (appliedFilters.keyword2) searchParams.append('keyword2', appliedFilters.keyword2);
+  if (appliedFilters.keyword3) searchParams.append('keyword3', appliedFilters.keyword3);
+  if (appliedFilters.source) searchParams.append('source', appliedFilters.source);
+  if (appliedFilters.supplier) searchParams.append('supplier', appliedFilters.supplier);
   if (appliedFilters.category) searchParams.append('category', appliedFilters.category);
   if (appliedFilters.brand) searchParams.append('brand', appliedFilters.brand);
-  if (appliedFilters.supplier) searchParams.append('supplier', appliedFilters.supplier);
   searchParams.append('page', currentPage.toString());
   searchParams.append('limit', pageLimit.toString());
 
@@ -36,19 +36,18 @@ export default function SearchPage() {
       }
       return response.json();
     },
-    enabled: Object.keys(appliedFilters).length > 0 || searchQuery.length > 0,
+    enabled: Object.keys(appliedFilters).length > 0,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Handle search execution
   const handleSearch = () => {
     setAppliedFilters({ ...filters });
-    setSearchQuery(filters.query || "");
     setCurrentPage(1);
   };
 
   // Handle filter changes
-  const handleFiltersChange = (newFilters: SearchFiltersType) => {
+  const handleFiltersChange = (newFilters: ProductSearchFiltersType) => {
     setFilters(newFilters);
   };
 
@@ -67,7 +66,6 @@ export default function SearchPage() {
   const clearAllFilters = () => {
     setFilters({});
     setAppliedFilters({});
-    setSearchQuery("");
     setCurrentPage(1);
   };
 
@@ -86,7 +84,7 @@ export default function SearchPage() {
 
         {/* Search filters */}
         <div className="mb-6">
-          <SearchFilters
+          <ProductSearchFilters
             filters={filters}
             onFiltersChange={handleFiltersChange}
             onSearch={handleSearch}
@@ -103,15 +101,32 @@ export default function SearchPage() {
                   <span className="text-sm font-medium text-gray-700">Active Filters:</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {searchQuery && (
+                  {appliedFilters.keyword1 && (
                     <Badge variant="secondary" className="flex items-center gap-1">
                       <Search className="h-3 w-3" />
-                      "{searchQuery}"
+                      Keyword 1: "{appliedFilters.keyword1}"
                     </Badge>
                   )}
-                  {appliedFilters.country && (
+                  {appliedFilters.keyword2 && (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Search className="h-3 w-3" />
+                      Keyword 2: "{appliedFilters.keyword2}"
+                    </Badge>
+                  )}
+                  {appliedFilters.keyword3 && (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Search className="h-3 w-3" />
+                      Keyword 3: "{appliedFilters.keyword3}"
+                    </Badge>
+                  )}
+                  {appliedFilters.source && (
                     <Badge variant="secondary">
-                      Country: {appliedFilters.country}
+                      Source: {appliedFilters.source}
+                    </Badge>
+                  )}
+                  {appliedFilters.supplier && (
+                    <Badge variant="secondary">
+                      Supplier: {appliedFilters.supplier}
                     </Badge>
                   )}
                   {appliedFilters.category && (
@@ -122,11 +137,6 @@ export default function SearchPage() {
                   {appliedFilters.brand && (
                     <Badge variant="secondary">
                       Brand: {appliedFilters.brand}
-                    </Badge>
-                  )}
-                  {appliedFilters.supplier && (
-                    <Badge variant="secondary">
-                      Supplier: {appliedFilters.supplier}
                     </Badge>
                   )}
                 </div>
@@ -145,7 +155,7 @@ export default function SearchPage() {
         )}
 
         {/* Search results */}
-        {(Object.keys(appliedFilters).length > 0 || searchQuery) ? (
+        {Object.keys(appliedFilters).length > 0 ? (
           <SearchResults
             results={searchData?.results || []}
             groupedResults={searchData?.groupedResults || {}}

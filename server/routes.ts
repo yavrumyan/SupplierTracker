@@ -368,22 +368,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/search", async (req, res) => {
     try {
       const { 
-        query = '', 
+        keyword1 = '',
+        keyword2 = '',
+        keyword3 = '',
+        source = '',
         supplier = '', 
-        country = '', 
         category = '', 
         brand = '', 
-        sourceType = '',
         page = '1',
         limit = '50'
       } = req.query;
 
       const filters = {
         supplier: supplier as string,
-        country: country as string,
         category: category as string,
         brand: brand as string,
-        sourceType: sourceType as string
+        sourceType: source as string
       };
 
       // Remove empty filters
@@ -393,7 +393,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
 
-      const searchResults = await storage.searchProducts(query as string, filters);
+      // Build combined search query for triple keyword search
+      const keywords = [keyword1, keyword2, keyword3].filter(k => k && k.trim()).map(k => k.trim());
+      const combinedQuery = keywords.join(' ');
+
+      const searchResults = await storage.searchProducts(combinedQuery, filters);
 
       // Group results by supplier for better display
       const groupedResults = searchResults.reduce((acc, result) => {
@@ -423,6 +427,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error searching products:", error);
       res.status(500).json({ error: "Failed to search products" });
+    }
+  });
+
+  // Search metadata endpoint for categories and brands
+  app.get("/api/search/metadata", async (req, res) => {
+    try {
+      const results = await storage.searchProducts("", {});
+      
+      // Extract unique categories and brands
+      const categories = [...new Set(results.map(r => r.category).filter(Boolean))].sort();
+      const brands = [...new Set(results.map(r => r.brand).filter(Boolean))].sort();
+      
+      res.json({
+        categories,
+        brands
+      });
+    } catch (error) {
+      console.error("Error fetching search metadata:", error);
+      res.status(500).json({ error: "Failed to fetch search metadata" });
     }
   });
 
