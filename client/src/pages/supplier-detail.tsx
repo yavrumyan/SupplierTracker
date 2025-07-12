@@ -24,7 +24,8 @@ import {
   Star,
   FileText,
   Download,
-  Eye
+  Eye,
+  RefreshCw
 } from "lucide-react";
 import { Link } from "wouter";
 import type { Supplier, PriceListFile, PriceListItem, Offer } from "@shared/schema";
@@ -110,6 +111,38 @@ export default function SupplierDetail() {
       toast({
         title: "Failed to add offer",
         description: "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const refreshSearchIndexMutation = useMutation({
+    mutationFn: async (priceListId: number) => {
+      const response = await fetch(`/api/suppliers/${supplierId}/price-lists/${priceListId}/refresh-index`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to refresh search index');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Search index refreshed",
+        description: `Successfully refreshed ${data.entriesCreated} search entries.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Failed to refresh search index",
+        description: error.message,
         variant: "destructive",
       });
     },
@@ -585,6 +618,15 @@ export default function SupplierDetail() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => refreshSearchIndexMutation.mutate(file.id)}
+                            disabled={refreshSearchIndexMutation.isPending}
+                          >
+                            <RefreshCw className="h-4 w-4 mr-1" />
+                            Refresh Index
+                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm"

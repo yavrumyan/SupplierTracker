@@ -449,6 +449,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Refresh search index for a specific price list
+  app.post("/api/suppliers/:supplierId/price-lists/:id/refresh-index", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.supplierId);
+      const priceListId = parseInt(req.params.id);
+      
+      // Get the price list file
+      const priceListFiles = await storage.getPriceListFiles(supplierId);
+      const priceListFile = priceListFiles.find(f => f.id === priceListId);
+      
+      if (!priceListFile) {
+        return res.status(404).json({ error: "Price list not found" });
+      }
+      
+      // Check if the file exists
+      if (!fs.existsSync(priceListFile.filePath)) {
+        return res.status(404).json({ error: "Price list file not found on disk" });
+      }
+      
+      // Get supplier information
+      const supplier = await storage.getSupplier(supplierId);
+      if (!supplier) {
+        return res.status(404).json({ error: "Supplier not found" });
+      }
+      
+      // Read the CSV file content
+      const csvContent = fs.readFileSync(priceListFile.filePath, 'utf8');
+      
+      // Clear existing search index entries for this price list
+      await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
+      
+      // Parse CSV content and populate search index
+      const workbook = XLSX.read(csvContent, { type: 'string' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const csvData = XLSX.utils.sheet_to_json(worksheet);
+      
+      // Map CSV headers to search index fields
+      const headerMap = {
+        'Supplier': 'supplier',
+        'Category': 'category', 
+        'Brand': 'brand',
+        'Model': 'model',
+        'Product Name': 'productName',
+        'Price': 'price',
+        'Currency': 'currency',
+        'Stock': 'stock',
+        'Warranty': 'warranty',
+        'Notes': 'notes'
+      };
+
+      const searchIndexEntries = [];
+      
+      // Process each data row
+      for (const row of csvData) {
+        const entry = {
+          supplierId: supplierId,
+          sourceType: 'price_list',
+          sourceId: priceListFile.id,
+          supplier: supplier.name,
+          category: null,
+          brand: null,
+          model: null,
+          productName: null,
+          price: null,
+          currency: null,
+          stock: null,
+          warranty: null,
+          notes: null
+        };
+
+        // Map CSV values to search index fields
+        Object.keys(row).forEach((header) => {
+          const fieldName = headerMap[header];
+          if (fieldName && row[header]) {
+            entry[fieldName] = String(row[header]).trim();
+          }
+        });
+
+        searchIndexEntries.push(entry);
+      }
+
+      // Insert search index entries
+      if (searchIndexEntries.length > 0) {
+        await storage.createSearchIndexEntries(searchIndexEntries);
+      }
+      
+      res.json({
+        success: true,
+        message: "Search index refreshed successfully",
+        entriesCreated: searchIndexEntries.length
+      });
+      
+    } catch (error) {
+      console.error("Error refreshing search index:", error);
+      res.status(500).json({ error: "Failed to refresh search index" });
+    }
+  });
+
   // Cost calculation file upload
   app.post("/api/suppliers/:id/cost-calculation", upload.single('file'), async (req, res) => {
     try {
@@ -651,8 +750,14 @@ print(json.dumps(result))
             try {
               const supplier = await storage.getSupplier(supplierId);
               if (supplier) {
-                const csvLines = result.csv_content.trim().split('\n');
-                const headers = csvLines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                // Clear existing search index entries for this price list
+                await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
+                
+                // Use proper CSV parsing with XLSX library
+                const workbook = XLSX.read(result.csv_content, { type: 'string' });
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const csvData = XLSX.utils.sheet_to_json(worksheet);
                 
                 // Map CSV headers to search index fields
                 const headerMap = {
@@ -671,11 +776,7 @@ print(json.dumps(result))
                 const searchIndexEntries = [];
                 
                 // Process each data row
-                for (let i = 1; i < csvLines.length; i++) {
-                  const line = csvLines[i].trim();
-                  if (!line) continue;
-                  
-                  const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+                for (const row of csvData) {
                   const entry = {
                     supplierId: supplierId,
                     sourceType: 'price_list',
@@ -693,10 +794,10 @@ print(json.dumps(result))
                   };
 
                   // Map CSV values to search index fields
-                  headers.forEach((header, index) => {
+                  Object.keys(row).forEach((header) => {
                     const fieldName = headerMap[header];
-                    if (fieldName && values[index]) {
-                      entry[fieldName] = values[index];
+                    if (fieldName && row[header]) {
+                      entry[fieldName] = String(row[header]).trim();
                     }
                   });
 
