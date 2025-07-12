@@ -505,10 +505,11 @@ print(json.dumps(result))
               return res.status(400).json({ error: result.error });
             }
 
-            // Save the processed file to storage with UTF-8 encoding
+            // Save the processed file to storage with UTF-8 encoding and BOM
             const processedFilename = result.output_filename || 'converted_price_list.csv';
             const processedFilePath = path.join(path.dirname(file.path), processedFilename);
-            fs.writeFileSync(processedFilePath, result.csv_content, 'utf8');
+            const utf8BOM = '\uFEFF';
+            fs.writeFileSync(processedFilePath, utf8BOM + result.csv_content, 'utf8');
 
             // Store the price list file in database
             const priceListFile = await storage.createPriceListFile({
@@ -572,7 +573,14 @@ print(json.dumps(result))
         return res.status(404).json({ error: "File no longer exists on disk" });
       }
 
-      res.download(file.filePath, file.filename);
+      // Set proper headers for UTF-8 encoding
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
+      
+      // Read and send the file with UTF-8 encoding including BOM
+      const fileContent = fs.readFileSync(file.filePath, 'utf8');
+      const utf8BOM = '\uFEFF';
+      res.send(utf8BOM + fileContent);
     } catch (error) {
       console.error("Error downloading file:", error);
       res.status(500).json({ error: "Failed to download file" });
