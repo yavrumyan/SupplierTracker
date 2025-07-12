@@ -46,6 +46,13 @@ export default function SearchPage() {
     setCurrentPage(1);
   };
 
+  // Handle Enter key press
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   // Handle filter changes
   const handleFiltersChange = (newFilters: ProductSearchFiltersType) => {
     setFilters(newFilters);
@@ -74,7 +81,7 @@ export default function SearchPage() {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Product Search</h1>
           <p className="text-gray-600">
@@ -83,7 +90,7 @@ export default function SearchPage() {
         </div>
 
         {/* Search filters */}
-        <div className="mb-6">
+        <div className="mb-6" onKeyDown={handleKeyDown}>
           <ProductSearchFilters
             filters={filters}
             onFiltersChange={handleFiltersChange}

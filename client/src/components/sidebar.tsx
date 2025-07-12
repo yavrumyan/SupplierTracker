@@ -12,6 +12,7 @@ import {
   Microchip
 } from "lucide-react";
 import { useState } from "react";
+import supHubLogo from "@/assets/SupHub_1752355359935.png";
 
 const navigation = [
   { name: "Search Suppliers", href: "/", icon: BarChart },
@@ -52,9 +53,11 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-slate-200">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Microchip className="h-4 w-4 text-white" />
-            </div>
+            <img 
+              src={supHubLogo} 
+              alt="SupHub Logo" 
+              className="w-8 h-8 rounded-lg"
+            />
             <h1 className="ml-3 text-lg font-semibold text-slate-800">SupHub</h1>
           </div>
           <button
@@ -76,7 +79,7 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                   isActive
-                    ? "text-white bg-primary"
+                    ? "text-white bg-orange-500"
                     : "text-slate-700 hover:bg-slate-100"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -87,6 +90,19 @@ export function Sidebar() {
             );
           })}
         </nav>
+
+        {/* User Profile Section */}
+        <div className="px-4 py-6 border-t border-slate-200">
+          <div className="flex items-center">
+            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">GY</span>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-slate-700">Greg</p>
+              <p className="text-xs text-slate-500">Administrator</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Mobile menu overlay */}

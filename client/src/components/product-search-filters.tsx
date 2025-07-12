@@ -176,7 +176,7 @@ export function ProductSearchFilters({ filters, onFiltersChange, onSearch }: Pro
 
         {/* Action buttons */}
         <div className="flex gap-3">
-          <Button onClick={onSearch} className="flex-1">
+          <Button onClick={onSearch} className="flex-1 bg-orange-500 hover:bg-orange-600">
             <Search className="h-4 w-4 mr-2" />
             Search Products
           </Button>

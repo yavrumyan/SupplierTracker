@@ -122,7 +122,7 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
 
         {/* Actions */}
         <div className="flex items-center space-x-3 mt-4">
-          <Button onClick={onSearch} className="bg-blue-600 hover:bg-blue-700">
+          <Button onClick={onSearch} className="bg-orange-500 hover:bg-orange-600">
             <Search className="h-4 w-4 mr-2" />
             Search
           </Button>

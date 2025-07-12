@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronLeft, ChevronRight, Package2, FileText, Building2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Package2, FileText, Building2, Download } from "lucide-react";
 
 interface SearchResult {
   id: number;
@@ -50,6 +50,44 @@ export function SearchResults({
   onLimitChange 
 }: SearchResultsProps) {
   const [displayMode, setDisplayMode] = useState<'list' | 'grouped'>('list');
+
+  // Export results to CSV
+  const exportResults = () => {
+    if (!results || results.length === 0) return;
+    
+    const headers = ['Source', 'Supplier', 'Category', 'Brand', 'Model', 'Name', 'Price', 'Currency', 'Stock', 'MOQ', 'Notes'];
+    const csvData = [headers];
+    
+    results.forEach(result => {
+      csvData.push([
+        result.sourceType === 'price_list' ? 'Price List' : 'Offer',
+        result.supplier || '',
+        result.category || '',
+        result.brand || '',
+        result.model || '',
+        result.productName || '',
+        result.price || '',
+        result.currency || '',
+        result.stock || '',
+        result.moq || '',
+        result.notes || ''
+      ]);
+    });
+    
+    const csvContent = csvData.map(row => 
+      row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+    
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `search_results_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const getSourceIcon = (sourceType: string) => {
     return sourceType === 'price_list' ? <FileText className="h-4 w-4" /> : <Package2 className="h-4 w-4" />;
@@ -106,6 +144,16 @@ export function SearchResults({
         </div>
         
         <div className="flex items-center gap-2">
+          <Button 
+            onClick={exportResults}
+            variant="outline" 
+            className="flex items-center gap-2"
+            disabled={results.length === 0}
+          >
+            <Download className="h-4 w-4" />
+            Export Results
+          </Button>
+          
           <span className="text-sm text-gray-600">Show:</span>
           <Select value={limit.toString()} onValueChange={(value) => onLimitChange(parseInt(value))}>
             <SelectTrigger className="w-20">

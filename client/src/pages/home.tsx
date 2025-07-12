@@ -183,7 +183,7 @@ export default function Home() {
                 </span>
                 <Button 
                   onClick={handleBulkInquiry}
-                  className="bg-emerald-600 hover:bg-emerald-700"
+                  className="bg-orange-500 hover:bg-orange-600"
                   disabled={selectedSuppliers.size === 0 || !inquiryMessage.trim()}
                 >
                   <Send className="h-4 w-4 mr-2" />
