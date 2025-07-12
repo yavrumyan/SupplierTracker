@@ -368,9 +368,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/search", async (req, res) => {
     try {
       const { 
-        query = '', 
+        keyword1 = '', 
+        keyword2 = '', 
+        keyword3 = '', 
         supplier = '', 
-        country = '', 
         category = '', 
         brand = '', 
         sourceType = '',
@@ -379,8 +380,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } = req.query;
 
       const filters = {
+        keyword1: keyword1 as string,
+        keyword2: keyword2 as string,
+        keyword3: keyword3 as string,
         supplier: supplier as string,
-        country: country as string,
         category: category as string,
         brand: brand as string,
         sourceType: sourceType as string
@@ -393,7 +396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
 
-      const searchResults = await storage.searchProducts(query as string, filters);
+      const searchResults = await storage.searchProducts(filters);
 
       // Group results by supplier for better display
       const groupedResults = searchResults.reduce((acc, result) => {
@@ -423,6 +426,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error searching products:", error);
       res.status(500).json({ error: "Failed to search products" });
+    }
+  });
+
+  // Search metadata endpoint for filters
+  app.get("/api/search/metadata", async (req, res) => {
+    try {
+      const metadata = await storage.getSearchMetadata();
+      res.json(metadata);
+    } catch (error) {
+      console.error("Error fetching search metadata:", error);
+      res.status(500).json({ error: "Failed to fetch search metadata" });
     }
   });
 

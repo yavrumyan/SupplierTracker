@@ -130,12 +130,12 @@ export function SearchResults({
                   <TableHead className="font-semibold">Supplier</TableHead>
                   <TableHead className="font-semibold">Category</TableHead>
                   <TableHead className="font-semibold">Brand</TableHead>
-                  <TableHead className="font-semibold">Model / PN</TableHead>
-                  <TableHead className="font-semibold">Product Name</TableHead>
+                  <TableHead className="font-semibold">Model</TableHead>
+                  <TableHead className="font-semibold">Name</TableHead>
                   <TableHead className="font-semibold">Price</TableHead>
                   <TableHead className="font-semibold">Currency</TableHead>
                   <TableHead className="font-semibold">Stock</TableHead>
-                  <TableHead className="font-semibold">Warranty</TableHead>
+                  <TableHead className="font-semibold">MOQ</TableHead>
                   <TableHead className="font-semibold">Notes</TableHead>
                 </TableRow>
               </TableHeader>
@@ -160,14 +160,14 @@ export function SearchResults({
                       <TableCell>{result.category || '-'}</TableCell>
                       <TableCell>{result.brand || '-'}</TableCell>
                       <TableCell>{result.model || '-'}</TableCell>
-                      <TableCell className="max-w-xs truncate" title={result.productName || ''}>
+                      <TableCell className="whitespace-normal">
                         {result.productName || '-'}
                       </TableCell>
                       <TableCell>{result.price || '-'}</TableCell>
                       <TableCell>{result.currency || '-'}</TableCell>
                       <TableCell>{result.stock || '-'}</TableCell>
-                      <TableCell>{result.warranty || '-'}</TableCell>
-                      <TableCell className="max-w-xs truncate" title={result.notes || ''}>
+                      <TableCell>-</TableCell>
+                      <TableCell className="whitespace-normal">
                         {result.notes || '-'}
                       </TableCell>
                     </TableRow>

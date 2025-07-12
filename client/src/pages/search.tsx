@@ -11,18 +11,19 @@ import type { SearchFilters as SearchFiltersType } from "@/lib/types";
 
 export default function SearchPage() {
   const [filters, setFilters] = useState<SearchFiltersType>({});
-  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageLimit, setPageLimit] = useState(50);
   const [appliedFilters, setAppliedFilters] = useState<SearchFiltersType>({});
 
   // Build search parameters
   const searchParams = new URLSearchParams();
-  if (searchQuery) searchParams.append('query', searchQuery);
-  if (appliedFilters.country) searchParams.append('country', appliedFilters.country);
+  if (appliedFilters.keyword1) searchParams.append('keyword1', appliedFilters.keyword1);
+  if (appliedFilters.keyword2) searchParams.append('keyword2', appliedFilters.keyword2);
+  if (appliedFilters.keyword3) searchParams.append('keyword3', appliedFilters.keyword3);
   if (appliedFilters.category) searchParams.append('category', appliedFilters.category);
   if (appliedFilters.brand) searchParams.append('brand', appliedFilters.brand);
   if (appliedFilters.supplier) searchParams.append('supplier', appliedFilters.supplier);
+  if (appliedFilters.sourceType) searchParams.append('sourceType', appliedFilters.sourceType);
   searchParams.append('page', currentPage.toString());
   searchParams.append('limit', pageLimit.toString());
 
@@ -36,14 +37,13 @@ export default function SearchPage() {
       }
       return response.json();
     },
-    enabled: Object.keys(appliedFilters).length > 0 || searchQuery.length > 0,
+    enabled: Object.keys(appliedFilters).length > 0,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Handle search execution
   const handleSearch = () => {
     setAppliedFilters({ ...filters });
-    setSearchQuery(filters.query || "");
     setCurrentPage(1);
   };
 
@@ -67,7 +67,6 @@ export default function SearchPage() {
   const clearAllFilters = () => {
     setFilters({});
     setAppliedFilters({});
-    setSearchQuery("");
     setCurrentPage(1);
   };
 
@@ -103,15 +102,27 @@ export default function SearchPage() {
                   <span className="text-sm font-medium text-gray-700">Active Filters:</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {searchQuery && (
+                  {appliedFilters.keyword1 && (
                     <Badge variant="secondary" className="flex items-center gap-1">
                       <Search className="h-3 w-3" />
-                      "{searchQuery}"
+                      "{appliedFilters.keyword1}"
                     </Badge>
                   )}
-                  {appliedFilters.country && (
+                  {appliedFilters.keyword2 && (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Search className="h-3 w-3" />
+                      "{appliedFilters.keyword2}"
+                    </Badge>
+                  )}
+                  {appliedFilters.keyword3 && (
+                    <Badge variant="secondary" className="flex items-center gap-1">
+                      <Search className="h-3 w-3" />
+                      "{appliedFilters.keyword3}"
+                    </Badge>
+                  )}
+                  {appliedFilters.sourceType && (
                     <Badge variant="secondary">
-                      Country: {appliedFilters.country}
+                      Source: {appliedFilters.sourceType}
                     </Badge>
                   )}
                   {appliedFilters.category && (
@@ -145,7 +156,7 @@ export default function SearchPage() {
         )}
 
         {/* Search results */}
-        {(Object.keys(appliedFilters).length > 0 || searchQuery) ? (
+        {Object.keys(appliedFilters).length > 0 ? (
           <SearchResults
             results={searchData?.results || []}
             groupedResults={searchData?.groupedResults || {}}
@@ -162,30 +173,30 @@ export default function SearchPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Search className="h-5 w-5" />
-                Ready to Search
+                Product Search
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                Use the search bar and filters above to find products across all supplier price lists and offers.
+                Use the keyword search and filters above to find products across all supplier price lists and offers.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">Search Products</h4>
+                  <h4 className="font-semibold text-blue-900 mb-2">Multiple Keywords</h4>
                   <p className="text-sm text-blue-700">
-                    Find specific products by name, model number, or keywords
+                    Use up to 3 keywords with AND logic for precise results
                   </p>
                 </div>
                 <div className="p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-green-900 mb-2">Filter by Supplier</h4>
+                  <h4 className="font-semibold text-green-900 mb-2">Smart Filters</h4>
                   <p className="text-sm text-green-700">
-                    Search within specific suppliers, countries, or categories
+                    Filter by source type, supplier, category, or brand
                   </p>
                 </div>
                 <div className="p-4 bg-purple-50 rounded-lg">
-                  <h4 className="font-semibold text-purple-900 mb-2">Compare Sources</h4>
+                  <h4 className="font-semibold text-purple-900 mb-2">All Sources</h4>
                   <p className="text-sm text-purple-700">
-                    See results from both price lists and direct offers
+                    Search across price lists and offers simultaneously
                   </p>
                 </div>
               </div>
