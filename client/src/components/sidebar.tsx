@@ -14,11 +14,11 @@ import {
 import { useState } from "react";
 
 const navigation = [
-  { name: "Search & Filter", href: "/", icon: Search },
+  { name: "Dashboard", href: "/", icon: BarChart },
+  { name: "Product Search", href: "/search", icon: Search },
   { name: "All Suppliers", href: "/suppliers", icon: Building },
   { name: "Add Supplier", href: "/add-supplier", icon: Plus },
   { name: "Import Data", href: "/import", icon: FolderInput },
-  { name: "Analytics", href: "/analytics", icon: BarChart },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

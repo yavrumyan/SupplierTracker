@@ -89,6 +89,25 @@ export const inquiries = pgTable("inquiries", {
   status: text("status").default("sent"), // sent, delivered, failed
 });
 
+export const searchIndex = pgTable("search_index", {
+  id: serial("id").primaryKey(),
+  supplierId: integer("supplier_id").references(() => suppliers.id).notNull(),
+  sourceType: text("source_type").notNull(), // 'price_list' or 'offer'
+  sourceId: integer("source_id"), // Reference to price_list_files.id or offers.id
+  supplier: text("supplier").notNull(),
+  category: text("category"),
+  brand: text("brand"),
+  model: text("model"),
+  productName: text("product_name"),
+  price: text("price"),
+  currency: text("currency"),
+  stock: text("stock"),
+  warranty: text("warranty"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const suppliersRelations = relations(suppliers, ({ many }) => ({
   priceListFiles: many(priceListFiles),
@@ -96,6 +115,7 @@ export const suppliersRelations = relations(suppliers, ({ many }) => ({
   offers: many(offers),
   orders: many(orders),
   costCalculationFiles: many(costCalculationFiles),
+  searchIndex: many(searchIndex),
 }));
 
 export const priceListFilesRelations = relations(priceListFiles, ({ one, many }) => ({
@@ -146,6 +166,13 @@ export const costCalculationFilesRelations = relations(costCalculationFiles, ({ 
   }),
 }));
 
+export const searchIndexRelations = relations(searchIndex, ({ one }) => ({
+  supplier: one(suppliers, {
+    fields: [searchIndex.supplierId],
+    references: [suppliers.id],
+  }),
+}));
+
 // Zod schemas
 export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   id: true,
@@ -184,6 +211,12 @@ export const insertInquirySchema = createInsertSchema(inquiries).omit({
   status: true,
 });
 
+export const insertSearchIndexSchema = createInsertSchema(searchIndex).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type Supplier = typeof suppliers.$inferSelect;
 export type InsertSupplier = z.infer<typeof insertSupplierSchema>;
@@ -200,6 +233,8 @@ export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
 export type CostCalculationFile = typeof costCalculationFiles.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
+export type SearchIndex = typeof searchIndex.$inferSelect;
+export type InsertSearchIndex = z.infer<typeof insertSearchIndexSchema>;
 
 // User table (keeping existing)
 export const users = pgTable("users", {

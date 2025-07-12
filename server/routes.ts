@@ -170,6 +170,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const supplierId = parseInt(req.params.id);
       const offerData = insertOfferSchema.parse({ ...req.body, supplierId });
       const offer = await storage.createOffer(offerData);
+      
+      // Populate search index with offer data
+      try {
+        const supplier = await storage.getSupplier(supplierId);
+        if (supplier) {
+          // Parse offer content to extract product information
+          const offerContent = offer.content || '';
+          const lines = offerContent.split('\n').map(line => line.trim()).filter(line => line);
+          
+          // Try to extract product information from each line
+          for (const line of lines) {
+            if (line.length > 10) { // Skip very short lines
+              const searchEntry = {
+                supplierId: supplierId,
+                sourceType: 'offer',
+                sourceId: offer.id,
+                supplier: supplier.name,
+                category: null,
+                brand: null,
+                model: null,
+                productName: line, // Use the line as product name
+                price: null,
+                currency: null,
+                stock: null,
+                warranty: null,
+                notes: `Source: ${offer.source}` // Add source information
+              };
+
+              await storage.createSearchIndexEntry(searchEntry);
+            }
+          }
+        }
+      } catch (searchIndexError) {
+        console.error("Error populating search index for offer:", searchIndexError);
+        // Don't fail the offer creation if search index population fails
+      }
+
       res.status(201).json(offer);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -324,6 +361,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(inquiries);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch inquiries" });
+    }
+  });
+
+  // Enhanced search endpoint for products across all sources
+  app.get("/api/search", async (req, res) => {
+    try {
+      const { 
+        query = '', 
+        supplier = '', 
+        country = '', 
+        category = '', 
+        brand = '', 
+        sourceType = '',
+        page = '1',
+        limit = '50'
+      } = req.query;
+
+      const filters = {
+        supplier: supplier as string,
+        country: country as string,
+        category: category as string,
+        brand: brand as string,
+        sourceType: sourceType as string
+      };
+
+      // Remove empty filters
+      Object.keys(filters).forEach(key => {
+        if (!filters[key]) {
+          delete filters[key];
+        }
+      });
+
+      const searchResults = await storage.searchProducts(query as string, filters);
+
+      // Group results by supplier for better display
+      const groupedResults = searchResults.reduce((acc, result) => {
+        const supplierName = result.supplier;
+        if (!acc[supplierName]) {
+          acc[supplierName] = [];
+        }
+        acc[supplierName].push(result);
+        return acc;
+      }, {} as Record<string, typeof searchResults>);
+
+      // Apply pagination
+      const pageNum = parseInt(page as string) || 1;
+      const limitNum = parseInt(limit as string) || 50;
+      const startIndex = (pageNum - 1) * limitNum;
+      const endIndex = startIndex + limitNum;
+      const paginatedResults = searchResults.slice(startIndex, endIndex);
+
+      res.json({
+        results: paginatedResults,
+        groupedResults,
+        totalCount: searchResults.length,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(searchResults.length / limitNum)
+      });
+    } catch (error) {
+      console.error("Error searching products:", error);
+      res.status(500).json({ error: "Failed to search products" });
     }
   });
 
@@ -524,6 +623,72 @@ print(json.dumps(result))
               filePath: processedFilePath,
               fileSize: file.size,
             });
+
+            // Parse CSV content and populate search index
+            try {
+              const supplier = await storage.getSupplier(supplierId);
+              if (supplier) {
+                const csvLines = result.csv_content.trim().split('\n');
+                const headers = csvLines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                
+                // Map CSV headers to search index fields
+                const headerMap = {
+                  'Supplier': 'supplier',
+                  'Category': 'category', 
+                  'Brand': 'brand',
+                  'Model': 'model',
+                  'Product Name': 'productName',
+                  'Price': 'price',
+                  'Currency': 'currency',
+                  'Stock': 'stock',
+                  'Warranty': 'warranty',
+                  'Notes': 'notes'
+                };
+
+                const searchIndexEntries = [];
+                
+                // Process each data row
+                for (let i = 1; i < csvLines.length; i++) {
+                  const line = csvLines[i].trim();
+                  if (!line) continue;
+                  
+                  const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
+                  const entry = {
+                    supplierId: supplierId,
+                    sourceType: 'price_list',
+                    sourceId: priceListFile.id,
+                    supplier: supplier.name,
+                    category: null,
+                    brand: null,
+                    model: null,
+                    productName: null,
+                    price: null,
+                    currency: null,
+                    stock: null,
+                    warranty: null,
+                    notes: null
+                  };
+
+                  // Map CSV values to search index fields
+                  headers.forEach((header, index) => {
+                    const fieldName = headerMap[header];
+                    if (fieldName && values[index]) {
+                      entry[fieldName] = values[index];
+                    }
+                  });
+
+                  searchIndexEntries.push(entry);
+                }
+
+                // Insert search index entries
+                if (searchIndexEntries.length > 0) {
+                  await storage.createSearchIndexEntries(searchIndexEntries);
+                }
+              }
+            } catch (searchIndexError) {
+              console.error("Error populating search index:", searchIndexError);
+              // Don't fail the upload if search index population fails
+            }
 
             // Delete the original uploaded file
             if (fs.existsSync(file.path)) {

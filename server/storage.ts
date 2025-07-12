@@ -7,6 +7,7 @@ import {
   orderItems, 
   costCalculationFiles, 
   inquiries,
+  searchIndex,
   users,
   type Supplier, 
   type InsertSupplier, 
@@ -23,6 +24,8 @@ import {
   type CostCalculationFile, 
   type Inquiry, 
   type InsertInquiry,
+  type SearchIndex,
+  type InsertSearchIndex,
   type User,
   type InsertUser 
 } from "@shared/schema";
@@ -80,6 +83,18 @@ export interface IStorage {
   // Inquiry methods
   createInquiry(inquiry: InsertInquiry): Promise<Inquiry>;
   getInquiries(): Promise<Inquiry[]>;
+
+  // Search index methods
+  createSearchIndexEntry(entry: InsertSearchIndex): Promise<SearchIndex>;
+  createSearchIndexEntries(entries: InsertSearchIndex[]): Promise<SearchIndex[]>;
+  deleteSearchIndexBySource(sourceType: string, sourceId: number): Promise<void>;
+  searchProducts(query: string, filters: {
+    supplier?: string;
+    country?: string;
+    category?: string;
+    brand?: string;
+    sourceType?: string;
+  }): Promise<SearchIndex[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -297,6 +312,112 @@ export class DatabaseStorage implements IStorage {
 
   async getInquiries(): Promise<Inquiry[]> {
     return await db.select().from(inquiries).orderBy(desc(inquiries.sentAt));
+  }
+
+  // Search index methods
+  async createSearchIndexEntry(entry: InsertSearchIndex): Promise<SearchIndex> {
+    const [newEntry] = await db.insert(searchIndex).values(entry).returning();
+    return newEntry;
+  }
+
+  async createSearchIndexEntries(entries: InsertSearchIndex[]): Promise<SearchIndex[]> {
+    if (entries.length === 0) return [];
+    const newEntries = await db.insert(searchIndex).values(entries).returning();
+    return newEntries;
+  }
+
+  async deleteSearchIndexBySource(sourceType: string, sourceId: number): Promise<void> {
+    await db.delete(searchIndex).where(
+      and(
+        eq(searchIndex.sourceType, sourceType),
+        eq(searchIndex.sourceId, sourceId)
+      )
+    );
+  }
+
+  async searchProducts(query: string, filters: {
+    supplier?: string;
+    country?: string;
+    category?: string;
+    brand?: string;
+    sourceType?: string;
+  }): Promise<SearchIndex[]> {
+    let whereConditions = [];
+
+    // Full-text search across product fields
+    if (query) {
+      const searchTerm = `%${query.toLowerCase()}%`;
+      whereConditions.push(
+        or(
+          ilike(searchIndex.productName, searchTerm),
+          ilike(searchIndex.model, searchTerm),
+          ilike(searchIndex.brand, searchTerm),
+          ilike(searchIndex.category, searchTerm),
+          ilike(searchIndex.notes, searchTerm)
+        )
+      );
+    }
+
+    // Apply filters
+    if (filters.supplier) {
+      whereConditions.push(ilike(searchIndex.supplier, `%${filters.supplier}%`));
+    }
+
+    if (filters.category) {
+      whereConditions.push(ilike(searchIndex.category, `%${filters.category}%`));
+    }
+
+    if (filters.brand) {
+      whereConditions.push(ilike(searchIndex.brand, `%${filters.brand}%`));
+    }
+
+    if (filters.sourceType) {
+      whereConditions.push(eq(searchIndex.sourceType, filters.sourceType));
+    }
+
+    // Country filter requires joining with suppliers table
+    if (filters.country) {
+      const results = await db
+        .select({
+          id: searchIndex.id,
+          supplierId: searchIndex.supplierId,
+          sourceType: searchIndex.sourceType,
+          sourceId: searchIndex.sourceId,
+          supplier: searchIndex.supplier,
+          category: searchIndex.category,
+          brand: searchIndex.brand,
+          model: searchIndex.model,
+          productName: searchIndex.productName,
+          price: searchIndex.price,
+          currency: searchIndex.currency,
+          stock: searchIndex.stock,
+          warranty: searchIndex.warranty,
+          notes: searchIndex.notes,
+          createdAt: searchIndex.createdAt,
+          updatedAt: searchIndex.updatedAt,
+        })
+        .from(searchIndex)
+        .innerJoin(suppliers, eq(searchIndex.supplierId, suppliers.id))
+        .where(
+          and(
+            eq(suppliers.country, filters.country),
+            ...(whereConditions.length > 0 ? [and(...whereConditions)] : [])
+          )
+        )
+        .orderBy(desc(searchIndex.updatedAt));
+      return results;
+    }
+
+    // Standard search without country filter
+    const queryBuilder = db.select().from(searchIndex);
+    
+    if (whereConditions.length > 0) {
+      return await queryBuilder
+        .where(and(...whereConditions))
+        .orderBy(desc(searchIndex.updatedAt));
+    }
+
+    return await queryBuilder.orderBy(desc(searchIndex.updatedAt));
   }
 }
 
