@@ -88,19 +88,13 @@ export interface IStorage {
   createSearchIndexEntry(entry: InsertSearchIndex): Promise<SearchIndex>;
   createSearchIndexEntries(entries: InsertSearchIndex[]): Promise<SearchIndex[]>;
   deleteSearchIndexBySource(sourceType: string, sourceId: number): Promise<void>;
-  searchProducts(filters: {
-    keyword1?: string;
-    keyword2?: string;
-    keyword3?: string;
+  searchProducts(query: string, filters: {
     supplier?: string;
+    country?: string;
     category?: string;
     brand?: string;
     sourceType?: string;
   }): Promise<SearchIndex[]>;
-  getSearchMetadata(): Promise<{
-    categories: string[];
-    brands: string[];
-  }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -341,32 +335,27 @@ export class DatabaseStorage implements IStorage {
     );
   }
 
-  async searchProducts(filters: {
-    keyword1?: string;
-    keyword2?: string;
-    keyword3?: string;
+  async searchProducts(query: string, filters: {
     supplier?: string;
+    country?: string;
     category?: string;
     brand?: string;
     sourceType?: string;
   }): Promise<SearchIndex[]> {
     let whereConditions = [];
 
-    // Multiple keyword search with AND logic
-    const keywords = [filters.keyword1, filters.keyword2, filters.keyword3].filter(Boolean);
-    if (keywords.length > 0) {
-      for (const keyword of keywords) {
-        const searchTerm = `%${keyword!.toLowerCase()}%`;
-        whereConditions.push(
-          or(
-            ilike(searchIndex.productName, searchTerm),
-            ilike(searchIndex.model, searchTerm),
-            ilike(searchIndex.brand, searchTerm),
-            ilike(searchIndex.category, searchTerm),
-            ilike(searchIndex.notes, searchTerm)
-          )
-        );
-      }
+    // Full-text search across product fields
+    if (query) {
+      const searchTerm = `%${query.toLowerCase()}%`;
+      whereConditions.push(
+        or(
+          ilike(searchIndex.productName, searchTerm),
+          ilike(searchIndex.model, searchTerm),
+          ilike(searchIndex.brand, searchTerm),
+          ilike(searchIndex.category, searchTerm),
+          ilike(searchIndex.notes, searchTerm)
+        )
+      );
     }
 
     // Apply filters
@@ -386,40 +375,49 @@ export class DatabaseStorage implements IStorage {
       whereConditions.push(eq(searchIndex.sourceType, filters.sourceType));
     }
 
-    // Build final query
-    const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
+    // Country filter requires joining with suppliers table
+    if (filters.country) {
+      const results = await db
+        .select({
+          id: searchIndex.id,
+          supplierId: searchIndex.supplierId,
+          sourceType: searchIndex.sourceType,
+          sourceId: searchIndex.sourceId,
+          supplier: searchIndex.supplier,
+          category: searchIndex.category,
+          brand: searchIndex.brand,
+          model: searchIndex.model,
+          productName: searchIndex.productName,
+          price: searchIndex.price,
+          currency: searchIndex.currency,
+          stock: searchIndex.stock,
+          warranty: searchIndex.warranty,
+          notes: searchIndex.notes,
+          createdAt: searchIndex.createdAt,
+          updatedAt: searchIndex.updatedAt,
+        })
+        .from(searchIndex)
+        .innerJoin(suppliers, eq(searchIndex.supplierId, suppliers.id))
+        .where(
+          and(
+            eq(suppliers.country, filters.country),
+            ...(whereConditions.length > 0 ? [and(...whereConditions)] : [])
+          )
+        )
+        .orderBy(desc(searchIndex.updatedAt));
+      return results;
+    }
 
-    const results = await db.select().from(searchIndex)
-      .where(whereClause)
-      .orderBy(searchIndex.supplier, searchIndex.productName)
-      .limit(1000);
+    // Standard search without country filter
+    const queryBuilder = db.select().from(searchIndex);
+    
+    if (whereConditions.length > 0) {
+      return await queryBuilder
+        .where(and(...whereConditions))
+        .orderBy(desc(searchIndex.updatedAt));
+    }
 
-    return results;
-  }
-
-  async getSearchMetadata(): Promise<{
-    categories: string[];
-    brands: string[];
-  }> {
-    // Get distinct categories and brands from search index
-    const categoriesResult = await db.select({
-      category: searchIndex.category
-    }).from(searchIndex)
-      .where(sql`${searchIndex.category} IS NOT NULL AND ${searchIndex.category} != ''`)
-      .groupBy(searchIndex.category)
-      .orderBy(searchIndex.category);
-
-    const brandsResult = await db.select({
-      brand: searchIndex.brand
-    }).from(searchIndex)
-      .where(sql`${searchIndex.brand} IS NOT NULL AND ${searchIndex.brand} != ''`)
-      .groupBy(searchIndex.brand)
-      .orderBy(searchIndex.brand);
-
-    return {
-      categories: categoriesResult.map(r => r.category!).filter(Boolean),
-      brands: brandsResult.map(r => r.brand!).filter(Boolean)
-    };
+    return await queryBuilder.orderBy(desc(searchIndex.updatedAt));
   }
 }
 

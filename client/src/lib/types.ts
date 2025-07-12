@@ -285,13 +285,12 @@ export type Brand = typeof BRANDS[number];
 export type WorkingStyle = typeof WORKING_STYLES[number];
 
 export interface SearchFilters {
-  keyword1?: string;
-  keyword2?: string;
-  keyword3?: string;
-  sourceType?: string;
-  supplier?: string;
+  query?: string;
+  country?: string;
   category?: string;
   brand?: string;
+  minReputation?: number;
+  workingStyle?: string;
 }
 
 export interface SupplierWithMatches {

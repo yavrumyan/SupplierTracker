@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { COUNTRIES } from "@/lib/types";
 import type { SearchFilters } from "@/lib/types";
 import { useCategoriesBrands } from "@/lib/categories-brands-context";
 
@@ -17,26 +17,6 @@ interface SearchFiltersProps {
 
 export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFiltersProps) {
   const { categories, brands } = useCategoriesBrands();
-  
-  // Fetch suppliers for the supplier filter
-  const { data: suppliers = [] } = useQuery({
-    queryKey: ['/api/suppliers'],
-    queryFn: async () => {
-      const response = await fetch('/api/suppliers');
-      if (!response.ok) throw new Error('Failed to fetch suppliers');
-      return response.json();
-    },
-  });
-
-  // Fetch unique categories and brands from search index
-  const { data: searchMetadata = { categories: [], brands: [] } } = useQuery({
-    queryKey: ['/api/search/metadata'],
-    queryFn: async () => {
-      const response = await fetch('/api/search/metadata');
-      if (!response.ok) throw new Error('Failed to fetch search metadata');
-      return response.json();
-    },
-  });
   
   const handleFilterChange = (key: keyof SearchFilters, value: string | number | undefined) => {
     onFiltersChange({
@@ -52,69 +32,34 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
   return (
     <Card>
       <CardContent className="p-6">
-        <h3 className="text-lg font-semibold text-slate-800 mb-4">Product Search</h3>
+        <h3 className="text-lg font-semibold text-slate-800 mb-4">Search Suppliers</h3>
         
-        {/* Three keyword search bars */}
-        <div className="mb-6 space-y-3">
-          <Label className="text-sm font-medium text-slate-700">Keyword Search (AND logic)</Label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-              <Input
-                placeholder="Keyword 1..."
-                className="pl-10"
-                value={filters.keyword1 || ""}
-                onChange={(e) => handleFilterChange("keyword1", e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-              <Input
-                placeholder="Keyword 2..."
-                className="pl-10"
-                value={filters.keyword2 || ""}
-                onChange={(e) => handleFilterChange("keyword2", e.target.value)}
-              />
-            </div>
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-              <Input
-                placeholder="Keyword 3..."
-                className="pl-10"
-                value={filters.keyword3 || ""}
-                onChange={(e) => handleFilterChange("keyword3", e.target.value)}
-              />
-            </div>
+        {/* Search bar */}
+        <div className="mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+            <Input
+              placeholder="Search products, keywords, or supplier names..."
+              className="pl-10"
+              value={filters.query || ""}
+              onChange={(e) => handleFilterChange("query", e.target.value)}
+            />
           </div>
         </div>
 
         {/* Filter controls */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <Label className="text-sm font-medium text-slate-700">Source</Label>
-            <Select value={filters.sourceType || "all"} onValueChange={(value) => handleFilterChange("sourceType", value)}>
+            <Label className="text-sm font-medium text-slate-700">Country</Label>
+            <Select value={filters.country || "all"} onValueChange={(value) => handleFilterChange("country", value)}>
               <SelectTrigger>
-                <SelectValue placeholder="All Sources" />
+                <SelectValue placeholder="All Countries" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Sources</SelectItem>
-                <SelectItem value="price_list">Price List</SelectItem>
-                <SelectItem value="offer">Offer</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label className="text-sm font-medium text-slate-700">Supplier</Label>
-            <Select value={filters.supplier || "all"} onValueChange={(value) => handleFilterChange("supplier", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Suppliers" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Suppliers</SelectItem>
-                {suppliers.map((supplier: any) => (
-                  <SelectItem key={supplier.id} value={supplier.name}>
-                    {supplier.name}
+                <SelectItem value="all">All Countries</SelectItem>
+                {COUNTRIES.map((country) => (
+                  <SelectItem key={country} value={country}>
+                    {country}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -122,14 +67,14 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-slate-700">Category</Label>
+            <Label className="text-sm font-medium text-slate-700">Trading Categories</Label>
             <Select value={filters.category || "all"} onValueChange={(value) => handleFilterChange("category", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                {searchMetadata.categories.map((category: string) => (
+                {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
                   </SelectItem>
@@ -139,18 +84,37 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
           </div>
 
           <div>
-            <Label className="text-sm font-medium text-slate-700">Brand</Label>
+            <Label className="text-sm font-medium text-slate-700">Trading Brands</Label>
             <Select value={filters.brand || "all"} onValueChange={(value) => handleFilterChange("brand", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="All Brands" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Brands</SelectItem>
-                {searchMetadata.brands.map((brand: string) => (
+                {brands.map((brand) => (
                   <SelectItem key={brand} value={brand}>
                     {brand}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label className="text-sm font-medium text-slate-700">Min. Reputation</Label>
+            <Select 
+              value={filters.minReputation?.toString() || "all"} 
+              onValueChange={(value) => handleFilterChange("minReputation", value === "all" ? undefined : parseInt(value))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Any Rating" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Any Rating</SelectItem>
+                <SelectItem value="8">8+ Stars</SelectItem>
+                <SelectItem value="7">7+ Stars</SelectItem>
+                <SelectItem value="6">6+ Stars</SelectItem>
+                <SelectItem value="5">5+ Stars</SelectItem>
               </SelectContent>
             </Select>
           </div>
