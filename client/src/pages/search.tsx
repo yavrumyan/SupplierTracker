@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Layout } from "@/components/layout";
 import { ProductSearchFilters, type ProductSearchFilters as ProductSearchFiltersType } from "@/components/product-search-filters";
 import { SearchResults } from "@/components/search-results";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -80,147 +79,127 @@ export default function SearchPage() {
   const activeFilterCount = Object.values(appliedFilters).filter(Boolean).length;
 
   return (
-    <Layout>
-      <div className="px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Product Search</h1>
-          <p className="text-gray-600">
-            Search across all price lists and supplier offers to find the products you need
-          </p>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="bg-white border-b border-slate-200 -mx-6 -mt-6 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-slate-800">Product Search</h1>
+          <div className="flex items-center space-x-4">
+            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">GY</span>
+            </div>
+            <span className="text-sm font-medium text-slate-700">Greg</span>
+          </div>
         </div>
-
-        {/* Search filters */}
-        <div className="mb-6" onKeyDown={handleKeyDown}>
-          <ProductSearchFilters
-            filters={filters}
-            onFiltersChange={handleFiltersChange}
-            onSearch={handleSearch}
-          />
-        </div>
-
-        {/* Active filters display */}
-        {activeFilterCount > 0 && (
-          <Card className="mb-6">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">Active Filters:</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {appliedFilters.keyword1 && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <Search className="h-3 w-3" />
-                      Keyword 1: "{appliedFilters.keyword1}"
-                    </Badge>
-                  )}
-                  {appliedFilters.keyword2 && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <Search className="h-3 w-3" />
-                      Keyword 2: "{appliedFilters.keyword2}"
-                    </Badge>
-                  )}
-                  {appliedFilters.keyword3 && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <Search className="h-3 w-3" />
-                      Keyword 3: "{appliedFilters.keyword3}"
-                    </Badge>
-                  )}
-                  {appliedFilters.source && (
-                    <Badge variant="secondary">
-                      Source: {appliedFilters.source}
-                    </Badge>
-                  )}
-                  {appliedFilters.supplier && (
-                    <Badge variant="secondary">
-                      Supplier: {appliedFilters.supplier}
-                    </Badge>
-                  )}
-                  {appliedFilters.category && (
-                    <Badge variant="secondary">
-                      Category: {appliedFilters.category}
-                    </Badge>
-                  )}
-                  {appliedFilters.brand && (
-                    <Badge variant="secondary">
-                      Brand: {appliedFilters.brand}
-                    </Badge>
-                  )}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearAllFilters}
-                  className="ml-auto"
-                >
-                  <X className="h-4 w-4" />
-                  Clear All
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Search results */}
-        {Object.keys(appliedFilters).length > 0 ? (
-          <SearchResults
-            results={searchData?.results || []}
-            groupedResults={searchData?.groupedResults || {}}
-            totalCount={searchData?.totalCount || 0}
-            page={searchData?.page || 1}
-            limit={searchData?.limit || 50}
-            totalPages={searchData?.totalPages || 1}
-            isLoading={isLoading}
-            onPageChange={handlePageChange}
-            onLimitChange={handleLimitChange}
-          />
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
-                Ready to Search
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                Use the search bar and filters above to find products across all supplier price lists and offers.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">Search Products</h4>
-                  <p className="text-sm text-blue-700">
-                    Find specific products by name, model number, or keywords
-                  </p>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-green-900 mb-2">Filter by Supplier</h4>
-                  <p className="text-sm text-green-700">
-                    Search within specific suppliers, countries, or categories
-                  </p>
-                </div>
-                <div className="p-4 bg-purple-50 rounded-lg">
-                  <h4 className="font-semibold text-purple-900 mb-2">Compare Sources</h4>
-                  <p className="text-sm text-purple-700">
-                    See results from both price lists and direct offers
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {error && (
-          <Card className="mt-4">
-            <CardContent className="p-4">
-              <div className="text-red-600">
-                <p className="font-semibold">Error loading search results</p>
-                <p className="text-sm">{error.message}</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
-    </Layout>
+
+      {/* Search filters */}
+      <div onKeyDown={handleKeyDown}>
+        <ProductSearchFilters
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+          onSearch={handleSearch}
+        />
+      </div>
+
+      {/* Active filters display */}
+      {activeFilterCount > 0 && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Active Filters:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {appliedFilters.keyword1 && (
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Search className="h-3 w-3" />
+                    Keyword 1: "{appliedFilters.keyword1}"
+                  </Badge>
+                )}
+                {appliedFilters.keyword2 && (
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Search className="h-3 w-3" />
+                    Keyword 2: "{appliedFilters.keyword2}"
+                  </Badge>
+                )}
+                {appliedFilters.keyword3 && (
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    <Search className="h-3 w-3" />
+                    Keyword 3: "{appliedFilters.keyword3}"
+                  </Badge>
+                )}
+                {appliedFilters.source && (
+                  <Badge variant="secondary">
+                    Source: {appliedFilters.source}
+                  </Badge>
+                )}
+                {appliedFilters.supplier && (
+                  <Badge variant="secondary">
+                    Supplier: {appliedFilters.supplier}
+                  </Badge>
+                )}
+                {appliedFilters.category && (
+                  <Badge variant="secondary">
+                    Category: {appliedFilters.category}
+                  </Badge>
+                )}
+                {appliedFilters.brand && (
+                  <Badge variant="secondary">
+                    Brand: {appliedFilters.brand}
+                  </Badge>
+                )}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearAllFilters}
+                className="ml-auto"
+              >
+                <X className="h-4 w-4" />
+                Clear All
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Search results */}
+      {Object.keys(appliedFilters).length > 0 ? (
+        <SearchResults
+          results={searchData?.results || []}
+          groupedResults={searchData?.groupedResults || {}}
+          totalCount={searchData?.totalCount || 0}
+          page={searchData?.page || 1}
+          limit={searchData?.limit || 50}
+          totalPages={searchData?.totalPages || 1}
+          isLoading={isLoading}
+          onPageChange={handlePageChange}
+          onLimitChange={handleLimitChange}
+        />
+      ) : (
+        <Card>
+          <CardContent className="p-8 text-center">
+            <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Start your product search</h3>
+            <p className="text-gray-600">
+              Use the search filters above to find products across all price lists and supplier offers
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {error && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-red-600">
+              <p className="font-semibold">Error loading search results</p>
+              <p className="text-sm">{error.message}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }

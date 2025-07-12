@@ -104,10 +104,10 @@ export default function Home() {
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold text-slate-800">Search & Filter Suppliers</h1>
           <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-medium">JD</span>
+            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-medium">GY</span>
             </div>
-            <span className="text-sm font-medium text-slate-700">John Doe</span>
+            <span className="text-sm font-medium text-slate-700">Greg</span>
           </div>
         </div>
       </div>
