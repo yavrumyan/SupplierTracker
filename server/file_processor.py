@@ -134,8 +134,15 @@ def process_price_list(file_path: str, logic_content: str) -> Dict[str, Any]:
         # Generate preview HTML
         preview_html = converted_df.head(10).to_html(classes='table table-striped', table_id='price-list-preview')
         
-        # Create CSV content (string will be UTF-8 encoded when written to file)
+        # Create CSV content ensuring proper UTF-8 handling
         csv_content = converted_df.to_csv(index=False)
+        
+        # Ensure the content is properly encoded as UTF-8 string
+        if isinstance(csv_content, bytes):
+            csv_content = csv_content.decode('utf-8')
+        
+        # Ensure all text is properly normalized for UTF-8
+        csv_content = csv_content.encode('utf-8', errors='ignore').decode('utf-8')
         
         return {
             'success': True,

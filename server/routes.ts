@@ -508,8 +508,13 @@ print(json.dumps(result))
             // Save the processed file to storage with UTF-8 encoding and BOM
             const processedFilename = result.output_filename || 'converted_price_list.csv';
             const processedFilePath = path.join(path.dirname(file.path), processedFilename);
-            const utf8BOM = '\uFEFF';
-            fs.writeFileSync(processedFilePath, utf8BOM + result.csv_content, 'utf8');
+            
+            // Create buffer with UTF-8 BOM
+            const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
+            const contentBuffer = Buffer.from(result.csv_content, 'utf8');
+            const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
+            
+            fs.writeFileSync(processedFilePath, finalBuffer);
 
             // Store the price list file in database
             const priceListFile = await storage.createPriceListFile({
@@ -577,10 +582,16 @@ print(json.dumps(result))
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
       
-      // Read and send the file with UTF-8 encoding including BOM
-      const fileContent = fs.readFileSync(file.filePath, 'utf8');
-      const utf8BOM = '\uFEFF';
-      res.send(utf8BOM + fileContent);
+      // Read file as binary and ensure proper UTF-8 encoding
+      const fileBuffer = fs.readFileSync(file.filePath);
+      const fileContent = fileBuffer.toString('utf8');
+      
+      // Add UTF-8 BOM for better compatibility
+      const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
+      const contentBuffer = Buffer.from(fileContent, 'utf8');
+      const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
+      
+      res.send(finalBuffer);
     } catch (error) {
       console.error("Error downloading file:", error);
       res.status(500).json({ error: "Failed to download file" });
