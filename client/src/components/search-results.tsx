@@ -19,6 +19,7 @@ interface SearchResult {
   price: string | null;
   currency: string | null;
   stock: string | null;
+  moq: string | null;
   warranty: string | null;
   notes: string | null;
   createdAt: string;
@@ -166,7 +167,7 @@ export function SearchResults({
                       <TableCell>{result.price || '-'}</TableCell>
                       <TableCell>{result.currency || '-'}</TableCell>
                       <TableCell>{result.stock || '-'}</TableCell>
-                      <TableCell>-</TableCell>
+                      <TableCell>{result.moq || '-'}</TableCell>
                       <TableCell className="min-w-[150px] whitespace-normal break-words">
                         {result.notes || '-'}
                       </TableCell>

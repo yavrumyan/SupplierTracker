@@ -480,11 +480,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Clear existing search index entries for this price list
       await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
       
-      // Parse CSV content and populate search index
-      const workbook = XLSX.read(csvContent, { type: 'string' });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const csvData = XLSX.utils.sheet_to_json(worksheet);
+      // Parse CSV content properly
+      const csvLines = csvContent.trim().split('\n');
+      const headers = csvLines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').replace(/^\uFEFF/, ''));
+      const csvData = [];
+      
+      for (let i = 1; i < csvLines.length; i++) {
+        const line = csvLines[i].trim();
+        if (!line) continue;
+        
+        // Parse CSV line respecting quoted fields
+        const values = [];
+        let currentField = '';
+        let inQuotes = false;
+        let j = 0;
+        
+        while (j < line.length) {
+          const char = line[j];
+          
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            values.push(currentField.trim());
+            currentField = '';
+          } else {
+            currentField += char;
+          }
+          j++;
+        }
+        values.push(currentField.trim()); // Add the last field
+        
+        // Create row object
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index] || '';
+        });
+        csvData.push(row);
+      }
+      
+
       
       // Map CSV headers to search index fields
       const headerMap = {
@@ -493,9 +527,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'Brand': 'brand',
         'Model': 'model',
         'Product Name': 'productName',
+        'Name': 'productName',  // Handle both 'Product Name' and 'Name' headers
         'Price': 'price',
         'Currency': 'currency',
         'Stock': 'stock',
+        'MOQ': 'moq',
         'Warranty': 'warranty',
         'Notes': 'notes'
       };
@@ -516,6 +552,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           price: null,
           currency: null,
           stock: null,
+          moq: null,
           warranty: null,
           notes: null
         };
@@ -527,6 +564,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             entry[fieldName] = String(row[header]).trim();
           }
         });
+        
+        // Preserve the database supplier name for consistency
+        entry.supplier = supplier.name;
 
         searchIndexEntries.push(entry);
       }
@@ -753,11 +793,43 @@ print(json.dumps(result))
                 // Clear existing search index entries for this price list
                 await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
                 
-                // Use proper CSV parsing with XLSX library
-                const workbook = XLSX.read(result.csv_content, { type: 'string' });
-                const sheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[sheetName];
-                const csvData = XLSX.utils.sheet_to_json(worksheet);
+                // Parse CSV content properly
+                const csvLines = result.csv_content.trim().split('\n');
+                const headers = csvLines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').replace(/^\uFEFF/, ''));
+                const csvData = [];
+                
+                for (let i = 1; i < csvLines.length; i++) {
+                  const line = csvLines[i].trim();
+                  if (!line) continue;
+                  
+                  // Parse CSV line respecting quoted fields
+                  const values = [];
+                  let currentField = '';
+                  let inQuotes = false;
+                  let j = 0;
+                  
+                  while (j < line.length) {
+                    const char = line[j];
+                    
+                    if (char === '"') {
+                      inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                      values.push(currentField.trim());
+                      currentField = '';
+                    } else {
+                      currentField += char;
+                    }
+                    j++;
+                  }
+                  values.push(currentField.trim()); // Add the last field
+                  
+                  // Create row object
+                  const row = {};
+                  headers.forEach((header, index) => {
+                    row[header] = values[index] || '';
+                  });
+                  csvData.push(row);
+                }
                 
                 // Map CSV headers to search index fields
                 const headerMap = {
@@ -766,9 +838,11 @@ print(json.dumps(result))
                   'Brand': 'brand',
                   'Model': 'model',
                   'Product Name': 'productName',
+                  'Name': 'productName',  // Handle both 'Product Name' and 'Name' headers
                   'Price': 'price',
                   'Currency': 'currency',
                   'Stock': 'stock',
+                  'MOQ': 'moq',
                   'Warranty': 'warranty',
                   'Notes': 'notes'
                 };
@@ -789,6 +863,7 @@ print(json.dumps(result))
                     price: null,
                     currency: null,
                     stock: null,
+                    moq: null,
                     warranty: null,
                     notes: null
                   };

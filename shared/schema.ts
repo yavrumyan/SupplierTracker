@@ -102,6 +102,7 @@ export const searchIndex = pgTable("search_index", {
   price: text("price"),
   currency: text("currency"),
   stock: text("stock"),
+  moq: text("moq"),
   warranty: text("warranty"),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),

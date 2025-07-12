@@ -396,6 +396,7 @@ export class DatabaseStorage implements IStorage {
           price: searchIndex.price,
           currency: searchIndex.currency,
           stock: searchIndex.stock,
+          moq: searchIndex.moq,
           warranty: searchIndex.warranty,
           notes: searchIndex.notes,
           createdAt: searchIndex.createdAt,
