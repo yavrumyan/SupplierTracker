@@ -25,10 +25,13 @@ import {
   FileText,
   Download,
   Eye,
-  RefreshCw
+  RefreshCw,
+  Trash2,
+  Save,
+  X
 } from "lucide-react";
 import { Link } from "wouter";
-import type { Supplier, PriceListFile, PriceListItem, Offer } from "@shared/schema";
+import type { Supplier, PriceListFile, PriceListItem, Offer, Document } from "@shared/schema";
 import { OrderTable } from "@/components/order-table";
 import { SupplierForm } from "@/components/supplier-form";
 import { useToast } from "@/hooks/use-toast";
@@ -48,9 +51,12 @@ export default function SupplierDetail() {
   const [isEditing, setIsEditing] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{type: 'logic' | 'price', progress: number} | null>(null);
   const [previewData, setPreviewData] = useState<{html: string, rowCount: number, columns: string[]} | null>(null);
+  const [editingOfferId, setEditingOfferId] = useState<number | null>(null);
+  const [editingOfferContent, setEditingOfferContent] = useState("");
   
   const logicFileRef = useRef<HTMLInputElement>(null);
   const priceFileRef = useRef<HTMLInputElement>(null);
+  const documentFileRef = useRef<HTMLInputElement>(null);
 
   const { data: supplier, isLoading } = useQuery<Supplier>({
     queryKey: [`/api/suppliers/${supplierId}`],
@@ -70,6 +76,107 @@ export default function SupplierDetail() {
   const { data: offers = [] } = useQuery<Offer[]>({
     queryKey: [`/api/suppliers/${supplierId}/offers`],
     enabled: !!supplierId,
+  });
+
+  const { data: documents = [] } = useQuery<Document[]>({
+    queryKey: [`/api/suppliers/${supplierId}/documents`],
+    enabled: !!supplierId,
+  });
+
+  // Mutations
+  const updateOfferMutation = useMutation({
+    mutationFn: ({ id, content }: { id: number, content: string }) =>
+      apiRequest("PUT", `/api/offers/${id}`, { content }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/offers`] });
+      // Refresh search index after offer update
+      apiRequest("POST", `/api/offers/${editingOfferId}/refresh-search`);
+      setEditingOfferId(null);
+      setEditingOfferContent("");
+      toast({
+        title: "Success",
+        description: "Offer updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update offer",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteOfferMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/offers/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/offers`] });
+      toast({
+        title: "Success",
+        description: "Offer deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete offer",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deletePriceListMutation = useMutation({
+    mutationFn: (fileId: number) => apiRequest("DELETE", `/api/suppliers/${supplierId}/price-lists/${fileId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/price-lists`] });
+      toast({
+        title: "Success",
+        description: "Price list deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete price list",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const uploadDocumentMutation = useMutation({
+    mutationFn: (formData: FormData) => apiRequest("POST", `/api/suppliers/${supplierId}/documents`, formData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/documents`] });
+      toast({
+        title: "Success",
+        description: "Document uploaded successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to upload document",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteDocumentMutation = useMutation({
+    mutationFn: (documentId: number) => apiRequest("DELETE", `/api/suppliers/${supplierId}/documents/${documentId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/documents`] });
+      toast({
+        title: "Success",
+        description: "Document deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete document",
+        variant: "destructive",
+      });
+    },
   });
 
   const sendInquiryMutation = useMutation({
@@ -320,6 +427,50 @@ export default function SupplierDetail() {
     }
   };
 
+  const handleDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const allowedTypes = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      
+      if (!allowedTypes.includes(fileExtension)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload a PDF, DOC, DOCX, XLS, XLSX, TXT, or CSV file.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('document', file);
+      uploadDocumentMutation.mutate(formData);
+    }
+  };
+
+  const handleEditOffer = (offer: Offer) => {
+    setEditingOfferId(offer.id);
+    setEditingOfferContent(offer.content);
+  };
+
+  const handleSaveOffer = () => {
+    if (editingOfferId) {
+      updateOfferMutation.mutate({
+        id: editingOfferId,
+        content: editingOfferContent,
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingOfferId(null);
+    setEditingOfferContent("");
+  };
+
+  const handleDownloadDocument = (documentId: number, originalName: string) => {
+    window.open(`/api/suppliers/${supplierId}/documents/${documentId}/download`, '_blank');
+  };
+
   if (isLoading) {
     return (
       <div className="p-6">
@@ -484,10 +635,11 @@ export default function SupplierDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="price-lists" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="price-lists">Price Lists</TabsTrigger>
           <TabsTrigger value="offers">Offers</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="inquiry">Send Inquiry</TabsTrigger>
         </TabsList>
 
@@ -635,6 +787,31 @@ export default function SupplierDetail() {
                             <Download className="h-4 w-4 mr-1" />
                             Download
                           </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="destructive" size="sm">
+                                <Trash2 className="h-4 w-4 mr-1" />
+                                Delete
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Price List</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete this price list? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deletePriceListMutation.mutate(file.id)}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </div>
                     </div>
@@ -725,20 +902,83 @@ export default function SupplierDetail() {
                                 {new Date(offer.receivedAt!).toLocaleDateString()}
                               </span>
                             </div>
-                            <p className="text-slate-800 mb-3">{offer.content}</p>
-                            {offer.tags && offer.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {offer.tags.map((tag) => (
-                                  <Badge key={tag} variant="secondary" className="text-xs">
-                                    {tag}
-                                  </Badge>
-                                ))}
+                            {editingOfferId === offer.id ? (
+                              <div className="space-y-3">
+                                <Textarea
+                                  value={editingOfferContent}
+                                  onChange={(e) => setEditingOfferContent(e.target.value)}
+                                  rows={4}
+                                  className="resize-none"
+                                />
+                                <div className="flex gap-2">
+                                  <Button
+                                    size="sm"
+                                    onClick={handleSaveOffer}
+                                    disabled={updateOfferMutation.isPending}
+                                  >
+                                    <Save className="h-4 w-4 mr-1" />
+                                    Save
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4 mr-1" />
+                                    Cancel
+                                  </Button>
+                                </div>
                               </div>
+                            ) : (
+                              <>
+                                <p className="text-slate-800 mb-3">{offer.content}</p>
+                                {offer.tags && offer.tags.length > 0 && (
+                                  <div className="flex flex-wrap gap-1">
+                                    {offer.tags.map((tag) => (
+                                      <Badge key={tag} variant="secondary" className="text-xs">
+                                        {tag}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
+                              </>
                             )}
                           </div>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          {editingOfferId !== offer.id && (
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditOffer(offer)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <Trash2 className="h-4 w-4 text-red-600" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete Offer</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Are you sure you want to delete this offer? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => deleteOfferMutation.mutate(offer.id)}
+                                      className="bg-red-600 hover:bg-red-700"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -756,6 +996,96 @@ export default function SupplierDetail() {
             onSave={() => {}}
             onExport={() => {}}
           />
+        </TabsContent>
+
+        <TabsContent value="documents" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Documents</CardTitle>
+                <Button
+                  onClick={() => documentFileRef.current?.click()}
+                  disabled={uploadDocumentMutation.isPending}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Document
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <input
+                type="file"
+                ref={documentFileRef}
+                onChange={handleDocumentUpload}
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
+                className="hidden"
+              />
+              
+              {documents.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-slate-500">No documents uploaded yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {documents.map((document) => (
+                    <div key={document.id} className="border border-slate-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <FileText className="h-4 w-4 mr-2 text-slate-500" />
+                            <span className="font-medium text-slate-800">{document.originalName}</span>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-slate-500">
+                            <span>
+                              {document.fileSize ? `${Math.round(document.fileSize / 1024)} KB` : 'Size unknown'}
+                            </span>
+                            <span>
+                              Uploaded: {new Date(document.uploadedAt!).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDownloadDocument(document.id, document.originalName)}
+                          >
+                            <Download className="h-4 w-4 mr-1" />
+                            Download
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="destructive" size="sm">
+                                <Trash2 className="h-4 w-4 mr-1" />
+                                Delete
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Document</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{document.originalName}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteDocumentMutation.mutate(document.id)}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="inquiry" className="space-y-4">

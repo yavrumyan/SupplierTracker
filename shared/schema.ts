@@ -109,6 +109,17 @@ export const searchIndex = pgTable("search_index", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const documents = pgTable("documents", {
+  id: serial("id").primaryKey(),
+  supplierId: integer("supplier_id").references(() => suppliers.id).notNull(),
+  filename: text("filename").notNull(),
+  originalName: text("original_name").notNull(),
+  filePath: text("file_path").notNull(),
+  fileSize: integer("file_size"),
+  fileType: text("file_type"), // MIME type
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
 // Relations
 export const suppliersRelations = relations(suppliers, ({ many }) => ({
   priceListFiles: many(priceListFiles),
@@ -117,6 +128,7 @@ export const suppliersRelations = relations(suppliers, ({ many }) => ({
   orders: many(orders),
   costCalculationFiles: many(costCalculationFiles),
   searchIndex: many(searchIndex),
+  documents: many(documents),
 }));
 
 export const priceListFilesRelations = relations(priceListFiles, ({ one, many }) => ({
@@ -174,6 +186,13 @@ export const searchIndexRelations = relations(searchIndex, ({ one }) => ({
   }),
 }));
 
+export const documentsRelations = relations(documents, ({ one }) => ({
+  supplier: one(suppliers, {
+    fields: [documents.supplierId],
+    references: [suppliers.id],
+  }),
+}));
+
 // Zod schemas
 export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   id: true,
@@ -218,6 +237,11 @@ export const insertSearchIndexSchema = createInsertSchema(searchIndex).omit({
   updatedAt: true,
 });
 
+export const insertDocumentSchema = createInsertSchema(documents).omit({
+  id: true,
+  uploadedAt: true,
+});
+
 // Types
 export type Supplier = typeof suppliers.$inferSelect;
 export type InsertSupplier = z.infer<typeof insertSupplierSchema>;
@@ -236,6 +260,8 @@ export type Inquiry = typeof inquiries.$inferSelect;
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
 export type SearchIndex = typeof searchIndex.$inferSelect;
 export type InsertSearchIndex = z.infer<typeof insertSearchIndexSchema>;
+export type Document = typeof documents.$inferSelect;
+export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 
 // User table (keeping existing)
 export const users = pgTable("users", {

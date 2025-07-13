@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertSupplierSchema, insertOfferSchema, insertOrderSchema, insertOrderItemSchema, insertInquirySchema } from "@shared/schema";
+import { insertSupplierSchema, insertOfferSchema, insertOrderSchema, insertOrderItemSchema, insertInquirySchema, insertDocumentSchema } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
 import path from "path";
@@ -959,6 +959,195 @@ print(json.dumps(result))
     } catch (error) {
       console.error("Error downloading file:", error);
       res.status(500).json({ error: "Failed to download file" });
+    }
+  });
+
+  // Document routes
+  app.post("/api/suppliers/:id/documents", upload.single('document'), async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const file = req.file;
+      
+      if (!file) {
+        return res.status(400).json({ error: "No document file uploaded" });
+      }
+
+      // Validate file type - allow common document types
+      const allowedExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'];
+      const fileExtension = path.extname(file.originalname).toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
+        // Delete the uploaded file
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+        return res.status(400).json({ error: "Invalid file type. Only PDF, DOC, DOCX, XLS, XLSX, TXT, and CSV files are allowed." });
+      }
+
+      // Store the document in database
+      const document = await storage.createDocument({
+        supplierId,
+        filename: file.filename,
+        originalName: file.originalname,
+        filePath: file.path,
+        fileSize: file.size,
+        fileType: file.mimetype,
+      });
+
+      res.status(201).json(document);
+    } catch (error) {
+      console.error("Error uploading document:", error);
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(500).json({ error: "Failed to upload document" });
+    }
+  });
+
+  app.get("/api/suppliers/:id/documents", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const documents = await storage.getDocuments(supplierId);
+      res.json(documents);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+      res.status(500).json({ error: "Failed to fetch documents" });
+    }
+  });
+
+  app.get("/api/suppliers/:id/documents/:documentId/download", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const documentId = parseInt(req.params.documentId);
+      
+      const documents = await storage.getDocuments(supplierId);
+      const document = documents.find(d => d.id === documentId);
+      
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+
+      if (!fs.existsSync(document.filePath)) {
+        return res.status(404).json({ error: "Document file no longer exists on disk" });
+      }
+
+      // Set proper headers for download
+      res.setHeader('Content-Type', document.fileType || 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${document.originalName}"`);
+      
+      // Stream the file
+      const fileStream = fs.createReadStream(document.filePath);
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error("Error downloading document:", error);
+      res.status(500).json({ error: "Failed to download document" });
+    }
+  });
+
+  app.delete("/api/suppliers/:id/documents/:documentId", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const documentId = parseInt(req.params.documentId);
+      
+      const documents = await storage.getDocuments(supplierId);
+      const document = documents.find(d => d.id === documentId);
+      
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+
+      // Delete the physical file
+      if (fs.existsSync(document.filePath)) {
+        fs.unlinkSync(document.filePath);
+      }
+
+      // Delete from database
+      await storage.deleteDocument(documentId);
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      res.status(500).json({ error: "Failed to delete document" });
+    }
+  });
+
+  // Add route to delete price list files
+  app.delete("/api/suppliers/:id/price-lists/:fileId", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const fileId = parseInt(req.params.fileId);
+      
+      const files = await storage.getPriceListFiles(supplierId);
+      const file = files.find(f => f.id === fileId);
+      
+      if (!file) {
+        return res.status(404).json({ error: "Price list file not found" });
+      }
+
+      // Delete the physical file
+      if (fs.existsSync(file.filePath)) {
+        fs.unlinkSync(file.filePath);
+      }
+
+      // Delete related search index entries
+      await storage.deleteSearchIndexBySource('price_list', fileId);
+
+      // Delete from database
+      await storage.deletePriceListFile(fileId);
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting price list file:", error);
+      res.status(500).json({ error: "Failed to delete price list file" });
+    }
+  });
+
+  // Add route to refresh search index after offer update
+  app.post("/api/offers/:id/refresh-search", async (req, res) => {
+    try {
+      const offerId = parseInt(req.params.id);
+      
+      // Find the offer
+      const offer = await storage.getOffers(0).then(offers => offers.find(o => o.id === offerId));
+      if (!offer) {
+        return res.status(404).json({ error: "Offer not found" });
+      }
+
+      // Clear existing search index entries for this offer
+      await storage.deleteSearchIndexBySource('offer', offerId);
+
+      // Repopulate search index
+      const supplier = await storage.getSupplier(offer.supplierId);
+      if (supplier) {
+        const offerContent = offer.content || '';
+        const lines = offerContent.split('\n').map(line => line.trim()).filter(line => line);
+        
+        for (const line of lines) {
+          if (line.length > 10) {
+            const searchEntry = {
+              supplierId: offer.supplierId,
+              sourceType: 'offer',
+              sourceId: offer.id,
+              supplier: supplier.name,
+              category: null,
+              brand: null,
+              model: null,
+              productName: line,
+              price: null,
+              currency: null,
+              stock: null,
+              warranty: null,
+              notes: `Source: ${offer.source}`
+            };
+
+            await storage.createSearchIndexEntry(searchEntry);
+          }
+        }
+      }
+
+      res.json({ success: true, message: "Search index refreshed for offer" });
+    } catch (error) {
+      console.error("Error refreshing search index for offer:", error);
+      res.status(500).json({ error: "Failed to refresh search index" });
     }
   });
 

@@ -8,6 +8,7 @@ import {
   costCalculationFiles, 
   inquiries,
   searchIndex,
+  documents,
   users,
   type Supplier, 
   type InsertSupplier, 
@@ -26,6 +27,8 @@ import {
   type InsertInquiry,
   type SearchIndex,
   type InsertSearchIndex,
+  type Document,
+  type InsertDocument,
   type User,
   type InsertUser 
 } from "@shared/schema";
@@ -95,6 +98,11 @@ export interface IStorage {
     brand?: string;
     sourceType?: string;
   }): Promise<SearchIndex[]>;
+
+  // Document methods
+  createDocument(document: InsertDocument): Promise<Document>;
+  getDocuments(supplierId: number): Promise<Document[]>;
+  deleteDocument(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -424,6 +432,20 @@ export class DatabaseStorage implements IStorage {
     }
 
     return await queryBuilder.orderBy(desc(searchIndex.updatedAt));
+  }
+
+  // Document methods
+  async createDocument(document: InsertDocument): Promise<Document> {
+    const [newDocument] = await db.insert(documents).values(document).returning();
+    return newDocument;
+  }
+
+  async getDocuments(supplierId: number): Promise<Document[]> {
+    return await db.select().from(documents).where(eq(documents.supplierId, supplierId));
+  }
+
+  async deleteDocument(id: number): Promise<void> {
+    await db.delete(documents).where(eq(documents.id, id));
   }
 }
 
