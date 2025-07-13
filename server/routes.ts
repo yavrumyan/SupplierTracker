@@ -179,9 +179,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const offerContent = offer.content || '';
           const lines = offerContent.split('\n').map(line => line.trim()).filter(line => line);
           
+          // If no line breaks, treat the entire content as one product
+          if (lines.length === 0 || (lines.length === 1 && lines[0].length <= 10)) {
+            lines.push(offerContent.trim());
+          }
+          
           // Try to extract product information from each line
           for (const line of lines) {
-            if (line.length > 10) { // Skip very short lines
+            if (line.length > 3) { // Lower threshold to catch more products
               const searchEntry = {
                 supplierId: supplierId,
                 sourceType: 'offer',
@@ -243,6 +248,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/offers/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      
+      // Delete related search index entries
+      await storage.deleteSearchIndexBySource('offer', id);
+      
+      // Delete the offer
       await storage.deleteOffer(id);
       res.status(204).send();
     } catch (error) {
