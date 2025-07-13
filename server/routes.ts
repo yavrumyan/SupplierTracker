@@ -1106,8 +1106,8 @@ print(json.dumps(result))
     try {
       const offerId = parseInt(req.params.id);
       
-      // Find the offer
-      const offer = await storage.getOffers(0).then(offers => offers.find(o => o.id === offerId));
+      // Find the offer directly
+      const offer = await storage.getOffer(offerId);
       if (!offer) {
         return res.status(404).json({ error: "Offer not found" });
       }

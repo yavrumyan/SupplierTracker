@@ -87,10 +87,14 @@ export default function SupplierDetail() {
   const updateOfferMutation = useMutation({
     mutationFn: ({ id, content }: { id: number, content: string }) =>
       apiRequest("PUT", `/api/offers/${id}`, { content }),
-    onSuccess: () => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [`/api/suppliers/${supplierId}/offers`] });
-      // Refresh search index after offer update
-      apiRequest("POST", `/api/offers/${editingOfferId}/refresh-search`);
+      // Refresh search index after offer update (don't fail if this fails)
+      try {
+        await apiRequest("POST", `/api/offers/${variables.id}/refresh-search`);
+      } catch (error) {
+        console.warn("Failed to refresh search index:", error);
+      }
       setEditingOfferId(null);
       setEditingOfferContent("");
       toast({

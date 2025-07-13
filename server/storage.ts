@@ -66,6 +66,7 @@ export interface IStorage {
   // Offer methods
   createOffer(offer: InsertOffer): Promise<Offer>;
   getOffers(supplierId: number): Promise<Offer[]>;
+  getOffer(id: number): Promise<Offer | undefined>;
   updateOffer(id: number, offer: Partial<InsertOffer>): Promise<Offer>;
   deleteOffer(id: number): Promise<void>;
 
@@ -235,6 +236,11 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(offers)
       .where(eq(offers.supplierId, supplierId))
       .orderBy(desc(offers.receivedAt));
+  }
+
+  async getOffer(id: number): Promise<Offer | undefined> {
+    const [offer] = await db.select().from(offers).where(eq(offers.id, id));
+    return offer || undefined;
   }
 
   async updateOffer(id: number, offer: Partial<InsertOffer>): Promise<Offer> {
