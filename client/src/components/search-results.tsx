@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChevronLeft, ChevronRight, Package2, FileText, Building2, Download } from "lucide-react";
+import { Link } from "wouter";
 
 interface SearchResult {
   id: number;
@@ -203,7 +204,11 @@ export function SearchResults({
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
                           <Building2 className="h-4 w-4 text-gray-400" />
-                          {result.supplier}
+                          <Link href={`/suppliers/${result.supplierId}`}>
+                            <span className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer">
+                              {result.supplier}
+                            </span>
+                          </Link>
                         </div>
                       </TableCell>
                       <TableCell>{result.category || '-'}</TableCell>
@@ -222,16 +227,24 @@ export function SearchResults({
                     </TableRow>
                   ))
                 ) : (
-                  Object.entries(groupedResults).map(([supplierName, supplierResults]) => (
-                    <TableRow key={supplierName} className="bg-blue-50">
-                      <TableCell colSpan={11} className="font-semibold py-3">
-                        <div className="flex items-center gap-2">
-                          <Building2 className="h-5 w-5 text-blue-600" />
-                          {supplierName} ({supplierResults.length} products)
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  Object.entries(groupedResults).map(([supplierName, supplierResults]) => {
+                    const supplierId = supplierResults[0]?.supplierId;
+                    return (
+                      <TableRow key={supplierName} className="bg-blue-50">
+                        <TableCell colSpan={11} className="font-semibold py-3">
+                          <div className="flex items-center gap-2">
+                            <Building2 className="h-5 w-5 text-blue-600" />
+                            <Link href={`/suppliers/${supplierId}`}>
+                              <span className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer">
+                                {supplierName}
+                              </span>
+                            </Link>
+                            <span className="text-blue-600">({supplierResults.length} products)</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
