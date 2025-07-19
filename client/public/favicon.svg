@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#EA580C"/>
+  
+  <!-- SupHub logo - stylized "S" with hub connections -->
+  <path d="M8 12c0-2.5 2-4.5 4.5-4.5h3c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5h-3v2h3c1.5 0 2.5 1 2.5 2.5s-1 2.5-2.5 2.5h-3c-2.5 0-4.5-2-4.5-4.5V12z" fill="white"/>
+  
+  <!-- Hub connection dots -->
+  <circle cx="22" cy="10" r="2" fill="white"/>
+  <circle cx="26" cy="16" r="2" fill="white"/>
+  <circle cx="22" cy="22" r="2" fill="white"/>
+  
+  <!-- Connection lines -->
+  <line x1="18" y1="12" x2="20" y2="10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="18" y1="16" x2="24" y2="16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="18" y1="20" x2="20" y2="22" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
