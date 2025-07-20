@@ -91,14 +91,44 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
     }
   };
 
-  const removeCategory = (category: string) => {
-    setCustomCategories(prev => prev.filter(c => c !== category));
-    // TODO: Remove from all suppliers who have this category
+  const removeCategory = async (category: string) => {
+    try {
+      // Call API to delete from all suppliers in database
+      const response = await fetch(`/api/categories/${encodeURIComponent(category)}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Remove from local state
+        setCustomCategories(prev => prev.filter(c => c !== category));
+        // Refresh supplier data to update the UI
+        await fetchSupplierData();
+      } else {
+        console.error('Failed to delete category from database');
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
   };
 
-  const removeBrand = (brand: string) => {
-    setCustomBrands(prev => prev.filter(b => b !== brand));
-    // TODO: Remove from all suppliers who have this brand
+  const removeBrand = async (brand: string) => {
+    try {
+      // Call API to delete from all suppliers in database
+      const response = await fetch(`/api/brands/${encodeURIComponent(brand)}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Remove from local state
+        setCustomBrands(prev => prev.filter(b => b !== brand));
+        // Refresh supplier data to update the UI
+        await fetchSupplierData();
+      } else {
+        console.error('Failed to delete brand from database');
+      }
+    } catch (error) {
+      console.error('Error deleting brand:', error);
+    }
   };
 
   // Combine static, custom, and supplier data lists

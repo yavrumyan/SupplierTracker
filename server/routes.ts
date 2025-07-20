@@ -1182,6 +1182,29 @@ print(json.dumps(result))
     }
   });
 
+  // Category and brand deletion routes
+  app.delete("/api/categories/:categoryName", async (req, res) => {
+    try {
+      const categoryName = decodeURIComponent(req.params.categoryName);
+      await storage.deleteCategoryFromAllSuppliers(categoryName);
+      res.json({ success: true, message: `Category "${categoryName}" deleted from all suppliers` });
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      res.status(500).json({ error: "Failed to delete category" });
+    }
+  });
+
+  app.delete("/api/brands/:brandName", async (req, res) => {
+    try {
+      const brandName = decodeURIComponent(req.params.brandName);
+      await storage.deleteBrandFromAllSuppliers(brandName);
+      res.json({ success: true, message: `Brand "${brandName}" deleted from all suppliers` });
+    } catch (error) {
+      console.error("Error deleting brand:", error);
+      res.status(500).json({ error: "Failed to delete brand" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

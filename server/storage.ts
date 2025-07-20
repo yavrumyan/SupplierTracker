@@ -484,6 +484,46 @@ export class DatabaseStorage implements IStorage {
     
     return Array.from(allBrands).sort();
   }
+
+  async deleteCategoryFromAllSuppliers(categoryToDelete: string): Promise<void> {
+    // Get all suppliers that have this category
+    const suppliersWithCategory = await db.select().from(suppliers);
+    
+    for (const supplier of suppliersWithCategory) {
+      if (supplier.categories && supplier.categories.includes(categoryToDelete)) {
+        // Remove the category from the array
+        const updatedCategories = supplier.categories.filter(cat => cat !== categoryToDelete);
+        
+        // Update the supplier
+        await db.update(suppliers)
+          .set({ 
+            categories: updatedCategories,
+            updatedAt: new Date()
+          })
+          .where(eq(suppliers.id, supplier.id));
+      }
+    }
+  }
+
+  async deleteBrandFromAllSuppliers(brandToDelete: string): Promise<void> {
+    // Get all suppliers that have this brand
+    const suppliersWithBrand = await db.select().from(suppliers);
+    
+    for (const supplier of suppliersWithBrand) {
+      if (supplier.brands && supplier.brands.includes(brandToDelete)) {
+        // Remove the brand from the array
+        const updatedBrands = supplier.brands.filter(brand => brand !== brandToDelete);
+        
+        // Update the supplier
+        await db.update(suppliers)
+          .set({ 
+            brands: updatedBrands,
+            updatedAt: new Date()
+          })
+          .where(eq(suppliers.id, supplier.id));
+      }
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();
