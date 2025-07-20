@@ -21,11 +21,15 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
   const [customBrands, setCustomBrands] = useState<string[]>([]);
   const [supplierCategories, setSupplierCategories] = useState<string[]>([]);
   const [supplierBrands, setSupplierBrands] = useState<string[]>([]);
+  const [deletedCategories, setDeletedCategories] = useState<string[]>([]);
+  const [deletedBrands, setDeletedBrands] = useState<string[]>([]);
 
   // Load from localStorage and fetch from suppliers on mount
   useEffect(() => {
     const savedCategories = localStorage.getItem('customCategories');
     const savedBrands = localStorage.getItem('customBrands');
+    const savedDeletedCategories = localStorage.getItem('deletedCategories');
+    const savedDeletedBrands = localStorage.getItem('deletedBrands');
     
     if (savedCategories) {
       try {
@@ -40,6 +44,22 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
         setCustomBrands(JSON.parse(savedBrands));
       } catch (e) {
         console.error('Failed to parse saved brands:', e);
+      }
+    }
+
+    if (savedDeletedCategories) {
+      try {
+        setDeletedCategories(JSON.parse(savedDeletedCategories));
+      } catch (e) {
+        console.error('Failed to parse deleted categories:', e);
+      }
+    }
+    
+    if (savedDeletedBrands) {
+      try {
+        setDeletedBrands(JSON.parse(savedDeletedBrands));
+      } catch (e) {
+        console.error('Failed to parse deleted brands:', e);
       }
     }
 
@@ -77,6 +97,14 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
     localStorage.setItem('customBrands', JSON.stringify(customBrands));
   }, [customBrands]);
 
+  useEffect(() => {
+    localStorage.setItem('deletedCategories', JSON.stringify(deletedCategories));
+  }, [deletedCategories]);
+
+  useEffect(() => {
+    localStorage.setItem('deletedBrands', JSON.stringify(deletedBrands));
+  }, [deletedBrands]);
+
   const addCategory = (category: string) => {
     const trimmedCategory = category.trim();
     if (trimmedCategory && !categories.includes(trimmedCategory)) {
@@ -99,8 +127,9 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
       });
       
       if (response.ok) {
-        // Remove from local state
+        // Remove from local state and add to blacklist
         setCustomCategories(prev => prev.filter(c => c !== category));
+        setDeletedCategories(prev => [...prev, category]);
         // Refresh supplier data to update the UI
         await fetchSupplierData();
       } else {
@@ -119,8 +148,9 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
       });
       
       if (response.ok) {
-        // Remove from local state
+        // Remove from local state and add to blacklist
         setCustomBrands(prev => prev.filter(b => b !== brand));
+        setDeletedBrands(prev => [...prev, brand]);
         // Refresh supplier data to update the UI
         await fetchSupplierData();
       } else {
@@ -131,9 +161,16 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
     }
   };
 
-  // Combine static, custom, and supplier data lists
-  const categories = [...STATIC_CATEGORIES, ...customCategories, ...supplierCategories].filter((item, index, arr) => arr.indexOf(item) === index).sort();
-  const brands = [...STATIC_BRANDS, ...customBrands, ...supplierBrands].filter((item, index, arr) => arr.indexOf(item) === index).sort();
+  // Combine static, custom, and supplier data lists, then filter out deleted items
+  const categories = [...STATIC_CATEGORIES, ...customCategories, ...supplierCategories]
+    .filter((item, index, arr) => arr.indexOf(item) === index) // Remove duplicates
+    .filter(category => !deletedCategories.includes(category)) // Remove blacklisted items
+    .sort();
+    
+  const brands = [...STATIC_BRANDS, ...customBrands, ...supplierBrands]
+    .filter((item, index, arr) => arr.indexOf(item) === index) // Remove duplicates
+    .filter(brand => !deletedBrands.includes(brand)) // Remove blacklisted items
+    .sort();
 
   return (
     <CategoriesBrandsContext.Provider value={{ categories, brands, addCategory, addBrand, removeCategory, removeBrand }}>
