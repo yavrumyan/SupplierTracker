@@ -104,6 +104,10 @@ export interface IStorage {
   createDocument(document: InsertDocument): Promise<Document>;
   getDocuments(supplierId: number): Promise<Document[]>;
   deleteDocument(id: number): Promise<void>;
+
+  // Categories and brands methods
+  getAllCategoriesFromSuppliers(): Promise<string[]>;
+  getAllBrandsFromSuppliers(): Promise<string[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -192,11 +196,11 @@ export class DatabaseStorage implements IStorage {
 
     const whereClause = whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
-    return await db.select().from(suppliers).where(whereClause);
+    return await db.select().from(suppliers).where(whereClause).orderBy(suppliers.name);
   }
 
   async getAllSuppliers(): Promise<Supplier[]> {
-    return await db.select().from(suppliers).orderBy(desc(suppliers.createdAt));
+    return await db.select().from(suppliers).orderBy(suppliers.name);
   }
 
   // Price list methods
@@ -452,6 +456,33 @@ export class DatabaseStorage implements IStorage {
 
   async deleteDocument(id: number): Promise<void> {
     await db.delete(documents).where(eq(documents.id, id));
+  }
+
+  // Categories and brands methods
+  async getAllCategoriesFromSuppliers(): Promise<string[]> {
+    const suppliersData = await db.select({ categories: suppliers.categories }).from(suppliers);
+    const allCategories = new Set<string>();
+    
+    suppliersData.forEach(supplier => {
+      if (supplier.categories) {
+        supplier.categories.forEach(category => allCategories.add(category));
+      }
+    });
+    
+    return Array.from(allCategories).sort();
+  }
+
+  async getAllBrandsFromSuppliers(): Promise<string[]> {
+    const suppliersData = await db.select({ brands: suppliers.brands }).from(suppliers);
+    const allBrands = new Set<string>();
+    
+    suppliersData.forEach(supplier => {
+      if (supplier.brands) {
+        supplier.brands.forEach(brand => allBrands.add(brand));
+      }
+    });
+    
+    return Array.from(allBrands).sort();
   }
 }
 

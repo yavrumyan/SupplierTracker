@@ -21,7 +21,7 @@ interface SupplierFormProps {
 }
 
 export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: SupplierFormProps) {
-  const { categories, brands, addCategory, addBrand } = useCategoriesBrands();
+  const { categories, brands, addCategory, addBrand, removeCategory, removeBrand } = useCategoriesBrands();
   const [selectedCategories, setSelectedCategories] = useState<string[]>(Array.isArray(defaultValues?.categories) ? defaultValues.categories : []);
   const [selectedBrands, setSelectedBrands] = useState<string[]>(Array.isArray(defaultValues?.brands) ? defaultValues.brands : []);
   const [selectedWorkingStyles, setSelectedWorkingStyles] = useState<string[]>(Array.isArray(defaultValues?.workingStyle) ? defaultValues.workingStyle : []);
@@ -276,15 +276,25 @@ export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: S
             {/* Category Checkboxes */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
+                <div key={category} className="flex items-center space-x-2 group">
                   <Checkbox
                     id={category}
                     checked={selectedCategories.includes(category)}
                     onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
                   />
-                  <Label htmlFor={category} className="text-sm">
+                  <Label htmlFor={category} className="text-sm flex-1">
                     {category}
                   </Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-4 w-4 p-0 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeCategory(category)}
+                    title="Delete this category"
+                  >
+                    ×
+                  </Button>
                 </div>
               ))}
             </div>
@@ -337,15 +347,25 @@ export function SupplierForm({ onSubmit, onCancel, defaultValues, isLoading }: S
             {/* Brand Checkboxes */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {brands.map((brand) => (
-                <div key={brand} className="flex items-center space-x-2">
+                <div key={brand} className="flex items-center space-x-2 group">
                   <Checkbox
                     id={brand}
                     checked={selectedBrands.includes(brand)}
                     onCheckedChange={(checked) => handleBrandChange(brand, checked as boolean)}
                   />
-                  <Label htmlFor={brand} className="text-sm">
+                  <Label htmlFor={brand} className="text-sm flex-1">
                     {brand}
                   </Label>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-4 w-4 p-0 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeBrand(brand)}
+                    title="Delete this brand"
+                  >
+                    ×
+                  </Button>
                 </div>
               ))}
             </div>

@@ -130,7 +130,7 @@ export function ProductSearchFilters({ filters, onFiltersChange, onSearch }: Pro
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Suppliers</SelectItem>
-                {suppliers.map((supplier: any) => (
+                {suppliers.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((supplier: any) => (
                   <SelectItem key={supplier.id} value={supplier.name}>
                     {supplier.name}
                   </SelectItem>

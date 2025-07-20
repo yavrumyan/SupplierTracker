@@ -111,6 +111,8 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Any Rating</SelectItem>
+                <SelectItem value="10">10 Stars</SelectItem>
+                <SelectItem value="9">9+ Stars</SelectItem>
                 <SelectItem value="8">8+ Stars</SelectItem>
                 <SelectItem value="7">7+ Stars</SelectItem>
                 <SelectItem value="6">6+ Stars</SelectItem>

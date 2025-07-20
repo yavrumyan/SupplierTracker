@@ -620,6 +620,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Categories and brands from supplier data
+  app.get("/api/categories/from-suppliers", async (req, res) => {
+    try {
+      const categories = await storage.getAllCategoriesFromSuppliers();
+      res.json(categories);
+    } catch (error) {
+      console.error("Error fetching categories from suppliers:", error);
+      res.status(500).json({ error: "Failed to fetch categories" });
+    }
+  });
+
+  app.get("/api/brands/from-suppliers", async (req, res) => {
+    try {
+      const brands = await storage.getAllBrandsFromSuppliers();
+      res.json(brands);
+    } catch (error) {
+      console.error("Error fetching brands from suppliers:", error);
+      res.status(500).json({ error: "Failed to fetch brands" });
+    }
+  });
+
   // Add new category/brand endpoints
   app.post("/api/categories", async (req, res) => {
     try {

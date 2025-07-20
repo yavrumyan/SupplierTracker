@@ -6,6 +6,8 @@ interface CategoriesBrandsContextType {
   brands: string[];
   addCategory: (category: string) => void;
   addBrand: (brand: string) => void;
+  removeCategory: (category: string) => void;
+  removeBrand: (brand: string) => void;
 }
 
 const CategoriesBrandsContext = createContext<CategoriesBrandsContextType | undefined>(undefined);
@@ -17,8 +19,10 @@ interface CategoriesBrandsProviderProps {
 export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderProps) {
   const [customCategories, setCustomCategories] = useState<string[]>([]);
   const [customBrands, setCustomBrands] = useState<string[]>([]);
+  const [supplierCategories, setSupplierCategories] = useState<string[]>([]);
+  const [supplierBrands, setSupplierBrands] = useState<string[]>([]);
 
-  // Load from localStorage on mount
+  // Load from localStorage and fetch from suppliers on mount
   useEffect(() => {
     const savedCategories = localStorage.getItem('customCategories');
     const savedBrands = localStorage.getItem('customBrands');
@@ -38,7 +42,31 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
         console.error('Failed to parse saved brands:', e);
       }
     }
+
+    // Fetch categories and brands from supplier data
+    fetchSupplierData();
   }, []);
+
+  const fetchSupplierData = async () => {
+    try {
+      const [categoriesRes, brandsRes] = await Promise.all([
+        fetch('/api/categories/from-suppliers'),
+        fetch('/api/brands/from-suppliers')
+      ]);
+      
+      if (categoriesRes.ok) {
+        const categories = await categoriesRes.json();
+        setSupplierCategories(categories);
+      }
+      
+      if (brandsRes.ok) {
+        const brands = await brandsRes.json();
+        setSupplierBrands(brands);
+      }
+    } catch (error) {
+      console.error('Failed to fetch supplier data:', error);
+    }
+  };
 
   // Save to localStorage whenever custom items change
   useEffect(() => {
@@ -63,12 +91,22 @@ export function CategoriesBrandsProvider({ children }: CategoriesBrandsProviderP
     }
   };
 
-  // Combine static and custom lists
-  const categories = [...STATIC_CATEGORIES, ...customCategories].sort();
-  const brands = [...STATIC_BRANDS, ...customBrands].sort();
+  const removeCategory = (category: string) => {
+    setCustomCategories(prev => prev.filter(c => c !== category));
+    // TODO: Remove from all suppliers who have this category
+  };
+
+  const removeBrand = (brand: string) => {
+    setCustomBrands(prev => prev.filter(b => b !== brand));
+    // TODO: Remove from all suppliers who have this brand
+  };
+
+  // Combine static, custom, and supplier data lists
+  const categories = [...STATIC_CATEGORIES, ...customCategories, ...supplierCategories].filter((item, index, arr) => arr.indexOf(item) === index).sort();
+  const brands = [...STATIC_BRANDS, ...customBrands, ...supplierBrands].filter((item, index, arr) => arr.indexOf(item) === index).sort();
 
   return (
-    <CategoriesBrandsContext.Provider value={{ categories, brands, addCategory, addBrand }}>
+    <CategoriesBrandsContext.Provider value={{ categories, brands, addCategory, addBrand, removeCategory, removeBrand }}>
       {children}
     </CategoriesBrandsContext.Provider>
   );
