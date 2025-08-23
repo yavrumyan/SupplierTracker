@@ -10,6 +10,7 @@ import SupplierDetail from "@/pages/supplier-detail";
 import AddSupplier from "@/pages/add-supplier";
 import AllSuppliers from "@/pages/all-suppliers";
 import SearchPage from "@/pages/search";
+import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -21,6 +22,7 @@ function Router() {
         <Route path="/suppliers/:id" component={SupplierDetail} />
         <Route path="/suppliers" component={AllSuppliers} />
         <Route path="/add-supplier" component={AddSupplier} />
+        <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

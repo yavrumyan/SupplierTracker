@@ -8,6 +8,7 @@ import path from "path";
 import fs from "fs";
 import * as XLSX from "xlsx";
 import { spawn } from "child_process";
+import archiver from "archiver";
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
@@ -1202,6 +1203,127 @@ print(json.dumps(result))
     } catch (error) {
       console.error("Error deleting brand:", error);
       res.status(500).json({ error: "Failed to delete brand" });
+    }
+  });
+
+  // Database export route
+  app.post("/api/export/database", async (req, res) => {
+    try {
+      console.log("Starting database export...");
+      
+      // Get all suppliers for CSV export
+      const suppliers = await storage.getAllSuppliersForExport();
+      console.log(`Found ${suppliers.length} suppliers`);
+      
+      // Get all documents with supplier names
+      const documents = await storage.getAllDocumentsForExport();
+      console.log(`Found ${documents.length} documents`);
+      
+      // Create CSV content for suppliers
+      const csvHeader = [
+        'ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp',
+        'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Notes',
+        'Created At', 'Updated At'
+      ].join(',') + '\n';
+      
+      const csvRows = suppliers.map(supplier => [
+        supplier.id,
+        `"${(supplier.name || '').replace(/"/g, '""')}"`,
+        `"${(supplier.country || '').replace(/"/g, '""')}"`,
+        `"${(supplier.city || '').replace(/"/g, '""')}"`,
+        `"${(supplier.contactPerson || '').replace(/"/g, '""')}"`,
+        `"${(supplier.phone || '').replace(/"/g, '""')}"`,
+        `"${(supplier.email || '').replace(/"/g, '""')}"`,
+        `"${(supplier.whatsapp || '').replace(/"/g, '""')}"`,
+        `"${(supplier.website || '').replace(/"/g, '""')}"`,
+        `"${(supplier.categories || []).join('; ').replace(/"/g, '""')}"`,
+        `"${(supplier.brands || []).join('; ').replace(/"/g, '""')}"`,
+        `"${(supplier.workingStyle || []).join('; ').replace(/"/g, '""')}"`,
+        supplier.reputation || 0,
+        `"${(supplier.notes || '').replace(/"/g, '""')}"`,
+        supplier.createdAt ? new Date(supplier.createdAt).toISOString() : '',
+        supplier.updatedAt ? new Date(supplier.updatedAt).toISOString() : ''
+      ].join(','));
+      
+      const csvContent = csvHeader + csvRows.join('\n');
+      
+      // Create temporary directory for export
+      const exportDir = path.join(process.cwd(), 'temp-export');
+      if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true });
+      }
+      
+      // Write CSV file
+      const csvFilePath = path.join(exportDir, 'suppliers-data.csv');
+      fs.writeFileSync(csvFilePath, csvContent, 'utf8');
+      console.log("CSV file created");
+      
+      // Set response headers for ZIP download
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', `attachment; filename=database-export-${new Date().toISOString().split('T')[0]}.zip`);
+      
+      // Create archive
+      const archive = archiver('zip', { zlib: { level: 9 } });
+      
+      archive.on('error', (err) => {
+        console.error('Archive error:', err);
+        if (!res.headersSent) {
+          res.status(500).json({ error: 'Failed to create export archive' });
+        }
+      });
+      
+      // Pipe archive to response
+      archive.pipe(res);
+      
+      // Add CSV file to archive
+      archive.file(csvFilePath, { name: 'suppliers-data.csv' });
+      
+      // Organize documents by supplier folders
+      const supplierFolders = new Map();
+      
+      for (const doc of documents) {
+        const supplierName = doc.supplierName.replace(/[^a-zA-Z0-9\s\-_]/g, ''); // Clean folder name
+        if (!supplierFolders.has(supplierName)) {
+          supplierFolders.set(supplierName, []);
+        }
+        supplierFolders.get(supplierName).push(doc);
+      }
+      
+      // Add documents to archive organized by supplier
+      for (const [supplierName, docs] of supplierFolders) {
+        for (const doc of docs) {
+          if (fs.existsSync(doc.filePath)) {
+            const folderPath = `supplier-files/${supplierName}/documents`;
+            archive.file(doc.filePath, { 
+              name: `${folderPath}/${doc.originalName}` 
+            });
+          }
+        }
+      }
+      
+      // Finalize archive
+      await archive.finalize();
+      console.log("Archive finalized and sent");
+      
+      // Clean up temporary files
+      setTimeout(() => {
+        try {
+          if (fs.existsSync(csvFilePath)) {
+            fs.unlinkSync(csvFilePath);
+          }
+          if (fs.existsSync(exportDir)) {
+            fs.rmdirSync(exportDir);
+          }
+        } catch (cleanupError) {
+          console.error('Cleanup error:', cleanupError);
+        }
+      }, 5000);
+      
+    } catch (error) {
+      console.error("Database export error:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Failed to export database" });
+      }
     }
   });
 

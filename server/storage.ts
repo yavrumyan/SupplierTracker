@@ -108,6 +108,12 @@ export interface IStorage {
   // Categories and brands methods
   getAllCategoriesFromSuppliers(): Promise<string[]>;
   getAllBrandsFromSuppliers(): Promise<string[]>;
+  deleteCategoryFromAllSuppliers(categoryName: string): Promise<void>;
+  deleteBrandFromAllSuppliers(brandName: string): Promise<void>;
+
+  // Export methods
+  getAllSuppliersForExport(): Promise<Supplier[]>;
+  getAllDocumentsForExport(): Promise<(Document & { supplierName: string })[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -523,6 +529,34 @@ export class DatabaseStorage implements IStorage {
           .where(eq(suppliers.id, supplier.id));
       }
     }
+  }
+
+  // Export methods
+  async getAllSuppliersForExport(): Promise<Supplier[]> {
+    return await db.select().from(suppliers).orderBy(suppliers.name);
+  }
+
+  async getAllDocumentsForExport(): Promise<(Document & { supplierName: string })[]> {
+    const result = await db
+      .select({
+        id: documents.id,
+        supplierId: documents.supplierId,
+        filename: documents.filename,
+        originalName: documents.originalName,
+        filePath: documents.filePath,
+        fileSize: documents.fileSize,
+        fileType: documents.fileType,
+        uploadedAt: documents.uploadedAt,
+        supplierName: suppliers.name,
+      })
+      .from(documents)
+      .leftJoin(suppliers, eq(documents.supplierId, suppliers.id))
+      .orderBy(suppliers.name, documents.originalName);
+    
+    return result.map(row => ({
+      ...row,
+      supplierName: row.supplierName || 'Unknown Supplier'
+    }));
   }
 }
 
