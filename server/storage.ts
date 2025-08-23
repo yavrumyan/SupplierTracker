@@ -143,8 +143,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSupplierByName(name: string): Promise<Supplier | undefined> {
-    const [supplier] = await db.select().from(suppliers).where(eq(suppliers.name, name));
-    return supplier || undefined;
+    try {
+      const [supplier] = await db.select().from(suppliers).where(eq(suppliers.name, name));
+      return supplier || undefined;
+    } catch (error) {
+      console.log('Drizzle query failed, using direct SQL:', error);
+      // Fallback to direct SQL if Drizzle fails
+      const result = await db.execute(sql`SELECT * FROM suppliers WHERE name = ${name} LIMIT 1`);
+      return result.rows[0] as Supplier || undefined;
+    }
   }
 
   async createSupplier(supplier: InsertSupplier): Promise<Supplier> {
@@ -583,11 +590,21 @@ export class DatabaseStorage implements IStorage {
         }
 
         if (supplierData.email) {
-          const existingByEmail = await db.select().from(suppliers).where(eq(suppliers.email, supplierData.email));
-          if (existingByEmail.length > 0) {
-            console.log(`Skipping ${supplierData.name} - already exists by email`);
-            skipped++;
-            continue;
+          try {
+            const existingByEmail = await db.select().from(suppliers).where(eq(suppliers.email, supplierData.email));
+            if (existingByEmail.length > 0) {
+              console.log(`Skipping ${supplierData.name} - already exists by email`);
+              skipped++;
+              continue;
+            }
+          } catch (error) {
+            console.log('Email check failed, using direct SQL:', error);
+            const result = await db.execute(sql`SELECT * FROM suppliers WHERE email = ${supplierData.email} LIMIT 1`);
+            if (result.rows.length > 0) {
+              console.log(`Skipping ${supplierData.name} - already exists by email (direct SQL)`);
+              skipped++;
+              continue;
+            }
           }
         }
 
