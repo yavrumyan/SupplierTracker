@@ -7,8 +7,6 @@ export const suppliers = pgTable("suppliers", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   country: text("country").notNull(),
-  city: text("city"),
-  contactPerson: text("contact_person"),
   website: text("website"),
   email: text("email"),
   phone: text("phone"),

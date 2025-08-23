@@ -1221,17 +1221,14 @@ print(json.dumps(result))
       
       // Create CSV content for suppliers
       const csvHeader = [
-        'ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp',
-        'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments',
-        'Created At', 'Updated At'
+        'ID', 'Name', 'Country', 'Phone', 'Email', 'WhatsApp',
+        'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments'
       ].join(',') + '\n';
       
       const csvRows = suppliers.map(supplier => [
         supplier.id,
         `"${(supplier.name || '').replace(/"/g, '""')}"`,
         `"${(supplier.country || '').replace(/"/g, '""')}"`,
-        `"${(supplier.city || '').replace(/"/g, '""')}"`,
-        `"${(supplier.contactPerson || '').replace(/"/g, '""')}"`,
         `"${(supplier.phone || '').replace(/"/g, '""')}"`,
         `"${(supplier.email || '').replace(/"/g, '""')}"`,
         `"${(supplier.whatsapp || '').replace(/"/g, '""')}"`,
@@ -1241,8 +1238,6 @@ print(json.dumps(result))
         `"${(supplier.workingStyle || []).join('; ').replace(/"/g, '""')}"`,
         supplier.reputation || 0,
         `"${(supplier.comments || '').replace(/"/g, '""')}"`,
-        supplier.createdAt ? new Date(supplier.createdAt).toISOString() : '',
-        supplier.updatedAt ? new Date(supplier.updatedAt).toISOString() : ''
       ].join(','));
       
       const csvContent = csvHeader + csvRows.join('\n');
@@ -1370,7 +1365,7 @@ print(json.dumps(result))
       const errors: string[] = [];
       
       // Expected headers for validation
-      const expectedHeaders = ['ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp', 'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments', 'Created At', 'Updated At'];
+      const expectedHeaders = ['ID', 'Name', 'Country', 'Phone', 'Email', 'WhatsApp', 'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments'];
       
       // Check if headers match expected format
       const missingHeaders = expectedHeaders.filter(expected => !headers.includes(expected));
@@ -1485,8 +1480,6 @@ print(json.dumps(result))
         const supplierData = {
           name: row['Name'],
           country: row['Country'],
-          city: row['City'] || null,
-          contactPerson: row['Contact Person'] || null,
           phone: row['Phone'] || null,
           email: row['Email'] || null,
           whatsapp: row['WhatsApp'] || null,

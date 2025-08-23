@@ -128,16 +128,15 @@ export default function ImportData() {
 
   const downloadTemplate = () => {
     const headers = [
-      'ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp',
-      'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments',
-      'Created At', 'Updated At'
+      'ID', 'Name', 'Country', 'Phone', 'Email', 'WhatsApp',
+      'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments'
     ];
     
     const sampleRow = [
-      '', 'Sample Supplier', 'United States', 'New York', 'John Doe', '+1-555-0123', 
+      '', 'Sample Supplier', 'United States', '+1-555-0123', 
       'john@example.com', '+1-555-0123', 'https://example.com', 
       'Laptops; Desktops', 'Dell; HP', 'Wholesale; Retail', '8', 
-      'Reliable supplier with good prices', '', ''
+      'Reliable supplier with good prices'
     ];
     
     const csvContent = headers.join(',') + '\n' + sampleRow.join(',');
