@@ -1523,6 +1523,8 @@ print(json.dumps(result))
         suppliersToImport.push(supplierData);
       }
 
+      console.log(`Prepared ${suppliersToImport.length} suppliers for import:`, suppliersToImport.map(s => ({ name: s.name, email: s.email })));
+
       // Import suppliers (only new ones)
       const result = await storage.importSuppliers(suppliersToImport);
 
