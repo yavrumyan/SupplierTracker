@@ -1222,7 +1222,7 @@ print(json.dumps(result))
       // Create CSV content for suppliers
       const csvHeader = [
         'ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp',
-        'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Notes',
+        'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments',
         'Created At', 'Updated At'
       ].join(',') + '\n';
       
@@ -1240,7 +1240,7 @@ print(json.dumps(result))
         `"${(supplier.brands || []).join('; ').replace(/"/g, '""')}"`,
         `"${(supplier.workingStyle || []).join('; ').replace(/"/g, '""')}"`,
         supplier.reputation || 0,
-        `"${(supplier.notes || '').replace(/"/g, '""')}"`,
+        `"${(supplier.comments || '').replace(/"/g, '""')}"`,
         supplier.createdAt ? new Date(supplier.createdAt).toISOString() : '',
         supplier.updatedAt ? new Date(supplier.updatedAt).toISOString() : ''
       ].join(','));

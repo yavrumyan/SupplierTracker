@@ -609,6 +609,21 @@ export default function SupplierDetail() {
             </div>
 
             <div className="space-y-3">
+              <h4 className="text-lg font-medium text-slate-800">Comments</h4>
+              <div className="space-y-2">
+                {supplier.comments ? (
+                  <div className="text-slate-700 bg-slate-50 p-3 rounded-lg border">
+                    {supplier.comments}
+                  </div>
+                ) : (
+                  <div className="text-slate-500 italic">No comments added</div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            <div className="space-y-3">
               <h4 className="text-lg font-medium text-slate-800">Trading Focus</h4>
               <div className="space-y-2">
                 <div>
