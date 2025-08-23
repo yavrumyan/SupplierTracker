@@ -568,11 +568,16 @@ export class DatabaseStorage implements IStorage {
     let skipped = 0;
     const errors: string[] = [];
 
+    console.log(`Starting import of ${suppliers.length} suppliers`);
+
     for (const supplierData of suppliers) {
       try {
+        console.log(`Processing supplier: ${supplierData.name}`);
+        
         // Check if supplier already exists by name or email
         const existingByName = await this.getSupplierByName(supplierData.name);
         if (existingByName) {
+          console.log(`Skipping ${supplierData.name} - already exists by name`);
           skipped++;
           continue;
         }
@@ -580,19 +585,24 @@ export class DatabaseStorage implements IStorage {
         if (supplierData.email) {
           const existingByEmail = await db.select().from(suppliers).where(eq(suppliers.email, supplierData.email));
           if (existingByEmail.length > 0) {
+            console.log(`Skipping ${supplierData.name} - already exists by email`);
             skipped++;
             continue;
           }
         }
 
         // Create new supplier (only if it doesn't exist)
+        console.log(`Creating new supplier: ${supplierData.name}`);
         await this.createSupplier(supplierData);
+        console.log(`Successfully created: ${supplierData.name}`);
         imported++;
       } catch (error) {
+        console.error(`Error importing ${supplierData.name}:`, error);
         errors.push(`Failed to import supplier "${supplierData.name}": ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 
+    console.log(`Import complete: ${imported} imported, ${skipped} skipped, ${errors.length} errors`);
     return { imported, skipped, errors };
   }
 }

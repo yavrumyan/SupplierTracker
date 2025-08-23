@@ -1529,6 +1529,12 @@ print(json.dumps(result))
       // Clean up uploaded file
       fs.unlinkSync(file.path);
 
+      // Add debugging info
+      console.log('Import result:', result);
+      if (result.errors.length > 0) {
+        console.log('Import errors:', result.errors);
+      }
+
       res.json(result);
 
     } catch (error) {
