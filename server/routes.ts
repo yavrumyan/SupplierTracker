@@ -1327,6 +1327,28 @@ print(json.dumps(result))
     }
   });
 
+  // CSV parsing helper function
+  const parseCSVLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    result.push(current.trim());
+    return result;
+  };
+
   // CSV Import routes
   app.post("/api/import/preview", upload.single('csv_file'), async (req, res) => {
     try {
@@ -1343,31 +1365,9 @@ print(json.dumps(result))
         return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
       }
 
-      // Better CSV parsing function that handles empty fields
-      function parseCSVLine(line: string): string[] {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let i = 0; i < line.length; i++) {
-          const char = line[i];
-          
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-          } else {
-            current += char;
-          }
-        }
-        result.push(current.trim());
-        return result;
-      }
-
       const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
-      const rows = [];
-      const errors = [];
+      const rows: string[][] = [];
+      const errors: string[] = [];
       
       // Expected headers for validation
       const expectedHeaders = ['ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp', 'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments', 'Created At', 'Updated At'];
@@ -1386,7 +1386,7 @@ print(json.dumps(result))
 
         // Parse CSV line with proper handling of empty fields
         const values = parseCSVLine(line).map(v => v.replace(/^"|"$/g, ''));
-        const row = {};
+        const row: Record<string, string> = {};
         
         // Ensure we have enough values for all headers
         while (values.length < headers.length) {
@@ -1458,30 +1458,8 @@ print(json.dumps(result))
         return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
       }
 
-      // Better CSV parsing function that handles empty fields
-      function parseCSVLine(line: string): string[] {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        
-        for (let i = 0; i < line.length; i++) {
-          const char = line[i];
-          
-          if (char === '"') {
-            inQuotes = !inQuotes;
-          } else if (char === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-          } else {
-            current += char;
-          }
-        }
-        result.push(current.trim());
-        return result;
-      }
-
       const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
-      const suppliersToImport = [];
+      const suppliersToImport: any[] = [];
       
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
@@ -1489,7 +1467,7 @@ print(json.dumps(result))
 
         // Parse CSV line with proper handling of empty fields
         const values = parseCSVLine(line).map(v => v.replace(/^"|"$/g, ''));
-        const row = {};
+        const row: Record<string, string> = {};
         
         // Ensure we have enough values for all headers
         while (values.length < headers.length) {
@@ -1513,9 +1491,9 @@ print(json.dumps(result))
           email: row['Email'] || null,
           whatsapp: row['WhatsApp'] || null,
           website: row['Website'] || null,
-          categories: row['Categories'] ? row['Categories'].split(';').map(c => c.trim()).filter(c => c) : [],
-          brands: row['Brands'] ? row['Brands'].split(';').map(b => b.trim()).filter(b => b) : [],
-          workingStyle: row['Working Style'] ? row['Working Style'].split(';').map(w => w.trim()).filter(w => w) : [],
+          categories: row['Categories'] ? row['Categories'].split(';').map((c: string) => c.trim()).filter((c: string) => c) : [],
+          brands: row['Brands'] ? row['Brands'].split(';').map((b: string) => b.trim()).filter((b: string) => b) : [],
+          workingStyle: row['Working Style'] ? row['Working Style'].split(';').map((w: string) => w.trim()).filter((w: string) => w) : [],
           reputation: row['Reputation'] && !isNaN(Number(row['Reputation'])) ? Number(row['Reputation']) : null,
           comments: row['Comments'] || null,
         };
