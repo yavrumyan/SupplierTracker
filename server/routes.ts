@@ -1337,13 +1337,35 @@ print(json.dumps(result))
 
       // Read and parse CSV
       const csvContent = fs.readFileSync(file.path, 'utf8');
-      const lines = csvContent.trim().split('\n');
+      const lines = csvContent.trim().split('\n').filter(line => line.trim());
       
       if (lines.length < 2) {
         return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
       }
 
-      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      // Better CSV parsing function that handles empty fields
+      function parseCSVLine(line: string): string[] {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        result.push(current.trim());
+        return result;
+      }
+
+      const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
       const rows = [];
       const errors = [];
       
@@ -1362,9 +1384,14 @@ print(json.dumps(result))
         const line = lines[i].trim();
         if (!line) continue;
 
-        // Parse CSV line
-        const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        // Parse CSV line with proper handling of empty fields
+        const values = parseCSVLine(line).map(v => v.replace(/^"|"$/g, ''));
         const row = {};
+        
+        // Ensure we have enough values for all headers
+        while (values.length < headers.length) {
+          values.push('');
+        }
         
         headers.forEach((header, index) => {
           row[header] = values[index] || '';
@@ -1425,22 +1452,49 @@ print(json.dumps(result))
 
       // Read and parse CSV
       const csvContent = fs.readFileSync(file.path, 'utf8');
-      const lines = csvContent.trim().split('\n');
+      const lines = csvContent.trim().split('\n').filter(line => line.trim());
       
       if (lines.length < 2) {
         return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
       }
 
-      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      // Better CSV parsing function that handles empty fields
+      function parseCSVLine(line: string): string[] {
+        const result = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        result.push(current.trim());
+        return result;
+      }
+
+      const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
       const suppliersToImport = [];
       
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
 
-        // Parse CSV line
-        const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        // Parse CSV line with proper handling of empty fields
+        const values = parseCSVLine(line).map(v => v.replace(/^"|"$/g, ''));
         const row = {};
+        
+        // Ensure we have enough values for all headers
+        while (values.length < headers.length) {
+          values.push('');
+        }
         
         headers.forEach((header, index) => {
           row[header] = values[index] || '';
