@@ -1327,6 +1327,165 @@ print(json.dumps(result))
     }
   });
 
+  // CSV Import routes
+  app.post("/api/import/preview", upload.single('csv_file'), async (req, res) => {
+    try {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ error: "No CSV file uploaded" });
+      }
+
+      // Read and parse CSV
+      const csvContent = fs.readFileSync(file.path, 'utf8');
+      const lines = csvContent.trim().split('\n');
+      
+      if (lines.length < 2) {
+        return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
+      }
+
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      const rows = [];
+      const errors = [];
+      
+      // Expected headers for validation
+      const expectedHeaders = ['ID', 'Name', 'Country', 'City', 'Contact Person', 'Phone', 'Email', 'WhatsApp', 'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments', 'Created At', 'Updated At'];
+      
+      // Check if headers match expected format
+      const missingHeaders = expectedHeaders.filter(expected => !headers.includes(expected));
+      if (missingHeaders.length > 0) {
+        errors.push(`Missing required headers: ${missingHeaders.join(', ')}`);
+      }
+
+      let validRows = 0;
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Parse CSV line
+        const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        const row = {};
+        
+        headers.forEach((header, index) => {
+          row[header] = values[index] || '';
+        });
+
+        rows.push(values);
+
+        // Validate required fields
+        if (!row['Name'] || row['Name'].length < 2) {
+          errors.push(`Row ${i}: Name is required and must be at least 2 characters`);
+          continue;
+        }
+
+        if (!row['Country']) {
+          errors.push(`Row ${i}: Country is required`);
+          continue;
+        }
+
+        if (row['Email'] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row['Email'])) {
+          errors.push(`Row ${i}: Invalid email format`);
+          continue;
+        }
+
+        if (row['Reputation'] && (isNaN(Number(row['Reputation'])) || Number(row['Reputation']) < 0 || Number(row['Reputation']) > 10)) {
+          errors.push(`Row ${i}: Reputation must be a number between 0 and 10`);
+          continue;
+        }
+
+        validRows++;
+      }
+
+      // Clean up uploaded file
+      fs.unlinkSync(file.path);
+
+      res.json({
+        headers,
+        rows: rows.slice(0, 10), // Only return first 10 rows for preview
+        errors,
+        validRows,
+        totalRows: rows.length
+      });
+
+    } catch (error) {
+      console.error("Preview error:", error);
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(500).json({ error: "Failed to preview CSV file" });
+    }
+  });
+
+  app.post("/api/import/suppliers", upload.single('csv_file'), async (req, res) => {
+    try {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ error: "No CSV file uploaded" });
+      }
+
+      // Read and parse CSV
+      const csvContent = fs.readFileSync(file.path, 'utf8');
+      const lines = csvContent.trim().split('\n');
+      
+      if (lines.length < 2) {
+        return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
+      }
+
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      const suppliersToImport = [];
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Parse CSV line
+        const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        const row = {};
+        
+        headers.forEach((header, index) => {
+          row[header] = values[index] || '';
+        });
+
+        // Skip rows without required fields
+        if (!row['Name'] || !row['Country']) continue;
+
+        // Convert to supplier object
+        const supplierData = {
+          name: row['Name'],
+          country: row['Country'],
+          city: row['City'] || null,
+          contactPerson: row['Contact Person'] || null,
+          phone: row['Phone'] || null,
+          email: row['Email'] || null,
+          whatsapp: row['WhatsApp'] || null,
+          website: row['Website'] || null,
+          categories: row['Categories'] ? row['Categories'].split(';').map(c => c.trim()).filter(c => c) : [],
+          brands: row['Brands'] ? row['Brands'].split(';').map(b => b.trim()).filter(b => b) : [],
+          workingStyle: row['Working Style'] ? row['Working Style'].split(';').map(w => w.trim()).filter(w => w) : [],
+          reputation: row['Reputation'] && !isNaN(Number(row['Reputation'])) ? Number(row['Reputation']) : null,
+          comments: row['Comments'] || null,
+        };
+
+        suppliersToImport.push(supplierData);
+      }
+
+      // Import suppliers (only new ones)
+      const result = await storage.importSuppliers(suppliersToImport);
+
+      // Clean up uploaded file
+      fs.unlinkSync(file.path);
+
+      res.json(result);
+
+    } catch (error) {
+      console.error("Import error:", error);
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(500).json({ error: "Failed to import suppliers" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -11,6 +11,7 @@ import AddSupplier from "@/pages/add-supplier";
 import AllSuppliers from "@/pages/all-suppliers";
 import SearchPage from "@/pages/search";
 import Settings from "@/pages/settings";
+import ImportData from "@/pages/import";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
         <Route path="/suppliers/:id" component={SupplierDetail} />
         <Route path="/suppliers" component={AllSuppliers} />
         <Route path="/add-supplier" component={AddSupplier} />
+        <Route path="/import" component={ImportData} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>

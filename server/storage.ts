@@ -114,6 +114,9 @@ export interface IStorage {
   // Export methods
   getAllSuppliersForExport(): Promise<Supplier[]>;
   getAllDocumentsForExport(): Promise<(Document & { supplierName: string })[]>;
+
+  // Import methods
+  importSuppliers(suppliers: InsertSupplier[]): Promise<{imported: number, skipped: number, errors: string[]}>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -557,6 +560,40 @@ export class DatabaseStorage implements IStorage {
       ...row,
       supplierName: row.supplierName || 'Unknown Supplier'
     }));
+  }
+
+  // Import methods
+  async importSuppliers(suppliers: InsertSupplier[]): Promise<{imported: number, skipped: number, errors: string[]}> {
+    let imported = 0;
+    let skipped = 0;
+    const errors: string[] = [];
+
+    for (const supplierData of suppliers) {
+      try {
+        // Check if supplier already exists by name or email
+        const existingByName = await this.getSupplierByName(supplierData.name);
+        if (existingByName) {
+          skipped++;
+          continue;
+        }
+
+        if (supplierData.email) {
+          const existingByEmail = await db.select().from(suppliers).where(eq(suppliers.email, supplierData.email));
+          if (existingByEmail.length > 0) {
+            skipped++;
+            continue;
+          }
+        }
+
+        // Create new supplier (only if it doesn't exist)
+        await this.createSupplier(supplierData);
+        imported++;
+      } catch (error) {
+        errors.push(`Failed to import supplier "${supplierData.name}": ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+
+    return { imported, skipped, errors };
   }
 }
 
