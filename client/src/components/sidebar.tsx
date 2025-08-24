@@ -14,12 +14,22 @@ import {
 import { useState } from "react";
 import supHubLogo from "@/assets/SupHub_1752355359935.png";
 
+// Custom CompStyle Icon Component
+function CompStyleIcon({ className }: { className?: string }) {
+  return (
+    <div className={cn("flex items-center justify-center w-4 h-4 bg-blue-600 rounded text-white text-xs font-bold", className)}>
+      CS
+    </div>
+  );
+}
+
 const navigation = [
   { name: "Search Suppliers", href: "/", icon: BarChart },
   { name: "Product Search", href: "/search", icon: Search },
   { name: "All Suppliers", href: "/suppliers", icon: Building },
   { name: "Add Supplier", href: "/add-supplier", icon: Plus },
   { name: "Import Data", href: "/import", icon: FolderInput },
+  { name: "CompStyle", href: "/compstyle", icon: CompStyleIcon },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

@@ -1,0 +1,187 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Upload, BarChart3, TrendingUp, Package, AlertTriangle, DollarSign } from "lucide-react";
+import { Link } from "wouter";
+
+export default function CompStyleDashboard() {
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">CompStyle Business Intelligence</h1>
+          <p className="text-slate-600">
+            Inventory optimization and sales analysis for CompStyle locations
+          </p>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+              <Package className="h-4 w-4 text-slate-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">1,327</div>
+              <p className="text-xs text-slate-600">Across all locations</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Locations</CardTitle>
+              <BarChart3 className="h-4 w-4 text-slate-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">2</div>
+              <p className="text-xs text-slate-600">Kievyan 11 & Sevan 5</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">In Transit</CardTitle>
+              <TrendingUp className="h-4 w-4 text-slate-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">238</div>
+              <p className="text-xs text-slate-600">Products incoming</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Analysis Ready</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-slate-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">6M</div>
+              <p className="text-xs text-slate-600">Sales data available</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Features */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Data Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Upload className="h-5 w-5" />
+                Data Management
+              </CardTitle>
+              <CardDescription>
+                Upload and manage CompStyle inventory and sales data
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Link href="/compstyle/upload">
+                <Button className="w-full" variant="outline">
+                  Upload CSV Files
+                </Button>
+              </Link>
+              <Link href="/compstyle/data-overview">
+                <Button className="w-full" variant="outline">
+                  View Data Overview
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* Analytics */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Analytics & Reports
+              </CardTitle>
+              <CardDescription>
+                Advanced business intelligence and optimization tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Link href="/compstyle/inventory-movement">
+                <Button className="w-full" variant="outline">
+                  Inventory Movement Analysis
+                </Button>
+              </Link>
+              <Link href="/compstyle/sales-analysis">
+                <Button className="w-full" variant="outline">
+                  Sales Performance
+                </Button>
+              </Link>
+              <Link href="/compstyle/profitability">
+                <Button className="w-full" variant="outline">
+                  Profitability Reports
+                </Button>
+              </Link>
+              <Link href="/compstyle/order-recommendations">
+                <Button className="w-full" variant="outline">
+                  Order Recommendations
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Feature Overview */}
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Available Features</CardTitle>
+              <CardDescription>
+                Comprehensive business intelligence tools for CompStyle
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">📊 Inventory Movement</h4>
+                  <p className="text-sm text-slate-600">
+                    Optimize stock distribution between Kievyan 11 and Sevan 5 locations
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">📈 Sales Analysis</h4>
+                  <p className="text-sm text-slate-600">
+                    Track performance trends across 1M, 3M, and 6M periods
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">🛒 Order Recommendations</h4>
+                  <p className="text-sm text-slate-600">
+                    AI-driven purchase suggestions based on sales velocity
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">💰 Profitability Reports</h4>
+                  <p className="text-sm text-slate-600">
+                    Analyze margins, ROI, and inventory efficiency
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">🐌 Low Moving Stock</h4>
+                  <p className="text-sm text-slate-600">
+                    Identify dead stock and slow-moving inventory
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-semibold mb-2">🚚 Transit Tracking</h4>
+                  <p className="text-sm text-slate-600">
+                    Monitor incoming inventory and plan accordingly
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

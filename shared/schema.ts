@@ -277,3 +277,112 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// CompStyle Business Intelligence Tables (Separate from main supplier system)
+export const compstyleLocations = pgTable("compstyle_locations", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(), // "Kievyan 11" or "Sevan 5"
+  type: text("type").notNull(), // "retail" or "warehouse"
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const compstyleStock = pgTable("compstyle_stock", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  qty: integer("qty").notNull(),
+  retail: decimal("retail", { precision: 10, scale: 2 }),
+  dealer: decimal("dealer", { precision: 10, scale: 2 }),
+  currentCost: decimal("current_cost", { precision: 10, scale: 2 }),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const compstyleLocationStock = pgTable("compstyle_location_stock", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  locationId: integer("location_id").references(() => compstyleLocations.id).notNull(),
+  qty: integer("qty").notNull(),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const compstyleSales = pgTable("compstyle_sales", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  sold: integer("sold").notNull(),
+  cost: decimal("cost", { precision: 10, scale: 2 }).notNull(),
+  period: text("period").notNull(), // "1M", "3M", "6M", "12M"
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const compstyleTransit = pgTable("compstyle_transit", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  upcoming: integer("upcoming").notNull(),
+  purchase: decimal("purchase", { precision: 10, scale: 2 }).notNull(),
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const compstylePurchases = pgTable("compstyle_purchases", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  purchased: integer("purchased").notNull(),
+  cost: decimal("cost", { precision: 10, scale: 2 }).notNull(),
+  period: text("period").notNull(), // "1M", "3M", "6M", "12M"
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+// CompStyle Relations
+export const compstyleLocationStockRelations = relations(compstyleLocationStock, ({ one }) => ({
+  location: one(compstyleLocations, {
+    fields: [compstyleLocationStock.locationId],
+    references: [compstyleLocations.id],
+  }),
+}));
+
+export const compstyleLocationsRelations = relations(compstyleLocations, ({ many }) => ({
+  locationStock: many(compstyleLocationStock),
+}));
+
+// CompStyle Zod schemas
+export const insertCompstyleLocationSchema = createInsertSchema(compstyleLocations).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertCompstyleStockSchema = createInsertSchema(compstyleStock).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const insertCompstyleLocationStockSchema = createInsertSchema(compstyleLocationStock).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const insertCompstyleSalesSchema = createInsertSchema(compstyleSales).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const insertCompstyleTransitSchema = createInsertSchema(compstyleTransit).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const insertCompstylePurchasesSchema = createInsertSchema(compstylePurchases).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+// CompStyle Types
+export type CompstyleLocation = typeof compstyleLocations.$inferSelect;
+export type InsertCompstyleLocation = z.infer<typeof insertCompstyleLocationSchema>;
+export type CompstyleStock = typeof compstyleStock.$inferSelect;
+export type InsertCompstyleStock = z.infer<typeof insertCompstyleStockSchema>;
+export type CompstyleLocationStock = typeof compstyleLocationStock.$inferSelect;
+export type InsertCompstyleLocationStock = z.infer<typeof insertCompstyleLocationStockSchema>;
+export type CompstyleSales = typeof compstyleSales.$inferSelect;
+export type InsertCompstyleSales = z.infer<typeof insertCompstyleSalesSchema>;
+export type CompstyleTransit = typeof compstyleTransit.$inferSelect;
+export type InsertCompstyleTransit = z.infer<typeof insertCompstyleTransitSchema>;
+export type CompstylePurchases = typeof compstylePurchases.$inferSelect;
+export type InsertCompstylePurchases = z.infer<typeof insertCompstylePurchasesSchema>;

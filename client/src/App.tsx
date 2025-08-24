@@ -12,6 +12,8 @@ import AllSuppliers from "@/pages/all-suppliers";
 import SearchPage from "@/pages/search";
 import Settings from "@/pages/settings";
 import ImportData from "@/pages/import";
+import CompStyleDashboard from "@/pages/compstyle";
+import CompStyleUpload from "@/pages/compstyle/upload";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -24,6 +26,8 @@ function Router() {
         <Route path="/suppliers" component={AllSuppliers} />
         <Route path="/add-supplier" component={AddSupplier} />
         <Route path="/import" component={ImportData} />
+        <Route path="/compstyle" component={CompStyleDashboard} />
+        <Route path="/compstyle/upload" component={CompStyleUpload} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>
