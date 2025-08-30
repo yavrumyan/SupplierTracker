@@ -14,6 +14,11 @@ import Settings from "@/pages/settings";
 import ImportData from "@/pages/import";
 import CompStyleDashboard from "@/pages/compstyle";
 import CompStyleUpload from "@/pages/compstyle/upload";
+import CompStyleDataOverview from "@/pages/compstyle/data-overview";
+import CompStyleInventoryMovement from "@/pages/compstyle/inventory-movement";
+import CompStyleSalesAnalysis from "@/pages/compstyle/sales-analysis";
+import CompStyleProfitability from "@/pages/compstyle/profitability";
+import CompStyleOrderRecommendations from "@/pages/compstyle/order-recommendations";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -28,6 +33,11 @@ function Router() {
         <Route path="/import" component={ImportData} />
         <Route path="/compstyle" component={CompStyleDashboard} />
         <Route path="/compstyle/upload" component={CompStyleUpload} />
+        <Route path="/compstyle/data-overview" component={CompStyleDataOverview} />
+        <Route path="/compstyle/inventory-movement" component={CompStyleInventoryMovement} />
+        <Route path="/compstyle/sales-analysis" component={CompStyleSalesAnalysis} />
+        <Route path="/compstyle/profitability" component={CompStyleProfitability} />
+        <Route path="/compstyle/order-recommendations" component={CompStyleOrderRecommendations} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>

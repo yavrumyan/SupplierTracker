@@ -1,7 +1,23 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertSupplierSchema, insertOfferSchema, insertOrderSchema, insertOrderItemSchema, insertInquirySchema, insertDocumentSchema } from "@shared/schema";
+import { 
+  insertSupplierSchema, 
+  insertOfferSchema, 
+  insertOrderSchema, 
+  insertOrderItemSchema, 
+  insertInquirySchema, 
+  insertDocumentSchema,
+  insertCompstyleTotalStockSchema,
+  insertCompstyleLocationStockSchema,
+  insertCompstyleTransitSchema,
+  insertCompstyleSalesOrderSchema,
+  insertCompstyleSalesItemSchema,
+  insertCompstylePurchaseOrderSchema,
+  insertCompstylePurchaseItemSchema,
+  insertCompstyleTotalSalesSchema,
+  insertCompstyleTotalProcurementSchema
+} from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
 import path from "path";
@@ -1518,6 +1534,336 @@ print(json.dumps(result))
       res.status(500).json({ error: "Failed to import suppliers" });
     }
   });
+
+  // CompStyle API Routes
+  
+  // Dashboard stats
+  app.get("/api/compstyle/dashboard-stats", async (req, res) => {
+    try {
+      const stats = await storage.getCompstyleDashboardStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch dashboard stats" });
+    }
+  });
+
+  // CompStyle file upload endpoint
+  app.post("/api/compstyle/upload", upload.single('file'), async (req, res) => {
+    try {
+      const file = req.file;
+      const fileType = req.body.fileType;
+      
+      if (!file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      if (!fileType) {
+        return res.status(400).json({ error: "File type is required" });
+      }
+
+      // Process Excel file
+      const workbook = XLSX.readFile(file.path);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      
+      // Convert to JSON with header row handling
+      const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      
+      let processedCount = 0;
+      
+      try {
+        switch (fileType) {
+          case "total-stock":
+            processedCount = await processTotalStockFile(rawData);
+            break;
+          case "stock-kievyan":
+            processedCount = await processLocationStockFile(rawData, "Kievyan");
+            break;
+          case "stock-sevan":
+            processedCount = await processLocationStockFile(rawData, "Sevan");
+            break;
+          case "in-transit":
+            processedCount = await processTransitFile(rawData);
+            break;
+          case "sale-sevan":
+            processedCount = await processSalesByLocationFile(rawData, "Sevan");
+            break;
+          case "sale-kievyan":
+            processedCount = await processSalesByLocationFile(rawData, "Kievyan");
+            break;
+          case "purchase-sevan":
+            processedCount = await processPurchasesByLocationFile(rawData, "Sevan");
+            break;
+          case "purchase-kievyan":
+            processedCount = await processPurchasesByLocationFile(rawData, "Kievyan");
+            break;
+          case "total-sales":
+            processedCount = await processTotalSalesFile(rawData);
+            break;
+          case "total-procurement":
+            processedCount = await processTotalProcurementFile(rawData);
+            break;
+          default:
+            return res.status(400).json({ error: "Invalid file type" });
+        }
+
+        // Clean up uploaded file
+        fs.unlinkSync(file.path);
+
+        res.json({
+          success: true,
+          message: `File processed successfully`,
+          recordsProcessed: processedCount,
+          fileType,
+          originalName: file.originalname
+        });
+
+      } catch (processingError) {
+        // Clean up uploaded file on error
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+        throw processingError;
+      }
+
+    } catch (error) {
+      console.error("CompStyle upload error:", error);
+      res.status(500).json({ error: "Failed to process CompStyle file" });
+    }
+  });
+
+  // Helper functions for processing different file types
+  async function processTotalStockFile(data: any[]): Promise<number> {
+    let count = 0;
+    // Skip header row
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[1] || !row[9]) continue; // Skip if no product name or SKU
+      
+      await storage.createCompstyleTotalStock({
+        productName: String(row[1]), // Column B (Марка)
+        sku: String(row[9]), // Column J (КодТовара)
+        qtyInStock: Number(row[2]) || 0, // Column C (НаСкладе)
+        retailPriceUsd: row[3] ? String(row[3]) : null, // Column D (Цена)
+        retailPriceAmd: row[4] ? String(row[4]) : null, // Column E (ЦенаПрайса)
+        wholesalePrice1: row[5] ? String(row[5]) : null, // Column F (Диллерская цена1)
+        wholesalePrice2: row[6] ? String(row[6]) : null, // Column G (Диллерская цена2)
+        currentCost: row[7] ? String(row[7]) : null, // Column H (ЦенаНаНас)
+      });
+      count++;
+    }
+    return count;
+  }
+
+  async function processLocationStockFile(data: any[], locationName: string): Promise<number> {
+    // Get or create location
+    const locations = await storage.getCompstyleLocations();
+    let location = locations.find(l => l.name.includes(locationName));
+    
+    if (!location) {
+      location = await storage.createCompstyleLocation({
+        name: locationName === "Kievyan" ? "Kievyan 11" : "Sevan 5",
+        type: locationName === "Kievyan" ? "retail" : "warehouse"
+      });
+    }
+
+    let count = 0;
+    const reportDate = data[0] && data[0][0] ? new Date(data[0][0]) : new Date();
+    
+    // Skip header rows and start from row 2
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[0] || !row[1]) continue; // Skip if no product name or quantity
+      
+      await storage.createCompstyleLocationStock({
+        productName: String(row[0]), // Column A (КодТовара)
+        locationId: location.id,
+        qty: Number(row[1]) || 0, // Column B (Остаток)
+        retailPriceAmd: row[2] ? String(row[2]) : null, // Column C (БухЦена)
+        reportDate,
+      });
+      count++;
+    }
+    return count;
+  }
+
+  async function processTransitFile(data: any[]): Promise<number> {
+    let count = 0;
+    // Skip header row
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[0] || !row[1]) continue; // Skip if no product name or quantity
+      
+      await storage.createCompstyleTransit({
+        productName: String(row[0]), // Column A (Товар)
+        qty: Number(row[1]) || 0, // Column B (Кол.)
+        purchasePriceUsd: row[2] ? String(row[2]) : null, // Column C (Цена $)
+        purchasePriceAmd: row[3] ? String(row[3]) : null, // Column D (Цена AMD)
+        currentCost: row[6] ? String(row[6]) : null, // Column G (Уч. цена)
+        purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь)
+        destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад)
+        supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик)
+      });
+      count++;
+    }
+    return count;
+  }
+
+  async function processSalesByLocationFile(data: any[], location: string): Promise<number> {
+    let count = 0;
+    let currentOrder: any = null;
+    
+    // Process period from filename (will be passed via body later)
+    const periodStart = "2025-08-20"; // Placeholder
+    const periodEnd = "2025-08-25"; // Placeholder
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      
+      // Check if this is a new sales order (Column A has order number)
+      if (row[0] && String(row[0]).includes("SO")) {
+        if (currentOrder) {
+          // Save previous order if exists
+          await storage.createCompstyleSalesOrder(currentOrder);
+        }
+        
+        currentOrder = {
+          salesOrderNumber: String(row[0]), // Column A (Поле4)
+          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения)
+          customer: row[2] ? String(row[2]) : null, // Column C (Клиент)
+          contactName: row[3] ? String(row[3]) : null, // Column D (Через)
+          location,
+          totalAmountUsd: row[14] ? String(row[14]) : null, // Column O
+          periodStart,
+          periodEnd,
+        };
+      }
+      
+      // Process line items (Column K has product name)
+      if (row[10] && currentOrder) { // Column K (КодТовара)
+        const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
+        
+        await storage.createCompstyleSalesItem({
+          salesOrderId: orderInDb.id,
+          productName: String(row[10]), // Column K (КодТовара)
+          priceUsd: row[11] ? String(row[11]) : null, // Column L (Цена)
+          qty: Number(row[12]) || 0, // Column M (Количество)
+          sumUsd: row[13] ? String(row[13]) : null, // Column N (Поле66)
+        });
+        
+        currentOrder = null; // Reset after processing
+        count++;
+      }
+    }
+    
+    // Save final order if exists
+    if (currentOrder) {
+      await storage.createCompstyleSalesOrder(currentOrder);
+    }
+    
+    return count;
+  }
+
+  async function processPurchasesByLocationFile(data: any[], location: string): Promise<number> {
+    let count = 0;
+    let currentOrder: any = null;
+    
+    const periodStart = "2025-08-20"; // Placeholder
+    const periodEnd = "2025-08-25"; // Placeholder
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      
+      // Check if this is a new purchase order
+      if (row[0] && String(row[0]).includes("PO")) {
+        if (currentOrder) {
+          await storage.createCompstylePurchaseOrder(currentOrder);
+        }
+        
+        currentOrder = {
+          purchaseOrderNumber: String(row[0]), // Column A (Поле4)
+          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения)
+          supplier: row[2] ? String(row[2]) : null, // Column C (Клиент)
+          contactName: row[3] ? String(row[3]) : null, // Column D (Через)
+          location,
+          totalAmountUsd: row[14] ? String(row[14]) : null, // Column O
+          periodStart,
+          periodEnd,
+        };
+      }
+      
+      // Process line items
+      if (row[10] && currentOrder) { // Column K (КодТовара)
+        const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
+        
+        await storage.createCompstylePurchaseItem({
+          purchaseOrderId: orderInDb.id,
+          productName: String(row[10]), // Column K (КодТовара)
+          priceUsd: row[11] ? String(row[11]) : null, // Column L (Цена)
+          qty: Number(row[12]) || 0, // Column M (Количество)
+          sumUsd: row[13] ? String(row[13]) : null, // Column N (Поле66)
+        });
+        
+        currentOrder = null;
+        count++;
+      }
+    }
+    
+    if (currentOrder) {
+      await storage.createCompstylePurchaseOrder(currentOrder);
+    }
+    
+    return count;
+  }
+
+  async function processTotalSalesFile(data: any[]): Promise<number> {
+    let count = 0;
+    const periodStart = "2025-08-20"; // Placeholder
+    const periodEnd = "2025-08-25"; // Placeholder
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[1] || !row[4]) continue; // Skip if no product name or quantity
+      
+      const salePriceUsd = Number(row[5]) || 0; // Column F (Цена)
+      const costPriceUsd = Number(row[6]) || 0; // Column G (Учетная цена)
+      const qtySold = Number(row[4]) || 0; // Column E (Количество)
+      
+      await storage.createCompstyleTotalSales({
+        productName: String(row[1]), // Column B (КодТовара)
+        qtySold,
+        salePriceUsd: String(salePriceUsd),
+        costPriceUsd: String(costPriceUsd),
+        profitPerUnit: String(salePriceUsd - costPriceUsd), // Column F - Column G
+        totalProfit: String((salePriceUsd - costPriceUsd) * qtySold), // (Column F - Column G) * Column E
+        periodStart,
+        periodEnd,
+      });
+      count++;
+    }
+    return count;
+  }
+
+  async function processTotalProcurementFile(data: any[]): Promise<number> {
+    let count = 0;
+    const periodStart = "2025-08-20"; // Placeholder
+    const periodEnd = "2025-08-25"; // Placeholder
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[1] || !row[4]) continue; // Skip if no product name or quantity
+      
+      await storage.createCompstyleTotalProcurement({
+        productName: String(row[1]), // Column B (КодТовара)
+        qtyPurchased: Number(row[4]) || 0, // Column E (Количество)
+        purchasePriceUsd: row[5] ? String(row[5]) : null, // Column F (Цена)
+        periodStart,
+        periodEnd,
+      });
+      count++;
+    }
+    return count;
+  }
 
   const httpServer = createServer(app);
   return httpServer;

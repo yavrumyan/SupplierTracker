@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, FileText, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 interface FileUpload {
   name: string;
@@ -14,9 +15,11 @@ interface FileUpload {
   file: File | null;
   uploaded: boolean;
   uploading: boolean;
+  fileType: string;
 }
 
 export default function CompStyleUpload() {
+  const { toast } = useToast();
   const [files, setFiles] = useState<FileUpload[]>([
     {
       name: "Total Stock Current",
@@ -24,6 +27,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "total-stock",
     },
     {
       name: "Stock Kievyan Current",
@@ -31,6 +35,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "stock-kievyan",
     },
     {
       name: "Stock Sevan Current",
@@ -38,6 +43,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "stock-sevan",
     },
     {
       name: "In Transit Current",
@@ -45,6 +51,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "in-transit",
     },
     {
       name: "Sale by Sevan (Period)",
@@ -52,6 +59,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "sale-sevan",
     },
     {
       name: "Sale by Kievyan (Period)",
@@ -59,6 +67,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "sale-kievyan",
     },
     {
       name: "Purchase by Sevan (Period)",
@@ -66,6 +75,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "purchase-sevan",
     },
     {
       name: "Purchase by Kievyan (Period)",
@@ -73,6 +83,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "purchase-kievyan",
     },
     {
       name: "Total sales by goods (Period)",
@@ -80,6 +91,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "total-sales",
     },
     {
       name: "Total procurement by goods (Period)",
@@ -87,6 +99,7 @@ export default function CompStyleUpload() {
       file: null,
       uploaded: false,
       uploading: false,
+      fileType: "total-procurement",
     },
   ]);
 
@@ -97,19 +110,50 @@ export default function CompStyleUpload() {
   };
 
   const handleUpload = async (index: number) => {
-    const file = files[index];
-    if (!file.file) return;
+    const fileUpload = files[index];
+    if (!fileUpload.file) return;
 
     setFiles(prev => prev.map((item, i) => 
       i === index ? { ...item, uploading: true } : item
     ));
 
-    // Simulate upload
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append('file', fileUpload.file);
+      formData.append('fileType', fileUpload.fileType);
+
+      const response = await fetch('/api/compstyle/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
+      const result = await response.json();
+      
       setFiles(prev => prev.map((item, i) => 
         i === index ? { ...item, uploading: false, uploaded: true } : item
       ));
-    }, 2000);
+
+      toast({
+        title: "Upload Successful",
+        description: `${fileUpload.name} processed successfully. ${result.recordsProcessed} records imported.`,
+      });
+
+    } catch (error) {
+      setFiles(prev => prev.map((item, i) => 
+        i === index ? { ...item, uploading: false } : item
+      ));
+
+      toast({
+        title: "Upload Failed",
+        description: error instanceof Error ? error.message : "An error occurred during upload",
+        variant: "destructive",
+      });
+    }
   };
 
   const uploadedCount = files.filter(f => f.uploaded).length;

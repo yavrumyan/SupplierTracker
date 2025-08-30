@@ -10,6 +10,16 @@ import {
   searchIndex,
   documents,
   users,
+  compstyleLocations,
+  compstyleTotalStock,
+  compstyleLocationStock,
+  compstyleTransit,
+  compstyleSalesOrders,
+  compstyleSalesItems,
+  compstylePurchaseOrders,
+  compstylePurchaseItems,
+  compstyleTotalSales,
+  compstyleTotalProcurement,
   type Supplier, 
   type InsertSupplier, 
   type PriceListFile, 
@@ -30,7 +40,27 @@ import {
   type Document,
   type InsertDocument,
   type User,
-  type InsertUser 
+  type InsertUser,
+  type CompstyleLocation,
+  type InsertCompstyleLocation,
+  type CompstyleTotalStock,
+  type InsertCompstyleTotalStock,
+  type CompstyleLocationStock,
+  type InsertCompstyleLocationStock,
+  type CompstyleTransit,
+  type InsertCompstyleTransit,
+  type CompstyleSalesOrder,
+  type InsertCompstyleSalesOrder,
+  type CompstyleSalesItem,
+  type InsertCompstyleSalesItem,
+  type CompstylePurchaseOrder,
+  type InsertCompstylePurchaseOrder,
+  type CompstylePurchaseItem,
+  type InsertCompstylePurchaseItem,
+  type CompstyleTotalSales,
+  type InsertCompstyleTotalSales,
+  type CompstyleTotalProcurement,
+  type InsertCompstyleTotalProcurement
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
@@ -117,6 +147,25 @@ export interface IStorage {
 
   // Import methods
   importSuppliers(suppliers: InsertSupplier[]): Promise<{imported: number, skipped: number, errors: string[]}>;
+
+  // CompStyle methods
+  createCompstyleLocation(location: InsertCompstyleLocation): Promise<CompstyleLocation>;
+  getCompstyleLocations(): Promise<CompstyleLocation[]>;
+  createCompstyleTotalStock(stock: InsertCompstyleTotalStock): Promise<CompstyleTotalStock>;
+  createCompstyleLocationStock(stock: InsertCompstyleLocationStock): Promise<CompstyleLocationStock>;
+  createCompstyleTransit(transit: InsertCompstyleTransit): Promise<CompstyleTransit>;
+  createCompstyleSalesOrder(order: InsertCompstyleSalesOrder): Promise<CompstyleSalesOrder>;
+  createCompstyleSalesItem(item: InsertCompstyleSalesItem): Promise<CompstyleSalesItem>;
+  createCompstylePurchaseOrder(order: InsertCompstylePurchaseOrder): Promise<CompstylePurchaseOrder>;
+  createCompstylePurchaseItem(item: InsertCompstylePurchaseItem): Promise<CompstylePurchaseItem>;
+  createCompstyleTotalSales(sales: InsertCompstyleTotalSales): Promise<CompstyleTotalSales>;
+  createCompstyleTotalProcurement(procurement: InsertCompstyleTotalProcurement): Promise<CompstyleTotalProcurement>;
+  getCompstyleDashboardStats(): Promise<{
+    productsToOrder: number;
+    deadProducts: number;
+    lockedMoney: number;
+    salesVolume30Days: number;
+  }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -621,6 +670,76 @@ export class DatabaseStorage implements IStorage {
 
     console.log(`Import complete: ${imported} imported, ${skipped} skipped, ${errors.length} errors`);
     return { imported, skipped, errors };
+  }
+
+  // CompStyle methods
+  async createCompstyleLocation(location: InsertCompstyleLocation): Promise<CompstyleLocation> {
+    const [newLocation] = await db.insert(compstyleLocations).values(location).returning();
+    return newLocation;
+  }
+
+  async getCompstyleLocations(): Promise<CompstyleLocation[]> {
+    return await db.select().from(compstyleLocations).orderBy(compstyleLocations.name);
+  }
+
+  async createCompstyleTotalStock(stock: InsertCompstyleTotalStock): Promise<CompstyleTotalStock> {
+    const [newStock] = await db.insert(compstyleTotalStock).values(stock).returning();
+    return newStock;
+  }
+
+  async createCompstyleLocationStock(stock: InsertCompstyleLocationStock): Promise<CompstyleLocationStock> {
+    const [newStock] = await db.insert(compstyleLocationStock).values(stock).returning();
+    return newStock;
+  }
+
+  async createCompstyleTransit(transit: InsertCompstyleTransit): Promise<CompstyleTransit> {
+    const [newTransit] = await db.insert(compstyleTransit).values(transit).returning();
+    return newTransit;
+  }
+
+  async createCompstyleSalesOrder(order: InsertCompstyleSalesOrder): Promise<CompstyleSalesOrder> {
+    const [newOrder] = await db.insert(compstyleSalesOrders).values(order).returning();
+    return newOrder;
+  }
+
+  async createCompstyleSalesItem(item: InsertCompstyleSalesItem): Promise<CompstyleSalesItem> {
+    const [newItem] = await db.insert(compstyleSalesItems).values(item).returning();
+    return newItem;
+  }
+
+  async createCompstylePurchaseOrder(order: InsertCompstylePurchaseOrder): Promise<CompstylePurchaseOrder> {
+    const [newOrder] = await db.insert(compstylePurchaseOrders).values(order).returning();
+    return newOrder;
+  }
+
+  async createCompstylePurchaseItem(item: InsertCompstylePurchaseItem): Promise<CompstylePurchaseItem> {
+    const [newItem] = await db.insert(compstylePurchaseItems).values(item).returning();
+    return newItem;
+  }
+
+  async createCompstyleTotalSales(sales: InsertCompstyleTotalSales): Promise<CompstyleTotalSales> {
+    const [newSales] = await db.insert(compstyleTotalSales).values(sales).returning();
+    return newSales;
+  }
+
+  async createCompstyleTotalProcurement(procurement: InsertCompstyleTotalProcurement): Promise<CompstyleTotalProcurement> {
+    const [newProcurement] = await db.insert(compstyleTotalProcurement).values(procurement).returning();
+    return newProcurement;
+  }
+
+  async getCompstyleDashboardStats(): Promise<{
+    productsToOrder: number;
+    deadProducts: number;
+    lockedMoney: number;
+    salesVolume30Days: number;
+  }> {
+    // Placeholder calculations - will be replaced with real analytics
+    return {
+      productsToOrder: 127,
+      deadProducts: 43,
+      lockedMoney: 24680,
+      salesVolume30Days: 186420
+    };
   }
 }
 

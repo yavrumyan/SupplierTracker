@@ -2,8 +2,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Upload, BarChart3, TrendingUp, Package, AlertTriangle, DollarSign } from "lucide-react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+
+interface DashboardStats {
+  productsToOrder: number;
+  deadProducts: number;
+  lockedMoney: number;
+  salesVolume30Days: number;
+}
 
 export default function CompStyleDashboard() {
+  const { data: stats, isLoading } = useQuery<DashboardStats>({
+    queryKey: ["/api/compstyle/dashboard-stats"],
+  });
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -23,7 +35,9 @@ export default function CompStyleDashboard() {
               <Package className="h-4 w-4 text-blue-800" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-800">127</div>
+              <div className="text-2xl font-bold text-blue-800">
+                {isLoading ? "..." : stats?.productsToOrder?.toLocaleString() || "0"}
+              </div>
               <p className="text-xs text-slate-600">Recommended reorders</p>
             </CardContent>
           </Card>
@@ -34,7 +48,9 @@ export default function CompStyleDashboard() {
               <AlertTriangle className="h-4 w-4 text-red-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">43</div>
+              <div className="text-2xl font-bold text-red-600">
+                {isLoading ? "..." : stats?.deadProducts?.toLocaleString() || "0"}
+              </div>
               <p className="text-xs text-slate-600">Dead stock items</p>
             </CardContent>
           </Card>
@@ -45,7 +61,9 @@ export default function CompStyleDashboard() {
               <DollarSign className="h-4 w-4 text-red-800" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-800">$24,680</div>
+              <div className="text-2xl font-bold text-red-800">
+                {isLoading ? "..." : `$${stats?.lockedMoney?.toLocaleString() || "0"}`}
+              </div>
               <p className="text-xs text-slate-600">Dead stock value</p>
             </CardContent>
           </Card>
@@ -56,7 +74,9 @@ export default function CompStyleDashboard() {
               <TrendingUp className="h-4 w-4 text-green-800" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-800">$186,420</div>
+              <div className="text-2xl font-bold text-green-800">
+                {isLoading ? "..." : `$${stats?.salesVolume30Days?.toLocaleString() || "0"}`}
+              </div>
               <p className="text-xs text-slate-600">Last 30 days total</p>
             </CardContent>
           </Card>
