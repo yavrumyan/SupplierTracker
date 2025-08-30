@@ -1,0 +1,185 @@
+Let's leave the app alone and plan our upcoming steps. Just discussing, no editing. I have updated the data report files, added more information so we can get even more useful analysis. Uploading for you now all data files to check. Below is detailed description: 
+
+File list:
+Total Stock Current.xlsx
+Stock Kievyan Current.xlsx
+Stock Sevan Current.xlsx
+In Transit Current.xlsx
+Sale by Sevan 20-08-25 to 25-08-25.xlsx
+Sale by Kievyan 20-08-25 to 25-08-25.xlsx
+Purchase by Sevan 20-08-25 to 25-08-25.xlsx
+Purchase by Kievyan 20-08-25 to 25-08-25.xlsx
+Total sales by goods 20-08-25 to 25-08-25.xlsx
+Total procurement by goods 20-08-25 to 25-08-25.xlsx
+
+
+⦁	Products are identified by name and Unique internal SKU
+⦁	If "Actual retail price in AMD" from "Total Stock Current" file differ from "Actual retail price in AMD" from files "Stock Kievyan Current" and "Stock Sevan Current" - use the one from "Total Stock Current" file.
+⦁	Sales and Purchases are always recorded in Sales Order and Purchase Orders. Sales Orders and Purchase Orders are identified by unique numbers. 
+⦁	Prices in AMD are calculated by formula: (Prices in USD)x(internal exchange rate) and rounded to hundreds.
+
+
+File: Total Stock Current
+Contains Up-To-Date actual total stock
+Detailed cells description:
+Column B (Марка): Name of product
+Column C (НаСкладе): Quantity of product in stock
+Column D (Цена): Actual retail price in USD
+Column E (ЦенаПрайса): Actual retail price in AMD
+Column F (Диллерская цена1): Actual wholesale price 1 (For quantities fewer than 5)
+Column G (Диллерская цена2): Actual wholesale price 2 (For quantities more than 5)
+Column H (ЦенаНаНас): Current actual cost
+Column J (КодТовара): Unique internal SKU
+* Ignore rest of the columns
+
+
+File: Stock Kievyan Current
+Contains Up-To-Date actual stock of Kievyan store
+Detailed cells description:
+Cell A1: Shows date of the report
+Cell B2: Can be ignored
+Starting from second row:
+Column A (КодТовара): Name of product
+Column B (Остаток): Quantity of product in stock in Kievyan
+Column C (БухЦена): Actual retail price in AMD
+
+
+File: Stock Sevan Current
+Contains Up-To-Date actual stock of Sevan warehouse
+Detailed cells description:
+Cell A1: Shows date of the report
+Cell B2: Can be ignored
+Starting from second row:
+Column A (КодТовара): Name of product
+Column B (Остаток): Quantity of product in stock in Sevan
+Column C (БухЦена): Actual retail price in AMD
+
+
+File: In Transit Current
+Contains products that are purchased and are on the way to our warehouse/store.
+Detailed cells description:
+Column A (Товар): Name of product
+Column B (Кол.): Quantity purchased
+Column C (Цена $): Purchasing price in USD
+Column D (Цена AMD): Purchasing price in AMD
+Column G (Уч. цена): Current actual cost
+Column J (Связь): Purchase Order Number
+Column O (Склад): Name of Stock, where the products will arrive ("КОМПСТАЙЛ СКЛАД" - for Sevan warehouse, and "КОМПСТАЙЛ МАГАЗИН КИЕВЯНА 11" - for Kievyan store
+Column P (Поставщик): Supplier, whom the products were ordered from
+* Ignore rest of the columns
+
+
+File: Sale by Sevan 20-08-25 to 25-08-25
+⦁	First part of the name of this file will always be "Sale by Sevan", however, the second part of the name of this file will always differ as it will include dates of reported period. For example, 20-08-25 to 25-08-25 means data in this file are for period from 20th to 25th August (25th included).
+Contains sales report of Sevan warehouse for the abovementioned period. 
+Detailed cells description:
+First row can be ignored
+Starting from second row:
+This report consists of blocks. Each block is one Sales Order. The data in each block start with "Sales Order Number" in Column A and closes with "Sales Order Total Amount in USD" in Column O.
+Other important data:
+Column A (Поле4): Sales Order Number
+Column B (ДатаИсполнения): Date of Sales Order
+Column C (Клиент): Customer of Sales Order (Whom the products were sold)
+Column D (Через): Contact name of that customer (may be empty)
+Column K (КодТовара): Name of product
+Column L (Цена): Price in USD that the product was sold for
+Column M (Количество): Quantity of that sold product
+Column N (Поле66): Sum in USD of total sold quantity of that product (Column L*Column M)
+Column O: Sales Order Total Amount in USD
+* Ignore rest of the columns
+* Ignore cells next to the cells named "Поле63:" and "Поле46:"
+
+
+File: Sale by Kievyan 20-08-25 to 25-08-25
+⦁	First part of the name of this file will always be "Sale by Kievyan", however, the second part of the name of this file will always differ as it will include dates of reported period. For example, 20-08-25 to 25-08-25 means data in this file are for period from 20th to 25th August (25th included).
+Contains sales report of Kievyan store for the abovementioned period.
+Detailed cells description:
+First row can be ignored
+Starting from second row:
+This report consists of blocks. Each block is one Sales Order. The data in each block start with "Sales Order Number" in Column A and closes with "Sales Order Total Amount in USD" in Column O.
+Other important data:
+Column A (Поле4): Sales Order Number
+Column B (ДатаИсполнения): Date of Sales Order
+Column C (Клиент): Customer of Sales Order (Whom the products were sold)
+Column D (Через): Contact name of that customer (may be empty)
+Column K (КодТовара): Name of product
+Column L (Цена): Price in USD that the product was sold for
+Column M (Количество): Quantity of that sold product
+Column N (Поле66): Sum in USD of total sold quantity of that product (Column L*Column M)
+Column O: Sales Order Total Amount in USD
+* Ignore rest of the columns
+* Ignore cells next to the cells named "Поле63:" and "Поле46:"
+
+
+File: Purchase by Sevan 20-08-25 to 25-08-25
+⦁	First part of the name of this file will always be "Purchase by Sevan", however, the second part of the name of this file will always differ as it will include dates of reported period. For example, 20-08-25 to 25-08-25 means data in this file are for period from 20th to 25th August (25th included).
+Contains purchase report of Sevan warehouse for the abovementioned period.
+Detailed cells description:
+First row can be ignored
+Starting from second row:
+This report consists of blocks. Each block is one Purchase Order. The data in each block start with "Purchase Order Number" in Column A and closes with "Purchase Order Total Amount in USD" in Column O.
+Other important data:
+Column A (Поле4): Purchase Order Number
+Column B (ДатаИсполнения): Date of Purchase Order (Day when the goods have arrived at Sevan warehouse)
+Column C (Клиент): Supplier, whom the products were ordered from
+Column D (Через): Contact name of that Supplier (may be empty)
+Column K (КодТовара): Name of product
+Column L (Цена): Price in USD that the product was purchased for (Not cost, as this price does not include transportation, customs and other costs)
+Column M (Количество): Quantity of that purchased product
+Column N (Поле66): Sum in USD of total purchased quantity of that product (Column L*Column M)
+Column O: Purchase Order Total Amount in USD
+* Ignore rest of the columns
+* Ignore cells next to the cells named "Поле63:" and "Поле46:"
+
+
+File: Purchase by Kievyan 20-08-25 to 25-08-25
+⦁	First part of the name of this file will always be "Purchase by Kievyan", however, the second part of the name of this file will always differ as it will include dates of reported period. For example, 20-08-25 to 25-08-25 means data in this file are for period from 20th to 25th August (25th included).
+Contains purchase report of Kievyan store for the abovementioned period.
+Detailed cells description:
+First row can be ignored
+Starting from second row:
+This report consists of blocks. Each block is one Purchase Order. The data in each block start with "Purchase Order Number" in Column A and closes with "Purchase Order Total Amount in USD" in Column O.
+Other important data:
+Column A (Поле4): Purchase Order Number
+Column B (ДатаИсполнения): Date of Purchase Order (Day when the goods have arrived at Kievyan store)
+Column C (Клиент): Supplier, whom the products were ordered from
+Column D (Через): Contact name of that Supplier (may be empty)
+Column K (КодТовара): Name of product
+Column L (Цена): Price in USD that the product was purchased for (Not cost, as this price does not include transportation, customs and other costs)
+Column M (Количество): Quantity of that purchased product
+Column N (Поле66): Sum in USD of total purchased quantity of that product (Column L*Column M)
+Column O: Purchase Order Total Amount in USD
+* Ignore rest of the columns
+* Ignore cells next to the cells named "Поле63:" and "Поле46:"
+
+
+File: Total sales by goods 20-08-25 to 25-08-25
+⦁	First part of the name of this file will always be "Total sales by goods", however, the second part of the name of this file will always differ as it will include dates of reported period. For example, 20-08-25 to 25-08-25 means data in this file are for period from 20th to 25th August (25th included).
+Contains total sales data for the abovementioned period (combined both for Kievyan and Sevan) sorted by product, and not combined by sales orders.
+As it is a combined report for two locations - same product can appear up to two times in this list. 
+Detailed cells description:
+First row can be ignored
+Starting from second row:
+Column B (КодТовара): Name of product
+Column E (Количество): Quantity of that sold product
+Column F (Цена): Price in USD that the product was sold for
+Column G (Учетная цена): Cost in USD of that sold product
+* Ignore rest of the columns
+* Ignore cells next to the cells named "Text84:" and "Text88:"
+* To calculate profit for each sold product: Column F - Column G 
+* To calculate profit of each row (total quantity of these sold product): (Column F - Column G)*Column E
+
+
+File: Total procurement by goods 20-08-25 to 25-08-25
+⦁	First part of the name of this file will always be "Total procurement by goods", however, the second part of the name of this file will always differ as it will include dates of reported period. For example, 20-08-25 to 25-08-25 means data in this file are for period from 20th to 25th August (25th included).
+Contains total purchase data for the abovementioned period (combined both for Kievyan and Sevan) sorted by product, and not combined by purchase orders.
+As it is a combined report for two locations - same product can appear up to two times in this list.
+Detailed cells description:
+First row can be ignored
+Starting from second row:
+Column B (КодТовара): Name of product
+Column E (Количество): Quantity of that purchased product
+Column F (Цена): Price in USD that the product was purchased for (Not cost, as this price does not include transportation, customs and other costs) 
+* Ignore rest of the columns
+* Ignore cells next to the cells named "Text84:" and "Text88:"
+* To calculate profit for each sold product: Column F - Column G
