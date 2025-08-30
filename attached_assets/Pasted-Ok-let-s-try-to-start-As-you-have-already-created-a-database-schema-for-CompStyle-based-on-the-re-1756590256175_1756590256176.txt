@@ -1,0 +1,25 @@
+Ok, let's try to start.
+As you have already created a database schema for CompStyle based on the reports I gave you before, I believe, you have to roll back and do that for my current reports. All reports I will upload in the future will have exact the structure I described you now.
+File names will be the same, except date periods (When you collect all data for different time periods, you can have a "complete picture". For example, you can calculate 3-month sales based on twelve weekly sales reports that I will upload you in parts)
+
+Also. you mentioned Location Performance - Compare Kievyan vs Sevan efficiency. It is not needed. We will go for these at first:
+- Inventory Movement - Compare stock levels vs sales velocity between locations
+- Profitability Analysis - Track margins by product, location, period
+- Purchase Optimization - Analyze what to buy based on sales trends and current stock
+- Dead Stock Detection - Find products with high stock but low sales
+- Transit Management - Monitor incoming inventory impact on stock planning
+
+Also, current UI in CompStyle section need some changes:
+There are 4 info "windows" under the CompStyle Business Intelligence headline.
+I want them to be replaced.
+Replace "Total Products" with "Products to be ordered". Text color - dark blue. Shows quantity of product names that are recommended to be reordered
+Replace "Locations" with "Dead products". Text color - red. Shows quantity of dead stock product names.
+Replace "In Transit" with "Locked-in money". Text color - dark red. Shows Total value of dead stock.
+Replace "Analysis Ready" with "30 day Sales Volume". Text color - dark green. Shows Total Sales amount of last 30 days.
+
+Ok, let's start.
+
+P.S. !Any edit/modification you do should be strictly in CompStyle section, don't touch any other part of the supplier system!
+!Ask before doing any edit if you are not 100% sure what I want!
+!Don't do anything that will modify or delete existing data in supplier database!
+!Keep the CompStyle section as a completely separate feature and isolated from from existing supplier system!

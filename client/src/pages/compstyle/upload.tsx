@@ -19,85 +19,71 @@ interface FileUpload {
 export default function CompStyleUpload() {
   const [files, setFiles] = useState<FileUpload[]>([
     {
-      name: "Total Stock",
-      description: "Complete inventory with quantities, retail, dealer, and current cost prices",
+      name: "Total Stock Current",
+      description: "Master inventory: product names, SKUs, quantities, USD/AMD prices, wholesale tiers, costs",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Kievyan 11 Stock",
-      description: "Stock levels at Kievyan 11 retail location",
+      name: "Stock Kievyan Current",
+      description: "Kievyan store stock: product names, quantities, retail prices in AMD",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Sevan 5 Stock",
-      description: "Stock levels at Sevan 5 warehouse location",
+      name: "Stock Sevan Current",
+      description: "Sevan warehouse stock: product names, quantities, retail prices in AMD",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Goods in Transit",
-      description: "Incoming inventory with quantities and purchase costs",
+      name: "In Transit Current",
+      description: "Incoming inventory: products, quantities, purchase prices, suppliers, destinations",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Sales 1 Month",
-      description: "Sales data for the last month",
+      name: "Sale by Sevan (Period)",
+      description: "Sevan sales orders with line items, customers, dates, prices - organized by sales order blocks",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Sales 3 Months",
-      description: "Sales data for the last 3 months",
+      name: "Sale by Kievyan (Period)",
+      description: "Kievyan sales orders with line items, customers, dates, prices - organized by sales order blocks",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Sales 6 Months",
-      description: "Sales data for the last 6 months",
+      name: "Purchase by Sevan (Period)",
+      description: "Sevan purchase orders with line items, suppliers, dates, prices - organized by purchase order blocks",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Sales 12 Months",
-      description: "Sales data for the last 12 months (optional)",
+      name: "Purchase by Kievyan (Period)",
+      description: "Kievyan purchase orders with line items, suppliers, dates, prices - organized by purchase order blocks",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Purchases 1 Month",
-      description: "Purchase data for the last month (optional)",
+      name: "Total sales by goods (Period)",
+      description: "Aggregated sales data by product across both locations with profit calculations",
       file: null,
       uploaded: false,
       uploading: false,
     },
     {
-      name: "Purchases 3 Months",
-      description: "Purchase data for the last 3 months (optional)",
-      file: null,
-      uploaded: false,
-      uploading: false,
-    },
-    {
-      name: "Purchases 6 Months",
-      description: "Purchase data for the last 6 months (optional)",
-      file: null,
-      uploaded: false,
-      uploading: false,
-    },
-    {
-      name: "Purchases 12 Months",
-      description: "Purchase data for the last 12 months (optional)",
+      name: "Total procurement by goods (Period)",
+      description: "Aggregated purchase data by product across both locations",
       file: null,
       uploaded: false,
       uploading: false,
@@ -167,8 +153,9 @@ export default function CompStyleUpload() {
         <Alert className="mb-6">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            <strong>File Format Requirements:</strong> All files must be in CSV format with UTF-8 encoding. 
-            Make sure column headers match the expected format. Optional files can be uploaded later.
+            <strong>File Format Requirements:</strong> All files must be Excel (.xlsx) format. 
+            Period files (sales/purchases) should include date ranges in filename (e.g., "20-08-25 to 25-08-25"). 
+            Stock and transit files are current snapshot data.
           </AlertDescription>
         </Alert>
 
@@ -184,9 +171,14 @@ export default function CompStyleUpload() {
                     <FileText className="h-5 w-5 text-slate-600" />
                   )}
                   {fileUpload.name}
-                  {index >= 7 && (
-                    <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded">
-                      Optional
+                  {index <= 3 && (
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      Core Data
+                    </span>
+                  )}
+                  {index > 3 && (
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                      Period Data
                     </span>
                   )}
                 </CardTitle>
@@ -196,11 +188,11 @@ export default function CompStyleUpload() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor={`file-${index}`}>Select CSV File</Label>
+                  <Label htmlFor={`file-${index}`}>Select Excel File</Label>
                   <Input
                     id={`file-${index}`}
                     type="file"
-                    accept=".csv"
+                    accept=".xlsx,.xls"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) handleFileSelect(index, file);

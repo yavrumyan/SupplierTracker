@@ -19,45 +19,45 @@ export default function CompStyleDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Products</CardTitle>
-              <Package className="h-4 w-4 text-slate-600" />
+              <CardTitle className="text-sm font-medium">Products to be ordered</CardTitle>
+              <Package className="h-4 w-4 text-blue-800" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">1,327</div>
-              <p className="text-xs text-slate-600">Across all locations</p>
+              <div className="text-2xl font-bold text-blue-800">127</div>
+              <p className="text-xs text-slate-600">Recommended reorders</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Locations</CardTitle>
-              <BarChart3 className="h-4 w-4 text-slate-600" />
+              <CardTitle className="text-sm font-medium">Dead products</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-red-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2</div>
-              <p className="text-xs text-slate-600">Kievyan 11 & Sevan 5</p>
+              <div className="text-2xl font-bold text-red-600">43</div>
+              <p className="text-xs text-slate-600">Dead stock items</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">In Transit</CardTitle>
-              <TrendingUp className="h-4 w-4 text-slate-600" />
+              <CardTitle className="text-sm font-medium">Locked-in money</CardTitle>
+              <DollarSign className="h-4 w-4 text-red-800" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">238</div>
-              <p className="text-xs text-slate-600">Products incoming</p>
+              <div className="text-2xl font-bold text-red-800">$24,680</div>
+              <p className="text-xs text-slate-600">Dead stock value</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Analysis Ready</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-slate-600" />
+              <CardTitle className="text-sm font-medium">30 day Sales Volume</CardTitle>
+              <TrendingUp className="h-4 w-4 text-green-800" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">6M</div>
-              <p className="text-xs text-slate-600">Sales data available</p>
+              <div className="text-2xl font-bold text-green-800">$186,420</div>
+              <p className="text-xs text-slate-600">Last 30 days total</p>
             </CardContent>
           </Card>
         </div>
