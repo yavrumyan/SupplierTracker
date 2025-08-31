@@ -1821,9 +1821,9 @@ print(json.dumps(result))
       // Skip empty rows and special cells
       if (shouldIgnoreRow(row)) continue;
       
-      // Check if this row starts a new Sales Order block
-      const cellValue = String(row[0]).toLowerCase();
-      if (row[0] && (cellValue.includes('поле') || cellValue.includes('field'))) {
+      // Check if this row starts a new Sales Order block (numeric order number)
+      const cellValue = String(row[0]);
+      if (row[0] && /^\d{6}$/.test(cellValue)) { // 6-digit order number like 226501
         console.log('Found Sales Order start:', row[0]);
         // Save previous order if exists
         if (currentOrder && orderLineItems.length > 0) {
@@ -1839,39 +1839,76 @@ print(json.dumps(result))
         
         // Start new order
         currentOrder = {
-          salesOrderNumber: String(row[0]), // Column A (Поле4): Sales Order Number
-          orderDate: parseExcelDate(row[1]) || new Date(), // Column B (ДатаИсполнения): Date of Sales Order
-          customer: row[2] ? String(row[2]) : null, // Column C (Клиент): Customer
-          contactName: row[3] ? String(row[3]) : null, // Column D (Через): Contact name
+          salesOrderNumber: String(row[0]), // Column A: Sales Order Number (e.g., 226501)
+          orderDate: parseExcelDate(row[1]) || new Date(), // Column B: Date of Sales Order
+          customer: row[2] ? String(row[2]) : null, // Column C: Customer name
+          contactName: row[3] ? String(row[3]) : null, // Column D: Contact name
           location,
-          totalAmountUsd: null, // Will be set when we find Column O
+          totalAmountUsd: null, // Will be set when we find the total
           periodStart,
           periodEnd,
         };
         orderLineItems = [];
       }
       
-      // Check for line items (Column K has product name)
-      if (row[10] && currentOrder) { // Column K (КодТовара): Name of product
-        const priceUsd = parseNumericValue(row[11]); // Column L (Цена): Price in USD
-        const qty = parseNumericValue(row[12]); // Column M (Количество): Quantity
-        const sumUsd = parseNumericValue(row[13]); // Column N (Поле66): Sum in USD
+      // Check for line items - look for rows with product names and pricing data
+      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) { // Not a new order header
+        // Look for product name (long text that contains product details)
+        let productName = null;
+        let priceUsd = null;
+        let qty = null;
+        let sumUsd = null;
         
-        if (qty !== null && qty > 0) {
-          orderLineItems.push({
-            productName: String(row[10]),
-            priceUsd: priceUsd ? String(priceUsd) : null,
-            qty,
-            sumUsd: sumUsd ? String(sumUsd) : null,
-          });
+        // Scan the row for product name (longest meaningful text)
+        for (let col = 0; col < row.length; col++) {
+          if (row[col] && String(row[col]).length > 20) {
+            productName = String(row[col]);
+            
+            // Look for numeric values in subsequent columns for this product
+            const numericValues = [];
+            for (let nextCol = col + 1; nextCol < row.length && nextCol < col + 5; nextCol++) {
+              const val = parseNumericValue(row[nextCol]);
+              if (val !== null && val > 0) {
+                numericValues.push(val);
+              }
+            }
+            
+            // If we found 2-3 numeric values, assume they are price, qty, sum
+            if (numericValues.length >= 2) {
+              priceUsd = numericValues[0]; // First number is price
+              qty = numericValues[1]; // Second number is quantity
+              sumUsd = numericValues[2] || (priceUsd * qty); // Third number or calculated sum
+              
+              // Only add if quantities make sense
+              if (qty <= 100) { // Reasonable quantity check
+                orderLineItems.push({
+                  productName,
+                  priceUsd: String(priceUsd),
+                  qty: Math.round(qty),
+                  sumUsd: String(sumUsd),
+                });
+                console.log(`Added line item: ${productName.substring(0, 30)}... Qty: ${qty}, Price: ${priceUsd}`);
+              }
+              break; // Found product in this row, move to next row
+            }
+          }
         }
       }
       
-      // Check for order total (Column O: Sales Order Total Amount in USD)
-      if (row[14] && currentOrder) { // Column O: Total amount
-        const totalAmount = parseNumericValue(row[14]);
-        if (totalAmount !== null) {
-          currentOrder.totalAmountUsd = String(totalAmount);
+      // Check for order total - look for a single numeric value that could be the total
+      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) {
+        const numericValues = [];
+        for (let col = 0; col < row.length; col++) {
+          const val = parseNumericValue(row[col]);
+          if (val !== null && val > 0) {
+            numericValues.push(val);
+          }
+        }
+        
+        // If row has only one significant numeric value, it might be the total
+        if (numericValues.length === 1 && numericValues[0] > 100) {
+          currentOrder.totalAmountUsd = String(numericValues[0]);
+          console.log(`Found order total: ${numericValues[0]}`);
         }
       }
     }
@@ -1907,9 +1944,9 @@ print(json.dumps(result))
       // Skip empty rows and special cells
       if (shouldIgnoreRow(row)) continue;
       
-      // Check if this row starts a new Purchase Order block
-      const cellValue = String(row[0]).toLowerCase();
-      if (row[0] && (cellValue.includes('поле') || cellValue.includes('field'))) {
+      // Check if this row starts a new Purchase Order block (numeric order number)
+      const cellValue = String(row[0]);
+      if (row[0] && /^\d{6}$/.test(cellValue)) { // 6-digit order number
         console.log('Found Purchase Order start:', row[0]);
         // Save previous order if exists
         if (currentOrder && orderLineItems.length > 0) {
@@ -1925,39 +1962,76 @@ print(json.dumps(result))
         
         // Start new order
         currentOrder = {
-          purchaseOrderNumber: String(row[0]), // Column A (Поле4): Purchase Order Number
-          orderDate: parseExcelDate(row[1]) || new Date(), // Column B (ДатаИсполнения): Date when goods arrived
-          supplier: row[2] ? String(row[2]) : null, // Column C (Клиент): Supplier
-          contactName: row[3] ? String(row[3]) : null, // Column D (Через): Contact name
+          purchaseOrderNumber: String(row[0]), // Column A: Purchase Order Number
+          orderDate: parseExcelDate(row[1]) || new Date(), // Column B: Date when goods arrived
+          supplier: row[2] ? String(row[2]) : null, // Column C: Supplier
+          contactName: row[3] ? String(row[3]) : null, // Column D: Contact name
           location,
-          totalAmountUsd: null, // Will be set when we find Column O
+          totalAmountUsd: null, // Will be set when we find the total
           periodStart,
           periodEnd,
         };
         orderLineItems = [];
       }
       
-      // Check for line items (Column K has product name)
-      if (row[10] && currentOrder) { // Column K (КодТовара): Name of product
-        const priceUsd = parseNumericValue(row[11]); // Column L (Цена): Purchase price in USD
-        const qty = parseNumericValue(row[12]); // Column M (Количество): Quantity
-        const sumUsd = parseNumericValue(row[13]); // Column N (Поле66): Sum in USD
+      // Check for line items - look for rows with product names and pricing data
+      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) { // Not a new order header
+        // Look for product name (long text that contains product details)
+        let productName = null;
+        let priceUsd = null;
+        let qty = null;
+        let sumUsd = null;
         
-        if (qty !== null && qty > 0) {
-          orderLineItems.push({
-            productName: String(row[10]),
-            priceUsd: priceUsd ? String(priceUsd) : null,
-            qty,
-            sumUsd: sumUsd ? String(sumUsd) : null,
-          });
+        // Scan the row for product name (longest meaningful text)
+        for (let col = 0; col < row.length; col++) {
+          if (row[col] && String(row[col]).length > 20) {
+            productName = String(row[col]);
+            
+            // Look for numeric values in subsequent columns for this product
+            const numericValues = [];
+            for (let nextCol = col + 1; nextCol < row.length && nextCol < col + 5; nextCol++) {
+              const val = parseNumericValue(row[nextCol]);
+              if (val !== null && val > 0) {
+                numericValues.push(val);
+              }
+            }
+            
+            // If we found 2-3 numeric values, assume they are price, qty, sum
+            if (numericValues.length >= 2) {
+              priceUsd = numericValues[0]; // First number is price
+              qty = numericValues[1]; // Second number is quantity
+              sumUsd = numericValues[2] || (priceUsd * qty); // Third number or calculated sum
+              
+              // Only add if quantities make sense
+              if (qty <= 100) { // Reasonable quantity check
+                orderLineItems.push({
+                  productName,
+                  priceUsd: String(priceUsd),
+                  qty: Math.round(qty),
+                  sumUsd: String(sumUsd),
+                });
+                console.log(`Added purchase item: ${productName.substring(0, 30)}... Qty: ${qty}, Price: ${priceUsd}`);
+              }
+              break; // Found product in this row, move to next row
+            }
+          }
         }
       }
       
-      // Check for order total (Column O: Purchase Order Total Amount in USD)
-      if (row[14] && currentOrder) { // Column O: Total amount
-        const totalAmount = parseNumericValue(row[14]);
-        if (totalAmount !== null) {
-          currentOrder.totalAmountUsd = String(totalAmount);
+      // Check for order total - look for a single numeric value that could be the total
+      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) {
+        const numericValues = [];
+        for (let col = 0; col < row.length; col++) {
+          const val = parseNumericValue(row[col]);
+          if (val !== null && val > 0) {
+            numericValues.push(val);
+          }
+        }
+        
+        // If row has only one significant numeric value, it might be the total
+        if (numericValues.length === 1 && numericValues[0] > 100) {
+          currentOrder.totalAmountUsd = String(numericValues[0]);
+          console.log(`Found purchase order total: ${numericValues[0]}`);
         }
       }
     }
