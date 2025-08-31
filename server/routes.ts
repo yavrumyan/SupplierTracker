@@ -1590,22 +1590,22 @@ print(json.dumps(result))
             processedCount = await processTransitFile(rawData);
             break;
           case "sale-sevan":
-            processedCount = await processSalesByLocationFile(rawData, "Sevan");
+            processedCount = await processSalesByLocationFile(rawData, "Sevan", file.originalname);
             break;
           case "sale-kievyan":
-            processedCount = await processSalesByLocationFile(rawData, "Kievyan");
+            processedCount = await processSalesByLocationFile(rawData, "Kievyan", file.originalname);
             break;
           case "purchase-sevan":
-            processedCount = await processPurchasesByLocationFile(rawData, "Sevan");
+            processedCount = await processPurchasesByLocationFile(rawData, "Sevan", file.originalname);
             break;
           case "purchase-kievyan":
-            processedCount = await processPurchasesByLocationFile(rawData, "Kievyan");
+            processedCount = await processPurchasesByLocationFile(rawData, "Kievyan", file.originalname);
             break;
           case "total-sales":
-            processedCount = await processTotalSalesFile(rawData);
+            processedCount = await processTotalSalesFile(rawData, file.originalname);
             break;
           case "total-procurement":
-            processedCount = await processTotalProcurementFile(rawData);
+            processedCount = await processTotalProcurementFile(rawData, file.originalname);
             break;
           default:
             return res.status(400).json({ error: "Invalid file type" });
@@ -1637,28 +1637,39 @@ print(json.dumps(result))
   });
 
   // Helper functions for processing different file types
+  // Process Total Stock Current file according to specifications
   async function processTotalStockFile(data: any[]): Promise<number> {
     let count = 0;
-    // Skip header row
+    // Start from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      if (!row[1] || !row[9]) continue; // Skip if no product name or SKU
+      
+      // Skip if no product name (Column B) or SKU (Column J)
+      if (!row[1] || !row[9]) continue;
+      
+      // Skip header rows
+      if (shouldIgnoreRow(row)) continue;
+      
+      // Validate required numeric fields
+      const qtyInStock = parseNumericValue(row[2]);
+      if (qtyInStock === null) continue;
       
       await storage.createCompstyleTotalStock({
-        productName: String(row[1]), // Column B (Марка)
-        sku: String(row[9]), // Column J (КодТовара)
-        qtyInStock: Number(row[2]) || 0, // Column C (НаСкладе)
-        retailPriceUsd: row[3] ? String(row[3]) : null, // Column D (Цена)
-        retailPriceAmd: row[4] ? String(row[4]) : null, // Column E (ЦенаПрайса)
-        wholesalePrice1: row[5] ? String(row[5]) : null, // Column F (Диллерская цена1)
-        wholesalePrice2: row[6] ? String(row[6]) : null, // Column G (Диллерская цена2)
-        currentCost: row[7] ? String(row[7]) : null, // Column H (ЦенаНаНас)
+        productName: String(row[1]), // Column B (Марка): Name of product
+        sku: String(row[9]), // Column J (КодТовара): Unique internal SKU
+        qtyInStock, // Column C (НаСкладе): Quantity of product in stock
+        retailPriceUsd: row[3] ? String(parseNumericValue(row[3]) || 0) : null, // Column D (Цена): Actual retail price in USD
+        retailPriceAmd: row[4] ? String(parseNumericValue(row[4]) || 0) : null, // Column E (ЦенаПрайса): Actual retail price in AMD
+        wholesalePrice1: row[5] ? String(parseNumericValue(row[5]) || 0) : null, // Column F (Диллерская цена1): For qty < 5
+        wholesalePrice2: row[6] ? String(parseNumericValue(row[6]) || 0) : null, // Column G (Диллерская цена2): For qty >= 5
+        currentCost: row[7] ? String(parseNumericValue(row[7]) || 0) : null, // Column H (ЦенаНаНас): Current actual cost
       });
       count++;
     }
     return count;
   }
 
+  // Process Stock Kievyan/Sevan Current files according to specifications
   async function processLocationStockFile(data: any[], locationName: string): Promise<number> {
     // Get or create location
     const locations = await storage.getCompstyleLocations();
@@ -1672,27 +1683,30 @@ print(json.dumps(result))
     }
 
     let count = 0;
+    // Cell A1: Shows date of the report
     const reportDate = data[0] && data[0][0] ? new Date(data[0][0]) : new Date();
     
-    // Skip header rows and start from row 2
+    // Starting from second row (skip header row and B2 which can be ignored)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      if (!row[0] || !row[1]) continue; // Skip if no product name or quantity
       
-      // Skip header rows by checking if the product name contains Russian headers
-      if (isHeaderRow(row[0])) continue;
+      // Skip if no product name (Column A) or quantity (Column B)
+      if (!row[0] || !row[1]) continue;
+      
+      // Skip header rows and special cells
+      if (shouldIgnoreRow(row)) continue;
       
       // Validate numeric data
       const qty = parseNumericValue(row[1]);
       const retailPriceAmd = parseNumericValue(row[2]);
       
-      if (qty === null) continue; // Skip if quantity is not a valid number
+      if (qty === null) continue; // Skip if quantity is not valid
       
       await storage.createCompstyleLocationStock({
-        productName: String(row[0]), // Column A (КодТовара)
+        productName: String(row[0]), // Column A (КодТовара): Name of product
         locationId: location.id,
-        qty, // Column B (Остаток)
-        retailPriceAmd: retailPriceAmd ? String(retailPriceAmd) : null, // Column C (БухЦена)
+        qty, // Column B (Остаток): Quantity of product in stock
+        retailPriceAmd: retailPriceAmd ? String(retailPriceAmd) : null, // Column C (БухЦена): Actual retail price in AMD
         reportDate,
       });
       count++;
@@ -1700,211 +1714,274 @@ print(json.dumps(result))
     return count;
   }
 
-  // Helper function to detect header rows
-  function isHeaderRow(value: any): boolean {
-    if (!value) return false;
-    const str = String(value).toLowerCase();
-    return str.includes('товар') || str.includes('марка') || str.includes('код') || 
-           str.includes('цена') || str.includes('количество') || str.includes('остаток') ||
-           str.includes('поле') || str.includes('клиент') || str.includes('дата');
+  // Helper function to extract period from filename
+  function extractPeriodFromFilename(filename: string): { periodStart: string, periodEnd: string } {
+    // Extract date range from filename like "Sale by Sevan 20-08-25 to 25-08-25.xlsx"
+    const match = filename.match(/(\d{2}-\d{2}-\d{2})\s+to\s+(\d{2}-\d{2}-\d{2})/);
+    if (match) {
+      return { periodStart: `20${match[1]}`, periodEnd: `20${match[2]}` };
+    }
+    // Default fallback
+    return { periodStart: "2025-08-20", periodEnd: "2025-08-25" };
   }
 
   // Helper function to parse numeric values safely
   function parseNumericValue(value: any): number | null {
-    if (!value) return null;
+    if (!value || value === '' || value === undefined || value === null) return null;
     const str = String(value).replace(/,/g, '.'); // Handle comma decimal separators
     const num = parseFloat(str);
     return isNaN(num) ? null : num;
   }
 
+  // Helper function to check if row should be ignored (Russian headers or special cells)
+  function shouldIgnoreRow(row: any[]): boolean {
+    if (!row || !row[0]) return true;
+    const cellA = String(row[0]).toLowerCase();
+    // Skip header rows and special cells mentioned in instructions
+    return cellA.includes('поле63:') || cellA.includes('поле46:') || 
+           cellA.includes('text84:') || cellA.includes('text88:') ||
+           cellA.includes('марка') || cellA.includes('кодтовара') || cellA.includes('товар');
+  }
+
+  // Process In Transit Current file according to specifications
   async function processTransitFile(data: any[]): Promise<number> {
     let count = 0;
-    // Skip header row
+    // Start from row 1 (skip header row)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      if (!row[0] || !row[1]) continue; // Skip if no product name or quantity
       
-      // Skip header rows
-      if (isHeaderRow(row[0])) continue;
+      // Skip if no product name (Column A) or quantity (Column B)
+      if (!row[0] || !row[1]) continue;
       
-      // Validate numeric data
+      // Skip header rows and special cells
+      if (shouldIgnoreRow(row)) continue;
+      
+      // Validate required numeric fields
       const qty = parseNumericValue(row[1]);
+      if (qty === null) continue;
+      
+      // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
       const purchasePriceAmd = parseNumericValue(row[3]);
       const currentCost = parseNumericValue(row[6]);
       
-      if (qty === null) continue; // Skip if quantity is not valid
-      
       await storage.createCompstyleTransit({
-        productName: String(row[0]), // Column A (Товар)
-        qty, // Column B (Кол.)
-        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column C (Цена $)
-        purchasePriceAmd: purchasePriceAmd ? String(purchasePriceAmd) : null, // Column D (Цена AMD)
-        currentCost: currentCost ? String(currentCost) : null, // Column G (Уч. цена)
-        purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь)
-        destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад)
-        supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик)
+        productName: String(row[0]), // Column A (Товар): Name of product
+        qty, // Column B (Кол.): Quantity purchased
+        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column C (Цена $): Purchasing price in USD
+        purchasePriceAmd: purchasePriceAmd ? String(purchasePriceAmd) : null, // Column D (Цена AMD): Purchasing price in AMD
+        currentCost: currentCost ? String(currentCost) : null, // Column G (Уч. цена): Current actual cost
+        purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь): Purchase Order Number
+        destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад): Destination warehouse/store
+        supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик): Supplier name
       });
       count++;
     }
     return count;
   }
 
-  async function processSalesByLocationFile(data: any[], location: string): Promise<number> {
+  // Process Sales by Location files according to specifications (block-based structure)
+  async function processSalesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
     
-    // Process period from filename (will be passed via body later)
-    const periodStart = "2025-08-20"; // Placeholder
-    const periodEnd = "2025-08-25"; // Placeholder
+    // Extract period from filename
+    const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
     
+    let currentOrder: any = null;
+    let orderLineItems: any[] = [];
+    
+    // Process starting from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Skip empty rows or header rows
-      if (!row[0] || isHeaderRow(row[0])) continue;
+      // Skip empty rows and special cells
+      if (shouldIgnoreRow(row)) continue;
       
-      // Look for rows with order data - more flexible pattern matching
-      // Check if row has order number, customer, and price data
-      if (row[0] && row[2] && (row[11] || row[13])) { // Order number, customer, and price data
+      // Check if this row starts a new Sales Order block
+      if (row[0] && String(row[0]).toLowerCase().includes('поле4')) {
+        // Save previous order if exists
+        if (currentOrder && orderLineItems.length > 0) {
+          const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
+          for (const item of orderLineItems) {
+            await storage.createCompstyleSalesItem({
+              ...item,
+              salesOrderId: orderInDb.id
+            });
+          }
+          count++;
+        }
         
-        // Validate numeric data
-        const priceUsd = parseNumericValue(row[11]);
-        const qty = parseNumericValue(row[12]);
-        const sumUsd = parseNumericValue(row[13]);
-        
-        // Create order record
-        const orderData = {
-          salesOrderNumber: String(row[0]), // Column A (Поле4)
-          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения)
-          customer: row[2] ? String(row[2]) : null, // Column C (Клиент)
-          contactName: row[3] ? String(row[3]) : null, // Column D (Через)
+        // Start new order
+        currentOrder = {
+          salesOrderNumber: String(row[0]), // Column A (Поле4): Sales Order Number
+          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения): Date of Sales Order
+          customer: row[2] ? String(row[2]) : null, // Column C (Клиент): Customer
+          contactName: row[3] ? String(row[3]) : null, // Column D (Через): Contact name
           location,
-          totalAmountUsd: sumUsd ? String(sumUsd) : null, // Column N or O
+          totalAmountUsd: null, // Will be set when we find Column O
           periodStart,
           periodEnd,
         };
+        orderLineItems = [];
+      }
+      
+      // Check for line items (Column K has product name)
+      if (row[10] && currentOrder) { // Column K (КодТовара): Name of product
+        const priceUsd = parseNumericValue(row[11]); // Column L (Цена): Price in USD
+        const qty = parseNumericValue(row[12]); // Column M (Количество): Quantity
+        const sumUsd = parseNumericValue(row[13]); // Column N (Поле66): Sum in USD
         
-        const orderInDb = await storage.createCompstyleSalesOrder(orderData);
-        
-        // Create line item if product data exists
-        if (row[10] && qty !== null) { // Column K (КодТовара)
-          await storage.createCompstyleSalesItem({
-            salesOrderId: orderInDb.id,
-            productName: String(row[10]), // Column K (КодТовара)
-            priceUsd: priceUsd ? String(priceUsd) : null, // Column L (Цена)
-            qty, // Column M (Количество)
-            sumUsd: sumUsd ? String(sumUsd) : null, // Column N (Поле66)
+        if (qty !== null && qty > 0) {
+          orderLineItems.push({
+            productName: String(row[10]),
+            priceUsd: priceUsd ? String(priceUsd) : null,
+            qty,
+            sumUsd: sumUsd ? String(sumUsd) : null,
           });
         }
-        
-        count++;
+      }
+      
+      // Check for order total (Column O: Sales Order Total Amount in USD)
+      if (row[14] && currentOrder) { // Column O: Total amount
+        const totalAmount = parseNumericValue(row[14]);
+        if (totalAmount !== null) {
+          currentOrder.totalAmountUsd = String(totalAmount);
+        }
       }
     }
     
-    return count;
-  }
-
-  async function processPurchasesByLocationFile(data: any[], location: string): Promise<number> {
-    let count = 0;
-    
-    const periodStart = "2025-08-20"; // Placeholder
-    const periodEnd = "2025-08-25"; // Placeholder
-    
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      
-      // Skip empty rows or header rows
-      if (!row[0] || isHeaderRow(row[0])) continue;
-      
-      // Look for rows with purchase order data
-      if (row[0] && row[2] && (row[11] || row[13])) { // Order number, supplier, and price data
-        
-        // Validate numeric data
-        const priceUsd = parseNumericValue(row[11]);
-        const qty = parseNumericValue(row[12]);
-        const sumUsd = parseNumericValue(row[13]);
-        
-        // Create purchase order record
-        const orderData = {
-          purchaseOrderNumber: String(row[0]), // Column A (Поле4)
-          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения)
-          supplier: row[2] ? String(row[2]) : null, // Column C (Клиент)
-          contactName: row[3] ? String(row[3]) : null, // Column D (Через)
-          location,
-          totalAmountUsd: sumUsd ? String(sumUsd) : null, // Column O
-          periodStart,
-          periodEnd,
-        };
-        
-        const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
-        
-        // Create line item if product data exists
-        if (row[10] && qty !== null) { // Column K (КодТовара)
-          await storage.createCompstylePurchaseItem({
-            purchaseOrderId: orderInDb.id,
-            productName: String(row[10]), // Column K (КодТовара)
-            priceUsd: priceUsd ? String(priceUsd) : null, // Column L (Цена)
-            qty, // Column M (Количество)
-            sumUsd: sumUsd ? String(sumUsd) : null, // Column N (Поле66)
-          });
-        }
-        
-        count++;
-      }
-      
-      // Process line items
-      if (row[10] && currentOrder) { // Column K (КодТовара)
-        const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
-        
-        await storage.createCompstylePurchaseItem({
-          purchaseOrderId: orderInDb.id,
-          productName: String(row[10]), // Column K (КодТовара)
-          priceUsd: row[11] ? String(row[11]) : null, // Column L (Цена)
-          qty: Number(row[12]) || 0, // Column M (Количество)
-          sumUsd: row[13] ? String(row[13]) : null, // Column N (Поле66)
+    // Save final order if exists
+    if (currentOrder && orderLineItems.length > 0) {
+      const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
+      for (const item of orderLineItems) {
+        await storage.createCompstyleSalesItem({
+          ...item,
+          salesOrderId: orderInDb.id
         });
-        
-        currentOrder = null;
-        count++;
       }
-    }
-    
-    if (currentOrder) {
-      await storage.createCompstylePurchaseOrder(currentOrder);
+      count++;
     }
     
     return count;
   }
 
-  async function processTotalSalesFile(data: any[]): Promise<number> {
+  async function processPurchasesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
-    const periodStart = "2025-08-20"; // Placeholder
-    const periodEnd = "2025-08-25"; // Placeholder
+    
+    // Extract period from filename
+    const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
+    
+    let currentOrder: any = null;
+    let orderLineItems: any[] = [];
     
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      if (!row[1] || !row[4]) continue; // Skip if no product name or quantity
       
-      // Skip header rows
-      if (isHeaderRow(row[1])) continue;
+      // Skip empty rows and special cells
+      if (shouldIgnoreRow(row)) continue;
       
-      // Validate numeric data
-      const salePriceUsd = parseNumericValue(row[5]); // Column F (Цена)
-      const costPriceUsd = parseNumericValue(row[6]); // Column G (Учетная цена)
-      const qtySold = parseNumericValue(row[4]); // Column E (Количество)
+      // Check if this row starts a new Purchase Order block
+      if (row[0] && String(row[0]).toLowerCase().includes('поле4')) {
+        // Save previous order if exists
+        if (currentOrder && orderLineItems.length > 0) {
+          const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
+          for (const item of orderLineItems) {
+            await storage.createCompstylePurchaseItem({
+              ...item,
+              purchaseOrderId: orderInDb.id
+            });
+          }
+          count++;
+        }
+        
+        // Start new order
+        currentOrder = {
+          purchaseOrderNumber: String(row[0]), // Column A (Поле4): Purchase Order Number
+          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения): Date when goods arrived
+          supplier: row[2] ? String(row[2]) : null, // Column C (Клиент): Supplier
+          contactName: row[3] ? String(row[3]) : null, // Column D (Через): Contact name
+          location,
+          totalAmountUsd: null, // Will be set when we find Column O
+          periodStart,
+          periodEnd,
+        };
+        orderLineItems = [];
+      }
       
-      if (qtySold === null) continue; // Skip if quantity is not valid
+      // Check for line items (Column K has product name)
+      if (row[10] && currentOrder) { // Column K (КодТовара): Name of product
+        const priceUsd = parseNumericValue(row[11]); // Column L (Цена): Purchase price in USD
+        const qty = parseNumericValue(row[12]); // Column M (Количество): Quantity
+        const sumUsd = parseNumericValue(row[13]); // Column N (Поле66): Sum in USD
+        
+        if (qty !== null && qty > 0) {
+          orderLineItems.push({
+            productName: String(row[10]),
+            priceUsd: priceUsd ? String(priceUsd) : null,
+            qty,
+            sumUsd: sumUsd ? String(sumUsd) : null,
+          });
+        }
+      }
+      
+      // Check for order total (Column O: Purchase Order Total Amount in USD)
+      if (row[14] && currentOrder) { // Column O: Total amount
+        const totalAmount = parseNumericValue(row[14]);
+        if (totalAmount !== null) {
+          currentOrder.totalAmountUsd = String(totalAmount);
+        }
+      }
+    }
+    
+    // Save final order if exists
+    if (currentOrder && orderLineItems.length > 0) {
+      const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
+      for (const item of orderLineItems) {
+        await storage.createCompstylePurchaseItem({
+          ...item,
+          purchaseOrderId: orderInDb.id
+        });
+      }
+      count++;
+    }
+    
+    return count;
+  }
+
+  // Process Total sales by goods files according to specifications
+  async function processTotalSalesFile(data: any[], filename: string): Promise<number> {
+    let count = 0;
+    
+    // Extract period from filename
+    const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
+    
+    // Start from row 1 (skip header row 0)
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      
+      // Skip if no product name (Column B) or quantity (Column E)
+      if (!row[1] || !row[4]) continue;
+      
+      // Skip header rows and special cells (Text84:, Text88:)
+      if (shouldIgnoreRow(row)) continue;
+      
+      // Validate required numeric fields
+      const qtySold = parseNumericValue(row[4]); // Column E (Количество): Quantity sold
+      const salePriceUsd = parseNumericValue(row[5]); // Column F (Цена): Price in USD sold for
+      const costPriceUsd = parseNumericValue(row[6]); // Column G (Учетная цена): Cost in USD
+      
+      if (qtySold === null || qtySold <= 0) continue;
       
       const safeSalePrice = salePriceUsd || 0;
       const safeCostPrice = costPriceUsd || 0;
       
       await storage.createCompstyleTotalSales({
-        productName: String(row[1]), // Column B (КодТовара)
+        productName: String(row[1]), // Column B (КодТовара): Name of product
         qtySold,
         salePriceUsd: String(safeSalePrice),
         costPriceUsd: String(safeCostPrice),
-        profitPerUnit: String(safeSalePrice - safeCostPrice), // Column F - Column G
-        totalProfit: String((safeSalePrice - safeCostPrice) * qtySold), // (Column F - Column G) * Column E
+        profitPerUnit: String(safeSalePrice - safeCostPrice), // Column F - Column G: Profit per unit
+        totalProfit: String((safeSalePrice - safeCostPrice) * qtySold), // (Column F - Column G) * Column E: Total profit
         periodStart,
         periodEnd,
       });
@@ -1913,28 +1990,33 @@ print(json.dumps(result))
     return count;
   }
 
-  async function processTotalProcurementFile(data: any[]): Promise<number> {
+  // Process Total procurement by goods files according to specifications
+  async function processTotalProcurementFile(data: any[], filename: string): Promise<number> {
     let count = 0;
-    const periodStart = "2025-08-20"; // Placeholder
-    const periodEnd = "2025-08-25"; // Placeholder
     
+    // Extract period from filename
+    const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
+    
+    // Start from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      if (!row[1] || !row[4]) continue; // Skip if no product name or quantity
       
-      // Skip header rows
-      if (isHeaderRow(row[1])) continue;
+      // Skip if no product name (Column B) or quantity (Column E)
+      if (!row[1] || !row[4]) continue;
       
-      // Validate numeric data
-      const qtyPurchased = parseNumericValue(row[4]);
-      const purchasePriceUsd = parseNumericValue(row[5]);
+      // Skip header rows and special cells (Text84:, Text88:)
+      if (shouldIgnoreRow(row)) continue;
       
-      if (qtyPurchased === null) continue; // Skip if quantity is not valid
+      // Validate required numeric fields
+      const qtyPurchased = parseNumericValue(row[4]); // Column E (Количество): Quantity purchased
+      const purchasePriceUsd = parseNumericValue(row[5]); // Column F (Цена): Purchase price in USD
+      
+      if (qtyPurchased === null || qtyPurchased <= 0) continue;
       
       await storage.createCompstyleTotalProcurement({
-        productName: String(row[1]), // Column B (КодТовара)
-        qtyPurchased, // Column E (Количество)
-        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column F (Цена)
+        productName: String(row[1]), // Column B (КодТовара): Name of product
+        qtyPurchased,
+        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null,
         periodStart,
         periodEnd,
       });
