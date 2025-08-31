@@ -1547,6 +1547,17 @@ print(json.dumps(result))
     }
   });
 
+  // Get CompStyle data overview with real data counts
+  app.get('/api/compstyle/data-overview', async (req, res) => {
+    try {
+      const overview = await storage.getCompstyleDataOverview();
+      res.json(overview);
+    } catch (error) {
+      console.error('Error fetching data overview:', error);
+      res.status(500).json({ error: 'Failed to fetch data overview' });
+    }
+  });
+
   // CompStyle file upload endpoint
   app.post("/api/compstyle/upload", upload.single('file'), async (req, res) => {
     try {

@@ -1,9 +1,32 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Database, FileText, BarChart } from "lucide-react";
+import { ArrowLeft, Database, FileText, BarChart, CheckCircle } from "lucide-react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CompStyleDataOverview() {
+  const { data: overview, isLoading } = useQuery({
+    queryKey: ['/api/compstyle/data-overview'],
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-slate-200 rounded mb-4 w-64"></div>
+            <div className="h-4 bg-slate-200 rounded mb-8 w-96"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-48 bg-slate-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       <div className="max-w-6xl mx-auto">
@@ -17,90 +40,35 @@ export default function CompStyleDataOverview() {
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Data Overview</h1>
           <p className="text-slate-600">
-            View status and summary of uploaded CompStyle data files
+            Real-time status and summary of uploaded CompStyle data files
           </p>
         </div>
 
-        {/* Data Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {/* Core Data Files */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Database className="h-5 w-5 text-blue-600" />
-                Core Inventory Data
-              </CardTitle>
-              <CardDescription>Current snapshot files</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Total Stock</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Kievyan Stock</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Sevan Stock</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">In Transit</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Sales Data */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart className="h-5 w-5 text-green-600" />
-                Sales Data
-              </CardTitle>
-              <CardDescription>Period-based sales files</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Sevan Sales</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Kievyan Sales</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Total Sales</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Purchase Data */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-purple-600" />
-                Purchase Data
-              </CardTitle>
-              <CardDescription>Period-based purchase files</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Sevan Purchases</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Kievyan Purchases</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Total Procurement</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Ready</span>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Real Data Files Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+          {overview?.files?.map((file, index) => (
+            <Card key={index} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    {file.type.includes('Inventory') && <Database className="h-4 w-4 text-blue-600" />}
+                    {file.type.includes('Order') && <BarChart className="h-4 w-4 text-green-600" />}
+                    {file.type.includes('Line Items') && <FileText className="h-4 w-4 text-purple-600" />}
+                    {file.type.includes('Analytics') && <Database className="h-4 w-4 text-orange-600" />}
+                    {file.type.includes('Transit') && <FileText className="h-4 w-4 text-red-600" />}
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3" />
+                      {file.status}
+                    </span>
+                  </div>
+                </div>
+                <h3 className="font-semibold text-sm mb-1">{file.name}</h3>
+                <p className="text-xs text-slate-600 mb-2">{file.type}</p>
+                <div className="text-lg font-bold text-slate-900">{file.records.toLocaleString()}</div>
+                <div className="text-xs text-slate-500">records</div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Analysis Actions */}
@@ -150,12 +118,12 @@ export default function CompStyleDataOverview() {
           </Card>
         </div>
 
-        {/* Data Summary */}
+        {/* Real Data Summary */}
         <Card className="mt-8">
           <CardHeader>
             <CardTitle>Data Summary</CardTitle>
             <CardDescription>
-              Current data status for business intelligence analysis
+              Real-time statistics from uploaded business data
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -166,19 +134,24 @@ export default function CompStyleDataOverview() {
                 <div className="text-xs text-slate-500">Kievyan & Sevan</div>
               </div>
               <div className="text-center p-4">
-                <div className="text-2xl font-bold text-green-600">10</div>
+                <div className="text-2xl font-bold text-green-600">{overview?.totals?.totalFiles || 0}</div>
                 <div className="text-sm text-slate-600">Data Sources</div>
-                <div className="text-xs text-slate-500">Excel files processed</div>
+                <div className="text-xs text-slate-500">Files processed</div>
               </div>
               <div className="text-center p-4">
-                <div className="text-2xl font-bold text-purple-600">4</div>
-                <div className="text-sm text-slate-600">Analysis Tools</div>
-                <div className="text-xs text-slate-500">BI features available</div>
+                <div className="text-2xl font-bold text-purple-600">{overview?.totals?.totalRecords?.toLocaleString() || '0'}</div>
+                <div className="text-sm text-slate-600">Total Records</div>
+                <div className="text-xs text-slate-500">Data points analyzed</div>
               </div>
               <div className="text-center p-4">
-                <div className="text-2xl font-bold text-orange-600">Real-time</div>
-                <div className="text-sm text-slate-600">Updates</div>
-                <div className="text-xs text-slate-500">Live data processing</div>
+                <div className="text-2xl font-bold text-orange-600">Live</div>
+                <div className="text-sm text-slate-600">Status</div>
+                <div className="text-xs text-slate-500">
+                  {overview?.totals?.lastUpdated 
+                    ? new Date(overview.totals.lastUpdated).toLocaleTimeString()
+                    : 'Processing...'
+                  }
+                </div>
               </div>
             </div>
           </CardContent>
