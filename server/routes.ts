@@ -1819,7 +1819,12 @@ print(json.dumps(result))
       const row = data[i];
       
       // Skip empty rows and special cells
-      if (shouldIgnoreRow(row)) continue;
+      if (shouldIgnoreRow(row)) {
+        console.log(`Skipping row ${i}:`, String(row[0] || '').substring(0, 20));
+        continue;
+      }
+      
+      console.log(`Processing row ${i}:`, row.slice(0, 5).map(cell => String(cell || '').substring(0, 15)));
       
       // Check if this row starts a new Sales Order block (numeric order number)
       const cellValue = String(row[0]);
