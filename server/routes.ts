@@ -1817,8 +1817,8 @@ print(json.dumps(result))
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
     
-    // Process starting from row 1 (skip header row 0)
-    for (let i = 1; i < data.length; i++) {
+    // Process starting from row 2 (skip irrelevant row 0 and header row 1)
+    for (let i = 2; i < data.length; i++) {
       const row = data[i];
       
       // Check if this row contains a sales order number in Column A
@@ -1900,27 +1900,73 @@ print(json.dumps(result))
 
   async function processPurchasesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
-    console.log(`Processing purchase file for ${location}, rows: ${data.length}`);
+    console.log(`Processing purchase file for ${location}, total rows: ${data.length}`);
     
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
     
-    let currentOrder: any = null;
-    let orderLineItems: any[] = [];
-    
-    for (let i = 1; i < data.length; i++) {
+    // Process starting from row 2 (skip irrelevant row 0 and header row 1)
+    for (let i = 2; i < data.length; i++) {
       const row = data[i];
       
-      // Skip completely empty rows only
-      if (shouldIgnoreRowForOrders(row)) continue;
-      
-      // Check if this row starts a new Purchase Order block (numeric order number)
-      const cellValue = String(row[0]);
-      if (row[0] && /^\d{6}$/.test(cellValue)) { // 6-digit order number
-        console.log('Found Purchase Order start:', row[0]);
-        // Save previous order if exists
-        if (currentOrder && orderLineItems.length > 0) {
-          const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
+      // Check if this row contains a purchase order number in Column A
+      if (row[0] && /^\d{6}$/.test(String(row[0]))) {
+        const purchaseOrderNumber = String(row[0]); // Column A
+        const orderDate = parseExcelDate(row[1]) || new Date(); // Column B
+        const supplier = row[2] ? String(row[2]) : null; // Column C
+        const contactName = row[3] ? String(row[3]) : null; // Column D
+        
+        console.log(`Found Purchase Order: ${purchaseOrderNumber}, Supplier: ${supplier}`);
+        
+        const orderLineItems: any[] = [];
+        
+        // Look for product data in the rows following this order header
+        let j = i + 1;
+        while (j < data.length) {
+          const productRow = data[j];
+          
+          // Stop if we hit an empty row or another order number
+          if (!productRow || productRow.every(cell => !cell || String(cell).trim() === '') || 
+              (productRow[0] && /^\d{6}$/.test(String(productRow[0])))) {
+            break;
+          }
+          
+          // Extract product data from exact columns K, L, M
+          const productName = productRow[10] ? String(productRow[10]) : null; // Column K
+          const priceUsd = parseNumericValue(productRow[11]); // Column L
+          const qty = parseNumericValue(productRow[12]); // Column M
+          
+          console.log(`Purchase Row ${j} - K: "${productName}", L: ${priceUsd}, M: ${qty}`);
+          
+          // Add product if all required data is present
+          if (productName && productName.length > 5 && priceUsd !== null && qty !== null && qty > 0) {
+            const sumUsd = priceUsd * qty;
+            orderLineItems.push({
+              productName,
+              priceUsd: String(priceUsd),
+              qty: Math.round(qty),
+              sumUsd: String(sumUsd),
+            });
+            console.log(`✓ Added purchase product: ${productName.substring(0, 30)}... $${priceUsd} x ${qty} = $${sumUsd}`);
+          }
+          
+          j++;
+        }
+        
+        // Save the order with its line items
+        if (orderLineItems.length > 0) {
+          const orderData = {
+            purchaseOrderNumber,
+            orderDate,
+            supplier,
+            contactName,
+            location,
+            totalAmountUsd: String(orderLineItems.reduce((sum, item) => sum + parseFloat(item.sumUsd), 0)),
+            periodStart,
+            periodEnd,
+          };
+          
+          const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
           for (const item of orderLineItems) {
             await storage.createCompstylePurchaseItem({
               ...item,
@@ -1928,106 +1974,15 @@ print(json.dumps(result))
             });
           }
           count++;
+          console.log(`✓ Saved purchase order ${purchaseOrderNumber} with ${orderLineItems.length} items`);
         }
         
-        // Start new order
-        currentOrder = {
-          purchaseOrderNumber: String(row[0]), // Column A: Purchase Order Number
-          orderDate: parseExcelDate(row[1]) || new Date(), // Column B: Date when goods arrived
-          supplier: row[2] ? String(row[2]) : null, // Column C: Supplier
-          contactName: row[3] ? String(row[3]) : null, // Column D: Contact name
-          location,
-          totalAmountUsd: null, // Will be set when we find the total
-          periodStart,
-          periodEnd,
-        };
-        orderLineItems = [];
-      }
-      
-      // Check for line items - look for rows with product names and pricing data
-      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) { // Not a new order header
-        console.log(`Checking purchase row ${i} for line items:`, row.slice(0, 8).map(cell => String(cell || '').substring(0, 20)));
-        
-        // Look for product name (long text that contains product details)
-        let productName = null;
-        let priceUsd = null;
-        let qty = null;
-        let sumUsd = null;
-        
-        // Scan the row for product name (text that looks like a product)
-        for (let col = 0; col < row.length; col++) {
-          const cellText = String(row[col] || '');
-          // Look for meaningful product names (contains letters and is reasonably long)
-          if (cellText.length > 10 && /[а-яё]/i.test(cellText)) {
-            productName = cellText;
-            console.log(`Found potential purchase product: ${cellText.substring(0, 40)}...`);
-            
-            // Look for numeric values in the same row (any columns)
-            const allNumericValues = [];
-            for (let scanCol = 0; scanCol < row.length; scanCol++) {
-              const val = parseNumericValue(row[scanCol]);
-              if (val !== null && val > 0) {
-                allNumericValues.push({ value: val, column: scanCol });
-              }
-            }
-            
-            console.log(`Found ${allNumericValues.length} numeric values:`, allNumericValues.map(v => v.value));
-            
-            // If we found 2+ numeric values, try to identify price, qty, sum
-            if (allNumericValues.length >= 2) {
-              // Look for values that could be price (> 1), quantity (usually 1-10), sum (usually largest)
-              const prices = allNumericValues.filter(v => v.value > 1 && v.value < 10000);
-              const quantities = allNumericValues.filter(v => v.value >= 1 && v.value <= 50);
-              
-              if (prices.length > 0 && quantities.length > 0) {
-                priceUsd = prices[0].value;
-                qty = quantities[0].value;
-                sumUsd = allNumericValues[allNumericValues.length - 1].value; // Last number is usually sum
-                
-                orderLineItems.push({
-                  productName,
-                  priceUsd: String(priceUsd),
-                  qty: Math.round(qty),
-                  sumUsd: String(sumUsd),
-                });
-                console.log(`✓ Added purchase item: ${productName.substring(0, 30)}... Qty: ${qty}, Price: ${priceUsd}, Sum: ${sumUsd}`);
-              }
-            }
-            break; // Only process first product found in row
-          }
-        }
-      }
-      
-      // Check for order total - look for a single numeric value that could be the total
-      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) {
-        const numericValues = [];
-        for (let col = 0; col < row.length; col++) {
-          const val = parseNumericValue(row[col]);
-          if (val !== null && val > 0) {
-            numericValues.push(val);
-          }
-        }
-        
-        // If row has only one significant numeric value, it might be the total
-        if (numericValues.length === 1 && numericValues[0] > 100) {
-          currentOrder.totalAmountUsd = String(numericValues[0]);
-          console.log(`Found purchase order total: ${numericValues[0]}`);
-        }
+        // Skip to the row we processed last
+        i = j - 1;
       }
     }
     
-    // Save final order if exists
-    if (currentOrder && orderLineItems.length > 0) {
-      const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
-      for (const item of orderLineItems) {
-        await storage.createCompstylePurchaseItem({
-          ...item,
-          purchaseOrderId: orderInDb.id
-        });
-      }
-      count++;
-    }
-    
+    console.log(`Purchase processing complete: ${count} orders saved`);
     return count;
   }
 
