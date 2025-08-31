@@ -1862,57 +1862,28 @@ print(json.dumps(result))
         orderLineItems = [];
       }
       
-      // Check for line items - look for rows with product names and pricing data
+      // Check for line items following your exact specification
       if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) { // Not a new order header
-        console.log(`Checking row ${i} for line items:`, row.slice(0, 8).map(cell => String(cell || '').substring(0, 20)));
+        console.log(`Checking row ${i} for line items:`, row.slice(0, 15).map(cell => String(cell || '').substring(0, 15)));
         
-        // Look for product name (long text that contains product details)
-        let productName = null;
-        let priceUsd = null;
-        let qty = null;
-        let sumUsd = null;
+        // Extract data from exact columns as specified
+        const productName = row[10] ? String(row[10]) : null; // Column K: Product name
+        const priceUsd = parseNumericValue(row[11]); // Column L: Sale price in USD
+        const qty = parseNumericValue(row[12]); // Column M: Sale quantity
         
-        // Scan the row for product name (text that looks like a product)
-        for (let col = 0; col < row.length; col++) {
-          const cellText = String(row[col] || '');
-          // Look for meaningful product names (contains letters and is reasonably long)
-          if (cellText.length > 10 && /[а-яё]/i.test(cellText)) {
-            productName = cellText;
-            console.log(`Found potential product: ${cellText.substring(0, 40)}...`);
-            
-            // Look for numeric values in the same row (any columns)
-            const allNumericValues = [];
-            for (let scanCol = 0; scanCol < row.length; scanCol++) {
-              const val = parseNumericValue(row[scanCol]);
-              if (val !== null && val > 0) {
-                allNumericValues.push({ value: val, column: scanCol });
-              }
-            }
-            
-            console.log(`Found ${allNumericValues.length} numeric values:`, allNumericValues.map(v => v.value));
-            
-            // If we found 2+ numeric values, try to identify price, qty, sum
-            if (allNumericValues.length >= 2) {
-              // Look for values that could be price (> 1), quantity (usually 1-10), sum (usually largest)
-              const prices = allNumericValues.filter(v => v.value > 1 && v.value < 10000);
-              const quantities = allNumericValues.filter(v => v.value >= 1 && v.value <= 50);
-              
-              if (prices.length > 0 && quantities.length > 0) {
-                priceUsd = prices[0].value;
-                qty = quantities[0].value;
-                sumUsd = allNumericValues[allNumericValues.length - 1].value; // Last number is usually sum
-                
-                orderLineItems.push({
-                  productName,
-                  priceUsd: String(priceUsd),
-                  qty: Math.round(qty),
-                  sumUsd: String(sumUsd),
-                });
-                console.log(`✓ Added line item: ${productName.substring(0, 30)}... Qty: ${qty}, Price: ${priceUsd}, Sum: ${sumUsd}`);
-              }
-            }
-            break; // Only process first product found in row
-          }
+        console.log(`Column K (product): "${productName}", Column L (price): ${priceUsd}, Column M (qty): ${qty}`);
+        
+        // Add line item if we have product name and valid price/quantity
+        if (productName && productName.length > 5 && priceUsd !== null && qty !== null && qty > 0) {
+          const sumUsd = priceUsd * qty; // Calculate sum
+          
+          orderLineItems.push({
+            productName,
+            priceUsd: String(priceUsd),
+            qty: Math.round(qty),
+            sumUsd: String(sumUsd),
+          });
+          console.log(`✓ Added line item: ${productName.substring(0, 40)}... Price: ${priceUsd}, Qty: ${qty}, Sum: ${sumUsd}`);
         }
       }
       
