@@ -22,7 +22,7 @@ import { z } from "zod";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import * as XLSX from "xlsx";
+import XLSX from "xlsx";
 import { spawn } from "child_process";
 import archiver from "archiver";
 
@@ -1562,12 +1562,16 @@ print(json.dumps(result))
       }
 
       // Process Excel file
+      console.log("Processing file:", file.path);
+      console.log("XLSX object:", Object.keys(XLSX));
+      
       const workbook = XLSX.readFile(file.path);
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       
       // Convert to JSON with header row handling
       const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      console.log("Parsed data rows:", rawData.length);
       
       let processedCount = 0;
       
