@@ -1824,9 +1824,10 @@ print(json.dumps(result))
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Skip completely empty rows only
-      if (shouldIgnoreRowForOrders(row)) {
-        console.log(`Skipping empty row ${i}`);
+      // Don't skip rows - we need to check all rows for product data in columns K, L, M
+      // Only skip completely empty rows
+      if (!row || row.every(cell => !cell || String(cell).trim() === '')) {
+        console.log(`Skipping completely empty row ${i}`);
         continue;
       }
       
