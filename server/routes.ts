@@ -1760,10 +1760,10 @@ print(json.dumps(result))
   function shouldIgnoreRow(row: any[]): boolean {
     if (!row || !row[0]) return true;
     const cellA = String(row[0]).toLowerCase();
-    // Skip header rows and special cells mentioned in instructions
+    // Skip only specific header labels and special cells mentioned in instructions
     return cellA.includes('поле63:') || cellA.includes('поле46:') || 
            cellA.includes('text84:') || cellA.includes('text88:') ||
-           cellA.includes('марка') || cellA.includes('кодтовара') || cellA.includes('товар');
+           cellA === 'марка' || cellA === 'кодтовара' || cellA === 'товар'; // Only exact matches for headers
   }
 
   // Process In Transit Current file according to specifications
@@ -1986,44 +1986,54 @@ print(json.dumps(result))
       
       // Check for line items - look for rows with product names and pricing data
       if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) { // Not a new order header
+        console.log(`Checking purchase row ${i} for line items:`, row.slice(0, 8).map(cell => String(cell || '').substring(0, 20)));
+        
         // Look for product name (long text that contains product details)
         let productName = null;
         let priceUsd = null;
         let qty = null;
         let sumUsd = null;
         
-        // Scan the row for product name (longest meaningful text)
+        // Scan the row for product name (text that looks like a product)
         for (let col = 0; col < row.length; col++) {
-          if (row[col] && String(row[col]).length > 20) {
-            productName = String(row[col]);
+          const cellText = String(row[col] || '');
+          // Look for meaningful product names (contains letters and is reasonably long)
+          if (cellText.length > 10 && /[а-яё]/i.test(cellText)) {
+            productName = cellText;
+            console.log(`Found potential purchase product: ${cellText.substring(0, 40)}...`);
             
-            // Look for numeric values in subsequent columns for this product
-            const numericValues = [];
-            for (let nextCol = col + 1; nextCol < row.length && nextCol < col + 5; nextCol++) {
-              const val = parseNumericValue(row[nextCol]);
+            // Look for numeric values in the same row (any columns)
+            const allNumericValues = [];
+            for (let scanCol = 0; scanCol < row.length; scanCol++) {
+              const val = parseNumericValue(row[scanCol]);
               if (val !== null && val > 0) {
-                numericValues.push(val);
+                allNumericValues.push({ value: val, column: scanCol });
               }
             }
             
-            // If we found 2-3 numeric values, assume they are price, qty, sum
-            if (numericValues.length >= 2) {
-              priceUsd = numericValues[0]; // First number is price
-              qty = numericValues[1]; // Second number is quantity
-              sumUsd = numericValues[2] || (priceUsd * qty); // Third number or calculated sum
+            console.log(`Found ${allNumericValues.length} numeric values:`, allNumericValues.map(v => v.value));
+            
+            // If we found 2+ numeric values, try to identify price, qty, sum
+            if (allNumericValues.length >= 2) {
+              // Look for values that could be price (> 1), quantity (usually 1-10), sum (usually largest)
+              const prices = allNumericValues.filter(v => v.value > 1 && v.value < 10000);
+              const quantities = allNumericValues.filter(v => v.value >= 1 && v.value <= 50);
               
-              // Only add if quantities make sense
-              if (qty <= 100) { // Reasonable quantity check
+              if (prices.length > 0 && quantities.length > 0) {
+                priceUsd = prices[0].value;
+                qty = quantities[0].value;
+                sumUsd = allNumericValues[allNumericValues.length - 1].value; // Last number is usually sum
+                
                 orderLineItems.push({
                   productName,
                   priceUsd: String(priceUsd),
                   qty: Math.round(qty),
                   sumUsd: String(sumUsd),
                 });
-                console.log(`Added purchase item: ${productName.substring(0, 30)}... Qty: ${qty}, Price: ${priceUsd}`);
+                console.log(`✓ Added purchase item: ${productName.substring(0, 30)}... Qty: ${qty}, Price: ${priceUsd}, Sum: ${sumUsd}`);
               }
-              break; // Found product in this row, move to next row
             }
+            break; // Only process first product found in row
           }
         }
       }
