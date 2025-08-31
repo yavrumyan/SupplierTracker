@@ -1,35 +1,115 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Database, FileText, BarChart, CheckCircle } from "lucide-react";
+import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
-export default function CompStyleDataOverview() {
-  const { data: overview, isLoading } = useQuery({
-    queryKey: ['/api/compstyle/data-overview'],
-  });
-
+// Data table component for displaying records
+function DataTable({ title, description, data, isLoading, icon }: {
+  title: string;
+  description: string;
+  data: any[] | undefined;
+  isLoading: boolean;
+  icon: React.ReactNode;
+}) {
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-slate-200 rounded mb-4 w-64"></div>
-            <div className="h-4 bg-slate-200 rounded mb-8 w-96"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-48 bg-slate-200 rounded"></div>
-              ))}
-            </div>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            {icon}
+            {title}
+          </CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="animate-pulse space-y-2">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-4 bg-slate-200 rounded"></div>
+            ))}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
+  if (!data || data.length === 0) {
+    return (
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            {icon}
+            {title}
+          </CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="text-slate-500 text-center py-4">No data available</div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const columns = Object.keys(data[0]).filter(key => key !== 'id');
+
+  return (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          {icon}
+          {title}
+        </CardTitle>
+        <CardDescription>{description} - {data.length} records shown</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="max-h-80 overflow-auto border rounded">
+          <table className="w-full text-xs">
+            <thead className="bg-slate-50 sticky top-0">
+              <tr>
+                {columns.map(col => (
+                  <th key={col} className="p-2 text-left border-b font-medium">
+                    {col.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, index) => (
+                <tr key={index} className="hover:bg-slate-50">
+                  {columns.map(col => (
+                    <td key={col} className="p-2 border-b">
+                      {typeof row[col] === 'object' && row[col] instanceof Date 
+                        ? row[col].toLocaleDateString()
+                        : String(row[col] || '').substring(0, 50)
+                      }
+                      {String(row[col] || '').length > 50 && '...'}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function CompStyleDataOverview() {
+  // Fetch data for all 10 tables
+  const totalStockQuery = useQuery({ queryKey: ['/api/compstyle/total-stock'] });
+  const locationStockQuery = useQuery({ queryKey: ['/api/compstyle/location-stock'] });
+  const transitQuery = useQuery({ queryKey: ['/api/compstyle/transit'] });
+  const salesOrdersQuery = useQuery({ queryKey: ['/api/compstyle/sales-orders'] });
+  const salesItemsQuery = useQuery({ queryKey: ['/api/compstyle/sales-items'] });
+  const purchaseOrdersQuery = useQuery({ queryKey: ['/api/compstyle/purchase-orders'] });
+  const purchaseItemsQuery = useQuery({ queryKey: ['/api/compstyle/purchase-items'] });
+  const totalSalesQuery = useQuery({ queryKey: ['/api/compstyle/total-sales'] });
+  const totalProcurementQuery = useQuery({ queryKey: ['/api/compstyle/total-procurement'] });
+
   return (
     <div className="min-h-screen bg-slate-50 p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <Link href="/compstyle">
@@ -40,122 +120,84 @@ export default function CompStyleDataOverview() {
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Data Overview</h1>
           <p className="text-slate-600">
-            Real-time status and summary of uploaded CompStyle data files
+            Detailed view of all imported business data tables (20 rows each, scrollable)
           </p>
         </div>
 
-        {/* Real Data Files Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {overview?.files?.map((file, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    {file.type.includes('Inventory') && <Database className="h-4 w-4 text-blue-600" />}
-                    {file.type.includes('Order') && <BarChart className="h-4 w-4 text-green-600" />}
-                    {file.type.includes('Line Items') && <FileText className="h-4 w-4 text-purple-600" />}
-                    {file.type.includes('Analytics') && <Database className="h-4 w-4 text-orange-600" />}
-                    {file.type.includes('Transit') && <FileText className="h-4 w-4 text-red-600" />}
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded flex items-center gap-1">
-                      <CheckCircle className="h-3 w-3" />
-                      {file.status}
-                    </span>
-                  </div>
-                </div>
-                <h3 className="font-semibold text-sm mb-1">{file.name}</h3>
-                <p className="text-xs text-slate-600 mb-2">{file.type}</p>
-                <div className="text-lg font-bold text-slate-900">{file.records.toLocaleString()}</div>
-                <div className="text-xs text-slate-500">records</div>
-              </CardContent>
-            </Card>
-          ))}
+        {/* 10 Data Table Sections */}
+        <div className="space-y-6">
+          <DataTable 
+            title="Total Stock" 
+            description="Complete inventory snapshot across all locations"
+            data={totalStockQuery.data}
+            isLoading={totalStockQuery.isLoading}
+            icon={<Database className="h-5 w-5 text-blue-600" />}
+          />
+
+          <DataTable 
+            title="Location Stock" 
+            description="Stock data by specific locations (Kievyan and Sevan)"
+            data={locationStockQuery.data}
+            isLoading={locationStockQuery.isLoading}
+            icon={<Package className="h-5 w-5 text-green-600" />}
+          />
+
+          <DataTable 
+            title="In Transit" 
+            description="Products currently in transit between locations"
+            data={transitQuery.data}
+            isLoading={transitQuery.isLoading}
+            icon={<Truck className="h-5 w-5 text-orange-600" />}
+          />
+
+          <DataTable 
+            title="Sales Orders" 
+            description="Sales order headers with customer and date information"
+            data={salesOrdersQuery.data}
+            isLoading={salesOrdersQuery.isLoading}
+            icon={<ShoppingCart className="h-5 w-5 text-emerald-600" />}
+          />
+
+          <DataTable 
+            title="Sales Items" 
+            description="Individual products sold with prices and quantities"
+            data={salesItemsQuery.data}
+            isLoading={salesItemsQuery.isLoading}
+            icon={<FileText className="h-5 w-5 text-emerald-500" />}
+          />
+
+          <DataTable 
+            title="Purchase Orders" 
+            description="Purchase order headers with supplier information"
+            data={purchaseOrdersQuery.data}
+            isLoading={purchaseOrdersQuery.isLoading}
+            icon={<ShoppingCart className="h-5 w-5 text-purple-600" />}
+          />
+
+          <DataTable 
+            title="Purchase Items" 
+            description="Individual products purchased with costs and quantities"
+            data={purchaseItemsQuery.data}
+            isLoading={purchaseItemsQuery.isLoading}
+            icon={<FileText className="h-5 w-5 text-purple-500" />}
+          />
+
+          <DataTable 
+            title="Total Sales Report" 
+            description="Aggregated sales data by product and period"
+            data={totalSalesQuery.data}
+            isLoading={totalSalesQuery.isLoading}
+            icon={<BarChart className="h-5 w-5 text-teal-600" />}
+          />
+
+          <DataTable 
+            title="Total Procurement Report" 
+            description="Aggregated procurement data by product and supplier"
+            data={totalProcurementQuery.data}
+            isLoading={totalProcurementQuery.isLoading}
+            icon={<BarChart className="h-5 w-5 text-indigo-600" />}
+          />
         </div>
-
-        {/* Analysis Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Inventory Analysis */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Inventory Analysis</CardTitle>
-              <CardDescription>
-                Analyze stock levels, movement patterns, and optimization opportunities
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/compstyle/inventory-movement">
-                <Button className="w-full" variant="outline">
-                  Inventory Movement Analysis
-                </Button>
-              </Link>
-              <div className="text-sm text-slate-600">
-                • Stock level optimization
-                • Location transfer recommendations
-                • Dead stock identification
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Sales & Profitability */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Sales & Profitability</CardTitle>
-              <CardDescription>
-                Analyze sales performance, profits, and order patterns
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/compstyle/sales-analysis">
-                <Button className="w-full" variant="outline">
-                  Sales Performance
-                </Button>
-              </Link>
-              <div className="text-sm text-slate-600">
-                • Product performance tracking
-                • Location-based sales analysis
-                • Profit margin optimization
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Real Data Summary */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Data Summary</CardTitle>
-            <CardDescription>
-              Real-time statistics from uploaded business data
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="text-center p-4">
-                <div className="text-2xl font-bold text-blue-600">2</div>
-                <div className="text-sm text-slate-600">Locations</div>
-                <div className="text-xs text-slate-500">Kievyan & Sevan</div>
-              </div>
-              <div className="text-center p-4">
-                <div className="text-2xl font-bold text-green-600">{overview?.totals?.totalFiles || 0}</div>
-                <div className="text-sm text-slate-600">Data Sources</div>
-                <div className="text-xs text-slate-500">Files processed</div>
-              </div>
-              <div className="text-center p-4">
-                <div className="text-2xl font-bold text-purple-600">{overview?.totals?.totalRecords?.toLocaleString() || '0'}</div>
-                <div className="text-sm text-slate-600">Total Records</div>
-                <div className="text-xs text-slate-500">Data points analyzed</div>
-              </div>
-              <div className="text-center p-4">
-                <div className="text-2xl font-bold text-orange-600">Live</div>
-                <div className="text-sm text-slate-600">Status</div>
-                <div className="text-xs text-slate-500">
-                  {overview?.totals?.lastUpdated 
-                    ? new Date(overview.totals.lastUpdated).toLocaleTimeString()
-                    : 'Processing...'
-                  }
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

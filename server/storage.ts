@@ -179,6 +179,15 @@ export interface IStorage {
       lastUpdated: string;
     };
   }>;
+  getCompstyleTotalStock(limit?: number): Promise<CompstyleTotalStock[]>;
+  getCompstyleLocationStock(limit?: number): Promise<CompstyleLocationStock[]>;
+  getCompstyleTransit(limit?: number): Promise<CompstyleTransit[]>;
+  getCompstyleSalesOrders(limit?: number): Promise<CompstyleSalesOrder[]>;
+  getCompstyleSalesItems(limit?: number): Promise<CompstyleSalesItem[]>;
+  getCompstylePurchaseOrders(limit?: number): Promise<CompstylePurchaseOrder[]>;
+  getCompstylePurchaseItems(limit?: number): Promise<CompstylePurchaseItem[]>;
+  getCompstyleTotalSales(limit?: number): Promise<CompstyleTotalSales[]>;
+  getCompstyleTotalProcurement(limit?: number): Promise<CompstyleTotalProcurement[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -814,6 +823,42 @@ export class DatabaseStorage implements IStorage {
         lastUpdated: new Date().toISOString()
       }
     };
+  }
+
+  async getCompstyleTotalStock(limit: number = 20): Promise<CompstyleTotalStock[]> {
+    return await db.select().from(compstyleTotalStock).limit(limit);
+  }
+
+  async getCompstyleLocationStock(limit: number = 20): Promise<CompstyleLocationStock[]> {
+    return await db.select().from(compstyleLocationStock).limit(limit);
+  }
+
+  async getCompstyleTransit(limit: number = 20): Promise<CompstyleTransit[]> {
+    return await db.select().from(compstyleTransit).limit(limit);
+  }
+
+  async getCompstyleSalesOrders(limit: number = 20): Promise<CompstyleSalesOrder[]> {
+    return await db.select().from(compstyleSalesOrders).limit(limit);
+  }
+
+  async getCompstyleSalesItems(limit: number = 20): Promise<CompstyleSalesItem[]> {
+    return await db.select().from(compstyleSalesItems).limit(limit);
+  }
+
+  async getCompstylePurchaseOrders(limit: number = 20): Promise<CompstylePurchaseOrder[]> {
+    return await db.select().from(compstylePurchaseOrders).limit(limit);
+  }
+
+  async getCompstylePurchaseItems(limit: number = 20): Promise<CompstylePurchaseItem[]> {
+    return await db.select().from(compstylePurchaseItems).limit(limit);
+  }
+
+  async getCompstyleTotalSales(limit: number = 20): Promise<CompstyleTotalSales[]> {
+    return await db.select().from(compstyleTotalSales).limit(limit);
+  }
+
+  async getCompstyleTotalProcurement(limit: number = 20): Promise<CompstyleTotalProcurement[]> {
+    return await db.select().from(compstyleTotalProcurement).limit(limit);
   }
 }
 

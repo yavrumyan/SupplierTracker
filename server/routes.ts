@@ -1558,6 +1558,97 @@ print(json.dumps(result))
     }
   });
 
+  // API endpoints for each data table (20 rows each for Data Overview)
+  app.get('/api/compstyle/total-stock', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleTotalStock(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching total stock:', error);
+      res.status(500).json({ error: 'Failed to fetch total stock' });
+    }
+  });
+
+  app.get('/api/compstyle/location-stock', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleLocationStock(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching location stock:', error);
+      res.status(500).json({ error: 'Failed to fetch location stock' });
+    }
+  });
+
+  app.get('/api/compstyle/transit', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleTransit(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching transit data:', error);
+      res.status(500).json({ error: 'Failed to fetch transit data' });
+    }
+  });
+
+  app.get('/api/compstyle/sales-orders', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleSalesOrders(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching sales orders:', error);
+      res.status(500).json({ error: 'Failed to fetch sales orders' });
+    }
+  });
+
+  app.get('/api/compstyle/sales-items', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleSalesItems(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching sales items:', error);
+      res.status(500).json({ error: 'Failed to fetch sales items' });
+    }
+  });
+
+  app.get('/api/compstyle/purchase-orders', async (req, res) => {
+    try {
+      const data = await storage.getCompstylePurchaseOrders(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching purchase orders:', error);
+      res.status(500).json({ error: 'Failed to fetch purchase orders' });
+    }
+  });
+
+  app.get('/api/compstyle/purchase-items', async (req, res) => {
+    try {
+      const data = await storage.getCompstylePurchaseItems(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching purchase items:', error);
+      res.status(500).json({ error: 'Failed to fetch purchase items' });
+    }
+  });
+
+  app.get('/api/compstyle/total-sales', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleTotalSales(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching total sales:', error);
+      res.status(500).json({ error: 'Failed to fetch total sales' });
+    }
+  });
+
+  app.get('/api/compstyle/total-procurement', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleTotalProcurement(20);
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching total procurement:', error);
+      res.status(500).json({ error: 'Failed to fetch total procurement' });
+    }
+  });
+
   // CompStyle file upload endpoint
   app.post("/api/compstyle/upload", upload.single('file'), async (req, res) => {
     try {
