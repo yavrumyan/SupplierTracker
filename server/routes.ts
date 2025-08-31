@@ -1561,7 +1561,7 @@ print(json.dumps(result))
   // API endpoints for each data table (20 rows each for Data Overview)
   app.get('/api/compstyle/total-stock', async (req, res) => {
     try {
-      const data = await storage.getCompstyleTotalStock(20);
+      const data = await storage.getCompstyleTotalStock();
       res.json(data);
     } catch (error) {
       console.error('Error fetching total stock:', error);
@@ -1569,19 +1569,29 @@ print(json.dumps(result))
     }
   });
 
-  app.get('/api/compstyle/location-stock', async (req, res) => {
+  app.get('/api/compstyle/kievyan-stock', async (req, res) => {
     try {
-      const data = await storage.getCompstyleLocationStock(20);
+      const data = await storage.getCompstyleKievyanStock();
       res.json(data);
     } catch (error) {
-      console.error('Error fetching location stock:', error);
-      res.status(500).json({ error: 'Failed to fetch location stock' });
+      console.error('Error fetching Kievyan stock:', error);
+      res.status(500).json({ error: 'Failed to fetch Kievyan stock' });
+    }
+  });
+
+  app.get('/api/compstyle/sevan-stock', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleSevanStock();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching Sevan stock:', error);
+      res.status(500).json({ error: 'Failed to fetch Sevan stock' });
     }
   });
 
   app.get('/api/compstyle/transit', async (req, res) => {
     try {
-      const data = await storage.getCompstyleTransit(20);
+      const data = await storage.getCompstyleTransit();
       res.json(data);
     } catch (error) {
       console.error('Error fetching transit data:', error);
@@ -1591,7 +1601,7 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/sales-orders', async (req, res) => {
     try {
-      const data = await storage.getCompstyleSalesOrders(20);
+      const data = await storage.getCompstyleSalesOrders();
       res.json(data);
     } catch (error) {
       console.error('Error fetching sales orders:', error);
@@ -1601,7 +1611,7 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/sales-items', async (req, res) => {
     try {
-      const data = await storage.getCompstyleSalesItems(20);
+      const data = await storage.getCompstyleSalesItems();
       res.json(data);
     } catch (error) {
       console.error('Error fetching sales items:', error);
@@ -1611,7 +1621,7 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/purchase-orders', async (req, res) => {
     try {
-      const data = await storage.getCompstylePurchaseOrders(20);
+      const data = await storage.getCompstylePurchaseOrders();
       res.json(data);
     } catch (error) {
       console.error('Error fetching purchase orders:', error);
@@ -1621,7 +1631,7 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/purchase-items', async (req, res) => {
     try {
-      const data = await storage.getCompstylePurchaseItems(20);
+      const data = await storage.getCompstylePurchaseItems();
       res.json(data);
     } catch (error) {
       console.error('Error fetching purchase items:', error);
@@ -1631,7 +1641,7 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/total-sales', async (req, res) => {
     try {
-      const data = await storage.getCompstyleTotalSales(20);
+      const data = await storage.getCompstyleTotalSales();
       res.json(data);
     } catch (error) {
       console.error('Error fetching total sales:', error);
@@ -1641,7 +1651,7 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/total-procurement', async (req, res) => {
     try {
-      const data = await storage.getCompstyleTotalProcurement(20);
+      const data = await storage.getCompstyleTotalProcurement();
       res.json(data);
     } catch (error) {
       console.error('Error fetching total procurement:', error);
@@ -1804,13 +1814,19 @@ print(json.dumps(result))
       
       if (qty === null) continue; // Skip if quantity is not valid
       
-      await storage.createCompstyleLocationStock({
-        productName: String(row[0]), // Column A (КодТовара): Name of product
-        locationId: location.id,
-        qty, // Column B (Остаток): Quantity of product in stock
-        retailPriceAmd: retailPriceAmd ? String(retailPriceAmd) : null, // Column C (БухЦена): Actual retail price in AMD
-        reportDate,
-      });
+      if (locationName === "Kievyan") {
+        await storage.createCompstyleKievyanStock({
+          productName: String(row[0]), // Column A (КодТовара): Name of product
+          qty, // Column B (Остаток): Quantity of product in stock
+          retailPriceAmd: retailPriceAmd ? String(retailPriceAmd) : null, // Column C (БухЦена): Actual retail price in AMD
+        });
+      } else {
+        await storage.createCompstyleSevanStock({
+          productName: String(row[0]), // Column A (КодТовара): Name of product
+          qty, // Column B (Остаток): Quantity of product in stock
+          retailPriceAmd: retailPriceAmd ? String(retailPriceAmd) : null, // Column C (БухЦена): Actual retail price in AMD
+        });
+      }
       count++;
     }
     return count;

@@ -289,7 +289,7 @@ export const compstyleLocations = pgTable("compstyle_locations", {
 // Total Stock Current - Master inventory with all pricing
 export const compstyleTotalStock = pgTable("compstyle_total_stock", {
   id: serial("id").primaryKey(),
-  productName: text("product_name").notNull(), // Column B (Марка)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column B (Марка)
   sku: text("sku").notNull(), // Column J (КодТовара) - Unique internal SKU
   qtyInStock: integer("qty_in_stock").notNull(), // Column C (НаСкладе)
   retailPriceUsd: decimal("retail_price_usd", { precision: 10, scale: 2 }), // Column D (Цена)
@@ -297,24 +297,28 @@ export const compstyleTotalStock = pgTable("compstyle_total_stock", {
   wholesalePrice1: decimal("wholesale_price1", { precision: 10, scale: 2 }), // Column F (Диллерская цена1) - qty < 5
   wholesalePrice2: decimal("wholesale_price2", { precision: 10, scale: 2 }), // Column G (Диллерская цена2) - qty >= 5
   currentCost: decimal("current_cost", { precision: 10, scale: 2 }), // Column H (ЦенаНаНас)
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
-// Location-specific stock (Kievyan & Sevan)
-export const compstyleLocationStock = pgTable("compstyle_location_stock", {
+// Kievyan 11 Retail Stock
+export const compstyleKievyanStock = pgTable("compstyle_kievyan_stock", {
   id: serial("id").primaryKey(),
-  productName: text("product_name").notNull(), // Column A (КодТовара)
-  locationId: integer("location_id").references(() => compstyleLocations.id).notNull(),
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (КодТовара)
   qty: integer("qty").notNull(), // Column B (Остаток)
   retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column C (БухЦена)
-  reportDate: timestamp("report_date"), // From cell A1
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+// Sevan 5 Warehouse Stock
+export const compstyleSevanStock = pgTable("compstyle_sevan_stock", {
+  id: serial("id").primaryKey(),
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (КодТовара)
+  qty: integer("qty").notNull(), // Column B (Остаток)
+  retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column C (БухЦена)
 });
 
 // In Transit - Goods coming to locations
 export const compstyleTransit = pgTable("compstyle_transit", {
   id: serial("id").primaryKey(),
-  productName: text("product_name").notNull(), // Column A (Товар)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (Товар)
   qty: integer("qty").notNull(), // Column B (Кол.)
   purchasePriceUsd: decimal("purchase_price_usd", { precision: 10, scale: 2 }), // Column C (Цена $)
   purchasePriceAmd: decimal("purchase_price_amd", { precision: 10, scale: 2 }), // Column D (Цена AMD)
@@ -322,7 +326,6 @@ export const compstyleTransit = pgTable("compstyle_transit", {
   purchaseOrderNumber: text("purchase_order_number"), // Column J (Связь)
   destinationLocation: text("destination_location"), // Column O (Склад)
   supplier: text("supplier"), // Column P (Поставщик)
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
 // Sales Orders by Location
@@ -334,16 +337,12 @@ export const compstyleSalesOrders = pgTable("compstyle_sales_orders", {
   contactName: text("contact_name"), // Column D (Через)
   location: text("location").notNull(), // "Kievyan" or "Sevan"
   totalAmountUsd: decimal("total_amount_usd", { precision: 12, scale: 2 }), // Column O
-  periodStart: text("period_start").notNull(), // From filename
-  periodEnd: text("period_end").notNull(), // From filename
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
 // Sales Order Line Items
 export const compstyleSalesItems = pgTable("compstyle_sales_items", {
   id: serial("id").primaryKey(),
-  salesOrderId: integer("sales_order_id").references(() => compstyleSalesOrders.id).notNull(),
-  productName: text("product_name").notNull(), // Column K (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column K (КодТовара)
   priceUsd: decimal("price_usd", { precision: 10, scale: 2 }), // Column L (Цена)
   qty: integer("qty").notNull(), // Column M (Количество)
   sumUsd: decimal("sum_usd", { precision: 12, scale: 2 }), // Column N (Поле66)
@@ -358,16 +357,12 @@ export const compstylePurchaseOrders = pgTable("compstyle_purchase_orders", {
   contactName: text("contact_name"), // Column D (Через)
   location: text("location").notNull(), // "Kievyan" or "Sevan"
   totalAmountUsd: decimal("total_amount_usd", { precision: 12, scale: 2 }), // Column O
-  periodStart: text("period_start").notNull(), // From filename
-  periodEnd: text("period_end").notNull(), // From filename
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
 // Purchase Order Line Items
 export const compstylePurchaseItems = pgTable("compstyle_purchase_items", {
   id: serial("id").primaryKey(),
-  purchaseOrderId: integer("purchase_order_id").references(() => compstylePurchaseOrders.id).notNull(),
-  productName: text("product_name").notNull(), // Column K (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column K (КодТовара)
   priceUsd: decimal("price_usd", { precision: 10, scale: 2 }), // Column L (Цена)
   qty: integer("qty").notNull(), // Column M (Количество)
   sumUsd: decimal("sum_usd", { precision: 12, scale: 2 }), // Column N (Поле66)
@@ -376,61 +371,24 @@ export const compstylePurchaseItems = pgTable("compstyle_purchase_items", {
 // Total Sales by Goods - Aggregated sales data
 export const compstyleTotalSales = pgTable("compstyle_total_sales", {
   id: serial("id").primaryKey(),
-  productName: text("product_name").notNull(), // Column B (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column B (КодТовара)
   qtySold: integer("qty_sold").notNull(), // Column E (Количество)
   salePriceUsd: decimal("sale_price_usd", { precision: 10, scale: 2 }), // Column F (Цена)
   costPriceUsd: decimal("cost_price_usd", { precision: 10, scale: 2 }), // Column G (Учетная цена)
   profitPerUnit: decimal("profit_per_unit", { precision: 10, scale: 2 }), // Calculated: Column F - Column G
   totalProfit: decimal("total_profit", { precision: 12, scale: 2 }), // Calculated: (Column F - Column G) * Column E
-  periodStart: text("period_start").notNull(), // From filename
-  periodEnd: text("period_end").notNull(), // From filename
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
 // Total Procurement by Goods - Aggregated purchase data
 export const compstyleTotalProcurement = pgTable("compstyle_total_procurement", {
   id: serial("id").primaryKey(),
-  productName: text("product_name").notNull(), // Column B (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column B (КодТовара)
   qtyPurchased: integer("qty_purchased").notNull(), // Column E (Количество)
   purchasePriceUsd: decimal("purchase_price_usd", { precision: 10, scale: 2 }), // Column F (Цена)
-  periodStart: text("period_start").notNull(), // From filename
-  periodEnd: text("period_end").notNull(), // From filename
-  uploadedAt: timestamp("uploaded_at").defaultNow(),
 });
 
 // CompStyle Relations
-export const compstyleLocationStockRelations = relations(compstyleLocationStock, ({ one }) => ({
-  location: one(compstyleLocations, {
-    fields: [compstyleLocationStock.locationId],
-    references: [compstyleLocations.id],
-  }),
-}));
 
-export const compstyleLocationsRelations = relations(compstyleLocations, ({ many }) => ({
-  locationStock: many(compstyleLocationStock),
-}));
-
-export const compstyleSalesOrdersRelations = relations(compstyleSalesOrders, ({ many }) => ({
-  items: many(compstyleSalesItems),
-}));
-
-export const compstyleSalesItemsRelations = relations(compstyleSalesItems, ({ one }) => ({
-  salesOrder: one(compstyleSalesOrders, {
-    fields: [compstyleSalesItems.salesOrderId],
-    references: [compstyleSalesOrders.id],
-  }),
-}));
-
-export const compstylePurchaseOrdersRelations = relations(compstylePurchaseOrders, ({ many }) => ({
-  items: many(compstylePurchaseItems),
-}));
-
-export const compstylePurchaseItemsRelations = relations(compstylePurchaseItems, ({ one }) => ({
-  purchaseOrder: one(compstylePurchaseOrders, {
-    fields: [compstylePurchaseItems.purchaseOrderId],
-    references: [compstylePurchaseOrders.id],
-  }),
-}));
 
 // CompStyle Zod schemas
 export const insertCompstyleLocationSchema = createInsertSchema(compstyleLocations).omit({
@@ -440,22 +398,22 @@ export const insertCompstyleLocationSchema = createInsertSchema(compstyleLocatio
 
 export const insertCompstyleTotalStockSchema = createInsertSchema(compstyleTotalStock).omit({
   id: true,
-  uploadedAt: true,
 });
 
-export const insertCompstyleLocationStockSchema = createInsertSchema(compstyleLocationStock).omit({
+export const insertCompstyleKievyanStockSchema = createInsertSchema(compstyleKievyanStock).omit({
   id: true,
-  uploadedAt: true,
+});
+
+export const insertCompstyleSevanStockSchema = createInsertSchema(compstyleSevanStock).omit({
+  id: true,
 });
 
 export const insertCompstyleTransitSchema = createInsertSchema(compstyleTransit).omit({
   id: true,
-  uploadedAt: true,
 });
 
 export const insertCompstyleSalesOrderSchema = createInsertSchema(compstyleSalesOrders).omit({
   id: true,
-  uploadedAt: true,
 });
 
 export const insertCompstyleSalesItemSchema = createInsertSchema(compstyleSalesItems).omit({
@@ -464,7 +422,6 @@ export const insertCompstyleSalesItemSchema = createInsertSchema(compstyleSalesI
 
 export const insertCompstylePurchaseOrderSchema = createInsertSchema(compstylePurchaseOrders).omit({
   id: true,
-  uploadedAt: true,
 });
 
 export const insertCompstylePurchaseItemSchema = createInsertSchema(compstylePurchaseItems).omit({
@@ -473,12 +430,10 @@ export const insertCompstylePurchaseItemSchema = createInsertSchema(compstylePur
 
 export const insertCompstyleTotalSalesSchema = createInsertSchema(compstyleTotalSales).omit({
   id: true,
-  uploadedAt: true,
 });
 
 export const insertCompstyleTotalProcurementSchema = createInsertSchema(compstyleTotalProcurement).omit({
   id: true,
-  uploadedAt: true,
 });
 
 // CompStyle Types
@@ -486,8 +441,10 @@ export type CompstyleLocation = typeof compstyleLocations.$inferSelect;
 export type InsertCompstyleLocation = z.infer<typeof insertCompstyleLocationSchema>;
 export type CompstyleTotalStock = typeof compstyleTotalStock.$inferSelect;
 export type InsertCompstyleTotalStock = z.infer<typeof insertCompstyleTotalStockSchema>;
-export type CompstyleLocationStock = typeof compstyleLocationStock.$inferSelect;
-export type InsertCompstyleLocationStock = z.infer<typeof insertCompstyleLocationStockSchema>;
+export type CompstyleKievyanStock = typeof compstyleKievyanStock.$inferSelect;
+export type InsertCompstyleKievyanStock = z.infer<typeof insertCompstyleKievyanStockSchema>;
+export type CompstyleSevanStock = typeof compstyleSevanStock.$inferSelect;
+export type InsertCompstyleSevanStock = z.infer<typeof insertCompstyleSevanStockSchema>;
 export type CompstyleTransit = typeof compstyleTransit.$inferSelect;
 export type InsertCompstyleTransit = z.infer<typeof insertCompstyleTransitSchema>;
 export type CompstyleSalesOrder = typeof compstyleSalesOrders.$inferSelect;

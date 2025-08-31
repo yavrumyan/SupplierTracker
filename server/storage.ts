@@ -12,7 +12,8 @@ import {
   users,
   compstyleLocations,
   compstyleTotalStock,
-  compstyleLocationStock,
+  compstyleKievyanStock,
+  compstyleSevanStock,
   compstyleTransit,
   compstyleSalesOrders,
   compstyleSalesItems,
@@ -45,8 +46,10 @@ import {
   type InsertCompstyleLocation,
   type CompstyleTotalStock,
   type InsertCompstyleTotalStock,
-  type CompstyleLocationStock,
-  type InsertCompstyleLocationStock,
+  type CompstyleKievyanStock,
+  type InsertCompstyleKievyanStock,
+  type CompstyleSevanStock,
+  type InsertCompstyleSevanStock,
   type CompstyleTransit,
   type InsertCompstyleTransit,
   type CompstyleSalesOrder,
@@ -152,7 +155,8 @@ export interface IStorage {
   createCompstyleLocation(location: InsertCompstyleLocation): Promise<CompstyleLocation>;
   getCompstyleLocations(): Promise<CompstyleLocation[]>;
   createCompstyleTotalStock(stock: InsertCompstyleTotalStock): Promise<CompstyleTotalStock>;
-  createCompstyleLocationStock(stock: InsertCompstyleLocationStock): Promise<CompstyleLocationStock>;
+  createCompstyleKievyanStock(stock: InsertCompstyleKievyanStock): Promise<CompstyleKievyanStock>;
+  createCompstyleSevanStock(stock: InsertCompstyleSevanStock): Promise<CompstyleSevanStock>;
   createCompstyleTransit(transit: InsertCompstyleTransit): Promise<CompstyleTransit>;
   createCompstyleSalesOrder(order: InsertCompstyleSalesOrder): Promise<CompstyleSalesOrder>;
   createCompstyleSalesItem(item: InsertCompstyleSalesItem): Promise<CompstyleSalesItem>;
@@ -179,15 +183,16 @@ export interface IStorage {
       lastUpdated: string;
     };
   }>;
-  getCompstyleTotalStock(limit?: number): Promise<CompstyleTotalStock[]>;
-  getCompstyleLocationStock(limit?: number): Promise<CompstyleLocationStock[]>;
-  getCompstyleTransit(limit?: number): Promise<CompstyleTransit[]>;
-  getCompstyleSalesOrders(limit?: number): Promise<CompstyleSalesOrder[]>;
-  getCompstyleSalesItems(limit?: number): Promise<CompstyleSalesItem[]>;
-  getCompstylePurchaseOrders(limit?: number): Promise<CompstylePurchaseOrder[]>;
-  getCompstylePurchaseItems(limit?: number): Promise<CompstylePurchaseItem[]>;
-  getCompstyleTotalSales(limit?: number): Promise<CompstyleTotalSales[]>;
-  getCompstyleTotalProcurement(limit?: number): Promise<CompstyleTotalProcurement[]>;
+  getCompstyleTotalStock(): Promise<CompstyleTotalStock[]>;
+  getCompstyleKievyanStock(): Promise<CompstyleKievyanStock[]>;
+  getCompstyleSevanStock(): Promise<CompstyleSevanStock[]>;
+  getCompstyleTransit(): Promise<CompstyleTransit[]>;
+  getCompstyleSalesOrders(): Promise<CompstyleSalesOrder[]>;
+  getCompstyleSalesItems(): Promise<CompstyleSalesItem[]>;
+  getCompstylePurchaseOrders(): Promise<CompstylePurchaseOrder[]>;
+  getCompstylePurchaseItems(): Promise<CompstylePurchaseItem[]>;
+  getCompstyleTotalSales(): Promise<CompstyleTotalSales[]>;
+  getCompstyleTotalProcurement(): Promise<CompstyleTotalProcurement[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -709,8 +714,13 @@ export class DatabaseStorage implements IStorage {
     return newStock;
   }
 
-  async createCompstyleLocationStock(stock: InsertCompstyleLocationStock): Promise<CompstyleLocationStock> {
-    const [newStock] = await db.insert(compstyleLocationStock).values(stock).returning();
+  async createCompstyleKievyanStock(stock: InsertCompstyleKievyanStock): Promise<CompstyleKievyanStock> {
+    const [newStock] = await db.insert(compstyleKievyanStock).values(stock).returning();
+    return newStock;
+  }
+
+  async createCompstyleSevanStock(stock: InsertCompstyleSevanStock): Promise<CompstyleSevanStock> {
+    const [newStock] = await db.insert(compstyleSevanStock).values(stock).returning();
     return newStock;
   }
 
@@ -780,7 +790,8 @@ export class DatabaseStorage implements IStorage {
     // Get actual data counts from all CompStyle tables
     const [
       totalStockCount,
-      locationStockCount,
+      kievyanStockCount,
+      sevanStockCount,
       transitCount,
       salesOrdersCount,
       salesItemsCount,
@@ -790,7 +801,8 @@ export class DatabaseStorage implements IStorage {
       totalProcurementCount
     ] = await Promise.all([
       db.select({ count: sql<number>`count(*)` }).from(compstyleTotalStock),
-      db.select({ count: sql<number>`count(*)` }).from(compstyleLocationStock),
+      db.select({ count: sql<number>`count(*)` }).from(compstyleKievyanStock),
+      db.select({ count: sql<number>`count(*)` }).from(compstyleSevanStock),
       db.select({ count: sql<number>`count(*)` }).from(compstyleTransit),
       db.select({ count: sql<number>`count(*)` }).from(compstyleSalesOrders),
       db.select({ count: sql<number>`count(*)` }).from(compstyleSalesItems),
@@ -802,8 +814,8 @@ export class DatabaseStorage implements IStorage {
 
     const files = [
       { name: "Total Stock", type: "Inventory Snapshot", records: totalStockCount[0].count, status: "Processed" },
-      { name: "Kievyan Stock", type: "Location Inventory", records: Math.floor(locationStockCount[0].count / 2), status: "Processed" },
-      { name: "Sevan Stock", type: "Location Inventory", records: Math.ceil(locationStockCount[0].count / 2), status: "Processed" },
+      { name: "Kievyan Stock", type: "Location Inventory", records: kievyanStockCount[0].count, status: "Processed" },
+      { name: "Sevan Stock", type: "Location Inventory", records: sevanStockCount[0].count, status: "Processed" },
       { name: "In Transit", type: "Transit Data", records: transitCount[0].count, status: "Processed" },
       { name: "Sales Orders", type: "Order Processing", records: salesOrdersCount[0].count, status: "Processed" },
       { name: "Sales Items", type: "Line Items", records: salesItemsCount[0].count, status: "Processed" },
@@ -825,40 +837,44 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async getCompstyleTotalStock(limit: number = 20): Promise<CompstyleTotalStock[]> {
-    return await db.select().from(compstyleTotalStock).limit(limit);
+  async getCompstyleTotalStock(): Promise<CompstyleTotalStock[]> {
+    return await db.select().from(compstyleTotalStock);
   }
 
-  async getCompstyleLocationStock(limit: number = 20): Promise<CompstyleLocationStock[]> {
-    return await db.select().from(compstyleLocationStock).limit(limit);
+  async getCompstyleKievyanStock(): Promise<CompstyleKievyanStock[]> {
+    return await db.select().from(compstyleKievyanStock);
   }
 
-  async getCompstyleTransit(limit: number = 20): Promise<CompstyleTransit[]> {
-    return await db.select().from(compstyleTransit).limit(limit);
+  async getCompstyleSevanStock(): Promise<CompstyleSevanStock[]> {
+    return await db.select().from(compstyleSevanStock);
   }
 
-  async getCompstyleSalesOrders(limit: number = 20): Promise<CompstyleSalesOrder[]> {
-    return await db.select().from(compstyleSalesOrders).limit(limit);
+  async getCompstyleTransit(): Promise<CompstyleTransit[]> {
+    return await db.select().from(compstyleTransit);
   }
 
-  async getCompstyleSalesItems(limit: number = 20): Promise<CompstyleSalesItem[]> {
-    return await db.select().from(compstyleSalesItems).limit(limit);
+  async getCompstyleSalesOrders(): Promise<CompstyleSalesOrder[]> {
+    return await db.select().from(compstyleSalesOrders);
   }
 
-  async getCompstylePurchaseOrders(limit: number = 20): Promise<CompstylePurchaseOrder[]> {
-    return await db.select().from(compstylePurchaseOrders).limit(limit);
+  async getCompstyleSalesItems(): Promise<CompstyleSalesItem[]> {
+    return await db.select().from(compstyleSalesItems);
   }
 
-  async getCompstylePurchaseItems(limit: number = 20): Promise<CompstylePurchaseItem[]> {
-    return await db.select().from(compstylePurchaseItems).limit(limit);
+  async getCompstylePurchaseOrders(): Promise<CompstylePurchaseOrder[]> {
+    return await db.select().from(compstylePurchaseOrders);
   }
 
-  async getCompstyleTotalSales(limit: number = 20): Promise<CompstyleTotalSales[]> {
-    return await db.select().from(compstyleTotalSales).limit(limit);
+  async getCompstylePurchaseItems(): Promise<CompstylePurchaseItem[]> {
+    return await db.select().from(compstylePurchaseItems);
   }
 
-  async getCompstyleTotalProcurement(limit: number = 20): Promise<CompstyleTotalProcurement[]> {
-    return await db.select().from(compstyleTotalProcurement).limit(limit);
+  async getCompstyleTotalSales(): Promise<CompstyleTotalSales[]> {
+    return await db.select().from(compstyleTotalSales);
+  }
+
+  async getCompstyleTotalProcurement(): Promise<CompstyleTotalProcurement[]> {
+    return await db.select().from(compstyleTotalProcurement);
   }
 }
 

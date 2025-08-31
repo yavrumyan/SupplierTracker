@@ -98,7 +98,8 @@ function DataTable({ title, description, data, isLoading, icon }: {
 export default function CompStyleDataOverview() {
   // Fetch data for all 10 tables
   const totalStockQuery = useQuery({ queryKey: ['/api/compstyle/total-stock'] });
-  const locationStockQuery = useQuery({ queryKey: ['/api/compstyle/location-stock'] });
+  const kievyanStockQuery = useQuery({ queryKey: ['/api/compstyle/kievyan-stock'] });
+  const sevanStockQuery = useQuery({ queryKey: ['/api/compstyle/sevan-stock'] });
   const transitQuery = useQuery({ queryKey: ['/api/compstyle/transit'] });
   const salesOrdersQuery = useQuery({ queryKey: ['/api/compstyle/sales-orders'] });
   const salesItemsQuery = useQuery({ queryKey: ['/api/compstyle/sales-items'] });
@@ -120,7 +121,7 @@ export default function CompStyleDataOverview() {
           </Link>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Data Overview</h1>
           <p className="text-slate-600">
-            Detailed view of all imported business data tables (20 rows each, scrollable)
+            Detailed view of all imported business data tables (complete data, scrollable)
           </p>
         </div>
 
@@ -135,11 +136,19 @@ export default function CompStyleDataOverview() {
           />
 
           <DataTable 
-            title="Location Stock" 
-            description="Stock data by specific locations (Kievyan and Sevan)"
-            data={locationStockQuery.data}
-            isLoading={locationStockQuery.isLoading}
+            title="Kievyan Stock" 
+            description="Stock data for Kievyan 11 retail location"
+            data={kievyanStockQuery.data}
+            isLoading={kievyanStockQuery.isLoading}
             icon={<Package className="h-5 w-5 text-green-600" />}
+          />
+
+          <DataTable 
+            title="Sevan Stock" 
+            description="Stock data for Sevan 5 warehouse location"
+            data={sevanStockQuery.data}
+            isLoading={sevanStockQuery.isLoading}
+            icon={<Package className="h-5 w-5 text-blue-600" />}
           />
 
           <DataTable 
