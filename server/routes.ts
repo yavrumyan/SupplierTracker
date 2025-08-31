@@ -1812,34 +1812,73 @@ print(json.dumps(result))
   // Process Sales by Location files according to specifications (block-based structure)
   async function processSalesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
-    console.log(`Processing sales file for ${location}, rows: ${data.length}`);
+    console.log(`Processing sales file for ${location}, total rows: ${data.length}`);
     
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
-    
-    let currentOrder: any = null;
-    let orderLineItems: any[] = [];
     
     // Process starting from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Don't skip rows - we need to check all rows for product data in columns K, L, M
-      // Only skip completely empty rows
-      if (!row || row.every(cell => !cell || String(cell).trim() === '')) {
-        console.log(`Skipping completely empty row ${i}`);
-        continue;
-      }
-      
-      console.log(`Processing row ${i}:`, row.slice(0, 5).map(cell => String(cell || '').substring(0, 15)));
-      
-      // Check if this row starts a new Sales Order block (numeric order number)
-      const cellValue = String(row[0]);
-      if (row[0] && /^\d{6}$/.test(cellValue)) { // 6-digit order number like 226501
-        console.log('Found Sales Order start:', row[0]);
-        // Save previous order if exists
-        if (currentOrder && orderLineItems.length > 0) {
-          const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
+      // Check if this row contains a sales order number in Column A
+      if (row[0] && /^\d{6}$/.test(String(row[0]))) {
+        const salesOrderNumber = String(row[0]); // Column A
+        const orderDate = parseExcelDate(row[1]) || new Date(); // Column B
+        const customer = row[2] ? String(row[2]) : null; // Column C
+        const contactName = row[3] ? String(row[3]) : null; // Column D
+        
+        console.log(`Found Sales Order: ${salesOrderNumber}, Customer: ${customer}`);
+        
+        const orderLineItems: any[] = [];
+        
+        // Look for product data in the rows following this order header
+        let j = i + 1;
+        while (j < data.length) {
+          const productRow = data[j];
+          
+          // Stop if we hit an empty row or another order number
+          if (!productRow || productRow.every(cell => !cell || String(cell).trim() === '') || 
+              (productRow[0] && /^\d{6}$/.test(String(productRow[0])))) {
+            break;
+          }
+          
+          // Extract product data from exact columns K, L, M
+          const productName = productRow[10] ? String(productRow[10]) : null; // Column K
+          const priceUsd = parseNumericValue(productRow[11]); // Column L
+          const qty = parseNumericValue(productRow[12]); // Column M
+          
+          console.log(`Row ${j} - K: "${productName}", L: ${priceUsd}, M: ${qty}`);
+          
+          // Add product if all required data is present
+          if (productName && productName.length > 5 && priceUsd !== null && qty !== null && qty > 0) {
+            const sumUsd = priceUsd * qty;
+            orderLineItems.push({
+              productName,
+              priceUsd: String(priceUsd),
+              qty: Math.round(qty),
+              sumUsd: String(sumUsd),
+            });
+            console.log(`✓ Added product: ${productName.substring(0, 30)}... $${priceUsd} x ${qty} = $${sumUsd}`);
+          }
+          
+          j++;
+        }
+        
+        // Save the order with its line items
+        if (orderLineItems.length > 0) {
+          const orderData = {
+            salesOrderNumber,
+            orderDate,
+            customer,
+            contactName,
+            location,
+            totalAmountUsd: String(orderLineItems.reduce((sum, item) => sum + parseFloat(item.sumUsd), 0)),
+            periodStart,
+            periodEnd,
+          };
+          
+          const orderInDb = await storage.createCompstyleSalesOrder(orderData);
           for (const item of orderLineItems) {
             await storage.createCompstyleSalesItem({
               ...item,
@@ -1847,77 +1886,15 @@ print(json.dumps(result))
             });
           }
           count++;
+          console.log(`✓ Saved sales order ${salesOrderNumber} with ${orderLineItems.length} items`);
         }
         
-        // Start new order
-        currentOrder = {
-          salesOrderNumber: String(row[0]), // Column A: Sales Order Number (e.g., 226501)
-          orderDate: parseExcelDate(row[1]) || new Date(), // Column B: Date of Sales Order
-          customer: row[2] ? String(row[2]) : null, // Column C: Customer name
-          contactName: row[3] ? String(row[3]) : null, // Column D: Contact name
-          location,
-          totalAmountUsd: null, // Will be set when we find the total
-          periodStart,
-          periodEnd,
-        };
-        orderLineItems = [];
-      }
-      
-      // Check for line items following your exact specification
-      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) { // Not a new order header
-        console.log(`Checking row ${i} for line items:`, row.slice(0, 15).map(cell => String(cell || '').substring(0, 15)));
-        
-        // Extract data from exact columns as specified
-        const productName = row[10] ? String(row[10]) : null; // Column K: Product name
-        const priceUsd = parseNumericValue(row[11]); // Column L: Sale price in USD
-        const qty = parseNumericValue(row[12]); // Column M: Sale quantity
-        
-        console.log(`Column K (product): "${productName}", Column L (price): ${priceUsd}, Column M (qty): ${qty}`);
-        
-        // Add line item if we have product name and valid price/quantity
-        if (productName && productName.length > 5 && priceUsd !== null && qty !== null && qty > 0) {
-          const sumUsd = priceUsd * qty; // Calculate sum
-          
-          orderLineItems.push({
-            productName,
-            priceUsd: String(priceUsd),
-            qty: Math.round(qty),
-            sumUsd: String(sumUsd),
-          });
-          console.log(`✓ Added line item: ${productName.substring(0, 40)}... Price: ${priceUsd}, Qty: ${qty}, Sum: ${sumUsd}`);
-        }
-      }
-      
-      // Check for order total - look for a single numeric value that could be the total
-      if (currentOrder && !(/^\d{6}$/.test(String(row[0])))) {
-        const numericValues = [];
-        for (let col = 0; col < row.length; col++) {
-          const val = parseNumericValue(row[col]);
-          if (val !== null && val > 0) {
-            numericValues.push(val);
-          }
-        }
-        
-        // If row has only one significant numeric value, it might be the total
-        if (numericValues.length === 1 && numericValues[0] > 100) {
-          currentOrder.totalAmountUsd = String(numericValues[0]);
-          console.log(`Found order total: ${numericValues[0]}`);
-        }
+        // Skip to the row we processed last
+        i = j - 1;
       }
     }
     
-    // Save final order if exists
-    if (currentOrder && orderLineItems.length > 0) {
-      const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
-      for (const item of orderLineItems) {
-        await storage.createCompstyleSalesItem({
-          ...item,
-          salesOrderId: orderInDb.id
-        });
-      }
-      count++;
-    }
-    
+    console.log(`Sales processing complete: ${count} orders saved`);
     return count;
   }
 
