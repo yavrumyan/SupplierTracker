@@ -1679,16 +1679,42 @@ print(json.dumps(result))
       const row = data[i];
       if (!row[0] || !row[1]) continue; // Skip if no product name or quantity
       
+      // Skip header rows by checking if the product name contains Russian headers
+      if (isHeaderRow(row[0])) continue;
+      
+      // Validate numeric data
+      const qty = parseNumericValue(row[1]);
+      const retailPriceAmd = parseNumericValue(row[2]);
+      
+      if (qty === null) continue; // Skip if quantity is not a valid number
+      
       await storage.createCompstyleLocationStock({
         productName: String(row[0]), // Column A (КодТовара)
         locationId: location.id,
-        qty: Number(row[1]) || 0, // Column B (Остаток)
-        retailPriceAmd: row[2] ? String(row[2]) : null, // Column C (БухЦена)
+        qty, // Column B (Остаток)
+        retailPriceAmd: retailPriceAmd ? String(retailPriceAmd) : null, // Column C (БухЦена)
         reportDate,
       });
       count++;
     }
     return count;
+  }
+
+  // Helper function to detect header rows
+  function isHeaderRow(value: any): boolean {
+    if (!value) return false;
+    const str = String(value).toLowerCase();
+    return str.includes('товар') || str.includes('марка') || str.includes('код') || 
+           str.includes('цена') || str.includes('количество') || str.includes('остаток') ||
+           str.includes('поле') || str.includes('клиент') || str.includes('дата');
+  }
+
+  // Helper function to parse numeric values safely
+  function parseNumericValue(value: any): number | null {
+    if (!value) return null;
+    const str = String(value).replace(/,/g, '.'); // Handle comma decimal separators
+    const num = parseFloat(str);
+    return isNaN(num) ? null : num;
   }
 
   async function processTransitFile(data: any[]): Promise<number> {
@@ -1698,12 +1724,23 @@ print(json.dumps(result))
       const row = data[i];
       if (!row[0] || !row[1]) continue; // Skip if no product name or quantity
       
+      // Skip header rows
+      if (isHeaderRow(row[0])) continue;
+      
+      // Validate numeric data
+      const qty = parseNumericValue(row[1]);
+      const purchasePriceUsd = parseNumericValue(row[2]);
+      const purchasePriceAmd = parseNumericValue(row[3]);
+      const currentCost = parseNumericValue(row[6]);
+      
+      if (qty === null) continue; // Skip if quantity is not valid
+      
       await storage.createCompstyleTransit({
         productName: String(row[0]), // Column A (Товар)
-        qty: Number(row[1]) || 0, // Column B (Кол.)
-        purchasePriceUsd: row[2] ? String(row[2]) : null, // Column C (Цена $)
-        purchasePriceAmd: row[3] ? String(row[3]) : null, // Column D (Цена AMD)
-        currentCost: row[6] ? String(row[6]) : null, // Column G (Уч. цена)
+        qty, // Column B (Кол.)
+        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column C (Цена $)
+        purchasePriceAmd: purchasePriceAmd ? String(purchasePriceAmd) : null, // Column D (Цена AMD)
+        currentCost: currentCost ? String(currentCost) : null, // Column G (Уч. цена)
         purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь)
         destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад)
         supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик)
@@ -1715,7 +1752,6 @@ print(json.dumps(result))
 
   async function processSalesByLocationFile(data: any[], location: string): Promise<number> {
     let count = 0;
-    let currentOrder: any = null;
     
     // Process period from filename (will be passed via body later)
     const periodStart = "2025-08-20"; // Placeholder
@@ -1724,45 +1760,45 @@ print(json.dumps(result))
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Check if this is a new sales order (Column A has order number)
-      if (row[0] && String(row[0]).includes("SO")) {
-        if (currentOrder) {
-          // Save previous order if exists
-          await storage.createCompstyleSalesOrder(currentOrder);
-        }
+      // Skip empty rows or header rows
+      if (!row[0] || isHeaderRow(row[0])) continue;
+      
+      // Look for rows with order data - more flexible pattern matching
+      // Check if row has order number, customer, and price data
+      if (row[0] && row[2] && (row[11] || row[13])) { // Order number, customer, and price data
         
-        currentOrder = {
+        // Validate numeric data
+        const priceUsd = parseNumericValue(row[11]);
+        const qty = parseNumericValue(row[12]);
+        const sumUsd = parseNumericValue(row[13]);
+        
+        // Create order record
+        const orderData = {
           salesOrderNumber: String(row[0]), // Column A (Поле4)
           orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения)
           customer: row[2] ? String(row[2]) : null, // Column C (Клиент)
           contactName: row[3] ? String(row[3]) : null, // Column D (Через)
           location,
-          totalAmountUsd: row[14] ? String(row[14]) : null, // Column O
+          totalAmountUsd: sumUsd ? String(sumUsd) : null, // Column N or O
           periodStart,
           periodEnd,
         };
-      }
-      
-      // Process line items (Column K has product name)
-      if (row[10] && currentOrder) { // Column K (КодТовара)
-        const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
         
-        await storage.createCompstyleSalesItem({
-          salesOrderId: orderInDb.id,
-          productName: String(row[10]), // Column K (КодТовара)
-          priceUsd: row[11] ? String(row[11]) : null, // Column L (Цена)
-          qty: Number(row[12]) || 0, // Column M (Количество)
-          sumUsd: row[13] ? String(row[13]) : null, // Column N (Поле66)
-        });
+        const orderInDb = await storage.createCompstyleSalesOrder(orderData);
         
-        currentOrder = null; // Reset after processing
+        // Create line item if product data exists
+        if (row[10] && qty !== null) { // Column K (КодТовара)
+          await storage.createCompstyleSalesItem({
+            salesOrderId: orderInDb.id,
+            productName: String(row[10]), // Column K (КодТовара)
+            priceUsd: priceUsd ? String(priceUsd) : null, // Column L (Цена)
+            qty, // Column M (Количество)
+            sumUsd: sumUsd ? String(sumUsd) : null, // Column N (Поле66)
+          });
+        }
+        
         count++;
       }
-    }
-    
-    // Save final order if exists
-    if (currentOrder) {
-      await storage.createCompstyleSalesOrder(currentOrder);
     }
     
     return count;
@@ -1770,7 +1806,6 @@ print(json.dumps(result))
 
   async function processPurchasesByLocationFile(data: any[], location: string): Promise<number> {
     let count = 0;
-    let currentOrder: any = null;
     
     const periodStart = "2025-08-20"; // Placeholder
     const periodEnd = "2025-08-25"; // Placeholder
@@ -1778,22 +1813,43 @@ print(json.dumps(result))
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Check if this is a new purchase order
-      if (row[0] && String(row[0]).includes("PO")) {
-        if (currentOrder) {
-          await storage.createCompstylePurchaseOrder(currentOrder);
-        }
+      // Skip empty rows or header rows
+      if (!row[0] || isHeaderRow(row[0])) continue;
+      
+      // Look for rows with purchase order data
+      if (row[0] && row[2] && (row[11] || row[13])) { // Order number, supplier, and price data
         
-        currentOrder = {
+        // Validate numeric data
+        const priceUsd = parseNumericValue(row[11]);
+        const qty = parseNumericValue(row[12]);
+        const sumUsd = parseNumericValue(row[13]);
+        
+        // Create purchase order record
+        const orderData = {
           purchaseOrderNumber: String(row[0]), // Column A (Поле4)
           orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения)
           supplier: row[2] ? String(row[2]) : null, // Column C (Клиент)
           contactName: row[3] ? String(row[3]) : null, // Column D (Через)
           location,
-          totalAmountUsd: row[14] ? String(row[14]) : null, // Column O
+          totalAmountUsd: sumUsd ? String(sumUsd) : null, // Column O
           periodStart,
           periodEnd,
         };
+        
+        const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
+        
+        // Create line item if product data exists
+        if (row[10] && qty !== null) { // Column K (КодТовара)
+          await storage.createCompstylePurchaseItem({
+            purchaseOrderId: orderInDb.id,
+            productName: String(row[10]), // Column K (КодТовара)
+            priceUsd: priceUsd ? String(priceUsd) : null, // Column L (Цена)
+            qty, // Column M (Количество)
+            sumUsd: sumUsd ? String(sumUsd) : null, // Column N (Поле66)
+          });
+        }
+        
+        count++;
       }
       
       // Process line items
@@ -1829,17 +1885,26 @@ print(json.dumps(result))
       const row = data[i];
       if (!row[1] || !row[4]) continue; // Skip if no product name or quantity
       
-      const salePriceUsd = Number(row[5]) || 0; // Column F (Цена)
-      const costPriceUsd = Number(row[6]) || 0; // Column G (Учетная цена)
-      const qtySold = Number(row[4]) || 0; // Column E (Количество)
+      // Skip header rows
+      if (isHeaderRow(row[1])) continue;
+      
+      // Validate numeric data
+      const salePriceUsd = parseNumericValue(row[5]); // Column F (Цена)
+      const costPriceUsd = parseNumericValue(row[6]); // Column G (Учетная цена)
+      const qtySold = parseNumericValue(row[4]); // Column E (Количество)
+      
+      if (qtySold === null) continue; // Skip if quantity is not valid
+      
+      const safeSalePrice = salePriceUsd || 0;
+      const safeCostPrice = costPriceUsd || 0;
       
       await storage.createCompstyleTotalSales({
         productName: String(row[1]), // Column B (КодТовара)
         qtySold,
-        salePriceUsd: String(salePriceUsd),
-        costPriceUsd: String(costPriceUsd),
-        profitPerUnit: String(salePriceUsd - costPriceUsd), // Column F - Column G
-        totalProfit: String((salePriceUsd - costPriceUsd) * qtySold), // (Column F - Column G) * Column E
+        salePriceUsd: String(safeSalePrice),
+        costPriceUsd: String(safeCostPrice),
+        profitPerUnit: String(safeSalePrice - safeCostPrice), // Column F - Column G
+        totalProfit: String((safeSalePrice - safeCostPrice) * qtySold), // (Column F - Column G) * Column E
         periodStart,
         periodEnd,
       });
@@ -1857,10 +1922,19 @@ print(json.dumps(result))
       const row = data[i];
       if (!row[1] || !row[4]) continue; // Skip if no product name or quantity
       
+      // Skip header rows
+      if (isHeaderRow(row[1])) continue;
+      
+      // Validate numeric data
+      const qtyPurchased = parseNumericValue(row[4]);
+      const purchasePriceUsd = parseNumericValue(row[5]);
+      
+      if (qtyPurchased === null) continue; // Skip if quantity is not valid
+      
       await storage.createCompstyleTotalProcurement({
         productName: String(row[1]), // Column B (КодТовара)
-        qtyPurchased: Number(row[4]) || 0, // Column E (Количество)
-        purchasePriceUsd: row[5] ? String(row[5]) : null, // Column F (Цена)
+        qtyPurchased, // Column E (Количество)
+        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column F (Цена)
         periodStart,
         periodEnd,
       });
