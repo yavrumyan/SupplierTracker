@@ -1733,6 +1733,29 @@ print(json.dumps(result))
     return isNaN(num) ? null : num;
   }
 
+  // Helper function to safely parse Excel date values
+  function parseExcelDate(value: any): Date | null {
+    if (value === null || value === undefined || value === "") return null;
+    
+    // If it's already a Date object
+    if (value instanceof Date) {
+      return isNaN(value.getTime()) ? null : value;
+    }
+    
+    // If it's a number (Excel serial date)
+    if (typeof value === 'number') {
+      // Excel stores dates as days since 1900-01-01 (with some quirks)
+      const excelEpoch = new Date(1900, 0, 1);
+      const days = value - 2; // Adjust for Excel's leap year bug
+      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
+      return isNaN(date.getTime()) ? null : date;
+    }
+    
+    // Try to parse as string
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
   // Helper function to check if row should be ignored (Russian headers or special cells)
   function shouldIgnoreRow(row: any[]): boolean {
     if (!row || !row[0]) return true;
@@ -1783,6 +1806,7 @@ print(json.dumps(result))
   // Process Sales by Location files according to specifications (block-based structure)
   async function processSalesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
+    console.log(`Processing sales file for ${location}, rows: ${data.length}`);
     
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
@@ -1798,7 +1822,9 @@ print(json.dumps(result))
       if (shouldIgnoreRow(row)) continue;
       
       // Check if this row starts a new Sales Order block
-      if (row[0] && String(row[0]).toLowerCase().includes('поле4')) {
+      const cellValue = String(row[0]).toLowerCase();
+      if (row[0] && (cellValue.includes('поле') || cellValue.includes('field'))) {
+        console.log('Found Sales Order start:', row[0]);
         // Save previous order if exists
         if (currentOrder && orderLineItems.length > 0) {
           const orderInDb = await storage.createCompstyleSalesOrder(currentOrder);
@@ -1814,7 +1840,7 @@ print(json.dumps(result))
         // Start new order
         currentOrder = {
           salesOrderNumber: String(row[0]), // Column A (Поле4): Sales Order Number
-          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения): Date of Sales Order
+          orderDate: parseExcelDate(row[1]) || new Date(), // Column B (ДатаИсполнения): Date of Sales Order
           customer: row[2] ? String(row[2]) : null, // Column C (Клиент): Customer
           contactName: row[3] ? String(row[3]) : null, // Column D (Через): Contact name
           location,
@@ -1867,6 +1893,7 @@ print(json.dumps(result))
 
   async function processPurchasesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
+    console.log(`Processing purchase file for ${location}, rows: ${data.length}`);
     
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
@@ -1881,7 +1908,9 @@ print(json.dumps(result))
       if (shouldIgnoreRow(row)) continue;
       
       // Check if this row starts a new Purchase Order block
-      if (row[0] && String(row[0]).toLowerCase().includes('поле4')) {
+      const cellValue = String(row[0]).toLowerCase();
+      if (row[0] && (cellValue.includes('поле') || cellValue.includes('field'))) {
+        console.log('Found Purchase Order start:', row[0]);
         // Save previous order if exists
         if (currentOrder && orderLineItems.length > 0) {
           const orderInDb = await storage.createCompstylePurchaseOrder(currentOrder);
@@ -1897,7 +1926,7 @@ print(json.dumps(result))
         // Start new order
         currentOrder = {
           purchaseOrderNumber: String(row[0]), // Column A (Поле4): Purchase Order Number
-          orderDate: row[1] ? new Date(row[1]) : new Date(), // Column B (ДатаИсполнения): Date when goods arrived
+          orderDate: parseExcelDate(row[1]) || new Date(), // Column B (ДатаИсполнения): Date when goods arrived
           supplier: row[2] ? String(row[2]) : null, // Column C (Клиент): Supplier
           contactName: row[3] ? String(row[3]) : null, // Column D (Через): Contact name
           location,
