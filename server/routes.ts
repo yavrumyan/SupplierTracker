@@ -1757,6 +1757,12 @@ print(json.dumps(result))
   }
 
   // Helper function to check if row should be ignored (Russian headers or special cells)
+  function shouldIgnoreRowForOrders(row: any[]): boolean {
+    if (!row) return true;
+    // For order processing, only skip if the entire row is empty
+    return row.every(cell => !cell || String(cell).trim() === '');
+  }
+
   function shouldIgnoreRow(row: any[]): boolean {
     if (!row || !row[0]) return true;
     const cellA = String(row[0]).toLowerCase();
@@ -1818,9 +1824,9 @@ print(json.dumps(result))
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Skip empty rows and special cells
-      if (shouldIgnoreRow(row)) {
-        console.log(`Skipping row ${i}:`, String(row[0] || '').substring(0, 20));
+      // Skip completely empty rows only
+      if (shouldIgnoreRowForOrders(row)) {
+        console.log(`Skipping empty row ${i}`);
         continue;
       }
       
@@ -1956,8 +1962,8 @@ print(json.dumps(result))
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       
-      // Skip empty rows and special cells
-      if (shouldIgnoreRow(row)) continue;
+      // Skip completely empty rows only
+      if (shouldIgnoreRowForOrders(row)) continue;
       
       // Check if this row starts a new Purchase Order block (numeric order number)
       const cellValue = String(row[0]);
