@@ -21,6 +21,7 @@ import {
   compstylePurchaseItems,
   compstyleTotalSales,
   compstyleTotalProcurement,
+  compstyleProductList,
   type Supplier, 
   type InsertSupplier, 
   type PriceListFile, 
@@ -63,7 +64,9 @@ import {
   type CompstyleTotalSales,
   type InsertCompstyleTotalSales,
   type CompstyleTotalProcurement,
-  type InsertCompstyleTotalProcurement
+  type InsertCompstyleTotalProcurement,
+  type CompstyleProductList,
+  type InsertCompstyleProductList
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
@@ -193,6 +196,13 @@ export interface IStorage {
   getCompstylePurchaseItems(): Promise<CompstylePurchaseItem[]>;
   getCompstyleTotalSales(): Promise<CompstyleTotalSales[]>;
   getCompstyleTotalProcurement(): Promise<CompstyleTotalProcurement[]>;
+  
+  // Product List methods
+  getCompstyleProductList(): Promise<CompstyleProductList[]>;
+  createCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList>;
+  updateCompstyleProductList(id: number, product: Partial<InsertCompstyleProductList>): Promise<CompstyleProductList>;
+  upsertCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList>;
+  rebuildProductList(): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -875,6 +885,147 @@ export class DatabaseStorage implements IStorage {
 
   async getCompstyleTotalProcurement(): Promise<CompstyleTotalProcurement[]> {
     return await db.select().from(compstyleTotalProcurement);
+  }
+
+  // Product List methods
+  async getCompstyleProductList(): Promise<CompstyleProductList[]> {
+    return await db.select().from(compstyleProductList).orderBy(compstyleProductList.productName);
+  }
+
+  async createCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList> {
+    const [newProduct] = await db.insert(compstyleProductList).values(product).returning();
+    return newProduct;
+  }
+
+  async updateCompstyleProductList(id: number, product: Partial<InsertCompstyleProductList>): Promise<CompstyleProductList> {
+    const [updatedProduct] = await db.update(compstyleProductList)
+      .set({ ...product, lastUpdated: new Date() })
+      .where(eq(compstyleProductList.id, id))
+      .returning();
+    return updatedProduct;
+  }
+
+  async upsertCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList> {
+    try {
+      // Try to find existing product by name
+      const [existing] = await db.select().from(compstyleProductList)
+        .where(eq(compstyleProductList.productName, product.productName));
+      
+      if (existing) {
+        // Update existing
+        return await this.updateCompstyleProductList(existing.id, product);
+      } else {
+        // Create new
+        return await this.createCompstyleProductList(product);
+      }
+    } catch (error) {
+      console.error('Error upserting product list:', error);
+      throw error;
+    }
+  }
+
+  async rebuildProductList(): Promise<number> {
+    console.log('Rebuilding Product List from existing data...');
+    
+    // Clear existing product list
+    await db.delete(compstyleProductList);
+    
+    // Collect all unique product names from all sources
+    const productMap = new Map<string, any>();
+    
+    // 1. Get products from Total Stock (primary source for pricing and SKU)
+    const totalStock = await db.select().from(compstyleTotalStock);
+    totalStock.forEach(item => {
+      productMap.set(item.productName, {
+        productName: item.productName,
+        sku: item.sku,
+        stock: item.qtyInStock,
+        transit: 0,
+        retailPriceUsd: item.retailPriceUsd,
+        retailPriceAmd: item.retailPriceAmd,
+        dealerPrice1: item.wholesalePrice1,
+        dealerPrice2: item.wholesalePrice2,
+        cost: item.currentCost,
+      });
+    });
+    
+    // 2. Add transit quantities (sum if multiple entries)
+    const transitData = await db.select().from(compstyleTransit);
+    transitData.forEach(item => {
+      const existing = productMap.get(item.productName) || {
+        productName: item.productName,
+        stock: 0,
+        transit: 0,
+      };
+      existing.transit = (existing.transit || 0) + item.qty;
+      existing.latestPurchase = item.currentCost;
+      productMap.set(item.productName, existing);
+    });
+    
+    // 3. Add latest cost and average sales price from sales data
+    const salesData = await db.select().from(compstyleTotalSales);
+    salesData.forEach(item => {
+      const existing = productMap.get(item.productName) || {
+        productName: item.productName,
+        stock: 0,
+        transit: 0,
+      };
+      existing.latestCost = item.costPriceUsd;
+      existing.aveSalesPrice = item.salePriceUsd;
+      productMap.set(item.productName, existing);
+    });
+    
+    // 4. Add latest purchase prices from purchase data
+    const purchaseData = await db.select().from(compstylePurchaseItems);
+    purchaseData.forEach(item => {
+      const existing = productMap.get(item.productName) || {
+        productName: item.productName,
+        stock: 0,
+        transit: 0,
+      };
+      if (!existing.latestPurchase) {
+        existing.latestPurchase = item.priceUsd;
+      }
+      productMap.set(item.productName, existing);
+    });
+    
+    // 5. Add products that appear only in sales items (no longer in stock)
+    const salesItems = await db.select().from(compstyleSalesItems);
+    salesItems.forEach(item => {
+      if (!productMap.has(item.productName)) {
+        productMap.set(item.productName, {
+          productName: item.productName,
+          stock: 0,
+          transit: 0,
+        });
+      }
+    });
+    
+    // Insert all products into the Product List
+    let count = 0;
+    for (const [name, data] of productMap) {
+      await this.createCompstyleProductList({
+        productName: name,
+        sku: data.sku || null,
+        stock: data.stock || 0,
+        transit: data.transit || 0,
+        retailPriceUsd: data.retailPriceUsd || null,
+        retailPriceAmd: data.retailPriceAmd || null,
+        dealerPrice1: data.dealerPrice1 || null,
+        dealerPrice2: data.dealerPrice2 || null,
+        cost: data.cost || null,
+        latestPurchase: data.latestPurchase || null,
+        latestCost: data.latestCost || null,
+        aveSalesPrice: data.aveSalesPrice || null,
+        actualPrice: null,
+        actualCost: null,
+        supplier: null,
+      });
+      count++;
+    }
+    
+    console.log(`Product List rebuilt with ${count} unique products`);
+    return count;
   }
 }
 
