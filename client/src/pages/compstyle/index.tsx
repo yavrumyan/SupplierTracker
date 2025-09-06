@@ -106,6 +106,11 @@ export default function CompStyleDashboard() {
                   View Data Overview
                 </Button>
               </Link>
+              <Link href="/compstyle/actual-product-prices">
+                <Button className="w-full" variant="outline">
+                  Actual Product Prices
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 

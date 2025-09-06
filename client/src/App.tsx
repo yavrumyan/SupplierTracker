@@ -15,6 +15,7 @@ import ImportData from "@/pages/import";
 import CompStyleDashboard from "@/pages/compstyle";
 import CompStyleUpload from "@/pages/compstyle/upload";
 import CompStyleDataOverview from "@/pages/compstyle/data-overview";
+import ActualProductPricesPage from "@/pages/compstyle/actual-product-prices";
 import CompStyleInventoryMovement from "@/pages/compstyle/inventory-movement";
 import CompStyleSalesAnalysis from "@/pages/compstyle/sales-analysis";
 import CompStyleProfitability from "@/pages/compstyle/profitability";
@@ -34,6 +35,7 @@ function Router() {
         <Route path="/compstyle" component={CompStyleDashboard} />
         <Route path="/compstyle/upload" component={CompStyleUpload} />
         <Route path="/compstyle/data-overview" component={CompStyleDataOverview} />
+        <Route path="/compstyle/actual-product-prices" component={ActualProductPricesPage} />
         <Route path="/compstyle/inventory-movement" component={CompStyleInventoryMovement} />
         <Route path="/compstyle/sales-analysis" component={CompStyleSalesAnalysis} />
         <Route path="/compstyle/profitability" component={CompStyleProfitability} />
