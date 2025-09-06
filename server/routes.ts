@@ -2111,8 +2111,8 @@ print(json.dumps(result))
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
     
-    // Start from row 1 (skip header row 0)
-    for (let i = 1; i < data.length; i++) {
+    // Start from row 2 (skip header rows 0 and 1)
+    for (let i = 2; i < data.length; i++) {
       const row = data[i];
       
       // Skip if no product name (Column B) or quantity (Column E)
