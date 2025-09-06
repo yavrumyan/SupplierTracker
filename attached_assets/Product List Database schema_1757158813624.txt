@@ -1,0 +1,16 @@
+"Product List" Database schema:
+Column 1: "SKU" - Sku of the product. Found in "Total Stock Current" file as "КодТовара"
+Column 2: "Product Name" - Product Name. Found in "Total Stock Current" file as "Марка", in "In Transit Current" file as "Товар", in "Sale by Sevan (Period)", "Sale by Kievyan (Period)", "Purchase by Kievyan (Period) and "Purchase by Sevan (Period)" files as "КодТовара", "Total sales by goods (Period)" and "Total procurement by goods (Period)" as "КодТовара".
+Column 3: "Stock" - Qty In Stock. Found in "Total Stock Current" file as "НаСкладе". When product not found in this file, means we have no stock - insert 0 in this column.
+Column 4: "Transit" - Qty In Transit. Goods that are ordered and are on the way to our stock. Can be found in "In Transit Current" file as "Кол.". Can appear there more than once - sum up quantities and insert a total number. When product not found in this file, means we have them not in transfer - insert 0 in this column.
+Column 5: "Retail Price USD" - Retail Price Usd. Found in "Total Stock Current" file as "Цена". When product not found in this file, means we have no stock - leave this cell empty.
+Column 6: "Retail Price AMD" - Retail Price Amd. Found in "Total Stock Current" file as "ЦенаПрайса". When product not found in this file, means we have no stock - leave this cell empty.
+Column 7: "Dealer Price 1" - Wholesale Price1. Found in "Total Stock Current" file as "Диллерская цена1". When product not found in this file, means we have no stock - leave this cell empty.
+Column 8: "Dealer Price 2" - Wholesale Price2. Found in "Total Stock Current" file as "Диллерская цена2". When product not found in this file, means we have no stock - leave this cell empty.
+Column 9: "Cost" - Current Cost. Found in "Total Stock Current" file as "ЦенаНаНас". When product not found in this file, means we have no stock - leave this cell empty.
+Column 10: "Latest Purchase". First, look in "In Transit Current" file as "Цена $". When product not found in this file, look in "Purchase by Sevan (Period)" and "Purchase by Kievyan (Period)" files as "Цена". Use the date next to Purchase Order number to identify the latest purchase. When product not found in this file either - leave this cell empty.
+Column 11: "Latest Cost" - Cost Price Usd. Found in "Total sales by goods (Period)" file as "Учетная цена". When product not found in this file - leave this cell empty.
+Column 12: "Ave. sales price" - Sale Price Usd. Found in "Total sales by goods (Period)" file as "Цена". When product not found in this file - leave this cell empty.
+Column 13: "Actual price" - 
+Column 14: "Actual cost" - automatically calculated based on "Actual price" in Column 14 and formula for each supplier that I will choose in column 15.
+Column 15: "Supplier" - A dropdown menu of suppliers. When I choose a supplier from this menu - Actual cost is automatically calculated (based on "Supplier Cost Calculation Rules" logic) and appears in
