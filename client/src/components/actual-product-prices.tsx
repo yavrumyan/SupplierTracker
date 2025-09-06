@@ -214,14 +214,14 @@ export default function ActualProductPrices() {
                   </TableCell>
                   <TableCell>
                     <Select
-                      value={product.supplier || ""}
-                      onValueChange={(value) => handleSupplierChange(product.id, value)}
+                      value={product.supplier || "none"}
+                      onValueChange={(value) => handleSupplierChange(product.id, value === "none" ? "" : value)}
                     >
                       <SelectTrigger className="h-8 text-xs">
                         <SelectValue placeholder="Select..." />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {suppliersQuery.data?.map((supplier) => (
                           <SelectItem key={supplier.id} value={supplier.name}>
                             {supplier.name}
