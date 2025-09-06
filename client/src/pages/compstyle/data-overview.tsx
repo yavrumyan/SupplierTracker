@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Data table component for displaying records
 function DataTable({ title, description, data, isLoading, icon }: {
@@ -100,8 +100,8 @@ function DataTable({ title, description, data, isLoading, icon }: {
 
 export default function CompStyleDataOverview() {
   const queryClient = useQueryClient();
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
   const [tableData, setTableData] = useState<{
     totalStock?: any[];
     kievyanStock?: any[];
@@ -114,6 +114,27 @@ export default function CompStyleDataOverview() {
     totalSales?: any[];
     totalProcurement?: any[];
   }>({});
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('compstyle-data-overview');
+    const savedTimestamp = localStorage.getItem('compstyle-data-overview-timestamp');
+    
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setTableData(parsedData);
+        if (savedTimestamp) {
+          setLastRefreshed(savedTimestamp);
+        }
+      } catch (error) {
+        console.error('Error loading saved data:', error);
+        // Clear corrupted data
+        localStorage.removeItem('compstyle-data-overview');
+        localStorage.removeItem('compstyle-data-overview-timestamp');
+      }
+    }
+  }, []); // Empty dependency array means this runs once on mount
 
   // Function to refresh all data manually using direct fetch
   const refreshAllData = async () => {
@@ -147,7 +168,13 @@ export default function CompStyleDataOverview() {
       });
 
       setTableData(newTableData);
-      setDataLoaded(true);
+      
+      // Save data to localStorage
+      const timestamp = new Date().toLocaleString();
+      localStorage.setItem('compstyle-data-overview', JSON.stringify(newTableData));
+      localStorage.setItem('compstyle-data-overview-timestamp', timestamp);
+      setLastRefreshed(timestamp);
+      
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -172,6 +199,11 @@ export default function CompStyleDataOverview() {
               <p className="text-slate-600">
                 Detailed view of all imported business data tables (complete data, scrollable)
               </p>
+              {lastRefreshed && (
+                <p className="text-sm text-slate-500 mt-1">
+                  Last refreshed: {lastRefreshed}
+                </p>
+              )}
             </div>
             <Button
               onClick={refreshAllData}
