@@ -387,6 +387,27 @@ export const compstyleTotalProcurement = pgTable("compstyle_total_procurement", 
   purchasePriceUsd: decimal("purchase_price_usd", { precision: 10, scale: 2 }), // Column F (Цена)
 });
 
+// Product List - Master product catalog with aggregated data
+export const compstyleProductList = pgTable("compstyle_product_list", {
+  id: serial("id").primaryKey(),
+  sku: text("sku"), // From Total Stock "КодТовара"
+  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Unique product names
+  stock: integer("stock").default(0), // From Total Stock "НаСкладе"
+  transit: integer("transit").default(0), // From In Transit "Кол." (summed)
+  retailPriceUsd: decimal("retail_price_usd", { precision: 10, scale: 2 }), // From Total Stock "Цена"
+  retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // From Total Stock "ЦенаПрайса"
+  dealerPrice1: decimal("dealer_price_1", { precision: 10, scale: 2 }), // From Total Stock "Диллерская цена1"
+  dealerPrice2: decimal("dealer_price_2", { precision: 10, scale: 2 }), // From Total Stock "Диллерская цена2"
+  cost: decimal("cost", { precision: 10, scale: 2 }), // From Total Stock "ЦенаНаНас"
+  latestPurchase: decimal("latest_purchase", { precision: 10, scale: 2 }), // From In Transit "Цена $" or latest Purchase
+  latestCost: decimal("latest_cost", { precision: 10, scale: 2 }), // From Total Sales "Учетная цена"
+  aveSalesPrice: decimal("ave_sales_price", { precision: 10, scale: 2 }), // From Total Sales "Цена"
+  actualPrice: decimal("actual_price", { precision: 10, scale: 2 }), // Manual input
+  actualCost: decimal("actual_cost", { precision: 10, scale: 2 }), // Auto-calculated
+  supplier: text("supplier"), // Dropdown selection
+  lastUpdated: timestamp("last_updated").defaultNow(),
+});
+
 // CompStyle Relations
 
 
@@ -436,6 +457,11 @@ export const insertCompstyleTotalProcurementSchema = createInsertSchema(compstyl
   id: true,
 });
 
+export const insertCompstyleProductListSchema = createInsertSchema(compstyleProductList).omit({
+  id: true,
+  lastUpdated: true,
+});
+
 // CompStyle Types
 export type CompstyleLocation = typeof compstyleLocations.$inferSelect;
 export type InsertCompstyleLocation = z.infer<typeof insertCompstyleLocationSchema>;
@@ -459,3 +485,5 @@ export type CompstyleTotalSales = typeof compstyleTotalSales.$inferSelect;
 export type InsertCompstyleTotalSales = z.infer<typeof insertCompstyleTotalSalesSchema>;
 export type CompstyleTotalProcurement = typeof compstyleTotalProcurement.$inferSelect;
 export type InsertCompstyleTotalProcurement = z.infer<typeof insertCompstyleTotalProcurementSchema>;
+export type CompstyleProductList = typeof compstyleProductList.$inferSelect;
+export type InsertCompstyleProductList = z.infer<typeof insertCompstyleProductListSchema>;
