@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,10 +31,19 @@ interface ProductListItem {
 
 export default function ActualProductPrices() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<string>("");
   const [pendingChanges, setPendingChanges] = useState<Record<number, { actualPrice?: string; supplier?: string }>>({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const queryClient = useQueryClient();
+
+  // Debounce search query to improve performance
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
 
   // Fetch product list data - only on manual rebuild
   const productListQuery = useQuery<ProductListItem[]>({
@@ -87,21 +96,22 @@ export default function ActualProductPrices() {
     }
   });
 
-  const handleActualPriceChange = (productId: number, actualPrice: string) => {
+  // Optimized change handlers using useCallback to prevent unnecessary re-renders
+  const handleActualPriceChange = useCallback((productId: number, actualPrice: string) => {
     setPendingChanges(prev => ({
       ...prev,
       [productId]: { ...prev[productId], actualPrice: actualPrice || "" }
     }));
     setHasUnsavedChanges(true);
-  };
+  }, []);
 
-  const handleSupplierChange = (productId: number, supplier: string) => {
+  const handleSupplierChange = useCallback((productId: number, supplier: string) => {
     setPendingChanges(prev => ({
       ...prev,
       [productId]: { ...prev[productId], supplier: supplier || "" }
     }));
     setHasUnsavedChanges(true);
-  };
+  }, []);
 
   const handleSaveChanges = () => {
     batchSaveMutation.mutate();
@@ -111,18 +121,30 @@ export default function ActualProductPrices() {
     exportCsvMutation.mutate();
   };
 
-  // Filter products based on search query and merge with pending changes
-  const filteredProducts = productListQuery.data?.filter(product =>
-    product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (product.sku && product.sku.toLowerCase().includes(searchQuery.toLowerCase()))
-  ).map(product => {
-    const pendingChangesForProduct = pendingChanges[product.id];
-    return {
-      ...product,
-      actualPrice: pendingChangesForProduct?.actualPrice !== undefined ? pendingChangesForProduct.actualPrice : product.actualPrice,
-      supplier: pendingChangesForProduct?.supplier !== undefined ? pendingChangesForProduct.supplier : product.supplier
-    };
-  }) || [];
+  // Memoized products with pending changes merged (runs only when data or pendingChanges change)
+  const productsWithChanges = useMemo(() => {
+    if (!productListQuery.data) return [];
+    
+    return productListQuery.data.map(product => {
+      const pendingChangesForProduct = pendingChanges[product.id];
+      return {
+        ...product,
+        actualPrice: pendingChangesForProduct?.actualPrice !== undefined ? pendingChangesForProduct.actualPrice : product.actualPrice,
+        supplier: pendingChangesForProduct?.supplier !== undefined ? pendingChangesForProduct.supplier : product.supplier
+      };
+    });
+  }, [productListQuery.data, pendingChanges]);
+
+  // Memoized filtered products (runs only when products or search query change)
+  const filteredProducts = useMemo(() => {
+    if (!debouncedSearchQuery.trim()) return productsWithChanges;
+    
+    const query = debouncedSearchQuery.toLowerCase();
+    return productsWithChanges.filter(product =>
+      product.productName.toLowerCase().includes(query) ||
+      (product.sku && product.sku.toLowerCase().includes(query))
+    );
+  }, [productsWithChanges, debouncedSearchQuery]);
 
   const formatPrice = (price: string | null) => {
     if (!price) return "-";
