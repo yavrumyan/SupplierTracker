@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck } from "lucide-react";
+import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -109,8 +109,8 @@ export default function CompStyleDataOverview() {
   const totalSalesQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-sales'], enabled: false });
   const totalProcurementQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-procurement'], enabled: false });
 
-  // Load data initially when component mounts
-  useEffect(() => {
+  // Function to refresh all data manually
+  const refreshAllData = () => {
     totalStockQuery.refetch();
     kievyanStockQuery.refetch();
     sevanStockQuery.refetch();
@@ -121,7 +121,7 @@ export default function CompStyleDataOverview() {
     purchaseItemsQuery.refetch();
     totalSalesQuery.refetch();
     totalProcurementQuery.refetch();
-  }, []);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -134,10 +134,22 @@ export default function CompStyleDataOverview() {
               Back to CompStyle
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Data Overview</h1>
-          <p className="text-slate-600">
-            Detailed view of all imported business data tables (complete data, scrollable)
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">Data Overview</h1>
+              <p className="text-slate-600">
+                Detailed view of all imported business data tables (complete data, scrollable)
+              </p>
+            </div>
+            <Button
+              onClick={refreshAllData}
+              disabled={totalStockQuery.isLoading || kievyanStockQuery.isLoading}
+              variant="outline"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${(totalStockQuery.isLoading || kievyanStockQuery.isLoading) ? 'animate-spin' : ''}`} />
+              Refresh All Data
+            </Button>
+          </div>
         </div>
 
         {/* 10 Data Table Sections */}

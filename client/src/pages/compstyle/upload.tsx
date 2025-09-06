@@ -140,8 +140,17 @@ export default function CompStyleUpload() {
         i === index ? { ...item, uploading: false, uploaded: true } : item
       ));
 
-      // Invalidate all CompStyle data queries when files are uploaded
-      queryClient.invalidateQueries({ queryKey: ['/api/compstyle'] });
+      // Manually refresh Data Overview queries when files are uploaded
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/total-stock'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/kievyan-stock'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/sevan-stock'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/transit'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/sales-orders'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/sales-items'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/purchase-orders'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/purchase-items'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/total-sales'] });
+      queryClient.refetchQueries({ queryKey: ['/api/compstyle/total-procurement'] });
       
       toast({
         title: "Upload Successful",

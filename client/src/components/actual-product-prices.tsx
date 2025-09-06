@@ -46,9 +46,8 @@ export default function ActualProductPrices() {
     enabled: false, // Disable automatic fetching
   });
 
-  // Load data initially
+  // Only load suppliers initially for the dropdown
   useEffect(() => {
-    productListQuery.refetch();
     suppliersQuery.refetch();
   }, []);
 
@@ -112,6 +111,37 @@ export default function ActualProductPrices() {
       return <Badge variant="outline" className="bg-gray-100 text-gray-600">Out of Stock</Badge>;
     }
   };
+
+  // Show initial state when no data is loaded
+  if (!productListQuery.data && !productListQuery.isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Package className="h-5 w-5" />
+            Actual Product Prices
+          </CardTitle>
+          <CardDescription>
+            Click "Rebuild List" to load the comprehensive product catalog
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center py-8">
+          <div className="space-y-4">
+            <Package className="h-16 w-16 mx-auto text-gray-400" />
+            <p className="text-gray-600">Product data not loaded</p>
+            <Button
+              onClick={() => rebuildMutation.mutate()}
+              disabled={rebuildMutation.isPending}
+              size="lg"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${rebuildMutation.isPending ? 'animate-spin' : ''}`} />
+              Rebuild List
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (productListQuery.isLoading) {
     return (
