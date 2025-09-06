@@ -53,10 +53,7 @@ export default function ActualProductPrices() {
 
   // Rebuild product list mutation
   const rebuildMutation = useMutation({
-    mutationFn: () => apiRequest('/api/compstyle/product-list/rebuild', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    }),
+    mutationFn: () => apiRequest('POST', '/api/compstyle/product-list/rebuild'),
     onSuccess: () => {
       productListQuery.refetch();
     }
@@ -65,11 +62,7 @@ export default function ActualProductPrices() {
   // Update product mutation
   const updateProductMutation = useMutation({
     mutationFn: ({ id, updates }: { id: number; updates: Partial<ProductListItem> }) =>
-      apiRequest(`/api/compstyle/product-list/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(updates),
-        headers: { 'Content-Type': 'application/json' }
-      }),
+      apiRequest('PATCH', `/api/compstyle/product-list/${id}`, updates),
     onSuccess: () => {
       productListQuery.refetch();
     }
