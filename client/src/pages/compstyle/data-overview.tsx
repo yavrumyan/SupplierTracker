@@ -2,7 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 
 // Data table component for displaying records
 function DataTable({ title, description, data, isLoading, icon }: {
@@ -99,97 +100,87 @@ function DataTable({ title, description, data, isLoading, icon }: {
 
 export default function CompStyleDataOverview() {
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const [tableData, setTableData] = useState<{
+    totalStock?: any[];
+    kievyanStock?: any[];
+    sevanStock?: any[];
+    transit?: any[];
+    salesOrders?: any[];
+    salesItems?: any[];
+    purchaseOrders?: any[];
+    purchaseItems?: any[];
+    totalSales?: any[];
+    totalProcurement?: any[];
+  }>({});
 
-  // Create persistent queries with unique keys for data overview
-  const totalStockQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'total-stock'], 
-    queryFn: () => fetch('/api/compstyle/total-stock', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity, // Never automatically refetch
-  });
+  // Cache keys for persistent storage
+  const cacheKeys = {
+    totalStock: ['data-overview-persistent', 'total-stock'],
+    kievyanStock: ['data-overview-persistent', 'kievyan-stock'],
+    sevanStock: ['data-overview-persistent', 'sevan-stock'],
+    transit: ['data-overview-persistent', 'transit'],
+    salesOrders: ['data-overview-persistent', 'sales-orders'],
+    salesItems: ['data-overview-persistent', 'sales-items'],
+    purchaseOrders: ['data-overview-persistent', 'purchase-orders'],
+    purchaseItems: ['data-overview-persistent', 'purchase-items'],
+    totalSales: ['data-overview-persistent', 'total-sales'],
+    totalProcurement: ['data-overview-persistent', 'total-procurement'],
+  };
 
-  const kievyanStockQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'kievyan-stock'], 
-    queryFn: () => fetch('/api/compstyle/kievyan-stock', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const sevanStockQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'sevan-stock'], 
-    queryFn: () => fetch('/api/compstyle/sevan-stock', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const transitQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'transit'], 
-    queryFn: () => fetch('/api/compstyle/transit', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const salesOrdersQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'sales-orders'], 
-    queryFn: () => fetch('/api/compstyle/sales-orders', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const salesItemsQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'sales-items'], 
-    queryFn: () => fetch('/api/compstyle/sales-items', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const purchaseOrdersQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'purchase-orders'], 
-    queryFn: () => fetch('/api/compstyle/purchase-orders', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const purchaseItemsQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'purchase-items'], 
-    queryFn: () => fetch('/api/compstyle/purchase-items', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const totalSalesQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'total-sales'], 
-    queryFn: () => fetch('/api/compstyle/total-sales', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  const totalProcurementQuery = useQuery<any[]>({ 
-    queryKey: ['data-overview-cache', 'total-procurement'], 
-    queryFn: () => fetch('/api/compstyle/total-procurement', { credentials: "include" }).then(res => res.json()),
-    enabled: false,
-    staleTime: Infinity,
-  });
-
-  // Check if any query is loading
-  const isLoading = totalStockQuery.isFetching || kievyanStockQuery.isFetching || 
-                   sevanStockQuery.isFetching || transitQuery.isFetching ||
-                   salesOrdersQuery.isFetching || salesItemsQuery.isFetching ||
-                   purchaseOrdersQuery.isFetching || purchaseItemsQuery.isFetching ||
-                   totalSalesQuery.isFetching || totalProcurementQuery.isFetching;
+  // Load cached data when component mounts
+  useEffect(() => {
+    const cachedData: any = {};
+    Object.entries(cacheKeys).forEach(([key, cacheKey]) => {
+      const cached = queryClient.getQueryData(cacheKey);
+      if (cached) {
+        cachedData[key] = cached;
+      }
+    });
+    setTableData(cachedData);
+  }, [queryClient]);
 
   // Function to refresh all data manually
-  const refreshAllData = () => {
-    totalStockQuery.refetch();
-    kievyanStockQuery.refetch();
-    sevanStockQuery.refetch();
-    transitQuery.refetch();
-    salesOrdersQuery.refetch();
-    salesItemsQuery.refetch();
-    purchaseOrdersQuery.refetch();
-    purchaseItemsQuery.refetch();
-    totalSalesQuery.refetch();
-    totalProcurementQuery.refetch();
+  const refreshAllData = async () => {
+    setIsLoading(true);
+    try {
+      const endpoints = [
+        { key: 'totalStock', url: '/api/compstyle/total-stock', cacheKey: cacheKeys.totalStock },
+        { key: 'kievyanStock', url: '/api/compstyle/kievyan-stock', cacheKey: cacheKeys.kievyanStock },
+        { key: 'sevanStock', url: '/api/compstyle/sevan-stock', cacheKey: cacheKeys.sevanStock },
+        { key: 'transit', url: '/api/compstyle/transit', cacheKey: cacheKeys.transit },
+        { key: 'salesOrders', url: '/api/compstyle/sales-orders', cacheKey: cacheKeys.salesOrders },
+        { key: 'salesItems', url: '/api/compstyle/sales-items', cacheKey: cacheKeys.salesItems },
+        { key: 'purchaseOrders', url: '/api/compstyle/purchase-orders', cacheKey: cacheKeys.purchaseOrders },
+        { key: 'purchaseItems', url: '/api/compstyle/purchase-items', cacheKey: cacheKeys.purchaseItems },
+        { key: 'totalSales', url: '/api/compstyle/total-sales', cacheKey: cacheKeys.totalSales },
+        { key: 'totalProcurement', url: '/api/compstyle/total-procurement', cacheKey: cacheKeys.totalProcurement },
+      ];
+
+      const results = await Promise.all(
+        endpoints.map(async (endpoint) => {
+          const response = await fetch(endpoint.url, { credentials: "include" });
+          if (!response.ok) throw new Error(`Failed to fetch ${endpoint.key}`);
+          const data = await response.json();
+          
+          // Store in React Query cache for persistence
+          queryClient.setQueryData(endpoint.cacheKey, data);
+          
+          return { key: endpoint.key, data };
+        })
+      );
+
+      const newTableData: any = {};
+      results.forEach(result => {
+        newTableData[result.key] = result.data;
+      });
+
+      setTableData(newTableData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -226,80 +217,80 @@ export default function CompStyleDataOverview() {
           <DataTable 
             title="Total Stock" 
             description="Complete inventory snapshot across all locations"
-            data={totalStockQuery.data}
-            isLoading={totalStockQuery.isFetching}
+            data={tableData.totalStock}
+            isLoading={isLoading}
             icon={<Database className="h-5 w-5 text-blue-600" />}
           />
 
           <DataTable 
             title="Kievyan Stock" 
             description="Stock data for Kievyan 11 retail location"
-            data={kievyanStockQuery.data}
-            isLoading={kievyanStockQuery.isFetching}
+            data={tableData.kievyanStock}
+            isLoading={isLoading}
             icon={<Package className="h-5 w-5 text-green-600" />}
           />
 
           <DataTable 
             title="Sevan Stock" 
             description="Stock data for Sevan 5 warehouse location"
-            data={sevanStockQuery.data}
-            isLoading={sevanStockQuery.isFetching}
+            data={tableData.sevanStock}
+            isLoading={isLoading}
             icon={<Package className="h-5 w-5 text-blue-600" />}
           />
 
           <DataTable 
             title="In Transit" 
             description="Products currently in transit between locations"
-            data={transitQuery.data}
-            isLoading={transitQuery.isFetching}
+            data={tableData.transit}
+            isLoading={isLoading}
             icon={<Truck className="h-5 w-5 text-orange-600" />}
           />
 
           <DataTable 
             title="Sales Orders" 
             description="Sales order headers with customer and date information"
-            data={salesOrdersQuery.data}
-            isLoading={salesOrdersQuery.isFetching}
+            data={tableData.salesOrders}
+            isLoading={isLoading}
             icon={<ShoppingCart className="h-5 w-5 text-emerald-600" />}
           />
 
           <DataTable 
             title="Sales Items" 
             description="Individual products sold with prices and quantities"
-            data={salesItemsQuery.data}
-            isLoading={salesItemsQuery.isFetching}
+            data={tableData.salesItems}
+            isLoading={isLoading}
             icon={<FileText className="h-5 w-5 text-emerald-500" />}
           />
 
           <DataTable 
             title="Purchase Orders" 
             description="Purchase order headers with supplier information"
-            data={purchaseOrdersQuery.data}
-            isLoading={purchaseOrdersQuery.isFetching}
+            data={tableData.purchaseOrders}
+            isLoading={isLoading}
             icon={<ShoppingCart className="h-5 w-5 text-purple-600" />}
           />
 
           <DataTable 
             title="Purchase Items" 
             description="Individual products purchased with costs and quantities"
-            data={purchaseItemsQuery.data}
-            isLoading={purchaseItemsQuery.isFetching}
+            data={tableData.purchaseItems}
+            isLoading={isLoading}
             icon={<FileText className="h-5 w-5 text-purple-500" />}
           />
 
           <DataTable 
             title="Total Sales Report" 
             description="Aggregated sales data by product and period"
-            data={totalSalesQuery.data}
-            isLoading={totalSalesQuery.isFetching}
+            data={tableData.totalSales}
+            isLoading={isLoading}
             icon={<BarChart className="h-5 w-5 text-teal-600" />}
           />
 
           <DataTable 
             title="Total Procurement Report" 
             description="Aggregated procurement data by product and supplier"
-            data={totalProcurementQuery.data}
-            isLoading={totalProcurementQuery.isFetching}
+            data={tableData.totalProcurement}
+            isLoading={isLoading}
             icon={<BarChart className="h-5 w-5 text-indigo-600" />}
           />
         </div>
