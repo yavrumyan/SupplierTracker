@@ -1659,6 +1659,39 @@ print(json.dumps(result))
     }
   });
 
+  // Product List endpoints
+  app.get('/api/compstyle/product-list', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleProductList();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching product list:', error);
+      res.status(500).json({ error: 'Failed to fetch product list' });
+    }
+  });
+
+  app.post('/api/compstyle/product-list/rebuild', async (req, res) => {
+    try {
+      const count = await storage.rebuildProductList();
+      res.json({ success: true, message: `Product list rebuilt with ${count} unique products`, count });
+    } catch (error) {
+      console.error('Error rebuilding product list:', error);
+      res.status(500).json({ error: 'Failed to rebuild product list' });
+    }
+  });
+
+  app.patch('/api/compstyle/product-list/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedProduct = await storage.updateCompstyleProductList(id, updates);
+      res.json(updatedProduct);
+    } catch (error) {
+      console.error('Error updating product:', error);
+      res.status(500).json({ error: 'Failed to update product' });
+    }
+  });
+
   // CompStyle file upload endpoint
   app.post("/api/compstyle/upload", upload.single('file'), async (req, res) => {
     try {
