@@ -1692,6 +1692,85 @@ print(json.dumps(result))
     }
   });
 
+  app.post('/api/compstyle/product-list/batch-save', async (req, res) => {
+    try {
+      const { changes } = req.body;
+      const results = [];
+      
+      for (const [productId, updates] of Object.entries(changes)) {
+        const id = parseInt(productId);
+        const updateData = updates as any;
+        
+        // Calculate actual cost if actual price is provided
+        if (updateData.actualPrice) {
+          const actualPriceNum = parseFloat(updateData.actualPrice);
+          if (!isNaN(actualPriceNum)) {
+            updateData.actualCost = (actualPriceNum * 0.85).toFixed(2); // Example calculation: 85% of actual price
+          }
+        }
+        
+        const updatedProduct = await storage.updateCompstyleProductList(id, updateData);
+        results.push(updatedProduct);
+      }
+      
+      res.json({ success: true, updatedCount: results.length, products: results });
+    } catch (error) {
+      console.error('Error batch saving products:', error);
+      res.status(500).json({ error: 'Failed to batch save products' });
+    }
+  });
+
+  app.get('/api/compstyle/product-list/export-csv', async (req, res) => {
+    try {
+      const products = await storage.getCompstyleProductList();
+      
+      // Define CSV headers (all columns)
+      const headers = [
+        'ID', 'SKU', 'Product Name', 'Stock', 'Transit', 'Retail USD', 'Retail AMD', 
+        'Dealer 1', 'Dealer 2', 'Cost', 'Latest Purchase', 'Latest Cost', 
+        'Avg Sales', 'Actual Price', 'Actual Cost', 'Supplier', 'Last Updated'
+      ];
+      
+      // Convert products to CSV format
+      const csvRows = [headers.join(',')];
+      
+      products.forEach(product => {
+        const row = [
+          product.id,
+          product.sku || '',
+          `"${product.productName.replace(/"/g, '""')}"`, // Escape quotes in product name
+          product.stock,
+          product.transit,
+          product.retailPriceUsd || '',
+          product.retailPriceAmd || '',
+          product.dealerPrice1 || '',
+          product.dealerPrice2 || '',
+          product.cost || '',
+          product.latestPurchase || '',
+          product.latestCost || '',
+          product.aveSalesPrice || '',
+          product.actualPrice || '',
+          product.actualCost || '',
+          product.supplier || '',
+          product.lastUpdated
+        ];
+        csvRows.push(row.join(','));
+      });
+      
+      const csvContent = csvRows.join('\n');
+      
+      // Set headers for file download
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="product-list-${new Date().toISOString().split('T')[0]}.csv"`);
+      
+      // Add UTF-8 BOM for proper Excel compatibility
+      res.send('\uFEFF' + csvContent);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      res.status(500).json({ error: 'Failed to export CSV' });
+    }
+  });
+
   // CompStyle file upload endpoint
   app.post("/api/compstyle/upload", upload.single('file'), async (req, res) => {
     try {

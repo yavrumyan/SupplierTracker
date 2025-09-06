@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Package, RefreshCw, Search, DollarSign } from "lucide-react";
+import { Package, RefreshCw, Search, DollarSign, Save, Download } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -32,6 +32,8 @@ interface ProductListItem {
 export default function ActualProductPrices() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState<string>("");
+  const [pendingChanges, setPendingChanges] = useState<Record<number, { actualPrice?: string; supplier?: string }>>({});
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const queryClient = useQueryClient();
 
   // Fetch product list data - only on manual rebuild
@@ -57,34 +59,70 @@ export default function ActualProductPrices() {
     }
   });
 
-  // Update product mutation
-  const updateProductMutation = useMutation({
-    mutationFn: ({ id, updates }: { id: number; updates: Partial<ProductListItem> }) =>
-      apiRequest('PATCH', `/api/compstyle/product-list/${id}`, updates),
+  // Batch save mutation
+  const batchSaveMutation = useMutation({
+    mutationFn: () => apiRequest('POST', '/api/compstyle/product-list/batch-save', { changes: pendingChanges }),
     onSuccess: () => {
+      setPendingChanges({});
+      setHasUnsavedChanges(false);
       productListQuery.refetch();
     }
   });
 
+  // CSV export mutation
+  const exportCsvMutation = useMutation({
+    mutationFn: () => fetch('/api/compstyle/product-list/export-csv').then(response => {
+      if (!response.ok) throw new Error('Export failed');
+      return response.blob();
+    }),
+    onSuccess: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `product-list-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+  });
+
   const handleActualPriceChange = (productId: number, actualPrice: string) => {
-    updateProductMutation.mutate({
-      id: productId,
-      updates: { actualPrice: actualPrice || null }
-    });
+    setPendingChanges(prev => ({
+      ...prev,
+      [productId]: { ...prev[productId], actualPrice: actualPrice || "" }
+    }));
+    setHasUnsavedChanges(true);
   };
 
   const handleSupplierChange = (productId: number, supplier: string) => {
-    updateProductMutation.mutate({
-      id: productId,
-      updates: { supplier: supplier || null }
-    });
+    setPendingChanges(prev => ({
+      ...prev,
+      [productId]: { ...prev[productId], supplier: supplier || "" }
+    }));
+    setHasUnsavedChanges(true);
   };
 
-  // Filter products based on search query
+  const handleSaveChanges = () => {
+    batchSaveMutation.mutate();
+  };
+
+  const handleExportCsv = () => {
+    exportCsvMutation.mutate();
+  };
+
+  // Filter products based on search query and merge with pending changes
   const filteredProducts = productListQuery.data?.filter(product =>
     product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (product.sku && product.sku.toLowerCase().includes(searchQuery.toLowerCase()))
-  ) || [];
+  ).map(product => {
+    const pendingChangesForProduct = pendingChanges[product.id];
+    return {
+      ...product,
+      actualPrice: pendingChangesForProduct?.actualPrice !== undefined ? pendingChangesForProduct.actualPrice : product.actualPrice,
+      supplier: pendingChangesForProduct?.supplier !== undefined ? pendingChangesForProduct.supplier : product.supplier
+    };
+  }) || [];
 
   const formatPrice = (price: string | null) => {
     if (!price) return "-";
@@ -164,6 +202,9 @@ export default function ActualProductPrices() {
         </CardTitle>
         <CardDescription>
           Comprehensive product catalog with pricing data from all sources ({filteredProducts.length} products)
+          {hasUnsavedChanges && (
+            <span className="text-orange-600 font-medium"> • Unsaved changes</span>
+          )}
         </CardDescription>
         
         {/* Controls */}
@@ -177,6 +218,24 @@ export default function ActualProductPrices() {
               className="pl-10"
             />
           </div>
+          <Button
+            onClick={handleSaveChanges}
+            disabled={!hasUnsavedChanges || batchSaveMutation.isPending}
+            variant={hasUnsavedChanges ? "default" : "outline"}
+            size="sm"
+          >
+            <Save className={`h-4 w-4 mr-2 ${batchSaveMutation.isPending ? 'animate-spin' : ''}`} />
+            Save Changes
+          </Button>
+          <Button
+            onClick={handleExportCsv}
+            disabled={exportCsvMutation.isPending}
+            variant="outline"
+            size="sm"
+          >
+            <Download className={`h-4 w-4 mr-2 ${exportCsvMutation.isPending ? 'animate-spin' : ''}`} />
+            Export to CSV
+          </Button>
           <Button
             onClick={() => rebuildMutation.mutate()}
             disabled={rebuildMutation.isPending}
@@ -194,19 +253,14 @@ export default function ActualProductPrices() {
           <Table>
             <TableHeader className="sticky top-0 bg-white">
               <TableRow>
-                <TableHead className="w-20">SKU</TableHead>
+                {/* Hidden: SKU, Status, Retail AMD, Dealer 2, Latest Cost, Avg Sales */}
                 <TableHead className="min-w-[300px]">Product Name</TableHead>
                 <TableHead className="w-20">Stock</TableHead>
                 <TableHead className="w-20">Transit</TableHead>
-                <TableHead className="w-24">Status</TableHead>
                 <TableHead className="w-24">Retail USD</TableHead>
-                <TableHead className="w-24">Retail AMD</TableHead>
                 <TableHead className="w-24">Dealer 1</TableHead>
-                <TableHead className="w-24">Dealer 2</TableHead>
                 <TableHead className="w-24">Cost</TableHead>
                 <TableHead className="w-24">Latest Purchase</TableHead>
-                <TableHead className="w-24">Latest Cost</TableHead>
-                <TableHead className="w-24">Avg Sales</TableHead>
                 <TableHead className="w-32">Actual Price</TableHead>
                 <TableHead className="w-24">Actual Cost</TableHead>
                 <TableHead className="w-40">Supplier</TableHead>
@@ -215,19 +269,14 @@ export default function ActualProductPrices() {
             <TableBody>
               {filteredProducts.map((product) => (
                 <TableRow key={product.id} className="hover:bg-slate-50">
-                  <TableCell className="font-mono text-xs">{product.sku || "-"}</TableCell>
+                  {/* Hidden: SKU, Status, Retail AMD, Dealer 2, Latest Cost, Avg Sales */}
                   <TableCell className="font-medium text-sm">{product.productName}</TableCell>
                   <TableCell className="text-center">{product.stock}</TableCell>
                   <TableCell className="text-center">{product.transit}</TableCell>
-                  <TableCell>{getStockBadge(product.stock, product.transit)}</TableCell>
                   <TableCell className="text-right">{formatPrice(product.retailPriceUsd)}</TableCell>
-                  <TableCell className="text-right">{product.retailPriceAmd ? `֏${parseFloat(product.retailPriceAmd).toFixed(0)}` : "-"}</TableCell>
                   <TableCell className="text-right">{formatPrice(product.dealerPrice1)}</TableCell>
-                  <TableCell className="text-right">{formatPrice(product.dealerPrice2)}</TableCell>
                   <TableCell className="text-right">{formatPrice(product.cost)}</TableCell>
                   <TableCell className="text-right">{formatPrice(product.latestPurchase)}</TableCell>
-                  <TableCell className="text-right">{formatPrice(product.latestCost)}</TableCell>
-                  <TableCell className="text-right">{formatPrice(product.aveSalesPrice)}</TableCell>
                   <TableCell>
                     <div className="relative">
                       <DollarSign className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
