@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,16 +46,14 @@ export default function ActualProductPrices() {
     enabled: false, // Disable automatic fetching
   });
 
-  // Only load suppliers initially for the dropdown
-  useEffect(() => {
-    suppliersQuery.refetch();
-  }, []);
+  // No automatic loading - suppliers will be loaded when product data is loaded
 
   // Rebuild product list mutation
   const rebuildMutation = useMutation({
     mutationFn: () => apiRequest('POST', '/api/compstyle/product-list/rebuild'),
     onSuccess: () => {
       productListQuery.refetch();
+      suppliersQuery.refetch(); // Load suppliers after product data is loaded
     }
   });
 

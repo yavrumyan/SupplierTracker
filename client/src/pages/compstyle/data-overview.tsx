@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 
 // Data table component for displaying records
 function DataTable({ title, description, data, isLoading, icon }: {
@@ -45,7 +44,9 @@ function DataTable({ title, description, data, isLoading, icon }: {
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-slate-500 text-center py-4">No data available</div>
+          <div className="text-slate-500 text-center py-4">
+            {data === undefined ? "Click 'Refresh All Data' to load this table" : "No data available"}
+          </div>
         </CardContent>
       </Card>
     );
