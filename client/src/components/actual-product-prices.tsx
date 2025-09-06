@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,21 +34,32 @@ export default function ActualProductPrices() {
   const [selectedSupplier, setSelectedSupplier] = useState<string>("");
   const queryClient = useQueryClient();
 
-  // Fetch product list data
+  // Fetch product list data - only on manual rebuild
   const productListQuery = useQuery<ProductListItem[]>({
     queryKey: ['/api/compstyle/product-list'],
+    enabled: false, // Disable automatic fetching
   });
 
-  // Fetch suppliers for dropdown
+  // Fetch suppliers for dropdown - only when needed
   const suppliersQuery = useQuery<any[]>({
     queryKey: ['/api/suppliers'],
+    enabled: false, // Disable automatic fetching
   });
+
+  // Load data initially
+  useEffect(() => {
+    productListQuery.refetch();
+    suppliersQuery.refetch();
+  }, []);
 
   // Rebuild product list mutation
   const rebuildMutation = useMutation({
-    mutationFn: () => apiRequest('/api/compstyle/product-list/rebuild', { method: 'POST' }),
+    mutationFn: () => apiRequest('/api/compstyle/product-list/rebuild', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/compstyle/product-list'] });
+      productListQuery.refetch();
     }
   });
 
@@ -61,7 +72,7 @@ export default function ActualProductPrices() {
         headers: { 'Content-Type': 'application/json' }
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/compstyle/product-list'] });
+      productListQuery.refetch();
     }
   });
 

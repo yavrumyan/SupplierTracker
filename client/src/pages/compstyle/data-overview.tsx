@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 // Data table component for displaying records
 function DataTable({ title, description, data, isLoading, icon }: {
@@ -96,17 +97,31 @@ function DataTable({ title, description, data, isLoading, icon }: {
 }
 
 export default function CompStyleDataOverview() {
-  // Fetch data for all 10 tables
-  const totalStockQuery = useQuery({ queryKey: ['/api/compstyle/total-stock'] });
-  const kievyanStockQuery = useQuery({ queryKey: ['/api/compstyle/kievyan-stock'] });
-  const sevanStockQuery = useQuery({ queryKey: ['/api/compstyle/sevan-stock'] });
-  const transitQuery = useQuery({ queryKey: ['/api/compstyle/transit'] });
-  const salesOrdersQuery = useQuery({ queryKey: ['/api/compstyle/sales-orders'] });
-  const salesItemsQuery = useQuery({ queryKey: ['/api/compstyle/sales-items'] });
-  const purchaseOrdersQuery = useQuery({ queryKey: ['/api/compstyle/purchase-orders'] });
-  const purchaseItemsQuery = useQuery({ queryKey: ['/api/compstyle/purchase-items'] });
-  const totalSalesQuery = useQuery({ queryKey: ['/api/compstyle/total-sales'] });
-  const totalProcurementQuery = useQuery({ queryKey: ['/api/compstyle/total-procurement'] });
+  // Fetch data for all 10 tables - disabled automatic fetching
+  const totalStockQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-stock'], enabled: false });
+  const kievyanStockQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/kievyan-stock'], enabled: false });
+  const sevanStockQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/sevan-stock'], enabled: false });
+  const transitQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/transit'], enabled: false });
+  const salesOrdersQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/sales-orders'], enabled: false });
+  const salesItemsQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/sales-items'], enabled: false });
+  const purchaseOrdersQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/purchase-orders'], enabled: false });
+  const purchaseItemsQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/purchase-items'], enabled: false });
+  const totalSalesQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-sales'], enabled: false });
+  const totalProcurementQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-procurement'], enabled: false });
+
+  // Load data initially when component mounts
+  useEffect(() => {
+    totalStockQuery.refetch();
+    kievyanStockQuery.refetch();
+    sevanStockQuery.refetch();
+    transitQuery.refetch();
+    salesOrdersQuery.refetch();
+    salesItemsQuery.refetch();
+    purchaseOrdersQuery.refetch();
+    purchaseItemsQuery.refetch();
+    totalSalesQuery.refetch();
+    totalProcurementQuery.refetch();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">

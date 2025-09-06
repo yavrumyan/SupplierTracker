@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Upload, FileText, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FileUpload {
   name: string;
@@ -20,6 +21,7 @@ interface FileUpload {
 
 export default function CompStyleUpload() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [files, setFiles] = useState<FileUpload[]>([
     {
       name: "Total Stock Current",
@@ -138,6 +140,9 @@ export default function CompStyleUpload() {
         i === index ? { ...item, uploading: false, uploaded: true } : item
       ));
 
+      // Invalidate all CompStyle data queries when files are uploaded
+      queryClient.invalidateQueries({ queryKey: ['/api/compstyle'] });
+      
       toast({
         title: "Upload Successful",
         description: `${fileUpload.name} processed successfully. ${result.recordsProcessed} records imported.`,
