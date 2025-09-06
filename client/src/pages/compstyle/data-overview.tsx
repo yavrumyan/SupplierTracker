@@ -98,17 +98,17 @@ function DataTable({ title, description, data, isLoading, icon }: {
 }
 
 export default function CompStyleDataOverview() {
-  // Fetch data for all 10 tables - disabled automatic fetching
-  const totalStockQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-stock'], enabled: false });
-  const kievyanStockQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/kievyan-stock'], enabled: false });
-  const sevanStockQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/sevan-stock'], enabled: false });
-  const transitQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/transit'], enabled: false });
-  const salesOrdersQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/sales-orders'], enabled: false });
-  const salesItemsQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/sales-items'], enabled: false });
-  const purchaseOrdersQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/purchase-orders'], enabled: false });
-  const purchaseItemsQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/purchase-items'], enabled: false });
-  const totalSalesQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-sales'], enabled: false });
-  const totalProcurementQuery = useQuery<any[]>({ queryKey: ['/api/compstyle/total-procurement'], enabled: false });
+  // Fetch data for all 10 tables - completely isolated queries with unique keys
+  const totalStockQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/total-stock'], enabled: false });
+  const kievyanStockQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/kievyan-stock'], enabled: false });
+  const sevanStockQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/sevan-stock'], enabled: false });
+  const transitQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/transit'], enabled: false });
+  const salesOrdersQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/sales-orders'], enabled: false });
+  const salesItemsQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/sales-items'], enabled: false });
+  const purchaseOrdersQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/purchase-orders'], enabled: false });
+  const purchaseItemsQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/purchase-items'], enabled: false });
+  const totalSalesQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/total-sales'], enabled: false });
+  const totalProcurementQuery = useQuery<any[]>({ queryKey: ['data-overview', '/api/compstyle/total-procurement'], enabled: false });
 
   // Function to refresh all data manually
   const refreshAllData = () => {

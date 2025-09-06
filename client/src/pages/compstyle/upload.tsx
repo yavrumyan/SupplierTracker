@@ -140,17 +140,7 @@ export default function CompStyleUpload() {
         i === index ? { ...item, uploading: false, uploaded: true } : item
       ));
 
-      // Manually refresh Data Overview queries when files are uploaded
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/total-stock'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/kievyan-stock'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/sevan-stock'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/transit'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/sales-orders'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/sales-items'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/purchase-orders'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/purchase-items'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/total-sales'] });
-      queryClient.refetchQueries({ queryKey: ['/api/compstyle/total-procurement'] });
+      // Data will be refreshed only when user explicitly clicks "Refresh All Data" in Data Overview
       
       toast({
         title: "Upload Successful",
