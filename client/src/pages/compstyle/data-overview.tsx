@@ -2,8 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Database, FileText, BarChart, CheckCircle, Package, ShoppingCart, Truck, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 // Data table component for displaying records
 function DataTable({ title, description, data, isLoading, icon }: {
@@ -100,6 +100,7 @@ function DataTable({ title, description, data, isLoading, icon }: {
 
 export default function CompStyleDataOverview() {
   const queryClient = useQueryClient();
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [tableData, setTableData] = useState<{
     totalStock?: any[];
@@ -114,47 +115,21 @@ export default function CompStyleDataOverview() {
     totalProcurement?: any[];
   }>({});
 
-  // Cache keys for persistent storage
-  const cacheKeys = {
-    totalStock: ['data-overview-persistent', 'total-stock'],
-    kievyanStock: ['data-overview-persistent', 'kievyan-stock'],
-    sevanStock: ['data-overview-persistent', 'sevan-stock'],
-    transit: ['data-overview-persistent', 'transit'],
-    salesOrders: ['data-overview-persistent', 'sales-orders'],
-    salesItems: ['data-overview-persistent', 'sales-items'],
-    purchaseOrders: ['data-overview-persistent', 'purchase-orders'],
-    purchaseItems: ['data-overview-persistent', 'purchase-items'],
-    totalSales: ['data-overview-persistent', 'total-sales'],
-    totalProcurement: ['data-overview-persistent', 'total-procurement'],
-  };
-
-  // Load cached data when component mounts
-  useEffect(() => {
-    const cachedData: any = {};
-    Object.entries(cacheKeys).forEach(([key, cacheKey]) => {
-      const cached = queryClient.getQueryData(cacheKey);
-      if (cached) {
-        cachedData[key] = cached;
-      }
-    });
-    setTableData(cachedData);
-  }, [queryClient]);
-
-  // Function to refresh all data manually
+  // Function to refresh all data manually using direct fetch
   const refreshAllData = async () => {
     setIsLoading(true);
     try {
       const endpoints = [
-        { key: 'totalStock', url: '/api/compstyle/total-stock', cacheKey: cacheKeys.totalStock },
-        { key: 'kievyanStock', url: '/api/compstyle/kievyan-stock', cacheKey: cacheKeys.kievyanStock },
-        { key: 'sevanStock', url: '/api/compstyle/sevan-stock', cacheKey: cacheKeys.sevanStock },
-        { key: 'transit', url: '/api/compstyle/transit', cacheKey: cacheKeys.transit },
-        { key: 'salesOrders', url: '/api/compstyle/sales-orders', cacheKey: cacheKeys.salesOrders },
-        { key: 'salesItems', url: '/api/compstyle/sales-items', cacheKey: cacheKeys.salesItems },
-        { key: 'purchaseOrders', url: '/api/compstyle/purchase-orders', cacheKey: cacheKeys.purchaseOrders },
-        { key: 'purchaseItems', url: '/api/compstyle/purchase-items', cacheKey: cacheKeys.purchaseItems },
-        { key: 'totalSales', url: '/api/compstyle/total-sales', cacheKey: cacheKeys.totalSales },
-        { key: 'totalProcurement', url: '/api/compstyle/total-procurement', cacheKey: cacheKeys.totalProcurement },
+        { key: 'totalStock', url: '/api/compstyle/total-stock' },
+        { key: 'kievyanStock', url: '/api/compstyle/kievyan-stock' },
+        { key: 'sevanStock', url: '/api/compstyle/sevan-stock' },
+        { key: 'transit', url: '/api/compstyle/transit' },
+        { key: 'salesOrders', url: '/api/compstyle/sales-orders' },
+        { key: 'salesItems', url: '/api/compstyle/sales-items' },
+        { key: 'purchaseOrders', url: '/api/compstyle/purchase-orders' },
+        { key: 'purchaseItems', url: '/api/compstyle/purchase-items' },
+        { key: 'totalSales', url: '/api/compstyle/total-sales' },
+        { key: 'totalProcurement', url: '/api/compstyle/total-procurement' },
       ];
 
       const results = await Promise.all(
@@ -162,10 +137,6 @@ export default function CompStyleDataOverview() {
           const response = await fetch(endpoint.url, { credentials: "include" });
           if (!response.ok) throw new Error(`Failed to fetch ${endpoint.key}`);
           const data = await response.json();
-          
-          // Store in React Query cache for persistence
-          queryClient.setQueryData(endpoint.cacheKey, data);
-          
           return { key: endpoint.key, data };
         })
       );
@@ -176,6 +147,7 @@ export default function CompStyleDataOverview() {
       });
 
       setTableData(newTableData);
+      setDataLoaded(true);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
