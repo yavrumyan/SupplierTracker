@@ -2056,6 +2056,13 @@ print(json.dumps(result))
       
       const productName = String(row[0]).trim();
       
+      // Debug logging for Intel processors
+      if (productName.includes('Процессор Intel Core i5 12400')) {
+        console.log(`Found Intel processor row ${i}: "${productName}" (length: ${productName.length}, qty: ${qty})`);
+        console.log(`Raw product name: "${row[0]}"`);
+        console.log(`Already exists in map: ${processedProducts.has(productName)}`);
+      }
+      
       // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
       const purchasePriceAmd = parseNumericValue(row[3]);
