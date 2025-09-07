@@ -949,16 +949,17 @@ export class DatabaseStorage implements IStorage {
       });
     });
 
-    // 2. Add transit quantities (aggregate by product name to handle duplicates)
+    // 2. Add transit quantities (use only the most recent record per product)
     const transitData = await db.select().from(compstyleTransit);
 
-    // Group transit data by product name and sum quantities
-    const transitAggregated = new Map<string, {totalQty: number, latestPurchase: string | null}>();
+    // Group transit data by product name and keep only the latest entry
+    const transitLatest = new Map<string, any>();
 
     transitData.forEach(item => {
       // Debug logging for the specific product
       if (item.productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
         console.log(`Transit data for ${item.productName}:`, {
+          id: item.id,
           qty: item.qty,
           purchasePriceUsd: item.purchasePriceUsd,
           currentCost: item.currentCost,
@@ -967,32 +968,24 @@ export class DatabaseStorage implements IStorage {
       }
 
       const productName = item.productName;
-      const existing = transitAggregated.get(productName) || {
-        totalQty: 0,
-        latestPurchase: null
-      };
+      const existing = transitLatest.get(productName);
 
-      // Sum quantities for the same product
-      existing.totalQty += item.qty || 0;
-
-      // Keep the most recent purchase price (prefer purchasePriceUsd)
-      if (!existing.latestPurchase || item.purchasePriceUsd) {
-        existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
+      // Keep only the record with the highest ID (most recent)
+      if (!existing || item.id > existing.id) {
+        transitLatest.set(productName, item);
       }
-
-      transitAggregated.set(productName, existing);
     });
 
-    // Add aggregated transit data to product map
-    for (const [productName, transitInfo] of transitAggregated) {
+    // Add latest transit data to product map
+    for (const [productName, item] of transitLatest) {
       const existing = productMap.get(productName) || {
         productName: productName,
         stock: 0,
         transit: 0,
       };
-      existing.transit = transitInfo.totalQty;
-      if (!existing.latestPurchase && transitInfo.latestPurchase) {
-        existing.latestPurchase = transitInfo.latestPurchase;
+      existing.transit = item.qty || 0;
+      if (!existing.latestPurchase && (item.purchasePriceUsd || item.currentCost)) {
+        existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
       }
       productMap.set(productName, existing);
     }

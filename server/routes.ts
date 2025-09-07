@@ -2004,10 +2004,14 @@ print(json.dumps(result))
 
   // Process In Transit Current file according to specifications
   async function processTransitFile(data: any[]): Promise<number> {
+    console.log('Processing Transit file - clearing existing data...');
+    
     // Clear existing transit data before processing new file
     await db.delete(compstyleTransit);
     
     let count = 0;
+    const processedProducts = new Map<string, any>(); // Track products to avoid duplicates within same file
+    
     // Start from row 1 (skip header row)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
@@ -2022,13 +2026,15 @@ print(json.dumps(result))
       const qty = parseNumericValue(row[1]);
       if (qty === null) continue;
       
+      const productName = String(row[0]).trim();
+      
       // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
       const purchasePriceAmd = parseNumericValue(row[3]);
       const currentCost = parseNumericValue(row[6]);
       
-      await storage.createCompstyleTransit({
-        productName: String(row[0]), // Column A (Товар): Name of product
+      const transitRecord = {
+        productName, // Column A (Товар): Name of product
         qty, // Column B (Кол.): Quantity purchased
         purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column C (Цена $): Purchasing price in USD
         purchasePriceAmd: purchasePriceAmd ? String(purchasePriceAmd) : null, // Column D (Цена AMD): Purchasing price in AMD
@@ -2036,9 +2042,32 @@ print(json.dumps(result))
         purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь): Purchase Order Number
         destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад): Destination warehouse/store
         supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик): Supplier name
-      });
-      count++;
+      };
+      
+      // Check if we already processed this product in this file
+      if (processedProducts.has(productName)) {
+        // Update existing record (keep the latest one)
+        const existing = processedProducts.get(productName);
+        if (i > existing.rowIndex) { // Keep the record that appears later in the file
+          processedProducts.set(productName, { ...transitRecord, rowIndex: i });
+        }
+      } else {
+        processedProducts.set(productName, { ...transitRecord, rowIndex: i });
+      }
     }
+    
+    // Insert only the latest record for each product
+    for (const [productName, record] of processedProducts) {
+      const { rowIndex, ...recordData } = record;
+      await storage.createCompstyleTransit(recordData);
+      count++;
+      
+      if (productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
+        console.log(`Processed ${productName}: qty=${record.qty}, supplier=${record.supplier}`);
+      }
+    }
+    
+    console.log(`Transit file processed: ${count} unique products saved`);
     return count;
   }
 
