@@ -952,13 +952,24 @@ export class DatabaseStorage implements IStorage {
     // 2. Add transit quantities (sum if multiple entries)
     const transitData = await db.select().from(compstyleTransit);
     transitData.forEach(item => {
+      // Debug logging for the specific product
+      if (item.productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
+        console.log(`Transit data for ${item.productName}:`, {
+          qty: item.qty,
+          purchasePriceUsd: item.purchasePriceUsd,
+          currentCost: item.currentCost,
+          supplier: item.supplier
+        });
+      }
+      
       const existing = productMap.get(item.productName) || {
         productName: item.productName,
         stock: 0,
         transit: 0,
       };
-      existing.transit = (existing.transit || 0) + item.qty;
-      existing.latestPurchase = item.currentCost;
+      existing.transit = (existing.transit || 0) + (item.qty || 0);
+      // Use purchase price from transit data, fallback to current cost
+      existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
       productMap.set(item.productName, existing);
     });
     
