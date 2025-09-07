@@ -2056,13 +2056,6 @@ print(json.dumps(result))
       
       const productName = String(row[0]).trim();
       
-      // Debug logging for Intel processors (broader search)
-      if (productName.includes('Intel Core i5') || productName.includes('Процессор Intel')) {
-        console.log(`Found Intel processor row ${i}: "${productName}" (length: ${productName.length}, qty: ${qty})`);
-        console.log(`Raw product name: "${row[0]}"`);
-        console.log(`Already exists in map: ${processedProducts.has(productName)}`);
-      }
-      
       // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
       const purchasePriceAmd = parseNumericValue(row[3]);
@@ -2081,32 +2074,20 @@ print(json.dumps(result))
       
       // Check if we already processed this product in this file
       if (processedProducts.has(productName)) {
-        // Sum quantities for duplicate products
+        // Update existing record (keep the latest one)
         const existing = processedProducts.get(productName);
-        const newQty = existing.qty + qty;
-        
-        // Keep the existing record but update quantity (and optionally other fields)
-        processedProducts.set(productName, { 
-          ...existing, 
-          qty: newQty,
-          // Update other fields with latest values (optional)
-          purchasePriceUsd: transitRecord.purchasePriceUsd || existing.purchasePriceUsd,
-          purchasePriceAmd: transitRecord.purchasePriceAmd || existing.purchasePriceAmd,
-          currentCost: transitRecord.currentCost || existing.currentCost,
-          purchaseOrderNumber: transitRecord.purchaseOrderNumber || existing.purchaseOrderNumber,
-          destinationLocation: transitRecord.destinationLocation || existing.destinationLocation,
-          supplier: transitRecord.supplier || existing.supplier,
-        });
-        
-        console.log(`Found duplicate product "${productName}": ${existing.qty} + ${qty} = ${newQty}`);
+        if (i > existing.rowIndex) { // Keep the record that appears later in the file
+          processedProducts.set(productName, { ...transitRecord, rowIndex: i });
+        }
       } else {
-        processedProducts.set(productName, transitRecord);
+        processedProducts.set(productName, { ...transitRecord, rowIndex: i });
       }
     }
     
-    // Insert consolidated records (one per unique product with summed quantities)
+    // Insert only the latest record for each product
     for (const [productName, record] of processedProducts) {
-      await storage.createCompstyleTransit(record);
+      const { rowIndex, ...recordData } = record;
+      await storage.createCompstyleTransit(recordData);
       count++;
       
       if (productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
