@@ -25,6 +25,20 @@ import fs from "fs";
 import XLSX from "xlsx";
 import { spawn } from "child_process";
 import archiver from "archiver";
+import { db } from "./db";
+import { 
+  compstyleTotalStock,
+  compstyleKievyanStock, 
+  compstyleSevanStock,
+  compstyleTransit,
+  compstyleSalesOrders,
+  compstyleSalesItems,
+  compstylePurchaseOrders,
+  compstylePurchaseItems,
+  compstyleTotalSales,
+  compstyleTotalProcurement
+} from "@shared/schema";
+import { eq, and } from "drizzle-orm";
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
@@ -1863,6 +1877,11 @@ print(json.dumps(result))
   // Helper functions for processing different file types
   // Process Total Stock Current file according to specifications
   async function processTotalStockFile(data: any[]): Promise<number> {
+    console.log('Processing Total Stock file - clearing existing data...');
+    
+    // Clear existing total stock data before processing new file
+    await db.delete(compstyleTotalStock);
+    
     let count = 0;
     // Start from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
@@ -1895,6 +1914,15 @@ print(json.dumps(result))
 
   // Process Stock Kievyan/Sevan Current files according to specifications
   async function processLocationStockFile(data: any[], locationName: string): Promise<number> {
+    console.log(`Processing ${locationName} Stock file - clearing existing data...`);
+    
+    // Clear existing location stock data before processing new file
+    if (locationName === "Kievyan") {
+      await db.delete(compstyleKievyanStock);
+    } else if (locationName === "Sevan") {
+      await db.delete(compstyleSevanStock);
+    }
+    
     // Get or create location
     const locations = await storage.getCompstyleLocations();
     let location = locations.find(l => l.name.includes(locationName));
