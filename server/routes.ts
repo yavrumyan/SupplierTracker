@@ -2074,20 +2074,32 @@ print(json.dumps(result))
       
       // Check if we already processed this product in this file
       if (processedProducts.has(productName)) {
-        // Update existing record (keep the latest one)
+        // Sum quantities for duplicate products
         const existing = processedProducts.get(productName);
-        if (i > existing.rowIndex) { // Keep the record that appears later in the file
-          processedProducts.set(productName, { ...transitRecord, rowIndex: i });
-        }
+        const newQty = existing.qty + qty;
+        
+        // Keep the existing record but update quantity (and optionally other fields)
+        processedProducts.set(productName, { 
+          ...existing, 
+          qty: newQty,
+          // Update other fields with latest values (optional)
+          purchasePriceUsd: transitRecord.purchasePriceUsd || existing.purchasePriceUsd,
+          purchasePriceAmd: transitRecord.purchasePriceAmd || existing.purchasePriceAmd,
+          currentCost: transitRecord.currentCost || existing.currentCost,
+          purchaseOrderNumber: transitRecord.purchaseOrderNumber || existing.purchaseOrderNumber,
+          destinationLocation: transitRecord.destinationLocation || existing.destinationLocation,
+          supplier: transitRecord.supplier || existing.supplier,
+        });
+        
+        console.log(`Found duplicate product "${productName}": ${existing.qty} + ${qty} = ${newQty}`);
       } else {
-        processedProducts.set(productName, { ...transitRecord, rowIndex: i });
+        processedProducts.set(productName, transitRecord);
       }
     }
     
-    // Insert only the latest record for each product
+    // Insert consolidated records (one per unique product with summed quantities)
     for (const [productName, record] of processedProducts) {
-      const { rowIndex, ...recordData } = record;
-      await storage.createCompstyleTransit(recordData);
+      await storage.createCompstyleTransit(record);
       count++;
       
       if (productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
