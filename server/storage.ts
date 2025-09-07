@@ -949,11 +949,11 @@ export class DatabaseStorage implements IStorage {
       });
     });
 
-    // 2. Add transit quantities (use only the most recent record per product)
+    // 2. Add transit quantities (sum all quantities for same product)
     const transitData = await db.select().from(compstyleTransit);
 
-    // Group transit data by product name and keep only the latest entry
-    const transitLatest = new Map<string, any>();
+    // Group transit data by product name and sum quantities
+    const transitSums = new Map<string, any>();
 
     transitData.forEach(item => {
       // Debug logging for the specific product
@@ -968,24 +968,36 @@ export class DatabaseStorage implements IStorage {
       }
 
       const productName = item.productName;
-      const existing = transitLatest.get(productName);
+      const existing = transitSums.get(productName);
 
-      // Keep only the record with the highest ID (most recent)
-      if (!existing || item.id > existing.id) {
-        transitLatest.set(productName, item);
+      if (!existing) {
+        // First occurrence of this product
+        transitSums.set(productName, {
+          productName: productName,
+          totalQty: item.qty || 0,
+          latestPurchasePrice: item.purchasePriceUsd || item.currentCost,
+          latestId: item.id
+        });
+      } else {
+        // Sum the quantities and keep the latest purchase price
+        existing.totalQty += (item.qty || 0);
+        if (item.id > existing.latestId && (item.purchasePriceUsd || item.currentCost)) {
+          existing.latestPurchasePrice = item.purchasePriceUsd || item.currentCost;
+          existing.latestId = item.id;
+        }
       }
     });
 
-    // Add latest transit data to product map
-    for (const [productName, item] of transitLatest) {
+    // Add summed transit data to product map
+    for (const [productName, item] of transitSums) {
       const existing = productMap.get(productName) || {
         productName: productName,
         stock: 0,
         transit: 0,
       };
-      existing.transit = item.qty || 0;
-      if (!existing.latestPurchase && (item.purchasePriceUsd || item.currentCost)) {
-        existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
+      existing.transit = item.totalQty;
+      if (!existing.latestPurchase && item.latestPurchasePrice) {
+        existing.latestPurchase = item.latestPurchasePrice;
       }
       productMap.set(productName, existing);
     }
