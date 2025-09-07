@@ -17,9 +17,8 @@ import supHubLogo from "@/assets/SupHub_1752355359935.png";
 // Custom CompStyle Icon Component
 function CompStyleIcon({ className }: { className?: string }) {
   return (
-    <div className={cn("flex items-center justify-center w-4 h-4 bg-blue-600 rounded text-white text-xs font-bold", className)}>
-      CS
-    </div>
+    <div className="flex items-center justify-center rounded text-white text-xs font-bold h-4 w-4 mr-3 bg-[#e4791b]">CS
+          </div>
   );
 }
 
