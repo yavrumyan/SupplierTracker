@@ -2004,6 +2004,9 @@ print(json.dumps(result))
 
   // Process In Transit Current file according to specifications
   async function processTransitFile(data: any[]): Promise<number> {
+    // Clear existing transit data before processing new file
+    await db.delete(compstyleTransit);
+    
     let count = 0;
     // Start from row 1 (skip header row)
     for (let i = 1; i < data.length; i++) {

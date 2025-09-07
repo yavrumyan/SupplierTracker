@@ -1,11 +1,11 @@
-import { 
-  suppliers, 
-  priceListFiles, 
-  priceListItems, 
-  offers, 
-  orders, 
-  orderItems, 
-  costCalculationFiles, 
+import {
+  suppliers,
+  priceListFiles,
+  priceListItems,
+  offers,
+  orders,
+  orderItems,
+  costCalculationFiles,
   inquiries,
   searchIndex,
   documents,
@@ -22,20 +22,20 @@ import {
   compstyleTotalSales,
   compstyleTotalProcurement,
   compstyleProductList,
-  type Supplier, 
-  type InsertSupplier, 
-  type PriceListFile, 
-  type InsertPriceListFile, 
-  type PriceListItem, 
-  type InsertPriceListItem, 
-  type Offer, 
-  type InsertOffer, 
-  type Order, 
-  type InsertOrder, 
-  type OrderItem, 
-  type InsertOrderItem, 
-  type CostCalculationFile, 
-  type Inquiry, 
+  type Supplier,
+  type InsertSupplier,
+  type PriceListFile,
+  type InsertPriceListFile,
+  type PriceListItem,
+  type InsertPriceListItem,
+  type Offer,
+  type InsertOffer,
+  type Order,
+  type InsertOrder,
+  type OrderItem,
+  type InsertOrderItem,
+  type CostCalculationFile,
+  type Inquiry,
   type InsertInquiry,
   type SearchIndex,
   type InsertSearchIndex,
@@ -196,7 +196,7 @@ export interface IStorage {
   getCompstylePurchaseItems(): Promise<CompstylePurchaseItem[]>;
   getCompstyleTotalSales(): Promise<CompstyleTotalSales[]>;
   getCompstyleTotalProcurement(): Promise<CompstyleTotalProcurement[]>;
-  
+
   // Product List methods
   getCompstyleProductList(): Promise<CompstyleProductList[]>;
   createCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList>;
@@ -467,7 +467,7 @@ export class DatabaseStorage implements IStorage {
     // Triple keyword search with AND logic
     if (query) {
       const keywords = query.split(' ').filter(k => k.trim()).map(k => k.trim().toLowerCase());
-      
+
       // Each keyword must match at least one of the searchable fields
       for (const keyword of keywords) {
         const searchTerm = `%${keyword}%`;
@@ -536,7 +536,7 @@ export class DatabaseStorage implements IStorage {
 
     // Standard search without country filter
     const queryBuilder = db.select().from(searchIndex);
-    
+
     if (whereConditions.length > 0) {
       return await queryBuilder
         .where(and(...whereConditions))
@@ -564,41 +564,41 @@ export class DatabaseStorage implements IStorage {
   async getAllCategoriesFromSuppliers(): Promise<string[]> {
     const suppliersData = await db.select({ categories: suppliers.categories }).from(suppliers);
     const allCategories = new Set<string>();
-    
+
     suppliersData.forEach(supplier => {
       if (supplier.categories) {
         supplier.categories.forEach(category => allCategories.add(category));
       }
     });
-    
+
     return Array.from(allCategories).sort();
   }
 
   async getAllBrandsFromSuppliers(): Promise<string[]> {
     const suppliersData = await db.select({ brands: suppliers.brands }).from(suppliers);
     const allBrands = new Set<string>();
-    
+
     suppliersData.forEach(supplier => {
       if (supplier.brands) {
         supplier.brands.forEach(brand => allBrands.add(brand));
       }
     });
-    
+
     return Array.from(allBrands).sort();
   }
 
   async deleteCategoryFromAllSuppliers(categoryToDelete: string): Promise<void> {
     // Get all suppliers that have this category
     const suppliersWithCategory = await db.select().from(suppliers);
-    
+
     for (const supplier of suppliersWithCategory) {
       if (supplier.categories && supplier.categories.includes(categoryToDelete)) {
         // Remove the category from the array
         const updatedCategories = supplier.categories.filter(cat => cat !== categoryToDelete);
-        
+
         // Update the supplier
         await db.update(suppliers)
-          .set({ 
+          .set({
             categories: updatedCategories,
             updatedAt: new Date()
           })
@@ -610,15 +610,15 @@ export class DatabaseStorage implements IStorage {
   async deleteBrandFromAllSuppliers(brandToDelete: string): Promise<void> {
     // Get all suppliers that have this brand
     const suppliersWithBrand = await db.select().from(suppliers);
-    
+
     for (const supplier of suppliersWithBrand) {
       if (supplier.brands && supplier.brands.includes(brandToDelete)) {
         // Remove the brand from the array
         const updatedBrands = supplier.brands.filter(brand => brand !== brandToDelete);
-        
+
         // Update the supplier
         await db.update(suppliers)
-          .set({ 
+          .set({
             brands: updatedBrands,
             updatedAt: new Date()
           })
@@ -648,7 +648,7 @@ export class DatabaseStorage implements IStorage {
       .from(documents)
       .leftJoin(suppliers, eq(documents.supplierId, suppliers.id))
       .orderBy(suppliers.name, documents.originalName);
-    
+
     return result.map(row => ({
       ...row,
       supplierName: row.supplierName || 'Unknown Supplier'
@@ -666,7 +666,7 @@ export class DatabaseStorage implements IStorage {
     for (const supplierData of suppliers) {
       try {
         console.log(`Processing supplier: ${supplierData.name}`);
-        
+
         // Check if supplier already exists by name or email
         const existingByName = await this.getSupplierByName(supplierData.name);
         if (existingByName) {
@@ -910,7 +910,7 @@ export class DatabaseStorage implements IStorage {
       // Try to find existing product by name
       const [existing] = await db.select().from(compstyleProductList)
         .where(eq(compstyleProductList.productName, product.productName));
-      
+
       if (existing) {
         // Update existing
         return await this.updateCompstyleProductList(existing.id, product);
@@ -926,13 +926,13 @@ export class DatabaseStorage implements IStorage {
 
   async rebuildProductList(): Promise<number> {
     console.log('Rebuilding Product List from existing data...');
-    
+
     // Clear existing product list
     await db.delete(compstyleProductList);
-    
+
     // Collect all unique product names from all sources
     const productMap = new Map<string, any>();
-    
+
     // 1. Get products from Total Stock (primary source for pricing and SKU)
     const totalStock = await db.select().from(compstyleTotalStock);
     totalStock.forEach(item => {
@@ -948,9 +948,13 @@ export class DatabaseStorage implements IStorage {
         cost: item.currentCost,
       });
     });
-    
-    // 2. Add transit quantities (sum if multiple entries)
+
+    // 2. Add transit quantities (aggregate by product name to handle duplicates)
     const transitData = await db.select().from(compstyleTransit);
+
+    // Group transit data by product name and sum quantities
+    const transitAggregated = new Map<string, {totalQty: number, latestPurchase: string | null}>();
+
     transitData.forEach(item => {
       // Debug logging for the specific product
       if (item.productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
@@ -961,18 +965,38 @@ export class DatabaseStorage implements IStorage {
           supplier: item.supplier
         });
       }
-      
-      const existing = productMap.get(item.productName) || {
-        productName: item.productName,
+
+      const productName = item.productName;
+      const existing = transitAggregated.get(productName) || {
+        totalQty: 0,
+        latestPurchase: null
+      };
+
+      // Sum quantities for the same product
+      existing.totalQty += item.qty || 0;
+
+      // Keep the most recent purchase price (prefer purchasePriceUsd)
+      if (!existing.latestPurchase || item.purchasePriceUsd) {
+        existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
+      }
+
+      transitAggregated.set(productName, existing);
+    });
+
+    // Add aggregated transit data to product map
+    for (const [productName, transitInfo] of transitAggregated) {
+      const existing = productMap.get(productName) || {
+        productName: productName,
         stock: 0,
         transit: 0,
       };
-      existing.transit = (existing.transit || 0) + (item.qty || 0);
-      // Use purchase price from transit data, fallback to current cost
-      existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
-      productMap.set(item.productName, existing);
-    });
-    
+      existing.transit = transitInfo.totalQty;
+      if (!existing.latestPurchase && transitInfo.latestPurchase) {
+        existing.latestPurchase = transitInfo.latestPurchase;
+      }
+      productMap.set(productName, existing);
+    }
+
     // 3. Add latest cost and average sales price from sales data
     const salesData = await db.select().from(compstyleTotalSales);
     salesData.forEach(item => {
@@ -985,7 +1009,7 @@ export class DatabaseStorage implements IStorage {
       existing.aveSalesPrice = item.salePriceUsd;
       productMap.set(item.productName, existing);
     });
-    
+
     // 4. Add latest purchase prices from purchase data
     const purchaseData = await db.select().from(compstylePurchaseItems);
     purchaseData.forEach(item => {
@@ -999,7 +1023,7 @@ export class DatabaseStorage implements IStorage {
       }
       productMap.set(item.productName, existing);
     });
-    
+
     // 5. Add products that appear only in sales items (no longer in stock)
     const salesItems = await db.select().from(compstyleSalesItems);
     salesItems.forEach(item => {
@@ -1011,7 +1035,7 @@ export class DatabaseStorage implements IStorage {
         });
       }
     });
-    
+
     // Insert all products into the Product List
     let count = 0;
     for (const [name, data] of productMap) {
@@ -1034,7 +1058,7 @@ export class DatabaseStorage implements IStorage {
       });
       count++;
     }
-    
+
     console.log(`Product List rebuilt with ${count} unique products`);
     return count;
   }
