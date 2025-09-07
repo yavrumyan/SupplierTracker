@@ -44,9 +44,8 @@ export default function AddSupplier() {
     <div className="p-6">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 -mx-6 -mt-6 px-6 py-4 mb-6">
-        <h1 className="text-xl font-semibold text-slate-800">Add New Supplier</h1>
+        <h1 className="text-xl font-semibold text-slate-800 ml-[35px] mr-[35px]">Add New Supplier</h1>
       </div>
-
       <SupplierForm
         onSubmit={handleSubmit}
         onCancel={handleCancel}

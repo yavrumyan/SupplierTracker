@@ -83,7 +83,7 @@ export default function SearchPage() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 -mx-6 -mt-6 px-6 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-slate-800">Product Search</h1>
+          <h1 className="text-xl font-semibold text-slate-800 ml-[35px] mr-[35px]">Product Search</h1>
           <div className="flex items-center space-x-4">
             <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">GY</span>
@@ -92,7 +92,6 @@ export default function SearchPage() {
           </div>
         </div>
       </div>
-
       {/* Search filters */}
       <div onKeyDown={handleKeyDown}>
         <ProductSearchFilters
@@ -101,7 +100,6 @@ export default function SearchPage() {
           onSearch={handleSearch}
         />
       </div>
-
       {/* Active filters display */}
       {activeFilterCount > 0 && (
         <Card>
@@ -164,7 +162,6 @@ export default function SearchPage() {
           </CardContent>
         </Card>
       )}
-
       {/* Search results */}
       {Object.keys(appliedFilters).length > 0 ? (
         <SearchResults
@@ -189,7 +186,6 @@ export default function SearchPage() {
           </CardContent>
         </Card>
       )}
-
       {error && (
         <Card>
           <CardContent className="p-4">

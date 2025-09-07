@@ -102,7 +102,7 @@ export default function Home() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 -mx-6 -mt-6 px-6 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-slate-800">Search & Filter Suppliers</h1>
+          <h1 className="text-xl font-semibold text-slate-800 ml-[35px] mr-[35px] pl-[0px] pr-[0px]">Search & Filter Suppliers</h1>
           <div className="flex items-center space-x-4">
             <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-medium">GY</span>
@@ -111,14 +111,12 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       {/* Search filters */}
       <SearchFilters
         filters={filters}
         onFiltersChange={setFilters}
         onSearch={handleSearch}
       />
-
       {/* Search results */}
       <Card>
         <CardHeader>
@@ -155,7 +153,6 @@ export default function Home() {
           )}
         </CardContent>
       </Card>
-
       {/* Multi-supplier inquiry */}
       {suppliers.length > 0 && (
         <Card>
