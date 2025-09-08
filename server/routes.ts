@@ -2074,17 +2074,31 @@ print(json.dumps(result))
       
       // Check if we already processed this product in this file
       if (processedProducts.has(productName)) {
-        // Update existing record (keep the latest one)
+        // Sum quantities for duplicate products
         const existing = processedProducts.get(productName);
-        if (i > existing.rowIndex) { // Keep the record that appears later in the file
-          processedProducts.set(productName, { ...transitRecord, rowIndex: i });
+        existing.qty += qty; // Add quantity to existing total
+        
+        // Keep other data from first occurrence, but update some fields if new ones have values
+        if (transitRecord.purchasePriceUsd && !existing.purchasePriceUsd) {
+          existing.purchasePriceUsd = transitRecord.purchasePriceUsd;
         }
+        if (transitRecord.purchasePriceAmd && !existing.purchasePriceAmd) {
+          existing.purchasePriceAmd = transitRecord.purchasePriceAmd;
+        }
+        if (transitRecord.currentCost && !existing.currentCost) {
+          existing.currentCost = transitRecord.currentCost;
+        }
+        if (transitRecord.supplier && !existing.supplier) {
+          existing.supplier = transitRecord.supplier;
+        }
+        
+        console.log(`Found duplicate ${productName}: adding ${qty} to existing ${existing.qty - qty}, total now: ${existing.qty}`);
       } else {
         processedProducts.set(productName, { ...transitRecord, rowIndex: i });
       }
     }
     
-    // Insert only the latest record for each product
+    // Insert aggregated record for each unique product (with summed quantities)
     for (const [productName, record] of processedProducts) {
       const { rowIndex, ...recordData } = record;
       await storage.createCompstyleTransit(recordData);
