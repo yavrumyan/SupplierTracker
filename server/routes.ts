@@ -2052,9 +2052,25 @@ print(json.dumps(result))
       
       // Validate required numeric fields
       const qty = parseNumericValue(row[1]);
-      if (qty === null) continue;
+      if (qty === null) {
+        console.log(`Row ${i}: Skipping - invalid quantity: ${row[1]}`);
+        continue;
+      }
       
       const productName = String(row[0]).trim();
+      
+      // Debug logging for specific products
+      const isTargetProduct = productName.includes('Процессор Intel Core i5 12400') || 
+                              productName.includes('Принтер струйный МФУ Canon PIXMA MG2541S');
+      
+      if (isTargetProduct) {
+        console.log(`\n=== ROW ${i} DEBUG ===`);
+        console.log(`Product: "${productName}"`);
+        console.log(`Quantity: ${qty}`);
+        console.log(`Raw row data: [${row.slice(0, 5).join(', ')}...]`);
+        console.log(`Product name length: ${productName.length}`);
+        console.log(`Product name hex: ${Buffer.from(productName).toString('hex')}`);
+      }
       
       // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
@@ -2076,7 +2092,15 @@ print(json.dumps(result))
       if (processedProducts.has(productName)) {
         // Sum quantities for duplicate products
         const existing = processedProducts.get(productName);
+        const oldQty = existing.qty;
         existing.qty += qty; // Add quantity to existing total
+        
+        if (isTargetProduct) {
+          console.log(`*** DUPLICATE FOUND ***`);
+          console.log(`Previous quantity: ${oldQty}`);
+          console.log(`Adding quantity: ${qty}`);
+          console.log(`New total quantity: ${existing.qty}`);
+        }
         
         // Keep other data from first occurrence, but update some fields if new ones have values
         if (transitRecord.purchasePriceUsd && !existing.purchasePriceUsd) {
@@ -2092,15 +2116,36 @@ print(json.dumps(result))
           existing.supplier = transitRecord.supplier;
         }
         
-        console.log(`Found duplicate ${productName}: adding ${qty} to existing ${existing.qty - qty}, total now: ${existing.qty}`);
+        console.log(`Found duplicate ${productName.substring(0, 50)}...: adding ${qty} to existing ${oldQty}, total now: ${existing.qty}`);
       } else {
+        if (isTargetProduct) {
+          console.log(`*** FIRST OCCURRENCE ***`);
+          console.log(`Storing product with quantity: ${qty}`);
+        }
         processedProducts.set(productName, { ...transitRecord, rowIndex: i });
+      }
+      
+      if (isTargetProduct) {
+        console.log(`=== END ROW ${i} DEBUG ===\n`);
       }
     }
     
     // Insert aggregated record for each unique product (with summed quantities)
     for (const [productName, record] of processedProducts) {
       const { rowIndex, ...recordData } = record;
+      
+      // Debug logging for specific products before database insertion
+      const isTargetProduct = productName.includes('Процессор Intel Core i5 12400') || 
+                              productName.includes('Принтер струйный МФУ Canon PIXMA MG2541S');
+      
+      if (isTargetProduct) {
+        console.log(`\n*** FINAL DATABASE INSERT ***`);
+        console.log(`Product: "${productName}"`);
+        console.log(`Final quantity: ${record.qty}`);
+        console.log(`Supplier: ${record.supplier}`);
+        console.log(`Price USD: ${record.purchasePriceUsd}`);
+      }
+      
       await storage.createCompstyleTransit(recordData);
       count++;
       
