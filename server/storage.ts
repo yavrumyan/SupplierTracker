@@ -205,6 +205,37 @@ export interface IStorage {
   updateCompstyleProductList(id: number, product: Partial<InsertCompstyleProductList>): Promise<CompstyleProductList>;
   upsertCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList>;
   rebuildProductList(): Promise<number>;
+
+  // Phase 1 Analytics methods
+  getCompstyleSalesVelocity(): Promise<Array<{
+    productName: string;
+    qtySold: number;
+    salesPeriodDays: number;
+    dailyVelocity: number;
+    weeklyVelocity: number;
+    monthlyVelocity: number;
+  }>>;
+  getCompstyleStockOutRisk(): Promise<Array<{
+    productName: string;
+    currentStock: number;
+    inTransit: number;
+    totalAvailable: number;
+    dailyVelocity: number;
+    daysUntilStockOut: number;
+    riskLevel: 'critical' | 'high' | 'medium' | 'low';
+    recommendedOrder: number;
+  }>>;
+  getCompstyleDeadStock(): Promise<Array<{
+    productName: string;
+    currentStock: number;
+    inTransit: number;
+    totalInventory: number;
+    qtySoldLast30Days: number;
+    dailyVelocity: number;
+    daysOfInventory: number;
+    lockedValue: number;
+    recommendation: string;
+  }>>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -777,13 +808,179 @@ export class DatabaseStorage implements IStorage {
     lockedMoney: number;
     salesVolume30Days: number;
   }> {
-    // Placeholder calculations - will be replaced with real analytics
+    // Get real analytics data
+    const stockOutRisk = await this.getCompstyleStockOutRisk();
+    const deadStock = await this.getCompstyleDeadStock();
+    
+    // Calculate locked money from total stock
+    const totalStockData = await db.select().from(compstyleTotalStock);
+    const lockedMoney = totalStockData.reduce((sum, item) => {
+      const cost = parseFloat(String(item.currentCost || 0));
+      return sum + (cost * item.qtyInStock);
+    }, 0);
+
+    // Calculate 30-day sales volume
+    const salesData = await db.select().from(compstyleTotalSales);
+    const salesVolume = salesData.reduce((sum, item) => {
+      const price = parseFloat(String(item.salePriceUsd || 0));
+      return sum + (price * item.qtySold);
+    }, 0);
+
     return {
-      productsToOrder: 127,
-      deadProducts: 43,
-      lockedMoney: 24680,
-      salesVolume30Days: 186420
+      productsToOrder: stockOutRisk.length,
+      deadProducts: deadStock.length,
+      lockedMoney: Math.round(lockedMoney),
+      salesVolume30Days: Math.round(salesVolume)
     };
+  }
+
+  async getCompstyleSalesVelocity(): Promise<Array<{
+    productName: string;
+    qtySold: number;
+    salesPeriodDays: number;
+    dailyVelocity: number;
+    weeklyVelocity: number;
+    monthlyVelocity: number;
+  }>> {
+    const salesData = await db.select().from(compstyleTotalSales);
+    
+    return salesData.map(item => {
+      // Assume 30-day period for sales data
+      const periodDays = 30;
+      const dailyVelocity = item.qtySold / periodDays;
+      
+      return {
+        productName: item.productName,
+        qtySold: item.qtySold,
+        salesPeriodDays: periodDays,
+        dailyVelocity: Number(dailyVelocity.toFixed(2)),
+        weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
+        monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
+      };
+    }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
+  }
+
+  async getCompstyleStockOutRisk(): Promise<Array<{
+    productName: string;
+    currentStock: number;
+    inTransit: number;
+    totalAvailable: number;
+    dailyVelocity: number;
+    daysUntilStockOut: number;
+    riskLevel: 'critical' | 'high' | 'medium' | 'low';
+    recommendedOrder: number;
+  }>> {
+    // Get all products with stock and transit data
+    const productList = await db.select().from(compstyleProductList);
+    const salesVelocity = await this.getCompstyleSalesVelocity();
+    
+    // Create velocity map for quick lookup
+    const velocityMap = new Map(
+      salesVelocity.map(v => [v.productName, v.dailyVelocity])
+    );
+
+    const riskAnalysis = productList
+      .map(product => {
+        const dailyVelocity = velocityMap.get(product.productName) || 0;
+        const currentStock = product.stock || 0;
+        const inTransit = product.transit || 0;
+        const totalAvailable = currentStock + inTransit;
+        
+        // Calculate days until stock out
+        const daysUntilStockOut = dailyVelocity > 0 
+          ? totalAvailable / dailyVelocity 
+          : 999;
+
+        // Determine risk level
+        let riskLevel: 'critical' | 'high' | 'medium' | 'low';
+        if (daysUntilStockOut <= 7) riskLevel = 'critical';
+        else if (daysUntilStockOut <= 14) riskLevel = 'high';
+        else if (daysUntilStockOut <= 30) riskLevel = 'medium';
+        else riskLevel = 'low';
+
+        // Calculate recommended order quantity (30 days of stock)
+        const recommendedOrder = dailyVelocity > 0
+          ? Math.max(0, Math.ceil(dailyVelocity * 30 - totalAvailable))
+          : 0;
+
+        return {
+          productName: product.productName,
+          currentStock,
+          inTransit,
+          totalAvailable,
+          dailyVelocity: Number(dailyVelocity.toFixed(2)),
+          daysUntilStockOut: Number(daysUntilStockOut.toFixed(1)),
+          riskLevel,
+          recommendedOrder
+        };
+      })
+      .filter(item => item.dailyVelocity > 0 && item.riskLevel !== 'low')
+      .sort((a, b) => a.daysUntilStockOut - b.daysUntilStockOut);
+
+    return riskAnalysis;
+  }
+
+  async getCompstyleDeadStock(): Promise<Array<{
+    productName: string;
+    currentStock: number;
+    inTransit: number;
+    totalInventory: number;
+    qtySoldLast30Days: number;
+    dailyVelocity: number;
+    daysOfInventory: number;
+    lockedValue: number;
+    recommendation: string;
+  }>> {
+    const productList = await db.select().from(compstyleProductList);
+    const salesVelocity = await this.getCompstyleSalesVelocity();
+    
+    const velocityMap = new Map(
+      salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
+    );
+
+    const deadStockAnalysis = productList
+      .map(product => {
+        const salesData = velocityMap.get(product.productName);
+        const dailyVelocity = salesData?.velocity || 0;
+        const qtySold = salesData?.qtySold || 0;
+        const currentStock = product.stock || 0;
+        const inTransit = product.transit || 0;
+        const totalInventory = currentStock + inTransit;
+        
+        // Calculate days of inventory
+        const daysOfInventory = dailyVelocity > 0 
+          ? totalInventory / dailyVelocity 
+          : (totalInventory > 0 ? 9999 : 0);
+
+        // Calculate locked value
+        const cost = parseFloat(String(product.cost || 0));
+        const lockedValue = cost * totalInventory;
+
+        // Determine recommendation
+        let recommendation = '';
+        if (daysOfInventory > 180) recommendation = 'Clearance sale recommended';
+        else if (daysOfInventory > 90) recommendation = 'Reduce price to move stock';
+        else if (daysOfInventory > 60) recommendation = 'Monitor closely';
+
+        return {
+          productName: product.productName,
+          currentStock,
+          inTransit,
+          totalInventory,
+          qtySoldLast30Days: qtySold,
+          dailyVelocity: Number(dailyVelocity.toFixed(2)),
+          daysOfInventory: Number(daysOfInventory.toFixed(0)),
+          lockedValue: Number(lockedValue.toFixed(2)),
+          recommendation
+        };
+      })
+      .filter(item => 
+        // Dead stock criteria: high inventory (> 60 days) with low/no sales
+        item.totalInventory > 0 && item.daysOfInventory > 60
+      )
+      .sort((a, b) => b.daysOfInventory - a.daysOfInventory);
+
+    return deadStockAnalysis;
   }
 
   async getCompstyleDataOverview(): Promise<{

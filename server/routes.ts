@@ -1695,6 +1695,37 @@ print(json.dumps(result))
     }
   });
 
+  // Phase 1 Analytics endpoints
+  app.get('/api/compstyle/analytics/sales-velocity', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleSalesVelocity();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching sales velocity:', error);
+      res.status(500).json({ error: 'Failed to fetch sales velocity' });
+    }
+  });
+
+  app.get('/api/compstyle/analytics/stock-out-risk', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleStockOutRisk();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching stock-out risk:', error);
+      res.status(500).json({ error: 'Failed to fetch stock-out risk' });
+    }
+  });
+
+  app.get('/api/compstyle/analytics/dead-stock', async (req, res) => {
+    try {
+      const data = await storage.getCompstyleDeadStock();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching dead stock:', error);
+      res.status(500).json({ error: 'Failed to fetch dead stock' });
+    }
+  });
+
   app.patch('/api/compstyle/product-list/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);

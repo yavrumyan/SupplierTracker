@@ -1,0 +1,288 @@
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock } from "lucide-react";
+import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+
+interface SalesVelocity {
+  productName: string;
+  qtySold: number;
+  salesPeriodDays: number;
+  dailyVelocity: number;
+  weeklyVelocity: number;
+  monthlyVelocity: number;
+}
+
+interface StockOutRisk {
+  productName: string;
+  currentStock: number;
+  inTransit: number;
+  totalAvailable: number;
+  dailyVelocity: number;
+  daysUntilStockOut: number;
+  riskLevel: 'critical' | 'high' | 'medium' | 'low';
+  recommendedOrder: number;
+}
+
+interface DeadStock {
+  productName: string;
+  currentStock: number;
+  inTransit: number;
+  totalInventory: number;
+  qtySoldLast30Days: number;
+  dailyVelocity: number;
+  daysOfInventory: number;
+  lockedValue: number;
+  recommendation: string;
+}
+
+export default function CompStyleAnalyticsPhase1() {
+  const { data: salesVelocity, isLoading: loadingVelocity } = useQuery<SalesVelocity[]>({
+    queryKey: ["/api/compstyle/analytics/sales-velocity"],
+  });
+
+  const { data: stockOutRisk, isLoading: loadingRisk } = useQuery<StockOutRisk[]>({
+    queryKey: ["/api/compstyle/analytics/stock-out-risk"],
+  });
+
+  const { data: deadStock, isLoading: loadingDead } = useQuery<DeadStock[]>({
+    queryKey: ["/api/compstyle/analytics/dead-stock"],
+  });
+
+  const getRiskColor = (level: string) => {
+    switch (level) {
+      case 'critical': return 'text-red-600 bg-red-50';
+      case 'high': return 'text-orange-600 bg-orange-50';
+      case 'medium': return 'text-yellow-600 bg-yellow-50';
+      default: return 'text-green-600 bg-green-50';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <Link href="/compstyle">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to CompStyle
+            </Button>
+          </Link>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Phase 1 Analytics</h1>
+          <p className="text-slate-600">
+            Sales velocity, stock-out risk, and dead stock identification
+          </p>
+        </div>
+
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Products at Risk</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-orange-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {loadingRisk ? "..." : stockOutRisk?.length || 0}
+              </div>
+              <p className="text-xs text-slate-600">Need immediate attention</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Dead Stock Items</CardTitle>
+              <Package className="h-4 w-4 text-red-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {loadingDead ? "..." : deadStock?.length || 0}
+              </div>
+              <p className="text-xs text-slate-600">Slow moving inventory</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Locked Value</CardTitle>
+              <Clock className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-blue-600">
+                ${loadingDead ? "..." : deadStock?.reduce((sum, item) => sum + item.lockedValue, 0).toLocaleString(undefined, {maximumFractionDigits: 0}) || 0}
+              </div>
+              <p className="text-xs text-slate-600">In dead stock</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Stock-Out Risk Analysis */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-orange-600" />
+              Stock-Out Risk Analysis
+            </CardTitle>
+            <CardDescription>
+              Products that need reordering based on sales velocity
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingRisk ? (
+              <div className="text-center py-8 text-slate-500">Loading risk analysis...</div>
+            ) : !stockOutRisk || stockOutRisk.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">No products at risk</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="p-3 text-left">Product</th>
+                      <th className="p-3 text-center">Risk</th>
+                      <th className="p-3 text-right">Stock</th>
+                      <th className="p-3 text-right">Transit</th>
+                      <th className="p-3 text-right">Total</th>
+                      <th className="p-3 text-right">Daily Sales</th>
+                      <th className="p-3 text-right">Days Left</th>
+                      <th className="p-3 text-right">Order Qty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stockOutRisk.slice(0, 20).map((item, index) => (
+                      <tr key={index} className="border-b hover:bg-slate-50">
+                        <td className="p-3 font-medium max-w-xs truncate" title={item.productName}>
+                          {item.productName}
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${getRiskColor(item.riskLevel)}`}>
+                            {item.riskLevel.toUpperCase()}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right">{item.currentStock}</td>
+                        <td className="p-3 text-right">{item.inTransit}</td>
+                        <td className="p-3 text-right font-semibold">{item.totalAvailable}</td>
+                        <td className="p-3 text-right">{item.dailyVelocity}</td>
+                        <td className="p-3 text-right font-semibold">
+                          {item.daysUntilStockOut < 999 ? item.daysUntilStockOut : '∞'}
+                        </td>
+                        <td className="p-3 text-right text-blue-600 font-semibold">
+                          {item.recommendedOrder}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Dead Stock Analysis */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5 text-red-600" />
+              Dead Stock Analysis
+            </CardTitle>
+            <CardDescription>
+              Slow-moving products with high inventory levels
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingDead ? (
+              <div className="text-center py-8 text-slate-500">Loading dead stock analysis...</div>
+            ) : !deadStock || deadStock.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">No dead stock identified</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="p-3 text-left">Product</th>
+                      <th className="p-3 text-right">Total Inventory</th>
+                      <th className="p-3 text-right">Sold (30d)</th>
+                      <th className="p-3 text-right">Daily Sales</th>
+                      <th className="p-3 text-right">Days of Stock</th>
+                      <th className="p-3 text-right">Locked Value</th>
+                      <th className="p-3 text-left">Recommendation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {deadStock.slice(0, 20).map((item, index) => (
+                      <tr key={index} className="border-b hover:bg-slate-50">
+                        <td className="p-3 font-medium max-w-xs truncate" title={item.productName}>
+                          {item.productName}
+                        </td>
+                        <td className="p-3 text-right font-semibold">{item.totalInventory}</td>
+                        <td className="p-3 text-right">{item.qtySoldLast30Days}</td>
+                        <td className="p-3 text-right">{item.dailyVelocity}</td>
+                        <td className="p-3 text-right">
+                          <span className={`font-semibold ${item.daysOfInventory > 180 ? 'text-red-600' : item.daysOfInventory > 90 ? 'text-orange-600' : 'text-yellow-600'}`}>
+                            {item.daysOfInventory}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right text-red-600 font-semibold">
+                          ${item.lockedValue.toFixed(2)}
+                        </td>
+                        <td className="p-3 text-xs text-slate-600">{item.recommendation}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Top Sales Velocity */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-green-600" />
+              Top Sales Velocity
+            </CardTitle>
+            <CardDescription>
+              Fastest selling products by daily velocity
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingVelocity ? (
+              <div className="text-center py-8 text-slate-500">Loading sales velocity...</div>
+            ) : !salesVelocity || salesVelocity.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">No sales data available</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="p-3 text-left">Product</th>
+                      <th className="p-3 text-right">Total Sold</th>
+                      <th className="p-3 text-right">Daily</th>
+                      <th className="p-3 text-right">Weekly</th>
+                      <th className="p-3 text-right">Monthly</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {salesVelocity.slice(0, 20).map((item, index) => (
+                      <tr key={index} className="border-b hover:bg-slate-50">
+                        <td className="p-3 font-medium max-w-xs truncate" title={item.productName}>
+                          {item.productName}
+                        </td>
+                        <td className="p-3 text-right font-semibold">{item.qtySold}</td>
+                        <td className="p-3 text-right text-green-600 font-semibold">{item.dailyVelocity}</td>
+                        <td className="p-3 text-right">{item.weeklyVelocity}</td>
+                        <td className="p-3 text-right">{item.monthlyVelocity}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

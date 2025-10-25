@@ -126,6 +126,11 @@ export default function CompStyleDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <Link href="/compstyle/analytics-phase1">
+                <Button className="w-full" variant="default">
+                  Phase 1 Analytics (NEW)
+                </Button>
+              </Link>
               <Link href="/compstyle/inventory-movement">
                 <Button className="w-full" variant="outline">
                   Inventory Movement Analysis
