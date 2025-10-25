@@ -1,9 +1,9 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock } from "lucide-react";
+import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface SalesVelocity {
   productName: string;
@@ -38,6 +38,8 @@ interface DeadStock {
 }
 
 export default function CompStyleAnalyticsPhase1() {
+  const queryClient = useQueryClient();
+
   const { data: salesVelocity, isLoading: loadingVelocity } = useQuery<SalesVelocity[]>({
     queryKey: ["/api/compstyle/analytics/sales-velocity"],
   });
@@ -49,6 +51,14 @@ export default function CompStyleAnalyticsPhase1() {
   const { data: deadStock, isLoading: loadingDead } = useQuery<DeadStock[]>({
     queryKey: ["/api/compstyle/analytics/dead-stock"],
   });
+
+  const isRefreshing = loadingVelocity || loadingRisk || loadingDead;
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/sales-velocity"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/stock-out-risk"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/dead-stock"] });
+  };
 
   const getRiskColor = (level: string) => {
     switch (level) {
@@ -70,10 +80,22 @@ export default function CompStyleAnalyticsPhase1() {
               Back to CompStyle
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Phase 1 Analytics</h1>
-          <p className="text-slate-600">
-            Sales velocity, stock-out risk, and dead stock identification
-          </p>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 mb-2">Phase 1 Analytics</h1>
+              <p className="text-slate-600">
+                Sales velocity, stock-out risk, and dead stock identification
+              </p>
+            </div>
+            <Button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              variant="outline"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh Analytics'}
+            </Button>
+          </div>
         </div>
 
         {/* Summary Cards */}
