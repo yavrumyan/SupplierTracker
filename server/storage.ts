@@ -1026,7 +1026,7 @@ export class DatabaseStorage implements IStorage {
         if (typeof daysOfInventory === 'number') {
           if (daysOfInventory > 180 && dailyVelocity < 0.5) recommendation = 'Clearance sale recommended';
           else if (daysOfInventory > 90 && dailyVelocity < 1) recommendation = 'Reduce price to move stock';
-          else if (daysOfInventory > 60) recommendation = 'Monitor closely';
+          else recommendation = 'Monitor closely';
         } else {
           if (dailyVelocity === 0) recommendation = 'Very old stock - clearance needed';
           else recommendation = 'Old stock - check manually';
@@ -1044,13 +1044,22 @@ export class DatabaseStorage implements IStorage {
           recommendation
         };
       })
-      .filter(item => 
-        // Dead stock criteria: inventory with old age or low sales
-        item.totalInventory > 0 && (
-          typeof item.daysOfInventory === 'string' || 
-          (typeof item.daysOfInventory === 'number' && item.daysOfInventory > 60)
-        )
-      )
+      .filter(item => {
+        // Dead stock criteria (ALL conditions must be met):
+        // 1. Has inventory
+        if (item.totalInventory <= 0) return false;
+        
+        // 2. Old stock (90+ days or unknown age)
+        const isOldStock = typeof item.daysOfInventory === 'string' || 
+                          (typeof item.daysOfInventory === 'number' && item.daysOfInventory > 90);
+        if (!isOldStock) return false;
+        
+        // 3. Low recent sales (less than 10% of current inventory sold in last 30 days)
+        const salesThreshold = item.currentStock * 0.1;
+        const hasLowSales = item.qtySoldLast30Days < salesThreshold;
+        
+        return hasLowSales;
+      })
       .sort((a, b) => {
         // Sort by days of inventory, treating "Long time ago" as highest
         const aVal = typeof a.daysOfInventory === 'string' ? 999999 : a.daysOfInventory;
