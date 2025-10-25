@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock, RefreshCw } from "lucide-react";
+import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock, RefreshCw, Download } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -60,6 +60,108 @@ export default function CompStyleAnalyticsPhase1() {
     queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/dead-stock"] });
   };
 
+  const exportAllReports = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+
+    // Export Stock-Out Risk Analysis
+    if (stockOutRisk && stockOutRisk.length > 0) {
+      const headers1 = ['Product', 'Risk Level', 'Current Stock', 'In Transit', 'Total Available', 'Daily Sales', 'Days Until Stock Out', 'Recommended Order'];
+      const csvData1 = [headers1];
+      
+      stockOutRisk.forEach(item => {
+        csvData1.push([
+          item.productName,
+          item.riskLevel.toUpperCase(),
+          item.currentStock.toString(),
+          item.inTransit.toString(),
+          item.totalAvailable.toString(),
+          item.dailyVelocity.toString(),
+          item.daysUntilStockOut < 999 ? item.daysUntilStockOut.toString() : '∞',
+          item.recommendedOrder.toString()
+        ]);
+      });
+      
+      const csvContent1 = csvData1.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+      
+      const blob1 = new Blob(['\ufeff' + csvContent1], { type: 'text/csv;charset=utf-8;' });
+      const link1 = document.createElement('a');
+      const url1 = URL.createObjectURL(blob1);
+      link1.setAttribute('href', url1);
+      link1.setAttribute('download', `stock-out-risk-analysis_${timestamp}.csv`);
+      link1.style.visibility = 'hidden';
+      document.body.appendChild(link1);
+      link1.click();
+      document.body.removeChild(link1);
+      URL.revokeObjectURL(url1);
+    }
+
+    // Export Dead Stock Analysis
+    if (deadStock && deadStock.length > 0) {
+      const headers2 = ['Product', 'Total Inventory', 'Sold (30d)', 'Daily Sales', 'Days of Stock', 'Locked Value', 'Recommendation'];
+      const csvData2 = [headers2];
+      
+      deadStock.forEach(item => {
+        csvData2.push([
+          item.productName,
+          item.totalInventory.toString(),
+          item.qtySoldLast30Days.toString(),
+          item.dailyVelocity.toString(),
+          item.daysOfInventory.toString(),
+          `$${item.lockedValue.toFixed(2)}`,
+          item.recommendation
+        ]);
+      });
+      
+      const csvContent2 = csvData2.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+      
+      const blob2 = new Blob(['\ufeff' + csvContent2], { type: 'text/csv;charset=utf-8;' });
+      const link2 = document.createElement('a');
+      const url2 = URL.createObjectURL(blob2);
+      link2.setAttribute('href', url2);
+      link2.setAttribute('download', `dead-stock-analysis_${timestamp}.csv`);
+      link2.style.visibility = 'hidden';
+      document.body.appendChild(link2);
+      link2.click();
+      document.body.removeChild(link2);
+      URL.revokeObjectURL(url2);
+    }
+
+    // Export Top Sales Velocity
+    if (salesVelocity && salesVelocity.length > 0) {
+      const headers3 = ['Product', 'Total Sold', 'Daily Velocity', 'Weekly Velocity', 'Monthly Velocity'];
+      const csvData3 = [headers3];
+      
+      salesVelocity.forEach(item => {
+        csvData3.push([
+          item.productName,
+          item.qtySold.toString(),
+          item.dailyVelocity.toString(),
+          item.weeklyVelocity.toString(),
+          item.monthlyVelocity.toString()
+        ]);
+      });
+      
+      const csvContent3 = csvData3.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+      
+      const blob3 = new Blob(['\ufeff' + csvContent3], { type: 'text/csv;charset=utf-8;' });
+      const link3 = document.createElement('a');
+      const url3 = URL.createObjectURL(blob3);
+      link3.setAttribute('href', url3);
+      link3.setAttribute('download', `top-sales-velocity_${timestamp}.csv`);
+      link3.style.visibility = 'hidden';
+      document.body.appendChild(link3);
+      link3.click();
+      document.body.removeChild(link3);
+      URL.revokeObjectURL(url3);
+    }
+  };
+
   const getRiskColor = (level: string) => {
     switch (level) {
       case 'critical': return 'text-red-600 bg-red-50';
@@ -87,14 +189,23 @@ export default function CompStyleAnalyticsPhase1() {
                 Sales velocity, stock-out risk, and dead stock identification
               </p>
             </div>
-            <Button
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-              variant="outline"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {isRefreshing ? 'Refreshing...' : 'Refresh Analytics'}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={exportAllReports}
+                variant="default"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export All Reports
+              </Button>
+              <Button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                variant="outline"
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? 'Refreshing...' : 'Refresh Analytics'}
+              </Button>
+            </div>
           </div>
         </div>
 
