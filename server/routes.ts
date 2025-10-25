@@ -1753,31 +1753,28 @@ print(json.dumps(result))
       // Write headers
       res.write(headers.join(',') + '\n');
       
-      // Stream products in chunks to avoid memory issues
-      const chunkSize = 100;
+      // Stream products in chunks using database pagination
+      const chunkSize = 50;
       let offset = 0;
       let hasMore = true;
       
       while (hasMore) {
-        const products = await db.select()
-          .from(compstyleProductList)
-          .orderBy(compstyleProductList.productName)
-          .limit(chunkSize)
-          .offset(offset);
+        // Fetch chunk directly from database with pagination
+        const chunk = await storage.getCompstyleProductListPaginated(chunkSize, offset);
         
-        if (products.length === 0) {
+        if (chunk.length === 0) {
           hasMore = false;
           break;
         }
         
         // Convert products to CSV format and write immediately
-        for (const product of products) {
+        for (const product of chunk) {
           const row = [
             product.id,
             product.sku || '',
-            `"${product.productName.replace(/"/g, '""')}"`, // Escape quotes in product name
-            product.stock,
-            product.transit,
+            `"${(product.productName || '').replace(/"/g, '""')}"`,
+            product.stock || 0,
+            product.transit || 0,
             product.retailPriceUsd || '',
             product.retailPriceAmd || '',
             product.dealerPrice1 || '',
@@ -1797,7 +1794,7 @@ print(json.dumps(result))
         offset += chunkSize;
         
         // If we got fewer products than the chunk size, we're done
-        if (products.length < chunkSize) {
+        if (chunk.length < chunkSize) {
           hasMore = false;
         }
       }

@@ -199,6 +199,7 @@ export interface IStorage {
 
   // Product List methods
   getCompstyleProductList(): Promise<CompstyleProductList[]>;
+  getCompstyleProductListPaginated(limit: number, offset: number): Promise<CompstyleProductList[]>;
   createCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList>;
   updateCompstyleProductList(id: number, product: Partial<InsertCompstyleProductList>): Promise<CompstyleProductList>;
   upsertCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList>;
@@ -890,6 +891,14 @@ export class DatabaseStorage implements IStorage {
   // Product List methods
   async getCompstyleProductList(): Promise<CompstyleProductList[]> {
     return await db.select().from(compstyleProductList).orderBy(compstyleProductList.productName);
+  }
+
+  async getCompstyleProductListPaginated(limit: number, offset: number): Promise<CompstyleProductList[]> {
+    return await db.select()
+      .from(compstyleProductList)
+      .orderBy(compstyleProductList.productName)
+      .limit(limit)
+      .offset(offset);
   }
 
   async createCompstyleProductList(product: InsertCompstyleProductList): Promise<CompstyleProductList> {
