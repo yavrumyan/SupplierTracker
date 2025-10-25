@@ -844,20 +844,31 @@ export class DatabaseStorage implements IStorage {
   }>> {
     const salesData = await db.select().from(compstyleTotalSales);
     
-    return salesData.map(item => {
+    // Aggregate sales by product name (sum quantities from multiple uploads)
+    const aggregatedSales = new Map<string, number>();
+    
+    for (const item of salesData) {
+      const currentQty = aggregatedSales.get(item.productName) || 0;
+      aggregatedSales.set(item.productName, currentQty + item.qtySold);
+    }
+    
+    // Convert aggregated data to result format
+    const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
       // Assume 30-day period for sales data
       const periodDays = 30;
-      const dailyVelocity = item.qtySold / periodDays;
+      const dailyVelocity = qtySold / periodDays;
       
       return {
-        productName: item.productName,
-        qtySold: item.qtySold,
+        productName,
+        qtySold,
         salesPeriodDays: periodDays,
         dailyVelocity: Number(dailyVelocity.toFixed(2)),
         weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
         monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
       };
     }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
+    
+    return result;
   }
 
   async getCompstyleStockOutRisk(): Promise<Array<{
