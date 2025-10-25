@@ -1736,7 +1736,12 @@ print(json.dumps(result))
 
   app.get('/api/compstyle/product-list/export-csv', async (req, res) => {
     try {
-      const products = await storage.getCompstyleProductList();
+      // Set headers for file download first
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="product-list-${new Date().toISOString().split('T')[0]}.csv"`);
+      
+      // Add UTF-8 BOM for proper Excel compatibility
+      res.write('\uFEFF');
       
       // Define CSV headers (all columns)
       const headers = [
@@ -1745,43 +1750,64 @@ print(json.dumps(result))
         'Avg Sales', 'Actual Price', 'Actual Cost', 'Supplier', 'Last Updated'
       ];
       
-      // Convert products to CSV format
-      const csvRows = [headers.join(',')];
+      // Write headers
+      res.write(headers.join(',') + '\n');
       
-      products.forEach(product => {
-        const row = [
-          product.id,
-          product.sku || '',
-          `"${product.productName.replace(/"/g, '""')}"`, // Escape quotes in product name
-          product.stock,
-          product.transit,
-          product.retailPriceUsd || '',
-          product.retailPriceAmd || '',
-          product.dealerPrice1 || '',
-          product.dealerPrice2 || '',
-          product.cost || '',
-          product.latestPurchase || '',
-          product.latestCost || '',
-          product.aveSalesPrice || '',
-          product.actualPrice || '',
-          product.actualCost || '',
-          product.supplier || '',
-          product.lastUpdated
-        ];
-        csvRows.push(row.join(','));
-      });
+      // Stream products in chunks to avoid memory issues
+      const chunkSize = 100;
+      let offset = 0;
+      let hasMore = true;
       
-      const csvContent = csvRows.join('\n');
+      while (hasMore) {
+        const products = await db.select()
+          .from(compstyleProductList)
+          .orderBy(compstyleProductList.productName)
+          .limit(chunkSize)
+          .offset(offset);
+        
+        if (products.length === 0) {
+          hasMore = false;
+          break;
+        }
+        
+        // Convert products to CSV format and write immediately
+        for (const product of products) {
+          const row = [
+            product.id,
+            product.sku || '',
+            `"${product.productName.replace(/"/g, '""')}"`, // Escape quotes in product name
+            product.stock,
+            product.transit,
+            product.retailPriceUsd || '',
+            product.retailPriceAmd || '',
+            product.dealerPrice1 || '',
+            product.dealerPrice2 || '',
+            product.cost || '',
+            product.latestPurchase || '',
+            product.latestCost || '',
+            product.aveSalesPrice || '',
+            product.actualPrice || '',
+            product.actualCost || '',
+            product.supplier || '',
+            product.lastUpdated
+          ];
+          res.write(row.join(',') + '\n');
+        }
+        
+        offset += chunkSize;
+        
+        // If we got fewer products than the chunk size, we're done
+        if (products.length < chunkSize) {
+          hasMore = false;
+        }
+      }
       
-      // Set headers for file download
-      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="product-list-${new Date().toISOString().split('T')[0]}.csv"`);
-      
-      // Add UTF-8 BOM for proper Excel compatibility
-      res.send('\uFEFF' + csvContent);
+      res.end();
     } catch (error) {
       console.error('Error exporting CSV:', error);
-      res.status(500).json({ error: 'Failed to export CSV' });
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to export CSV' });
+      }
     }
   });
 
