@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock, RefreshCw, Download } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 interface SalesVelocity {
   productName: string;
@@ -38,25 +39,41 @@ interface DeadStock {
 
 export default function CompStyleAnalyticsPhase1() {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const { data: salesVelocity, isLoading: loadingVelocity } = useQuery<SalesVelocity[]>({
+  const { data: salesVelocity, isLoading: loadingVelocity, isFetching: fetchingVelocity } = useQuery<SalesVelocity[]>({
     queryKey: ["/api/compstyle/analytics/sales-velocity"],
   });
 
-  const { data: stockOutRisk, isLoading: loadingRisk } = useQuery<StockOutRisk[]>({
+  const { data: stockOutRisk, isLoading: loadingRisk, isFetching: fetchingRisk } = useQuery<StockOutRisk[]>({
     queryKey: ["/api/compstyle/analytics/stock-out-risk"],
   });
 
-  const { data: deadStock, isLoading: loadingDead } = useQuery<DeadStock[]>({
+  const { data: deadStock, isLoading: loadingDead, isFetching: fetchingDead } = useQuery<DeadStock[]>({
     queryKey: ["/api/compstyle/analytics/dead-stock"],
   });
 
-  const isRefreshing = loadingVelocity || loadingRisk || loadingDead;
+  const isRefreshing = fetchingVelocity || fetchingRisk || fetchingDead;
 
-  const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/sales-velocity"] });
-    queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/stock-out-risk"] });
-    queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/dead-stock"] });
+  const handleRefresh = async () => {
+    toast({
+      title: "Refreshing analytics...",
+      description: "Fetching the latest data",
+    });
+
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/sales-velocity"] }),
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/stock-out-risk"] }),
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/dead-stock"] }),
+    ]);
+
+    // Wait a moment for queries to complete
+    setTimeout(() => {
+      toast({
+        title: "Analytics refreshed",
+        description: "All data has been updated successfully",
+      });
+    }, 1000);
   };
 
   const exportAllReports = () => {
