@@ -1221,58 +1221,20 @@ export class DatabaseStorage implements IStorage {
       });
     });
 
-    // 2. Add transit quantities (sum all quantities for same product)
+    // 2. Add transit quantities
     const transitData = await db.select().from(compstyleTransit);
-
-    // Group transit data by product name and sum quantities
-    const transitSums = new Map<string, any>();
-
     transitData.forEach(item => {
-      // Debug logging for the specific product
-      if (item.productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
-        console.log(`Transit data for ${item.productName}:`, {
-          id: item.id,
-          qty: item.qty,
-          purchasePriceUsd: item.purchasePriceUsd,
-          currentCost: item.currentCost,
-          supplier: item.supplier
-        });
-      }
-
-      const productName = item.productName;
-      const existing = transitSums.get(productName);
-
-      if (!existing) {
-        // First occurrence of this product
-        transitSums.set(productName, {
-          productName: productName,
-          totalQty: item.qty || 0,
-          latestPurchasePrice: item.purchasePriceUsd || item.currentCost,
-          latestId: item.id
-        });
-      } else {
-        // Sum the quantities and keep the latest purchase price
-        existing.totalQty += (item.qty || 0);
-        if (item.id > existing.latestId && (item.purchasePriceUsd || item.currentCost)) {
-          existing.latestPurchasePrice = item.purchasePriceUsd || item.currentCost;
-          existing.latestId = item.id;
-        }
-      }
-    });
-
-    // Add summed transit data to product map
-    for (const [productName, item] of transitSums) {
-      const existing = productMap.get(productName) || {
-        productName: productName,
+      const existing = productMap.get(item.productName) || {
+        productName: item.productName,
         stock: 0,
         transit: 0,
       };
-      existing.transit = item.totalQty;
-      if (!existing.latestPurchase && item.latestPurchasePrice) {
-        existing.latestPurchase = item.latestPurchasePrice;
+      existing.transit = (existing.transit || 0) + (item.qty || 0);
+      if (!existing.latestPurchase && (item.purchasePriceUsd || item.currentCost)) {
+        existing.latestPurchase = item.purchasePriceUsd || item.currentCost;
       }
-      productMap.set(productName, existing);
-    }
+      productMap.set(item.productName, existing);
+    });
 
     // 3. Add latest cost and average sales price from sales data
     const salesData = await db.select().from(compstyleTotalSales);
