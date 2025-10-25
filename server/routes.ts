@@ -63,7 +63,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/suppliers", async (req, res) => {
     try {
       const { query, country, category, brand, minReputation, workingStyle } = req.query;
-      
+
       const filters = {
         country: country as string,
         category: category as string,
@@ -83,11 +83,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const supplier = await storage.getSupplier(id);
-      
+
       if (!supplier) {
         return res.status(404).json({ error: "Supplier not found" });
       }
-      
+
       res.json(supplier);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch supplier" });
@@ -136,7 +136,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const supplierId = parseInt(req.params.id);
       const file = req.file;
-      
+
       if (!file) {
         return res.status(400).json({ error: "No file uploaded" });
       }
@@ -202,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const supplierId = parseInt(req.params.id);
       const offerData = insertOfferSchema.parse({ ...req.body, supplierId });
       const offer = await storage.createOffer(offerData);
-      
+
       // Populate search index with offer data
       try {
         const supplier = await storage.getSupplier(supplierId);
@@ -210,12 +210,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Parse offer content to extract product information
           const offerContent = offer.content || '';
           const lines = offerContent.split('\n').map(line => line.trim()).filter(line => line);
-          
+
           // If no line breaks, treat the entire content as one product
           if (lines.length === 0 || (lines.length === 1 && lines[0].length <= 10)) {
             lines.push(offerContent.trim());
           }
-          
+
           // Try to extract product information from each line
           for (const line of lines) {
             if (line.length > 3) { // Lower threshold to catch more products
@@ -280,10 +280,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/offers/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      
+
       // Delete related search index entries
       await storage.deleteSearchIndexBySource('offer', id);
-      
+
       // Delete the offer
       await storage.deleteOffer(id);
       res.status(204).send();
@@ -385,7 +385,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const inquiryData = insertInquirySchema.parse(req.body);
       const inquiry = await storage.createInquiry(inquiryData);
-      
+
       // TODO: Implement actual WhatsApp and email sending
       // For now, just return the inquiry
       res.status(201).json(inquiry);
@@ -476,11 +476,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/search/metadata", async (req, res) => {
     try {
       const results = await storage.searchProducts("", {});
-      
+
       // Extract unique categories and brands
       const categories = [...new Set(results.map(r => r.category).filter(Boolean))].sort();
       const brands = [...new Set(results.map(r => r.brand).filter(Boolean))].sort();
-      
+
       res.json({
         categories,
         brands
@@ -496,50 +496,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const supplierId = parseInt(req.params.supplierId);
       const priceListId = parseInt(req.params.id);
-      
+
       // Get the price list file
       const priceListFiles = await storage.getPriceListFiles(supplierId);
       const priceListFile = priceListFiles.find(f => f.id === priceListId);
-      
+
       if (!priceListFile) {
         return res.status(404).json({ error: "Price list not found" });
       }
-      
+
       // Check if the file exists
       if (!fs.existsSync(priceListFile.filePath)) {
         return res.status(404).json({ error: "Price list file not found on disk" });
       }
-      
+
       // Get supplier information
       const supplier = await storage.getSupplier(supplierId);
       if (!supplier) {
         return res.status(404).json({ error: "Supplier not found" });
       }
-      
+
       // Read the CSV file content
       const csvContent = fs.readFileSync(priceListFile.filePath, 'utf8');
-      
+
       // Clear existing search index entries for this price list
       await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
-      
+
       // Parse CSV content properly
       const csvLines = csvContent.trim().split('\n');
       const headers = csvLines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').replace(/^\uFEFF/, ''));
       const csvData = [];
-      
+
       for (let i = 1; i < csvLines.length; i++) {
         const line = csvLines[i].trim();
         if (!line) continue;
-        
+
         // Parse CSV line respecting quoted fields
         const values = [];
         let currentField = '';
         let inQuotes = false;
         let j = 0;
-        
+
         while (j < line.length) {
           const char = line[j];
-          
+
           if (char === '"') {
             inQuotes = !inQuotes;
           } else if (char === ',' && !inQuotes) {
@@ -551,7 +551,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           j++;
         }
         values.push(currentField.trim()); // Add the last field
-        
+
         // Create row object
         const row = {};
         headers.forEach((header, index) => {
@@ -559,9 +559,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
         csvData.push(row);
       }
-      
 
-      
+
+
       // Map CSV headers to search index fields
       const headerMap = {
         'Supplier': 'supplier',
@@ -579,7 +579,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const searchIndexEntries = [];
-      
+
       // Process each data row
       for (const row of csvData) {
         const entry = {
@@ -606,7 +606,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             entry[fieldName] = String(row[header]).trim();
           }
         });
-        
+
         // Preserve the database supplier name for consistency
         entry.supplier = supplier.name;
 
@@ -617,13 +617,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (searchIndexEntries.length > 0) {
         await storage.createSearchIndexEntries(searchIndexEntries);
       }
-      
+
       res.json({
         success: true,
         message: "Search index refreshed successfully",
         entriesCreated: searchIndexEntries.length
       });
-      
+
     } catch (error) {
       console.error("Error refreshing search index:", error);
       res.status(500).json({ error: "Failed to refresh search index" });
@@ -635,7 +635,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const supplierId = parseInt(req.params.id);
       const file = req.file;
-      
+
       if (!file) {
         return res.status(400).json({ error: "No file uploaded" });
       }
@@ -707,7 +707,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const supplierId = parseInt(req.params.id);
       const file = req.file;
-      
+
       if (!file) {
         return res.status(400).json({ error: "No logic file uploaded" });
       }
@@ -725,7 +725,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Read and validate the logic content
       const logicContent = fs.readFileSync(file.path, 'utf8');
-      
+
       // Store the conversion logic in the cost calculation files table for now
       const costFile = await storage.createCostCalculationFile({
         supplierId,
@@ -748,7 +748,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const supplierId = parseInt(req.params.id);
       const file = req.file;
-      
+
       if (!file) {
         return res.status(400).json({ error: "No price list file uploaded" });
       }
@@ -779,7 +779,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Process the file using Python script
       const pythonScript = path.join(process.cwd(), 'server', 'file_processor.py');
-      
+
       return new Promise((resolve, reject) => {
         const python = spawn('python3', ['-c', `
 import sys
@@ -820,7 +820,7 @@ print(json.dumps(result))
             }
 
             const result = JSON.parse(output);
-            
+
             if (!result.success) {
               // Delete the uploaded file
               if (fs.existsSync(file.path)) {
@@ -832,12 +832,12 @@ print(json.dumps(result))
             // Save the processed file to storage with UTF-8 encoding and BOM
             const processedFilename = result.output_filename || 'converted_price_list.csv';
             const processedFilePath = path.join(path.dirname(file.path), processedFilename);
-            
+
             // Create buffer with UTF-8 BOM
             const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
             const contentBuffer = Buffer.from(result.csv_content, 'utf8');
             const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
-            
+
             fs.writeFileSync(processedFilePath, finalBuffer);
 
             // Store the price list file in database
@@ -855,25 +855,25 @@ print(json.dumps(result))
               if (supplier) {
                 // Clear existing search index entries for this price list
                 await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
-                
+
                 // Parse CSV content properly
                 const csvLines = result.csv_content.trim().split('\n');
                 const headers = csvLines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').replace(/^\uFEFF/, ''));
                 const csvData = [];
-                
+
                 for (let i = 1; i < csvLines.length; i++) {
                   const line = csvLines[i].trim();
                   if (!line) continue;
-                  
+
                   // Parse CSV line respecting quoted fields
                   const values = [];
                   let currentField = '';
                   let inQuotes = false;
                   let j = 0;
-                  
+
                   while (j < line.length) {
                     const char = line[j];
-                    
+
                     if (char === '"') {
                       inQuotes = !inQuotes;
                     } else if (char === ',' && !inQuotes) {
@@ -885,7 +885,7 @@ print(json.dumps(result))
                     j++;
                   }
                   values.push(currentField.trim()); // Add the last field
-                  
+
                   // Create row object
                   const row = {};
                   headers.forEach((header, index) => {
@@ -893,7 +893,7 @@ print(json.dumps(result))
                   });
                   csvData.push(row);
                 }
-                
+
                 // Map CSV headers to search index fields
                 const headerMap = {
                   'Supplier': 'supplier',
@@ -911,7 +911,7 @@ print(json.dumps(result))
                 };
 
                 const searchIndexEntries = [];
-                
+
                 // Process each data row
                 for (const row of csvData) {
                   const entry = {
@@ -993,10 +993,10 @@ print(json.dumps(result))
     try {
       const supplierId = parseInt(req.params.id);
       const fileId = parseInt(req.params.fileId);
-      
+
       const files = await storage.getPriceListFiles(supplierId);
       const file = files.find(f => f.id === fileId);
-      
+
       if (!file) {
         return res.status(404).json({ error: "File not found" });
       }
@@ -1008,16 +1008,16 @@ print(json.dumps(result))
       // Set proper headers for UTF-8 encoding
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
-      
+
       // Read file as binary and ensure proper UTF-8 encoding
       const fileBuffer = fs.readFileSync(file.filePath);
       const fileContent = fileBuffer.toString('utf8');
-      
+
       // Add UTF-8 BOM for better compatibility
       const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
       const contentBuffer = Buffer.from(fileContent, 'utf8');
       const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
-      
+
       res.send(finalBuffer);
     } catch (error) {
       console.error("Error downloading file:", error);
@@ -1030,7 +1030,7 @@ print(json.dumps(result))
     try {
       const supplierId = parseInt(req.params.id);
       const file = req.file;
-      
+
       if (!file) {
         return res.status(400).json({ error: "No document file uploaded" });
       }
@@ -1081,10 +1081,10 @@ print(json.dumps(result))
     try {
       const supplierId = parseInt(req.params.id);
       const documentId = parseInt(req.params.documentId);
-      
+
       const documents = await storage.getDocuments(supplierId);
       const document = documents.find(d => d.id === documentId);
-      
+
       if (!document) {
         return res.status(404).json({ error: "Document not found" });
       }
@@ -1096,7 +1096,7 @@ print(json.dumps(result))
       // Set proper headers for download
       res.setHeader('Content-Type', document.fileType || 'application/octet-stream');
       res.setHeader('Content-Disposition', `attachment; filename="${document.originalName}"`);
-      
+
       // Stream the file
       const fileStream = fs.createReadStream(document.filePath);
       fileStream.pipe(res);
@@ -1110,10 +1110,10 @@ print(json.dumps(result))
     try {
       const supplierId = parseInt(req.params.id);
       const documentId = parseInt(req.params.documentId);
-      
+
       const documents = await storage.getDocuments(supplierId);
       const document = documents.find(d => d.id === documentId);
-      
+
       if (!document) {
         return res.status(404).json({ error: "Document not found" });
       }
@@ -1125,7 +1125,7 @@ print(json.dumps(result))
 
       // Delete from database
       await storage.deleteDocument(documentId);
-      
+
       res.status(204).send();
     } catch (error) {
       console.error("Error deleting document:", error);
@@ -1138,10 +1138,10 @@ print(json.dumps(result))
     try {
       const supplierId = parseInt(req.params.id);
       const fileId = parseInt(req.params.fileId);
-      
+
       const files = await storage.getPriceListFiles(supplierId);
       const file = files.find(f => f.id === fileId);
-      
+
       if (!file) {
         return res.status(404).json({ error: "Price list file not found" });
       }
@@ -1156,7 +1156,7 @@ print(json.dumps(result))
 
       // Delete from database
       await storage.deletePriceListFile(fileId);
-      
+
       res.status(204).send();
     } catch (error) {
       console.error("Error deleting price list file:", error);
@@ -1168,7 +1168,7 @@ print(json.dumps(result))
   app.post("/api/offers/:id/refresh-search", async (req, res) => {
     try {
       const offerId = parseInt(req.params.id);
-      
+
       // Find the offer directly
       const offer = await storage.getOffer(offerId);
       if (!offer) {
@@ -1183,7 +1183,7 @@ print(json.dumps(result))
       if (supplier) {
         const offerContent = offer.content || '';
         const lines = offerContent.split('\n').map(line => line.trim()).filter(line => line);
-        
+
         for (const line of lines) {
           if (line.length > 10) {
             const searchEntry = {
@@ -1241,21 +1241,21 @@ print(json.dumps(result))
   app.post("/api/export/database", async (req, res) => {
     try {
       console.log("Starting database export...");
-      
+
       // Get all suppliers for CSV export
       const suppliers = await storage.getAllSuppliersForExport();
       console.log(`Found ${suppliers.length} suppliers`);
-      
+
       // Get all documents with supplier names
       const documents = await storage.getAllDocumentsForExport();
       console.log(`Found ${documents.length} documents`);
-      
+
       // Create CSV content for suppliers
       const csvHeader = [
         'ID', 'Name', 'Country', 'Phone', 'Email', 'WhatsApp',
         'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments'
       ].join(',') + '\n';
-      
+
       const csvRows = suppliers.map(supplier => [
         supplier.id,
         `"${(supplier.name || '').replace(/"/g, '""')}"`,
@@ -1270,43 +1270,43 @@ print(json.dumps(result))
         supplier.reputation || 0,
         `"${(supplier.comments || '').replace(/"/g, '""')}"`,
       ].join(','));
-      
+
       const csvContent = csvHeader + csvRows.join('\n');
-      
+
       // Create temporary directory for export
       const exportDir = path.join(process.cwd(), 'temp-export');
       if (!fs.existsSync(exportDir)) {
         fs.mkdirSync(exportDir, { recursive: true });
       }
-      
+
       // Write CSV file
       const csvFilePath = path.join(exportDir, 'suppliers-data.csv');
       fs.writeFileSync(csvFilePath, csvContent, 'utf8');
       console.log("CSV file created");
-      
+
       // Set response headers for ZIP download
       res.setHeader('Content-Type', 'application/zip');
       res.setHeader('Content-Disposition', `attachment; filename=database-export-${new Date().toISOString().split('T')[0]}.zip`);
-      
+
       // Create archive
       const archive = archiver('zip', { zlib: { level: 9 } });
-      
+
       archive.on('error', (err) => {
         console.error('Archive error:', err);
         if (!res.headersSent) {
           res.status(500).json({ error: 'Failed to create export archive' });
         }
       });
-      
+
       // Pipe archive to response
       archive.pipe(res);
-      
+
       // Add CSV file to archive
       archive.file(csvFilePath, { name: 'suppliers-data.csv' });
-      
+
       // Organize documents by supplier folders
       const supplierFolders = new Map();
-      
+
       for (const doc of documents) {
         const supplierName = doc.supplierName.replace(/[^a-zA-Z0-9\s\-_]/g, ''); // Clean folder name
         if (!supplierFolders.has(supplierName)) {
@@ -1314,7 +1314,7 @@ print(json.dumps(result))
         }
         supplierFolders.get(supplierName).push(doc);
       }
-      
+
       // Add documents to archive organized by supplier
       for (const [supplierName, docs] of supplierFolders) {
         for (const doc of docs) {
@@ -1326,11 +1326,11 @@ print(json.dumps(result))
           }
         }
       }
-      
+
       // Finalize archive
       await archive.finalize();
       console.log("Archive finalized and sent");
-      
+
       // Clean up temporary files
       setTimeout(() => {
         try {
@@ -1344,7 +1344,7 @@ print(json.dumps(result))
           console.error('Cleanup error:', cleanupError);
         }
       }, 5000);
-      
+
     } catch (error) {
       console.error("Database export error:", error);
       if (!res.headersSent) {
@@ -1358,10 +1358,10 @@ print(json.dumps(result))
     const result: string[] = [];
     let current = '';
     let inQuotes = false;
-    
+
     for (let i = 0; i < line.length; i++) {
       const char = line[i];
-      
+
       if (char === '"') {
         inQuotes = !inQuotes;
       } else if (char === ',' && !inQuotes) {
@@ -1386,7 +1386,7 @@ print(json.dumps(result))
       // Read and parse CSV
       const csvContent = fs.readFileSync(file.path, 'utf8');
       const lines = csvContent.trim().split('\n').filter(line => line.trim());
-      
+
       if (lines.length < 2) {
         return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
       }
@@ -1394,10 +1394,10 @@ print(json.dumps(result))
       const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
       const rows: string[][] = [];
       const errors: string[] = [];
-      
+
       // Expected headers for validation
       const expectedHeaders = ['ID', 'Name', 'Country', 'Phone', 'Email', 'WhatsApp', 'Website', 'Categories', 'Brands', 'Working Style', 'Reputation', 'Comments'];
-      
+
       // Check if headers match expected format
       const missingHeaders = expectedHeaders.filter(expected => !headers.includes(expected));
       if (missingHeaders.length > 0) {
@@ -1405,7 +1405,7 @@ print(json.dumps(result))
       }
 
       let validRows = 0;
-      
+
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
@@ -1413,12 +1413,12 @@ print(json.dumps(result))
         // Parse CSV line with proper handling of empty fields
         const values = parseCSVLine(line).map(v => v.replace(/^"|"$/g, ''));
         const row: Record<string, string> = {};
-        
+
         // Ensure we have enough values for all headers
         while (values.length < headers.length) {
           values.push('');
         }
-        
+
         headers.forEach((header, index) => {
           row[header] = values[index] || '';
         });
@@ -1479,14 +1479,14 @@ print(json.dumps(result))
       // Read and parse CSV
       const csvContent = fs.readFileSync(file.path, 'utf8');
       const lines = csvContent.trim().split('\n').filter(line => line.trim());
-      
+
       if (lines.length < 2) {
         return res.status(400).json({ error: "CSV file must have at least a header and one data row" });
       }
 
       const headers = parseCSVLine(lines[0]).map(h => h.replace(/^"|"$/g, ''));
       const suppliersToImport: any[] = [];
-      
+
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
@@ -1494,12 +1494,12 @@ print(json.dumps(result))
         // Parse CSV line with proper handling of empty fields
         const values = parseCSVLine(line).map(v => v.replace(/^"|"$/g, ''));
         const row: Record<string, string> = {};
-        
+
         // Ensure we have enough values for all headers
         while (values.length < headers.length) {
           values.push('');
         }
-        
+
         headers.forEach((header, index) => {
           row[header] = values[index] || '';
         });
@@ -1551,7 +1551,7 @@ print(json.dumps(result))
   });
 
   // CompStyle API Routes
-  
+
   // Dashboard stats
   app.get("/api/compstyle/dashboard-stats", async (req, res) => {
     try {
@@ -1711,11 +1711,11 @@ print(json.dumps(result))
     try {
       const { changes } = req.body;
       const results = [];
-      
+
       for (const [productId, updates] of Object.entries(changes)) {
         const id = parseInt(productId);
         const updateData = updates as any;
-        
+
         // Calculate actual cost if actual price is provided
         if (updateData.actualPrice) {
           const actualPriceNum = parseFloat(updateData.actualPrice);
@@ -1723,11 +1723,11 @@ print(json.dumps(result))
             updateData.actualCost = (actualPriceNum * 0.85).toFixed(2); // Example calculation: 85% of actual price
           }
         }
-        
+
         const updatedProduct = await storage.updateCompstyleProductList(id, updateData);
         results.push(updatedProduct);
       }
-      
+
       res.json({ success: true, updatedCount: results.length, products: results });
     } catch (error) {
       console.error('Error batch saving products:', error);
@@ -1740,78 +1740,76 @@ print(json.dumps(result))
       // Set headers for file download first
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', `attachment; filename="product-list-${new Date().toISOString().split('T')[0]}.csv"`);
-      
+      res.setHeader('Transfer-Encoding', 'chunked');
+
       // Add UTF-8 BOM for proper Excel compatibility
       res.write('\uFEFF');
-      
+
       // Define CSV headers (all columns)
       const headers = [
         'ID', 'SKU', 'Product Name', 'Stock', 'Transit', 'Retail USD', 'Retail AMD', 
         'Dealer 1', 'Dealer 2', 'Cost', 'Latest Purchase', 'Latest Cost', 
         'Avg Sales', 'Actual Price', 'Actual Cost', 'Supplier', 'Last Updated'
       ];
-      
+
       // Write headers
       res.write(headers.join(',') + '\n');
-      
-      // Stream products in very small chunks to avoid OOM
-      const chunkSize = 25; // Reduced from 50
+
+      // Stream products in smaller chunks to avoid memory issues
+      const chunkSize = 100;
       let offset = 0;
       let hasMore = true;
       let totalProcessed = 0;
-      
+
       while (hasMore) {
-        try {
-          // Fetch chunk directly from database with pagination
-          const chunk = await storage.getCompstyleProductListPaginated(chunkSize, offset);
-          
-          if (chunk.length === 0) {
-            hasMore = false;
-            break;
-          }
-          
-          // Convert products to CSV format and write immediately
-          for (const product of chunk) {
-            const row = [
-              product.id,
-              product.sku || '',
-              `"${(product.productName || '').replace(/"/g, '""')}"`,
-              product.stock || 0,
-              product.transit || 0,
-              product.retailPriceUsd || '',
-              product.retailPriceAmd || '',
-              product.dealerPrice1 || '',
-              product.dealerPrice2 || '',
-              product.cost || '',
-              product.latestPurchase || '',
-              product.latestCost || '',
-              product.aveSalesPrice || '',
-              product.actualPrice || '',
-              product.actualCost || '',
-              product.supplier || '',
-              product.lastUpdated
-            ];
-            res.write(row.join(',') + '\n');
-            totalProcessed++;
-          }
-          
-          offset += chunkSize;
-          
-          // If we got fewer products than the chunk size, we're done
-          if (chunk.length < chunkSize) {
-            hasMore = false;
-          }
-          
-          // Log progress every 100 rows
-          if (totalProcessed % 100 === 0) {
-            console.log(`CSV export: processed ${totalProcessed} products`);
-          }
-        } catch (chunkError) {
-          console.error(`Error processing chunk at offset ${offset}:`, chunkError);
-          throw chunkError;
+        // Fetch chunk directly from database with pagination
+        const chunk = await storage.getCompstyleProductListPaginated(chunkSize, offset);
+
+        if (chunk.length === 0) {
+          hasMore = false;
+          break;
+        }
+
+        // Build CSV rows for this chunk
+        const csvRows: string[] = [];
+        for (const product of chunk) {
+          const row = [
+            product.id,
+            product.sku || '',
+            `"${(product.productName || '').replace(/"/g, '""')}"`,
+            product.stock || 0,
+            product.transit || 0,
+            product.retailPriceUsd || '',
+            product.retailPriceAmd || '',
+            product.dealerPrice1 || '',
+            product.dealerPrice2 || '',
+            product.cost || '',
+            product.latestPurchase || '',
+            product.latestCost || '',
+            product.aveSalesPrice || '',
+            product.actualPrice || '',
+            product.actualCost || '',
+            product.supplier || '',
+            product.lastUpdated
+          ];
+          csvRows.push(row.join(','));
+        }
+
+        // Write chunk to response stream
+        res.write(csvRows.join('\n') + '\n');
+
+        totalProcessed += chunk.length;
+        offset += chunkSize;
+
+        // Clear the chunk from memory
+        csvRows.length = 0;
+
+        // If we got fewer products than the chunk size, we're done
+        if (chunk.length < chunkSize) {
+          hasMore = false;
         }
       }
-      
+
       console.log(`CSV export completed: ${totalProcessed} products exported`);
       res.end();
     } catch (error) {
@@ -1819,7 +1817,6 @@ print(json.dumps(result))
       if (!res.headersSent) {
         res.status(500).json({ error: 'Failed to export CSV' });
       } else {
-        // If headers already sent, just end the response
         res.end();
       }
     }
@@ -1830,7 +1827,7 @@ print(json.dumps(result))
     try {
       const file = req.file;
       const fileType = req.body.fileType;
-      
+
       if (!file) {
         return res.status(400).json({ error: "No file uploaded" });
       }
@@ -1842,17 +1839,17 @@ print(json.dumps(result))
       // Process Excel file
       console.log("Processing file:", file.path);
       console.log("XLSX object:", Object.keys(XLSX));
-      
+
       const workbook = XLSX.readFile(file.path);
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      
+
       // Convert to JSON with header row handling
       const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
       console.log("Parsed data rows:", rawData.length);
-      
+
       let processedCount = 0;
-      
+
       try {
         switch (fileType) {
           case "total-stock":
@@ -1918,25 +1915,25 @@ print(json.dumps(result))
   // Process Total Stock Current file according to specifications
   async function processTotalStockFile(data: any[]): Promise<number> {
     console.log('Processing Total Stock file - clearing existing data...');
-    
+
     // Clear existing total stock data before processing new file
     await db.delete(compstyleTotalStock);
-    
+
     let count = 0;
     // Start from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      
+
       // Skip if no product name (Column B) or SKU (Column J)
       if (!row[1] || !row[9]) continue;
-      
+
       // Skip header rows
       if (shouldIgnoreRow(row)) continue;
-      
+
       // Validate required numeric fields
       const qtyInStock = parseNumericValue(row[2]);
       if (qtyInStock === null) continue;
-      
+
       await storage.createCompstyleTotalStock({
         productName: String(row[1]), // Column B (Марка): Name of product
         sku: String(row[9]), // Column J (КодТовара): Unique internal SKU
@@ -1955,18 +1952,18 @@ print(json.dumps(result))
   // Process Stock Kievyan/Sevan Current files according to specifications
   async function processLocationStockFile(data: any[], locationName: string): Promise<number> {
     console.log(`Processing ${locationName} Stock file - clearing existing data...`);
-    
+
     // Clear existing location stock data before processing new file
     if (locationName === "Kievyan") {
       await db.delete(compstyleKievyanStock);
     } else if (locationName === "Sevan") {
       await db.delete(compstyleSevanStock);
     }
-    
+
     // Get or create location
     const locations = await storage.getCompstyleLocations();
     let location = locations.find(l => l.name.includes(locationName));
-    
+
     if (!location) {
       location = await storage.createCompstyleLocation({
         name: locationName === "Kievyan" ? "Kievyan 11" : "Sevan 5",
@@ -1977,23 +1974,23 @@ print(json.dumps(result))
     let count = 0;
     // Cell A1: Shows date of the report
     const reportDate = data[0] && data[0][0] ? new Date(data[0][0]) : new Date();
-    
+
     // Starting from second row (skip header row and B2 which can be ignored)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      
+
       // Skip if no product name (Column A) or quantity (Column B)
       if (!row[0] || !row[1]) continue;
-      
+
       // Skip header rows and special cells
       if (shouldIgnoreRow(row)) continue;
-      
+
       // Validate numeric data
       const qty = parseNumericValue(row[1]);
       const retailPriceAmd = parseNumericValue(row[2]);
-      
+
       if (qty === null) continue; // Skip if quantity is not valid
-      
+
       if (locationName === "Kievyan") {
         await storage.createCompstyleKievyanStock({
           productName: String(row[0]), // Column A (КодТовара): Name of product
@@ -2034,12 +2031,12 @@ print(json.dumps(result))
   // Helper function to safely parse Excel date values
   function parseExcelDate(value: any): Date | null {
     if (value === null || value === undefined || value === "") return null;
-    
+
     // If it's already a Date object
     if (value instanceof Date) {
       return isNaN(value.getTime()) ? null : value;
     }
-    
+
     // If it's a number (Excel serial date)
     if (typeof value === 'number') {
       // Excel stores dates as days since 1900-01-01 (with some quirks)
@@ -2048,7 +2045,7 @@ print(json.dumps(result))
       const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
       return isNaN(date.getTime()) ? null : date;
     }
-    
+
     // Try to parse as string
     const date = new Date(value);
     return isNaN(date.getTime()) ? null : date;
@@ -2073,36 +2070,36 @@ print(json.dumps(result))
   // Process In Transit Current file according to specifications
   async function processTransitFile(data: any[]): Promise<number> {
     console.log('Processing Transit file - clearing existing data...');
-    
+
     // Clear existing transit data before processing new file
     await db.delete(compstyleTransit);
-    
+
     let count = 0;
     const processedProducts = new Map<string, any>(); // Track products to avoid duplicates within same file
-    
+
     // Start from row 1 (skip header row)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      
+
       // Skip if no product name (Column A) or quantity (Column B)
       if (!row[0] || !row[1]) continue;
-      
+
       // Skip header rows and special cells
       if (shouldIgnoreRow(row)) continue;
-      
+
       // Validate required numeric fields
       const qty = parseNumericValue(row[1]);
       if (qty === null) {
         console.log(`Row ${i}: Skipping - invalid quantity: ${row[1]}`);
         continue;
       }
-      
+
       const productName = String(row[0]).trim();
-      
+
       // Debug logging for specific products
       const isTargetProduct = productName.includes('Процессор Intel Core i5 12400') || 
                               productName.includes('Принтер струйный МФУ Canon PIXMA MG2541S');
-      
+
       if (isTargetProduct) {
         console.log(`\n=== ROW ${i} DEBUG ===`);
         console.log(`Product: "${productName}"`);
@@ -2111,12 +2108,12 @@ print(json.dumps(result))
         console.log(`Product name length: ${productName.length}`);
         console.log(`Product name hex: ${Buffer.from(productName).toString('hex')}`);
       }
-      
+
       // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
       const purchasePriceAmd = parseNumericValue(row[3]);
       const currentCost = parseNumericValue(row[6]);
-      
+
       const transitRecord = {
         productName, // Column A (Товар): Name of product
         qty, // Column B (Кол.): Quantity purchased
@@ -2127,21 +2124,21 @@ print(json.dumps(result))
         destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад): Destination warehouse/store
         supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик): Supplier name
       };
-      
+
       // Check if we already processed this product in this file
       if (processedProducts.has(productName)) {
         // Sum quantities for duplicate products
         const existing = processedProducts.get(productName);
         const oldQty = existing.qty;
         existing.qty += qty; // Add quantity to existing total
-        
+
         if (isTargetProduct) {
           console.log(`*** DUPLICATE FOUND ***`);
           console.log(`Previous quantity: ${oldQty}`);
           console.log(`Adding quantity: ${qty}`);
           console.log(`New total quantity: ${existing.qty}`);
         }
-        
+
         // Keep other data from first occurrence, but update some fields if new ones have values
         if (transitRecord.purchasePriceUsd && !existing.purchasePriceUsd) {
           existing.purchasePriceUsd = transitRecord.purchasePriceUsd;
@@ -2155,7 +2152,7 @@ print(json.dumps(result))
         if (transitRecord.supplier && !existing.supplier) {
           existing.supplier = transitRecord.supplier;
         }
-        
+
         console.log(`Found duplicate ${productName.substring(0, 50)}...: adding ${qty} to existing ${oldQty}, total now: ${existing.qty}`);
       } else {
         if (isTargetProduct) {
@@ -2164,20 +2161,20 @@ print(json.dumps(result))
         }
         processedProducts.set(productName, { ...transitRecord, rowIndex: i });
       }
-      
+
       if (isTargetProduct) {
         console.log(`=== END ROW ${i} DEBUG ===\n`);
       }
     }
-    
+
     // Insert aggregated record for each unique product (with summed quantities)
     for (const [productName, record] of processedProducts) {
       const { rowIndex, ...recordData } = record;
-      
+
       // Debug logging for specific products before database insertion
       const isTargetProduct = productName.includes('Процессор Intel Core i5 12400') || 
                               productName.includes('Принтер струйный МФУ Canon PIXMA MG2541S');
-      
+
       if (isTargetProduct) {
         console.log(`\n*** FINAL DATABASE INSERT ***`);
         console.log(`Product: "${productName}"`);
@@ -2185,15 +2182,15 @@ print(json.dumps(result))
         console.log(`Supplier: ${record.supplier}`);
         console.log(`Price USD: ${record.purchasePriceUsd}`);
       }
-      
+
       await storage.createCompstyleTransit(recordData);
       count++;
-      
+
       if (productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
         console.log(`Processed ${productName}: qty=${record.qty}, supplier=${record.supplier}`);
       }
     }
-    
+
     console.log(`Transit file processed: ${count} unique products saved`);
     return count;
   }
@@ -2202,43 +2199,43 @@ print(json.dumps(result))
   async function processSalesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
     console.log(`Processing sales file for ${location}, total rows: ${data.length}`);
-    
+
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
-    
+
     // Process starting from row 2 (skip irrelevant row 0 and header row 1)
     for (let i = 2; i < data.length; i++) {
       const row = data[i];
-      
+
       // Check if this row contains a sales order number in Column A
       if (row[0] && /^\d{6}$/.test(String(row[0]))) {
         const salesOrderNumber = String(row[0]); // Column A
         const orderDate = parseExcelDate(row[1]) || new Date(); // Column B
         const customer = row[2] ? String(row[2]) : null; // Column C
         const contactName = row[3] ? String(row[3]) : null; // Column D
-        
+
         console.log(`Found Sales Order: ${salesOrderNumber}, Customer: ${customer}`);
-        
+
         const orderLineItems: any[] = [];
-        
+
         // Look for product data in the rows following this order header
         let j = i + 1;
         while (j < data.length) {
           const productRow = data[j];
-          
+
           // Stop if we hit an empty row or another order number
           if (!productRow || productRow.every(cell => !cell || String(cell).trim() === '') || 
               (productRow[0] && /^\d{6}$/.test(String(productRow[0])))) {
             break;
           }
-          
+
           // Extract product data from exact columns K, L, M
           const productName = productRow[10] ? String(productRow[10]) : null; // Column K
           const priceUsd = parseNumericValue(productRow[11]); // Column L
           const qty = parseNumericValue(productRow[12]); // Column M
-          
+
           console.log(`Row ${j} - K: "${productName}", L: ${priceUsd}, M: ${qty}`);
-          
+
           // Add product if all required data is present
           if (productName && productName.length > 5 && priceUsd !== null && qty !== null && qty > 0) {
             const sumUsd = priceUsd * qty;
@@ -2250,10 +2247,10 @@ print(json.dumps(result))
             });
             console.log(`✓ Added product: ${productName.substring(0, 30)}... $${priceUsd} x ${qty} = $${sumUsd}`);
           }
-          
+
           j++;
         }
-        
+
         // Save the order with its line items
         if (orderLineItems.length > 0) {
           const orderData = {
@@ -2266,7 +2263,7 @@ print(json.dumps(result))
             periodStart,
             periodEnd,
           };
-          
+
           const orderInDb = await storage.createCompstyleSalesOrder(orderData);
           for (const item of orderLineItems) {
             await storage.createCompstyleSalesItem({
@@ -2277,12 +2274,12 @@ print(json.dumps(result))
           count++;
           console.log(`✓ Saved sales order ${salesOrderNumber} with ${orderLineItems.length} items`);
         }
-        
+
         // Skip to the row we processed last
         i = j - 1;
       }
     }
-    
+
     console.log(`Sales processing complete: ${count} orders saved`);
     return count;
   }
@@ -2290,43 +2287,43 @@ print(json.dumps(result))
   async function processPurchasesByLocationFile(data: any[], location: string, filename: string): Promise<number> {
     let count = 0;
     console.log(`Processing purchase file for ${location}, total rows: ${data.length}`);
-    
+
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
-    
+
     // Process starting from row 2 (skip irrelevant row 0 and header row 1)
     for (let i = 2; i < data.length; i++) {
       const row = data[i];
-      
+
       // Check if this row contains a purchase order number in Column A
       if (row[0] && /^\d{6}$/.test(String(row[0]))) {
         const purchaseOrderNumber = String(row[0]); // Column A
         const orderDate = parseExcelDate(row[1]) || new Date(); // Column B
         const supplier = row[2] ? String(row[2]) : null; // Column C
         const contactName = row[3] ? String(row[3]) : null; // Column D
-        
+
         console.log(`Found Purchase Order: ${purchaseOrderNumber}, Supplier: ${supplier}`);
-        
+
         const orderLineItems: any[] = [];
-        
+
         // Look for product data in the rows following this order header
         let j = i + 1;
         while (j < data.length) {
           const productRow = data[j];
-          
+
           // Stop if we hit an empty row or another order number
           if (!productRow || productRow.every(cell => !cell || String(cell).trim() === '') || 
               (productRow[0] && /^\d{6}$/.test(String(productRow[0])))) {
             break;
           }
-          
+
           // Extract product data from exact columns K, L, M
           const productName = productRow[10] ? String(productRow[10]) : null; // Column K
           const priceUsd = parseNumericValue(productRow[11]); // Column L
           const qty = parseNumericValue(productRow[12]); // Column M
-          
+
           console.log(`Purchase Row ${j} - K: "${productName}", L: ${priceUsd}, M: ${qty}`);
-          
+
           // Add product if all required data is present
           if (productName && productName.length > 5 && priceUsd !== null && qty !== null && qty > 0) {
             const sumUsd = priceUsd * qty;
@@ -2338,10 +2335,10 @@ print(json.dumps(result))
             });
             console.log(`✓ Added purchase product: ${productName.substring(0, 30)}... $${priceUsd} x ${qty} = $${sumUsd}`);
           }
-          
+
           j++;
         }
-        
+
         // Save the order with its line items
         if (orderLineItems.length > 0) {
           const orderData = {
@@ -2354,7 +2351,7 @@ print(json.dumps(result))
             periodStart,
             periodEnd,
           };
-          
+
           const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
           for (const item of orderLineItems) {
             await storage.createCompstylePurchaseItem({
@@ -2365,12 +2362,12 @@ print(json.dumps(result))
           count++;
           console.log(`✓ Saved purchase order ${purchaseOrderNumber} with ${orderLineItems.length} items`);
         }
-        
+
         // Skip to the row we processed last
         i = j - 1;
       }
     }
-    
+
     console.log(`Purchase processing complete: ${count} orders saved`);
     return count;
   }
@@ -2378,30 +2375,30 @@ print(json.dumps(result))
   // Process Total sales by goods files according to specifications
   async function processTotalSalesFile(data: any[], filename: string): Promise<number> {
     let count = 0;
-    
+
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
-    
+
     // Start from row 2 (skip header rows 0 and 1)
     for (let i = 2; i < data.length; i++) {
       const row = data[i];
-      
+
       // Skip if no product name (Column B) or quantity (Column E)
       if (!row[1] || !row[4]) continue;
-      
+
       // Skip header rows and special cells (Text84:, Text88:)
       if (shouldIgnoreRow(row)) continue;
-      
+
       // Validate required numeric fields
       const qtySold = parseNumericValue(row[4]); // Column E (Количество): Quantity sold
       const salePriceUsd = parseNumericValue(row[5]); // Column F (Цена): Price in USD sold for
       const costPriceUsd = parseNumericValue(row[6]); // Column G (Учетная цена): Cost in USD
-      
+
       if (qtySold === null || qtySold <= 0) continue;
-      
+
       const safeSalePrice = salePriceUsd || 0;
       const safeCostPrice = costPriceUsd || 0;
-      
+
       await storage.createCompstyleTotalSales({
         productName: String(row[1]), // Column B (КодТовара): Name of product
         qtySold,
@@ -2420,26 +2417,26 @@ print(json.dumps(result))
   // Process Total procurement by goods files according to specifications
   async function processTotalProcurementFile(data: any[], filename: string): Promise<number> {
     let count = 0;
-    
+
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
-    
+
     // Start from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      
+
       // Skip if no product name (Column B) or quantity (Column E)
       if (!row[1] || !row[4]) continue;
-      
+
       // Skip header rows and special cells (Text84:, Text88:)
       if (shouldIgnoreRow(row)) continue;
-      
+
       // Validate required numeric fields
       const qtyPurchased = parseNumericValue(row[4]); // Column E (Количество): Quantity purchased
       const purchasePriceUsd = parseNumericValue(row[5]); // Column F (Цена): Purchase price in USD
-      
+
       if (qtyPurchased === null || qtyPurchased <= 0) continue;
-      
+
       await storage.createCompstyleTotalProcurement({
         productName: String(row[1]), // Column B (КодТовара): Name of product
         qtyPurchased,

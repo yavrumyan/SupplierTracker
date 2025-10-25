@@ -895,9 +895,29 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getCompstyleProductListPaginated(limit: number, offset: number): Promise<CompstyleProductList[]> {
-    return await db.select()
+    // Use a more efficient query with explicit column selection to reduce memory overhead
+    return await db
+      .select({
+        id: compstyleProductList.id,
+        sku: compstyleProductList.sku,
+        productName: compstyleProductList.productName,
+        stock: compstyleProductList.stock,
+        transit: compstyleProductList.transit,
+        retailPriceUsd: compstyleProductList.retailPriceUsd,
+        retailPriceAmd: compstyleProductList.retailPriceAmd,
+        dealerPrice1: compstyleProductList.dealerPrice1,
+        dealerPrice2: compstyleProductList.dealerPrice2,
+        cost: compstyleProductList.cost,
+        latestPurchase: compstyleProductList.latestPurchase,
+        latestCost: compstyleProductList.latestCost,
+        aveSalesPrice: compstyleProductList.aveSalesPrice,
+        actualPrice: compstyleProductList.actualPrice,
+        actualCost: compstyleProductList.actualCost,
+        supplier: compstyleProductList.supplier,
+        lastUpdated: compstyleProductList.lastUpdated,
+      })
       .from(compstyleProductList)
-      .orderBy(compstyleProductList.productName)
+      .orderBy(compstyleProductList.id)
       .limit(limit)
       .offset(offset);
   }
