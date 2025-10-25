@@ -842,26 +842,56 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    const salesData = await db.select().from(compstyleTotalSales);
+    // Get all sales items with their order dates
+    const salesOrders = await db.select().from(compstyleSalesOrders);
+    const salesItems = await db.select().from(compstyleSalesItems);
     
-    // Aggregate sales by product name (sum quantities from multiple uploads)
+    // Create a map of order IDs to order dates
+    const orderDateMap = new Map<number, Date>();
+    salesOrders.forEach(order => {
+      if (order.orderDate) {
+        orderDateMap.set(order.id, order.orderDate);
+      }
+    });
+    
+    // Find the date range across all sales orders
+    let minDate: Date | null = null;
+    let maxDate: Date | null = null;
+    
+    salesOrders.forEach(order => {
+      if (order.orderDate) {
+        if (!minDate || order.orderDate < minDate) {
+          minDate = order.orderDate;
+        }
+        if (!maxDate || order.orderDate > maxDate) {
+          maxDate = order.orderDate;
+        }
+      }
+    });
+    
+    // Calculate the actual period in days (default to 30 if no date range found)
+    let actualPeriodDays = 30;
+    if (minDate && maxDate) {
+      const timeDiff = maxDate.getTime() - minDate.getTime();
+      actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
+    }
+    
+    // Aggregate sales by product name from sales items
     const aggregatedSales = new Map<string, number>();
     
-    for (const item of salesData) {
+    for (const item of salesItems) {
       const currentQty = aggregatedSales.get(item.productName) || 0;
-      aggregatedSales.set(item.productName, currentQty + item.qtySold);
+      aggregatedSales.set(item.productName, currentQty + item.qty);
     }
     
     // Convert aggregated data to result format
     const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
-      // Assume 30-day period for sales data
-      const periodDays = 30;
-      const dailyVelocity = qtySold / periodDays;
+      const dailyVelocity = qtySold / actualPeriodDays;
       
       return {
         productName,
         qtySold,
-        salesPeriodDays: periodDays,
+        salesPeriodDays: actualPeriodDays,
         dailyVelocity: Number(dailyVelocity.toFixed(2)),
         weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
         monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
