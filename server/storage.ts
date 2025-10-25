@@ -938,16 +938,32 @@ export class DatabaseStorage implements IStorage {
     totalInventory: number;
     qtySoldLast30Days: number;
     dailyVelocity: number;
-    daysOfInventory: number;
+    daysOfInventory: number | string;
     lockedValue: number;
     recommendation: string;
   }>> {
     const productList = await db.select().from(compstyleProductList);
     const salesVelocity = await this.getCompstyleSalesVelocity();
+    const purchaseItems = await db.select().from(compstylePurchaseItems);
+    const purchaseOrders = await db.select().from(compstylePurchaseOrders);
     
     const velocityMap = new Map(
       salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
     );
+
+    // Create a map of product names to their latest purchase date
+    const purchaseMap = new Map<string, Date>();
+    
+    // Iterate through purchase items and find the latest purchase date for each product
+    for (const item of purchaseItems) {
+      const order = purchaseOrders.find(o => o.purchaseOrderNumber === item.productName);
+      if (order && order.orderDate) {
+        const existingDate = purchaseMap.get(item.productName);
+        if (!existingDate || order.orderDate > existingDate) {
+          purchaseMap.set(item.productName, order.orderDate);
+        }
+      }
+    }
 
     const deadStockAnalysis = productList
       .map(product => {
@@ -958,20 +974,30 @@ export class DatabaseStorage implements IStorage {
         const inTransit = product.transit || 0;
         const totalInventory = currentStock + inTransit;
         
-        // Calculate days of inventory
-        const daysOfInventory = dailyVelocity > 0 
-          ? totalInventory / dailyVelocity 
-          : (totalInventory > 0 ? 9999 : 0);
+        // Calculate days of stock based on purchase date age
+        let daysOfInventory: number | string = 'Long time ago';
+        const latestPurchaseDate = purchaseMap.get(product.productName);
+        
+        if (latestPurchaseDate) {
+          const ageInMs = Date.now() - latestPurchaseDate.getTime();
+          const ageInDays = Math.floor(ageInMs / (1000 * 60 * 60 * 24));
+          daysOfInventory = ageInDays;
+        }
 
         // Calculate locked value
         const cost = parseFloat(String(product.cost || 0));
         const lockedValue = cost * totalInventory;
 
-        // Determine recommendation
+        // Determine recommendation based on age and velocity
         let recommendation = '';
-        if (daysOfInventory > 180) recommendation = 'Clearance sale recommended';
-        else if (daysOfInventory > 90) recommendation = 'Reduce price to move stock';
-        else if (daysOfInventory > 60) recommendation = 'Monitor closely';
+        if (typeof daysOfInventory === 'number') {
+          if (daysOfInventory > 180 && dailyVelocity < 0.5) recommendation = 'Clearance sale recommended';
+          else if (daysOfInventory > 90 && dailyVelocity < 1) recommendation = 'Reduce price to move stock';
+          else if (daysOfInventory > 60) recommendation = 'Monitor closely';
+        } else {
+          if (dailyVelocity === 0) recommendation = 'Very old stock - clearance needed';
+          else recommendation = 'Old stock - check manually';
+        }
 
         return {
           productName: product.productName,
@@ -980,16 +1006,24 @@ export class DatabaseStorage implements IStorage {
           totalInventory,
           qtySoldLast30Days: qtySold,
           dailyVelocity: Number(dailyVelocity.toFixed(2)),
-          daysOfInventory: Number(daysOfInventory.toFixed(0)),
+          daysOfInventory,
           lockedValue: Number(lockedValue.toFixed(2)),
           recommendation
         };
       })
       .filter(item => 
-        // Dead stock criteria: high inventory (> 60 days) with low/no sales
-        item.totalInventory > 0 && item.daysOfInventory > 60
+        // Dead stock criteria: inventory with old age or low sales
+        item.totalInventory > 0 && (
+          typeof item.daysOfInventory === 'string' || 
+          (typeof item.daysOfInventory === 'number' && item.daysOfInventory > 60)
+        )
       )
-      .sort((a, b) => b.daysOfInventory - a.daysOfInventory);
+      .sort((a, b) => {
+        // Sort by days of inventory, treating "Long time ago" as highest
+        const aVal = typeof a.daysOfInventory === 'string' ? 999999 : a.daysOfInventory;
+        const bVal = typeof b.daysOfInventory === 'string' ? 999999 : b.daysOfInventory;
+        return bVal - aVal;
+      });
 
     return deadStockAnalysis;
   }

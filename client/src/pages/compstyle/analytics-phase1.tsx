@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp, AlertTriangle, Package, Clock, RefreshCw, Download } from "lucide-react";
@@ -32,7 +31,7 @@ interface DeadStock {
   totalInventory: number;
   qtySoldLast30Days: number;
   dailyVelocity: number;
-  daysOfInventory: number;
+  daysOfInventory: number | string; // Changed to allow string for "long time ago"
   lockedValue: number;
   recommendation: string;
 }
@@ -67,7 +66,7 @@ export default function CompStyleAnalyticsPhase1() {
     if (stockOutRisk && stockOutRisk.length > 0) {
       const headers1 = ['Product', 'Risk Level', 'Current Stock', 'In Transit', 'Total Available', 'Daily Sales', 'Days Until Stock Out', 'Recommended Order'];
       const csvData1 = [headers1];
-      
+
       stockOutRisk.forEach(item => {
         csvData1.push([
           item.productName,
@@ -80,11 +79,11 @@ export default function CompStyleAnalyticsPhase1() {
           item.recommendedOrder.toString()
         ]);
       });
-      
+
       const csvContent1 = csvData1.map(row => 
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
-      
+
       const blob1 = new Blob(['\ufeff' + csvContent1], { type: 'text/csv;charset=utf-8;' });
       const link1 = document.createElement('a');
       const url1 = URL.createObjectURL(blob1);
@@ -101,23 +100,23 @@ export default function CompStyleAnalyticsPhase1() {
     if (deadStock && deadStock.length > 0) {
       const headers2 = ['Product', 'Total Inventory', 'Sold (30d)', 'Daily Sales', 'Days of Stock', 'Locked Value', 'Recommendation'];
       const csvData2 = [headers2];
-      
+
       deadStock.forEach(item => {
         csvData2.push([
           item.productName,
           item.totalInventory.toString(),
           item.qtySoldLast30Days.toString(),
           item.dailyVelocity.toString(),
-          item.daysOfInventory.toString(),
+          typeof item.daysOfInventory === 'string' ? item.daysOfInventory : item.daysOfInventory.toString(), // Handle string or number
           `$${item.lockedValue.toFixed(2)}`,
           item.recommendation
         ]);
       });
-      
+
       const csvContent2 = csvData2.map(row => 
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
-      
+
       const blob2 = new Blob(['\ufeff' + csvContent2], { type: 'text/csv;charset=utf-8;' });
       const link2 = document.createElement('a');
       const url2 = URL.createObjectURL(blob2);
@@ -134,7 +133,7 @@ export default function CompStyleAnalyticsPhase1() {
     if (salesVelocity && salesVelocity.length > 0) {
       const headers3 = ['Product', 'Total Sold', 'Daily Velocity', 'Weekly Velocity', 'Monthly Velocity'];
       const csvData3 = [headers3];
-      
+
       salesVelocity.forEach(item => {
         csvData3.push([
           item.productName,
@@ -144,11 +143,11 @@ export default function CompStyleAnalyticsPhase1() {
           item.monthlyVelocity.toString()
         ]);
       });
-      
+
       const csvContent3 = csvData3.map(row => 
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
-      
+
       const blob3 = new Blob(['\ufeff' + csvContent3], { type: 'text/csv;charset=utf-8;' });
       const link3 = document.createElement('a');
       const url3 = URL.createObjectURL(blob3);
@@ -352,7 +351,15 @@ export default function CompStyleAnalyticsPhase1() {
                         <td className="p-3 text-right">{item.qtySoldLast30Days}</td>
                         <td className="p-3 text-right">{item.dailyVelocity}</td>
                         <td className="p-3 text-right">
-                          <span className={`font-semibold ${item.daysOfInventory > 180 ? 'text-red-600' : item.daysOfInventory > 90 ? 'text-orange-600' : 'text-yellow-600'}`}>
+                          <span className={`font-semibold ${
+                            typeof item.daysOfInventory === 'string' 
+                              ? 'text-red-600' 
+                              : item.daysOfInventory > 180 
+                                ? 'text-red-600' 
+                                : item.daysOfInventory > 90 
+                                  ? 'text-orange-600' 
+                                  : 'text-yellow-600'
+                          }`}>
                             {item.daysOfInventory}
                           </span>
                         </td>
