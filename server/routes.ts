@@ -36,7 +36,8 @@ import {
   compstylePurchaseOrders,
   compstylePurchaseItems,
   compstyleTotalSales,
-  compstyleTotalProcurement
+  compstyleTotalProcurement,
+  compstyleProductList
 } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
 
