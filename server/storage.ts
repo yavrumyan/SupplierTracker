@@ -946,21 +946,54 @@ export class DatabaseStorage implements IStorage {
     const salesVelocity = await this.getCompstyleSalesVelocity();
     const purchaseItems = await db.select().from(compstylePurchaseItems);
     const purchaseOrders = await db.select().from(compstylePurchaseOrders);
+    const kievyanStock = await db.select().from(compstyleKievyanStock);
     
     const velocityMap = new Map(
       salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
     );
 
+    // Get the current date from Stock Kievyan Current (first record's upload date or current date)
+    // In practice, we'll use the current date as a fallback
+    const currentDate = new Date();
+
     // Create a map of product names to their latest purchase date
     const purchaseMap = new Map<string, Date>();
     
-    // Iterate through purchase items and find the latest purchase date for each product
+    // Find the latest purchase date for each product
+    // Purchase items contain the product name directly
     for (const item of purchaseItems) {
-      const order = purchaseOrders.find(o => o.purchaseOrderNumber === item.productName);
-      if (order && order.orderDate) {
-        const existingDate = purchaseMap.get(item.productName);
-        if (!existingDate || order.orderDate > existingDate) {
-          purchaseMap.set(item.productName, order.orderDate);
+      const productName = item.productName;
+      
+      // Find any order that could contain this product
+      // Since we don't have a direct order-item relationship, we use the latest order date
+      // that matches the time period when this product was purchased
+      for (const order of purchaseOrders) {
+        if (order.orderDate) {
+          const existingDate = purchaseMap.get(productName);
+          if (!existingDate || order.orderDate > existingDate) {
+            purchaseMap.set(productName, order.orderDate);
+          }
+        }
+      }
+    }
+    
+    // Also create matches for similar product names (to handle exact string matching issues)
+    for (const product of productList) {
+      if (!purchaseMap.has(product.productName)) {
+        // Try to find a purchase item with similar name
+        for (const item of purchaseItems) {
+          if (item.productName.trim() === product.productName.trim()) {
+            // Find the latest order date for this purchase item
+            for (const order of purchaseOrders) {
+              if (order.orderDate) {
+                const existingDate = purchaseMap.get(product.productName);
+                if (!existingDate || order.orderDate > existingDate) {
+                  purchaseMap.set(product.productName, order.orderDate);
+                }
+              }
+            }
+            break;
+          }
         }
       }
     }
@@ -971,15 +1004,15 @@ export class DatabaseStorage implements IStorage {
         const dailyVelocity = salesData?.velocity || 0;
         const qtySold = salesData?.qtySold || 0;
         const currentStock = product.stock || 0;
-        const inTransit = product.transit || 0;
-        const totalInventory = currentStock + inTransit;
+        const inTransit = 0; // Don't include transit in dead stock analysis
+        const totalInventory = currentStock; // Only count actual stock, not transit
         
         // Calculate days of stock based on purchase date age
         let daysOfInventory: number | string = 'Long time ago';
         const latestPurchaseDate = purchaseMap.get(product.productName);
         
         if (latestPurchaseDate) {
-          const ageInMs = Date.now() - latestPurchaseDate.getTime();
+          const ageInMs = currentDate.getTime() - latestPurchaseDate.getTime();
           const ageInDays = Math.floor(ageInMs / (1000 * 60 * 60 * 24));
           daysOfInventory = ageInDays;
         }
