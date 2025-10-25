@@ -150,6 +150,7 @@ export interface IStorage {
   // Export methods
   getAllSuppliersForExport(): Promise<Supplier[]>;
   getAllDocumentsForExport(): Promise<(Document & { supplierName: string })[]>;
+  getCompstyleProductListPaginated(limit: number, offset: number): Promise<CompstyleProductList[]>;
 
   // Import methods
   importSuppliers(suppliers: InsertSupplier[]): Promise<{imported: number, skipped: number, errors: string[]}>;
@@ -890,7 +891,7 @@ export class DatabaseStorage implements IStorage {
 
   // Product List methods
   async getCompstyleProductList(): Promise<CompstyleProductList[]> {
-    return await db.select().from(compstyleProductList).orderBy(compstyleProductList.productName);
+    return await db.select().from(compstyleProductList).orderBy(compstyleProductList.productName).limit(1000);
   }
 
   async getCompstyleProductListPaginated(limit: number, offset: number): Promise<CompstyleProductList[]> {

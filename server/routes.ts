@@ -1754,57 +1754,73 @@ print(json.dumps(result))
       // Write headers
       res.write(headers.join(',') + '\n');
       
-      // Stream products in chunks using database pagination
-      const chunkSize = 50;
+      // Stream products in very small chunks to avoid OOM
+      const chunkSize = 25; // Reduced from 50
       let offset = 0;
       let hasMore = true;
+      let totalProcessed = 0;
       
       while (hasMore) {
-        // Fetch chunk directly from database with pagination
-        const chunk = await storage.getCompstyleProductListPaginated(chunkSize, offset);
-        
-        if (chunk.length === 0) {
-          hasMore = false;
-          break;
-        }
-        
-        // Convert products to CSV format and write immediately
-        for (const product of chunk) {
-          const row = [
-            product.id,
-            product.sku || '',
-            `"${(product.productName || '').replace(/"/g, '""')}"`,
-            product.stock || 0,
-            product.transit || 0,
-            product.retailPriceUsd || '',
-            product.retailPriceAmd || '',
-            product.dealerPrice1 || '',
-            product.dealerPrice2 || '',
-            product.cost || '',
-            product.latestPurchase || '',
-            product.latestCost || '',
-            product.aveSalesPrice || '',
-            product.actualPrice || '',
-            product.actualCost || '',
-            product.supplier || '',
-            product.lastUpdated
-          ];
-          res.write(row.join(',') + '\n');
-        }
-        
-        offset += chunkSize;
-        
-        // If we got fewer products than the chunk size, we're done
-        if (chunk.length < chunkSize) {
-          hasMore = false;
+        try {
+          // Fetch chunk directly from database with pagination
+          const chunk = await storage.getCompstyleProductListPaginated(chunkSize, offset);
+          
+          if (chunk.length === 0) {
+            hasMore = false;
+            break;
+          }
+          
+          // Convert products to CSV format and write immediately
+          for (const product of chunk) {
+            const row = [
+              product.id,
+              product.sku || '',
+              `"${(product.productName || '').replace(/"/g, '""')}"`,
+              product.stock || 0,
+              product.transit || 0,
+              product.retailPriceUsd || '',
+              product.retailPriceAmd || '',
+              product.dealerPrice1 || '',
+              product.dealerPrice2 || '',
+              product.cost || '',
+              product.latestPurchase || '',
+              product.latestCost || '',
+              product.aveSalesPrice || '',
+              product.actualPrice || '',
+              product.actualCost || '',
+              product.supplier || '',
+              product.lastUpdated
+            ];
+            res.write(row.join(',') + '\n');
+            totalProcessed++;
+          }
+          
+          offset += chunkSize;
+          
+          // If we got fewer products than the chunk size, we're done
+          if (chunk.length < chunkSize) {
+            hasMore = false;
+          }
+          
+          // Log progress every 100 rows
+          if (totalProcessed % 100 === 0) {
+            console.log(`CSV export: processed ${totalProcessed} products`);
+          }
+        } catch (chunkError) {
+          console.error(`Error processing chunk at offset ${offset}:`, chunkError);
+          throw chunkError;
         }
       }
       
+      console.log(`CSV export completed: ${totalProcessed} products exported`);
       res.end();
     } catch (error) {
       console.error('Error exporting CSV:', error);
       if (!res.headersSent) {
         res.status(500).json({ error: 'Failed to export CSV' });
+      } else {
+        // If headers already sent, just end the response
+        res.end();
       }
     }
   });
