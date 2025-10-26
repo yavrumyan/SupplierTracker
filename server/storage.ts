@@ -66,7 +66,43 @@ import {
   type CompstyleTotalProcurement,
   type InsertCompstyleTotalProcurement,
   type CompstyleProductList,
-  type InsertCompstyleProductList
+  type InsertCompstyleProductList,
+  chipCurrencyRates,
+  chipProducts,
+  chipCustomers,
+  chipSuppliers,
+  chipPurchases,
+  chipPurchaseItems,
+  chipSales,
+  chipSalesItems,
+  chipInvoices,
+  chipInvoiceItems,
+  chipExpenses,
+  chipPayments,
+  type ChipCurrencyRate,
+  type InsertChipCurrencyRate,
+  type ChipProduct,
+  type InsertChipProduct,
+  type ChipCustomer,
+  type InsertChipCustomer,
+  type ChipSupplier,
+  type InsertChipSupplier,
+  type ChipPurchase,
+  type InsertChipPurchase,
+  type ChipPurchaseItem,
+  type InsertChipPurchaseItem,
+  type ChipSale,
+  type InsertChipSale,
+  type ChipSalesItem,
+  type InsertChipSaleItem,
+  type ChipInvoice,
+  type InsertChipInvoice,
+  type ChipInvoiceItem,
+  type InsertChipInvoiceItem,
+  type ChipExpense,
+  type InsertChipExpense,
+  type ChipPayment,
+  type InsertChipPayment
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
@@ -300,6 +336,100 @@ export interface IStorage {
     priorityScore: number;
     priority: 'critical' | 'high' | 'medium' | 'low';
   }>>;
+
+  // ==================== CHIP ERP METHODS ====================
+  
+  // Currency methods
+  getChipCurrencyRates(): Promise<ChipCurrencyRate[]>;
+  updateChipCurrencyRate(currency: string, rateToAMD: string): Promise<ChipCurrencyRate>;
+  convertToAMD(amount: number, fromCurrency: string): Promise<number>;
+  
+  // Product methods
+  getChipProducts(): Promise<ChipProduct[]>;
+  getChipProduct(id: number): Promise<ChipProduct | undefined>;
+  createChipProduct(product: InsertChipProduct): Promise<ChipProduct>;
+  updateChipProduct(id: number, product: Partial<InsertChipProduct>): Promise<ChipProduct>;
+  deleteChipProduct(id: number): Promise<void>;
+  updateChipProductStock(id: number, stockChange: number, newAverageCost?: string): Promise<ChipProduct>;
+  
+  // Customer methods
+  getChipCustomers(): Promise<ChipCustomer[]>;
+  getChipCustomer(id: number): Promise<ChipCustomer | undefined>;
+  createChipCustomer(customer: InsertChipCustomer): Promise<ChipCustomer>;
+  updateChipCustomer(id: number, customer: Partial<InsertChipCustomer>): Promise<ChipCustomer>;
+  deleteChipCustomer(id: number): Promise<void>;
+  
+  // Supplier methods
+  getChipSuppliers(): Promise<ChipSupplier[]>;
+  getChipSupplier(id: number): Promise<ChipSupplier | undefined>;
+  createChipSupplier(supplier: InsertChipSupplier): Promise<ChipSupplier>;
+  updateChipSupplier(id: number, supplier: Partial<InsertChipSupplier>): Promise<ChipSupplier>;
+  deleteChipSupplier(id: number): Promise<void>;
+  
+  // Purchase methods
+  getChipPurchases(): Promise<ChipPurchase[]>;
+  getChipPurchase(id: number): Promise<ChipPurchase | undefined>;
+  getChipPurchaseWithItems(id: number): Promise<ChipPurchase & { items: ChipPurchaseItem[], supplier?: ChipSupplier }>;
+  createChipPurchase(purchase: InsertChipPurchase, items: InsertChipPurchaseItem[]): Promise<ChipPurchase>;
+  updateChipPurchase(id: number, purchase: Partial<InsertChipPurchase>): Promise<ChipPurchase>;
+  deleteChipPurchase(id: number): Promise<void>;
+  
+  // Sale methods
+  getChipSales(): Promise<ChipSale[]>;
+  getChipSale(id: number): Promise<ChipSale | undefined>;
+  getChipSaleWithItems(id: number): Promise<ChipSale & { items: ChipSalesItem[], customer?: ChipCustomer }>;
+  createChipSale(sale: InsertChipSale, items: InsertChipSaleItem[]): Promise<ChipSale>;
+  updateChipSale(id: number, sale: Partial<InsertChipSale>): Promise<ChipSale>;
+  deleteChipSale(id: number): Promise<void>;
+  
+  // Invoice methods
+  getChipInvoices(): Promise<ChipInvoice[]>;
+  getChipInvoice(id: number): Promise<ChipInvoice | undefined>;
+  getChipInvoiceWithItems(id: number): Promise<ChipInvoice & { items: ChipInvoiceItem[], customer?: ChipCustomer }>;
+  createChipInvoice(invoice: InsertChipInvoice, items: InsertChipInvoiceItem[]): Promise<ChipInvoice>;
+  updateChipInvoice(id: number, invoice: Partial<InsertChipInvoice>): Promise<ChipInvoice>;
+  deleteChipInvoice(id: number): Promise<void>;
+  
+  // Expense methods
+  getChipExpenses(): Promise<ChipExpense[]>;
+  getChipExpense(id: number): Promise<ChipExpense | undefined>;
+  createChipExpense(expense: InsertChipExpense): Promise<ChipExpense>;
+  updateChipExpense(id: number, expense: Partial<InsertChipExpense>): Promise<ChipExpense>;
+  deleteChipExpense(id: number): Promise<void>;
+  
+  // Payment methods
+  getChipPayments(): Promise<ChipPayment[]>;
+  createChipPayment(payment: InsertChipPayment): Promise<ChipPayment>;
+  
+  // Dashboard & Analytics
+  getChipDashboardStats(): Promise<{
+    totalRevenue: number;
+    totalProfit: number;
+    totalExpenses: number;
+    netIncome: number;
+    inventoryValue: number;
+    accountsReceivable: number;
+    accountsPayable: number;
+    salesCount: number;
+    purchaseCount: number;
+  }>;
+  
+  getChipProfitLoss(startDate: Date, endDate: Date): Promise<{
+    revenue: number;
+    costOfGoods: number;
+    grossProfit: number;
+    expenses: { category: string; amount: number }[];
+    totalExpenses: number;
+    netIncome: number;
+  }>;
+  
+  getChipCashFlow(startDate: Date, endDate: Date): Promise<{
+    salesRevenue: number;
+    purchaseCosts: number;
+    expenses: number;
+    netCashFlow: number;
+    paymentsByMethod: { method: string; amount: number }[];
+  }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1878,6 +2008,626 @@ export class DatabaseStorage implements IStorage {
       console.error('Error generating order recommendations:', error);
       throw error;
     }
+  }
+
+  // ==================== CHIP ERP METHODS ====================
+
+  // Currency methods
+  async getChipCurrencyRates(): Promise<ChipCurrencyRate[]> {
+    return await db.select().from(chipCurrencyRates);
+  }
+
+  async updateChipCurrencyRate(currency: string, rateToAMD: string): Promise<ChipCurrencyRate> {
+    const [existing] = await db.select().from(chipCurrencyRates)
+      .where(eq(chipCurrencyRates.currency, currency));
+    
+    if (existing) {
+      const [updated] = await db.update(chipCurrencyRates)
+        .set({ rateToAMD, lastUpdated: new Date() })
+        .where(eq(chipCurrencyRates.currency, currency))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db.insert(chipCurrencyRates)
+        .values({ currency, rateToAMD })
+        .returning();
+      return created;
+    }
+  }
+
+  async convertToAMD(amount: number, fromCurrency: string): Promise<number> {
+    if (fromCurrency === 'AMD') return amount;
+    
+    const [rate] = await db.select().from(chipCurrencyRates)
+      .where(eq(chipCurrencyRates.currency, fromCurrency));
+    
+    if (!rate) {
+      throw new Error(`Currency rate not found for ${fromCurrency}`);
+    }
+    
+    return amount * parseFloat(rate.rateToAMD);
+  }
+
+  // Product methods
+  async getChipProducts(): Promise<ChipProduct[]> {
+    return await db.select().from(chipProducts).orderBy(chipProducts.name);
+  }
+
+  async getChipProduct(id: number): Promise<ChipProduct | undefined> {
+    const [product] = await db.select().from(chipProducts)
+      .where(eq(chipProducts.id, id));
+    return product || undefined;
+  }
+
+  async createChipProduct(product: InsertChipProduct): Promise<ChipProduct> {
+    const [newProduct] = await db.insert(chipProducts).values(product).returning();
+    return newProduct;
+  }
+
+  async updateChipProduct(id: number, product: Partial<InsertChipProduct>): Promise<ChipProduct> {
+    const [updated] = await db.update(chipProducts)
+      .set({ ...product, updatedAt: new Date() })
+      .where(eq(chipProducts.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipProduct(id: number): Promise<void> {
+    await db.delete(chipProducts).where(eq(chipProducts.id, id));
+  }
+
+  async updateChipProductStock(id: number, stockChange: number, newAverageCost?: string): Promise<ChipProduct> {
+    const [product] = await db.select().from(chipProducts)
+      .where(eq(chipProducts.id, id));
+    
+    if (!product) {
+      throw new Error(`Product with id ${id} not found`);
+    }
+
+    const newStock = (product.currentStock || 0) + stockChange;
+    const updateData: any = {
+      currentStock: newStock
+    };
+
+    if (newAverageCost !== undefined) {
+      updateData.averageCost = newAverageCost;
+    }
+
+    const [updated] = await db.update(chipProducts)
+      .set(updateData)
+      .where(eq(chipProducts.id, id))
+      .returning();
+    
+    return updated;
+  }
+
+  // Customer methods
+  async getChipCustomers(): Promise<ChipCustomer[]> {
+    return await db.select().from(chipCustomers).orderBy(chipCustomers.name);
+  }
+
+  async getChipCustomer(id: number): Promise<ChipCustomer | undefined> {
+    const [customer] = await db.select().from(chipCustomers)
+      .where(eq(chipCustomers.id, id));
+    return customer || undefined;
+  }
+
+  async createChipCustomer(customer: InsertChipCustomer): Promise<ChipCustomer> {
+    const [newCustomer] = await db.insert(chipCustomers).values(customer).returning();
+    return newCustomer;
+  }
+
+  async updateChipCustomer(id: number, customer: Partial<InsertChipCustomer>): Promise<ChipCustomer> {
+    const [updated] = await db.update(chipCustomers)
+      .set({ ...customer, updatedAt: new Date() })
+      .where(eq(chipCustomers.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipCustomer(id: number): Promise<void> {
+    await db.delete(chipCustomers).where(eq(chipCustomers.id, id));
+  }
+
+  // Supplier methods
+  async getChipSuppliers(): Promise<ChipSupplier[]> {
+    return await db.select().from(chipSuppliers).orderBy(chipSuppliers.name);
+  }
+
+  async getChipSupplier(id: number): Promise<ChipSupplier | undefined> {
+    const [supplier] = await db.select().from(chipSuppliers)
+      .where(eq(chipSuppliers.id, id));
+    return supplier || undefined;
+  }
+
+  async createChipSupplier(supplier: InsertChipSupplier): Promise<ChipSupplier> {
+    const [newSupplier] = await db.insert(chipSuppliers).values(supplier).returning();
+    return newSupplier;
+  }
+
+  async updateChipSupplier(id: number, supplier: Partial<InsertChipSupplier>): Promise<ChipSupplier> {
+    const [updated] = await db.update(chipSuppliers)
+      .set({ ...supplier, updatedAt: new Date() })
+      .where(eq(chipSuppliers.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipSupplier(id: number): Promise<void> {
+    await db.delete(chipSuppliers).where(eq(chipSuppliers.id, id));
+  }
+
+  // Purchase methods
+  async getChipPurchases(): Promise<ChipPurchase[]> {
+    return await db.select().from(chipPurchases)
+      .orderBy(desc(chipPurchases.purchaseDate));
+  }
+
+  async getChipPurchase(id: number): Promise<ChipPurchase | undefined> {
+    const [purchase] = await db.select().from(chipPurchases)
+      .where(eq(chipPurchases.id, id));
+    return purchase || undefined;
+  }
+
+  async getChipPurchaseWithItems(id: number): Promise<ChipPurchase & { items: ChipPurchaseItem[], supplier?: ChipSupplier }> {
+    const [purchase] = await db.select().from(chipPurchases)
+      .where(eq(chipPurchases.id, id));
+    
+    if (!purchase) {
+      throw new Error(`Purchase with id ${id} not found`);
+    }
+
+    const items = await db.select().from(chipPurchaseItems)
+      .where(eq(chipPurchaseItems.purchaseId, id));
+    
+    let supplier: ChipSupplier | undefined;
+    if (purchase.supplierId) {
+      const [sup] = await db.select().from(chipSuppliers)
+        .where(eq(chipSuppliers.id, purchase.supplierId));
+      supplier = sup;
+    }
+
+    return { ...purchase, items, supplier };
+  }
+
+  async createChipPurchase(purchase: InsertChipPurchase, items: InsertChipPurchaseItem[]): Promise<ChipPurchase> {
+    const [newPurchase] = await db.insert(chipPurchases).values(purchase).returning();
+    
+    for (const item of items) {
+      const itemData = {
+        purchaseId: newPurchase.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        unitPriceAMD: item.unitPriceAMD,
+        serialNumbers: (item.serialNumbers || []) as string[],
+        totalPrice: item.totalPrice
+      };
+      
+      await db.insert(chipPurchaseItems).values([itemData]);
+
+      const [product] = await db.select().from(chipProducts)
+        .where(eq(chipProducts.id, item.productId));
+      
+      if (product) {
+        const oldStock = product.currentStock || 0;
+        const oldCost = parseFloat(product.averageCost || '0');
+        const newQty = item.quantity;
+        const newCost = parseFloat(item.unitPriceAMD);
+        
+        const newAverageCost = oldStock + newQty > 0
+          ? ((oldStock * oldCost) + (newQty * newCost)) / (oldStock + newQty)
+          : newCost;
+
+        await this.updateChipProductStock(
+          item.productId,
+          item.quantity,
+          newAverageCost.toFixed(2)
+        );
+      }
+    }
+
+    return newPurchase;
+  }
+
+  async updateChipPurchase(id: number, purchase: Partial<InsertChipPurchase>): Promise<ChipPurchase> {
+    const [updated] = await db.update(chipPurchases)
+      .set({ ...purchase, updatedAt: new Date() })
+      .where(eq(chipPurchases.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipPurchase(id: number): Promise<void> {
+    await db.delete(chipPurchaseItems).where(eq(chipPurchaseItems.purchaseId, id));
+    await db.delete(chipPurchases).where(eq(chipPurchases.id, id));
+  }
+
+  // Sale methods
+  async getChipSales(): Promise<ChipSale[]> {
+    return await db.select().from(chipSales)
+      .orderBy(desc(chipSales.saleDate));
+  }
+
+  async getChipSale(id: number): Promise<ChipSale | undefined> {
+    const [sale] = await db.select().from(chipSales)
+      .where(eq(chipSales.id, id));
+    return sale || undefined;
+  }
+
+  async getChipSaleWithItems(id: number): Promise<ChipSale & { items: ChipSalesItem[], customer?: ChipCustomer }> {
+    const [sale] = await db.select().from(chipSales)
+      .where(eq(chipSales.id, id));
+    
+    if (!sale) {
+      throw new Error(`Sale with id ${id} not found`);
+    }
+
+    const items = await db.select().from(chipSalesItems)
+      .where(eq(chipSalesItems.saleId, id));
+    
+    let customer: ChipCustomer | undefined;
+    if (sale.customerId) {
+      const [cust] = await db.select().from(chipCustomers)
+        .where(eq(chipCustomers.id, sale.customerId));
+      customer = cust;
+    }
+
+    return { ...sale, items, customer };
+  }
+
+  async createChipSale(sale: InsertChipSale, items: InsertChipSaleItem[]): Promise<ChipSale> {
+    let totalCostOfGoods = 0;
+    
+    for (const item of items) {
+      const [product] = await db.select().from(chipProducts)
+        .where(eq(chipProducts.id, item.productId));
+      
+      if (!product) {
+        throw new Error(`Product with id ${item.productId} not found`);
+      }
+
+      if ((product.currentStock || 0) < item.quantity) {
+        throw new Error(`Insufficient stock for product ${product.name}`);
+      }
+
+      const unitCost = parseFloat(product.averageCost || '0');
+      const totalCost = unitCost * item.quantity;
+      totalCostOfGoods += totalCost;
+
+      await this.updateChipProductStock(item.productId, -item.quantity);
+    }
+
+    const totalAmountAMD = parseFloat(sale.totalAmountAMD);
+    const profit = totalAmountAMD - totalCostOfGoods;
+
+    const [newSale] = await db.insert(chipSales).values({
+      ...sale,
+      costOfGoods: totalCostOfGoods.toFixed(2),
+      profit: profit.toFixed(2)
+    }).returning();
+    
+    for (const item of items) {
+      const [product] = await db.select().from(chipProducts)
+        .where(eq(chipProducts.id, item.productId));
+      
+      const unitCost = parseFloat(product!.averageCost || '0');
+      const totalCost = unitCost * item.quantity;
+      const itemProfit = parseFloat(item.totalPrice) - totalCost;
+
+      const itemData = {
+        saleId: newSale.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        unitPriceAMD: item.unitPriceAMD,
+        unitCost: unitCost.toFixed(2),
+        serialNumbers: (item.serialNumbers || []) as string[],
+        totalPrice: item.totalPrice,
+        totalCost: totalCost.toFixed(2),
+        profit: itemProfit.toFixed(2)
+      };
+
+      await db.insert(chipSalesItems).values([itemData]);
+    }
+
+    return newSale;
+  }
+
+  async updateChipSale(id: number, sale: Partial<InsertChipSale>): Promise<ChipSale> {
+    const [updated] = await db.update(chipSales)
+      .set({ ...sale, updatedAt: new Date() })
+      .where(eq(chipSales.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipSale(id: number): Promise<void> {
+    await db.delete(chipSalesItems).where(eq(chipSalesItems.saleId, id));
+    await db.delete(chipSales).where(eq(chipSales.id, id));
+  }
+
+  // Invoice methods
+  async getChipInvoices(): Promise<ChipInvoice[]> {
+    return await db.select().from(chipInvoices)
+      .orderBy(desc(chipInvoices.invoiceDate));
+  }
+
+  async getChipInvoice(id: number): Promise<ChipInvoice | undefined> {
+    const [invoice] = await db.select().from(chipInvoices)
+      .where(eq(chipInvoices.id, id));
+    return invoice || undefined;
+  }
+
+  async getChipInvoiceWithItems(id: number): Promise<ChipInvoice & { items: ChipInvoiceItem[], customer?: ChipCustomer }> {
+    const [invoice] = await db.select().from(chipInvoices)
+      .where(eq(chipInvoices.id, id));
+    
+    if (!invoice) {
+      throw new Error(`Invoice with id ${id} not found`);
+    }
+
+    const items = await db.select().from(chipInvoiceItems)
+      .where(eq(chipInvoiceItems.invoiceId, id));
+    
+    const [customer] = await db.select().from(chipCustomers)
+      .where(eq(chipCustomers.id, invoice.customerId));
+
+    return { ...invoice, items, customer };
+  }
+
+  async createChipInvoice(invoice: InsertChipInvoice, items: InsertChipInvoiceItem[]): Promise<ChipInvoice> {
+    const [newInvoice] = await db.insert(chipInvoices).values(invoice).returning();
+    
+    for (const item of items) {
+      await db.insert(chipInvoiceItems).values({
+        ...item,
+        invoiceId: newInvoice.id
+      });
+    }
+
+    return newInvoice;
+  }
+
+  async updateChipInvoice(id: number, invoice: Partial<InsertChipInvoice>): Promise<ChipInvoice> {
+    const [updated] = await db.update(chipInvoices)
+      .set({ ...invoice, updatedAt: new Date() })
+      .where(eq(chipInvoices.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipInvoice(id: number): Promise<void> {
+    await db.delete(chipInvoiceItems).where(eq(chipInvoiceItems.invoiceId, id));
+    await db.delete(chipInvoices).where(eq(chipInvoices.id, id));
+  }
+
+  // Expense methods
+  async getChipExpenses(): Promise<ChipExpense[]> {
+    return await db.select().from(chipExpenses)
+      .orderBy(desc(chipExpenses.date));
+  }
+
+  async getChipExpense(id: number): Promise<ChipExpense | undefined> {
+    const [expense] = await db.select().from(chipExpenses)
+      .where(eq(chipExpenses.id, id));
+    return expense || undefined;
+  }
+
+  async createChipExpense(expense: InsertChipExpense): Promise<ChipExpense> {
+    const [newExpense] = await db.insert(chipExpenses).values(expense).returning();
+    return newExpense;
+  }
+
+  async updateChipExpense(id: number, expense: Partial<InsertChipExpense>): Promise<ChipExpense> {
+    const [updated] = await db.update(chipExpenses)
+      .set(expense)
+      .where(eq(chipExpenses.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteChipExpense(id: number): Promise<void> {
+    await db.delete(chipExpenses).where(eq(chipExpenses.id, id));
+  }
+
+  // Payment methods
+  async getChipPayments(): Promise<ChipPayment[]> {
+    return await db.select().from(chipPayments)
+      .orderBy(desc(chipPayments.paymentDate));
+  }
+
+  async createChipPayment(payment: InsertChipPayment): Promise<ChipPayment> {
+    const [newPayment] = await db.insert(chipPayments).values(payment).returning();
+    return newPayment;
+  }
+
+  // Dashboard & Analytics
+  async getChipDashboardStats(): Promise<{
+    totalRevenue: number;
+    totalProfit: number;
+    totalExpenses: number;
+    netIncome: number;
+    inventoryValue: number;
+    accountsReceivable: number;
+    accountsPayable: number;
+    salesCount: number;
+    purchaseCount: number;
+  }> {
+    const sales = await db.select().from(chipSales);
+    const purchases = await db.select().from(chipPurchases);
+    const expenses = await db.select().from(chipExpenses);
+    const products = await db.select().from(chipProducts);
+
+    const totalRevenue = sales.reduce((sum, sale) => 
+      sum + parseFloat(sale.totalAmountAMD || '0'), 0);
+    
+    const totalProfit = sales.reduce((sum, sale) => 
+      sum + parseFloat(sale.profit || '0'), 0);
+    
+    const totalExpenses = expenses
+      .filter(exp => !exp.isPersonal)
+      .reduce((sum, expense) => sum + parseFloat(expense.amountAMD || '0'), 0);
+    
+    const netIncome = totalProfit - totalExpenses;
+
+    const inventoryValue = products.reduce((sum, product) => {
+      const stock = product.currentStock || 0;
+      const cost = parseFloat(product.averageCost || '0');
+      return sum + (stock * cost);
+    }, 0);
+
+    const accountsReceivable = sales
+      .filter(sale => sale.paymentStatus !== 'paid')
+      .reduce((sum, sale) => {
+        const total = parseFloat(sale.totalWithVat || '0');
+        const paid = parseFloat(sale.paidAmount || '0');
+        return sum + (total - paid);
+      }, 0);
+
+    const accountsPayable = purchases
+      .filter(purchase => purchase.paymentStatus !== 'paid')
+      .reduce((sum, purchase) => {
+        const total = parseFloat(purchase.totalAmountAMD || '0');
+        const paid = parseFloat(purchase.paidAmount || '0');
+        return sum + (total - paid);
+      }, 0);
+
+    return {
+      totalRevenue: Number(totalRevenue.toFixed(2)),
+      totalProfit: Number(totalProfit.toFixed(2)),
+      totalExpenses: Number(totalExpenses.toFixed(2)),
+      netIncome: Number(netIncome.toFixed(2)),
+      inventoryValue: Number(inventoryValue.toFixed(2)),
+      accountsReceivable: Number(accountsReceivable.toFixed(2)),
+      accountsPayable: Number(accountsPayable.toFixed(2)),
+      salesCount: sales.length,
+      purchaseCount: purchases.length
+    };
+  }
+
+  async getChipProfitLoss(startDate: Date, endDate: Date): Promise<{
+    revenue: number;
+    costOfGoods: number;
+    grossProfit: number;
+    expenses: { category: string; amount: number }[];
+    totalExpenses: number;
+    netIncome: number;
+  }> {
+    const sales = await db.select().from(chipSales)
+      .where(and(
+        sql`${chipSales.saleDate} >= ${startDate}`,
+        sql`${chipSales.saleDate} <= ${endDate}`
+      ));
+
+    const expenses = await db.select().from(chipExpenses)
+      .where(and(
+        sql`${chipExpenses.date} >= ${startDate}`,
+        sql`${chipExpenses.date} <= ${endDate}`,
+        eq(chipExpenses.isPersonal, false)
+      ));
+
+    const revenue = sales.reduce((sum, sale) => 
+      sum + parseFloat(sale.totalAmountAMD || '0'), 0);
+    
+    const costOfGoods = sales.reduce((sum, sale) => 
+      sum + parseFloat(sale.costOfGoods || '0'), 0);
+    
+    const grossProfit = revenue - costOfGoods;
+
+    const expensesByCategory = expenses.reduce((acc, expense) => {
+      const category = expense.category || 'other';
+      const amount = parseFloat(expense.amountAMD || '0');
+      const existing = acc.find(e => e.category === category);
+      if (existing) {
+        existing.amount += amount;
+      } else {
+        acc.push({ category, amount });
+      }
+      return acc;
+    }, [] as { category: string; amount: number }[]);
+
+    const totalExpenses = expensesByCategory.reduce((sum, e) => sum + e.amount, 0);
+    const netIncome = grossProfit - totalExpenses;
+
+    return {
+      revenue: Number(revenue.toFixed(2)),
+      costOfGoods: Number(costOfGoods.toFixed(2)),
+      grossProfit: Number(grossProfit.toFixed(2)),
+      expenses: expensesByCategory.map(e => ({
+        category: e.category,
+        amount: Number(e.amount.toFixed(2))
+      })),
+      totalExpenses: Number(totalExpenses.toFixed(2)),
+      netIncome: Number(netIncome.toFixed(2))
+    };
+  }
+
+  async getChipCashFlow(startDate: Date, endDate: Date): Promise<{
+    salesRevenue: number;
+    purchaseCosts: number;
+    expenses: number;
+    netCashFlow: number;
+    paymentsByMethod: { method: string; amount: number }[];
+  }> {
+    const payments = await db.select().from(chipPayments)
+      .where(and(
+        sql`${chipPayments.paymentDate} >= ${startDate}`,
+        sql`${chipPayments.paymentDate} <= ${endDate}`
+      ));
+
+    const sales = await db.select().from(chipSales)
+      .where(and(
+        sql`${chipSales.saleDate} >= ${startDate}`,
+        sql`${chipSales.saleDate} <= ${endDate}`
+      ));
+
+    const purchases = await db.select().from(chipPurchases)
+      .where(and(
+        sql`${chipPurchases.purchaseDate} >= ${startDate}`,
+        sql`${chipPurchases.purchaseDate} <= ${endDate}`
+      ));
+
+    const expenses = await db.select().from(chipExpenses)
+      .where(and(
+        sql`${chipExpenses.date} >= ${startDate}`,
+        sql`${chipExpenses.date} <= ${endDate}`,
+        eq(chipExpenses.isPersonal, false)
+      ));
+
+    const salesRevenue = sales.reduce((sum, sale) => 
+      sum + parseFloat(sale.paidAmount || '0'), 0);
+    
+    const purchaseCosts = purchases.reduce((sum, purchase) => 
+      sum + parseFloat(purchase.paidAmount || '0'), 0);
+    
+    const expensesTotal = expenses.reduce((sum, expense) => 
+      sum + parseFloat(expense.amountAMD || '0'), 0);
+
+    const netCashFlow = salesRevenue - purchaseCosts - expensesTotal;
+
+    const paymentsByMethod = payments.reduce((acc, payment) => {
+      const method = payment.paymentMethod || 'unknown';
+      const amount = parseFloat(payment.amountAMD || '0');
+      const existing = acc.find(p => p.method === method);
+      if (existing) {
+        existing.amount += amount;
+      } else {
+        acc.push({ method, amount });
+      }
+      return acc;
+    }, [] as { method: string; amount: number }[]);
+
+    return {
+      salesRevenue: Number(salesRevenue.toFixed(2)),
+      purchaseCosts: Number(purchaseCosts.toFixed(2)),
+      expenses: Number(expensesTotal.toFixed(2)),
+      netCashFlow: Number(netCashFlow.toFixed(2)),
+      paymentsByMethod: paymentsByMethod.map(p => ({
+        method: p.method,
+        amount: Number(p.amount.toFixed(2))
+      }))
+    };
   }
 }
 

@@ -13,12 +13,24 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import supHubLogo from "@/assets/SupHub_1752355359935.png";
+import chipLogo from "@assets/fbNew_1761515552324.png";
 
 // Custom CompStyle Icon Component
 function CompStyleIcon({ className }: { className?: string }) {
   return (
     <div className="flex items-center justify-center rounded text-white text-xs font-bold h-4 w-4 mr-3 bg-[#e4791b]">CS
           </div>
+  );
+}
+
+// Custom CHIP Icon Component
+function ChipIcon({ className }: { className?: string }) {
+  return (
+    <img 
+      src={chipLogo} 
+      alt="CHIP"
+      className={cn("h-5 w-5 mr-3 rounded", className)}
+    />
   );
 }
 
@@ -29,6 +41,7 @@ const navigation = [
   { name: "Add Supplier", href: "/add-supplier", icon: Plus },
   { name: "Import Data", href: "/import", icon: FolderInput },
   { name: "CompStyle", href: "/compstyle", icon: CompStyleIcon },
+  { name: "CHIP", href: "/chip", icon: ChipIcon },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
