@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, BarChart3, TrendingUp, Package, AlertTriangle, DollarSign } from "lucide-react";
+import { Upload, BarChart3, TrendingUp, Package, AlertTriangle, DollarSign, Award } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
@@ -127,28 +127,18 @@ export default function CompStyleDashboard() {
             </CardHeader>
             <CardContent className="space-y-4">
               <Link href="/compstyle/analytics-phase1">
-                <Button className="w-full" variant="default">
-                  Phase 1 Analytics (NEW)
+                <Button className="w-full h-24 flex-col gap-2" variant="outline">
+                  <TrendingUp className="h-6 w-6" />
+                  <span className="font-semibold">Phase 1 Analytics</span>
+                  <span className="text-xs text-slate-600">Sales Velocity & Stock-Out Risk</span>
                 </Button>
               </Link>
-              <Link href="/compstyle/inventory-movement">
-                <Button className="w-full" variant="outline">
-                  Inventory Movement Analysis
-                </Button>
-              </Link>
-              <Link href="/compstyle/sales-analysis">
-                <Button className="w-full" variant="outline">
-                  Sales Performance
-                </Button>
-              </Link>
-              <Link href="/compstyle/profitability">
-                <Button className="w-full" variant="outline">
-                  Profitability Reports
-                </Button>
-              </Link>
-              <Link href="/compstyle/order-recommendations">
-                <Button className="w-full" variant="outline">
-                  Order Recommendations
+
+              <Link href="/compstyle/analytics-phase2">
+                <Button className="w-full h-24 flex-col gap-2" variant="outline">
+                  <Award className="h-6 w-6" />
+                  <span className="font-semibold">Phase 2: Strategic Insights</span>
+                  <span className="text-xs text-slate-600">Supplier Performance & Order Engine</span>
                 </Button>
               </Link>
             </CardContent>
@@ -172,35 +162,35 @@ export default function CompStyleDashboard() {
                     Optimize stock distribution between Kievyan 11 and Sevan 5 locations
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">📈 Sales Analysis</h4>
                   <p className="text-sm text-slate-600">
                     Track performance trends across 1M, 3M, and 6M periods
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">🛒 Order Recommendations</h4>
                   <p className="text-sm text-slate-600">
                     AI-driven purchase suggestions based on sales velocity
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">💰 Profitability Reports</h4>
                   <p className="text-sm text-slate-600">
                     Analyze margins, ROI, and inventory efficiency
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">🐌 Low Moving Stock</h4>
                   <p className="text-sm text-slate-600">
                     Identify dead stock and slow-moving inventory
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">🚚 Transit Tracking</h4>
                   <p className="text-sm text-slate-600">

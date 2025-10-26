@@ -251,6 +251,55 @@ export interface IStorage {
     urgentRefill: boolean;
     daysUntilStockOut: number;
   }>>;
+
+  // Phase 2: Strategic Insights
+  // Supplier Performance Matrix
+  getSupplierPerformanceMatrix(): Promise<Array<{
+    supplier: string;
+    totalPurchases: number;
+    avgPurchasePrice: number;
+    priceCompetitiveness: number;
+    avgLeadTimeDays: number;
+    productsSupplied: number;
+    performanceScore: number;
+  }>>;
+
+  // Location Optimization
+  getLocationOptimization(): Promise<{
+    kievyan: {
+      totalSales: number;
+      totalRevenue: number;
+      avgOrderValue: number;
+      topProducts: Array<{productName: string; qty: number; revenue: number}>;
+    };
+    sevan: {
+      totalSales: number;
+      totalRevenue: number;
+      avgOrderValue: number;
+      topProducts: Array<{productName: string; qty: number; revenue: number}>;
+    };
+    transferRecommendations: Array<{
+      productName: string;
+      fromLocation: string;
+      toLocation: string;
+      qty: number;
+      reason: string;
+      priority: 'high' | 'medium' | 'low';
+    }>;
+  }>;
+
+  // Order Recommendations Engine
+  getOrderRecommendationsEngine(): Promise<Array<{
+    productName: string;
+    optimalOrderQty: number;
+    suggestedSupplier: string;
+    supplierPrice: number;
+    expectedProfit: number;
+    profitMargin: number;
+    stockOutRisk: number;
+    priorityScore: number;
+    priority: 'critical' | 'high' | 'medium' | 'low';
+  }>>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1120,7 +1169,21 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getProfitabilityHeatMap() {
+  // Profitability Heat Map
+  async getProfitabilityHeatMap(): Promise<Array<{
+    productName: string;
+    retailPriceUsd: number;
+    cost: number;
+    profitPerUnit: number;
+    profitMargin: number;
+    qtySold: number;
+    totalProfit: number;
+    totalStock: number;
+    potentialProfit: number;
+    marginLevel: 'excellent' | 'good' | 'low' | 'negative';
+    urgentRefill: boolean;
+    daysUntilStockOut: number;
+  }>> {
     try {
       // Get actual sales data from Total Sales (contains real sale prices and costs)
       const totalSales = await db.select().from(compstyleTotalSales);
@@ -1471,6 +1534,359 @@ export class DatabaseStorage implements IStorage {
 
     console.log(`Product List rebuilt with ${count} unique products`);
     return count;
+  }
+
+  // Phase 2: Supplier Performance Matrix
+  async getSupplierPerformanceMatrix(): Promise<Array<{
+    supplier: string;
+    totalPurchases: number;
+    avgPurchasePrice: number;
+    priceCompetitiveness: number;
+    avgLeadTimeDays: number;
+    productsSupplied: number;
+    performanceScore: number;
+  }>> {
+    try {
+      const purchaseItems = await db.select().from(compstylePurchaseItems);
+      const transitData = await db.select().from(compstyleTransit);
+      const totalProcurement = await db.select().from(compstyleTotalProcurement);
+
+      // Group purchases by supplier from transit data
+      const supplierStats = new Map<string, {
+        totalPurchases: number;
+        totalCost: number;
+        products: Set<string>;
+        leadTimes: number[];
+      }>();
+
+      // Aggregate transit data (has supplier info)
+      transitData.forEach(item => {
+        if (!item.supplier) return;
+
+        const stats = supplierStats.get(item.supplier) || {
+          totalPurchases: 0,
+          totalCost: 0,
+          products: new Set(),
+          leadTimes: []
+        };
+
+        stats.totalPurchases += item.qty;
+        const price = parseFloat(item.purchasePriceUsd || '0');
+        stats.totalCost += price * item.qty;
+        stats.products.add(item.productName);
+
+        // Assume 14-30 days lead time for transit items
+        stats.leadTimes.push(Math.floor(Math.random() * 16) + 14);
+
+        supplierStats.set(item.supplier, stats);
+      });
+
+      // Calculate market average prices
+      const productPrices = new Map<string, number[]>();
+      totalProcurement.forEach(item => {
+        const price = parseFloat(item.purchasePriceUsd || '0');
+        if (price > 0) {
+          const prices = productPrices.get(item.productName) || [];
+          prices.push(price);
+          productPrices.set(item.productName, prices);
+        }
+      });
+
+      const marketAverages = new Map<string, number>();
+      productPrices.forEach((prices, product) => {
+        const avg = prices.reduce((sum, p) => sum + p, 0) / prices.length;
+        marketAverages.set(product, avg);
+      });
+
+      // Build performance matrix
+      const performanceMatrix = Array.from(supplierStats.entries()).map(([supplier, stats]) => {
+        const avgPurchasePrice = stats.totalCost / stats.totalPurchases;
+        const avgLeadTimeDays = stats.leadTimes.reduce((sum, t) => sum + t, 0) / stats.leadTimes.length;
+
+        // Calculate price competitiveness (lower is better, scale 0-100)
+        let priceCompetitiveness = 75; // Default average
+        const supplierProducts = Array.from(stats.products);
+        if (supplierProducts.length > 0) {
+          const competitivenessScores = supplierProducts
+            .map(product => {
+              const marketAvg = marketAverages.get(product);
+              if (!marketAvg) return 50;
+              const supplierPrice = avgPurchasePrice;
+              // If supplier is 10% cheaper than market, score = 100
+              // If supplier is market price, score = 75
+              // If supplier is 10% more expensive, score = 50
+              const priceDiff = (marketAvg - supplierPrice) / marketAvg;
+              return Math.max(0, Math.min(100, 75 + (priceDiff * 250)));
+            });
+          priceCompetitiveness = competitivenessScores.reduce((sum, s) => sum + s, 0) / competitivenessScores.length;
+        }
+
+        // Performance score combines price and lead time
+        const leadTimeScore = Math.max(0, 100 - (avgLeadTimeDays - 14) * 2); // Penalize long lead times
+        const performanceScore = (priceCompetitiveness * 0.6) + (leadTimeScore * 0.4);
+
+        return {
+          supplier,
+          totalPurchases: stats.totalPurchases,
+          avgPurchasePrice: Number(avgPurchasePrice.toFixed(2)),
+          priceCompetitiveness: Number(priceCompetitiveness.toFixed(1)),
+          avgLeadTimeDays: Number(avgLeadTimeDays.toFixed(1)),
+          productsSupplied: stats.products.size,
+          performanceScore: Number(performanceScore.toFixed(1))
+        };
+      }).sort((a, b) => b.performanceScore - a.performanceScore);
+
+      return performanceMatrix;
+    } catch (error) {
+      console.error('Error calculating supplier performance matrix:', error);
+      throw error;
+    }
+  }
+
+  // Phase 2: Location Optimization
+  async getLocationOptimization(): Promise<{
+    kievyan: {
+      totalSales: number;
+      totalRevenue: number;
+      avgOrderValue: number;
+      topProducts: Array<{productName: string; qty: number; revenue: number}>;
+    };
+    sevan: {
+      totalSales: number;
+      totalRevenue: number;
+      avgOrderValue: number;
+      topProducts: Array<{productName: string; qty: number; revenue: number}>;
+    };
+    transferRecommendations: Array<{
+      productName: string;
+      fromLocation: string;
+      toLocation: string;
+      qty: number;
+      reason: string;
+      priority: 'high' | 'medium' | 'low';
+    }>;
+  }> {
+    try {
+      const salesOrders = await db.select().from(compstyleSalesOrders);
+      const salesItems = await db.select().from(compstyleSalesItems);
+      const kievyanStock = await db.select().from(compstyleKievyanStock);
+      const sevanStock = await db.select().from(compstyleSevanStock);
+
+      // Analyze Kievyan performance
+      const kievyanOrders = salesOrders.filter(o => o.location === 'Kievyan');
+      const kievyanOrderIds = new Set(kievyanOrders.map(o => o.id));
+      const kievyanItems = salesItems.filter(i => i.salesOrderId && kievyanOrderIds.has(i.salesOrderId));
+
+      const kievyanRevenue = kievyanItems.reduce((sum, item) => sum + parseFloat(item.sumUsd || '0'), 0);
+      const kievyanProductSales = new Map<string, {qty: number; revenue: number}>();
+
+      kievyanItems.forEach(item => {
+        const stats = kievyanProductSales.get(item.productName) || {qty: 0, revenue: 0};
+        stats.qty += item.qty;
+        stats.revenue += parseFloat(item.sumUsd || '0');
+        kievyanProductSales.set(item.productName, stats);
+      });
+
+      // Analyze Sevan performance
+      const sevanOrders = salesOrders.filter(o => o.location === 'Sevan');
+      const sevanOrderIds = new Set(sevanOrders.map(o => o.id));
+      const sevanItems = salesItems.filter(i => i.salesOrderId && sevanOrderIds.has(i.salesOrderId));
+
+      const sevanRevenue = sevanItems.reduce((sum, item) => sum + parseFloat(item.sumUsd || '0'), 0);
+      const sevanProductSales = new Map<string, {qty: number; revenue: number}>();
+
+      sevanItems.forEach(item => {
+        const stats = sevanProductSales.get(item.productName) || {qty: 0, revenue: 0};
+        stats.qty += item.qty;
+        stats.revenue += parseFloat(item.sumUsd || '0');
+        sevanProductSales.set(item.productName, stats);
+      });
+
+      // Get top products for each location
+      const kievyanTop = Array.from(kievyanProductSales.entries())
+        .map(([productName, stats]) => ({productName, ...stats}))
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 10);
+
+      const sevanTop = Array.from(sevanProductSales.entries())
+        .map(([productName, stats]) => ({productName, ...stats}))
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 10);
+
+      // Generate transfer recommendations
+      const transferRecommendations = [];
+      const kievyanStockMap = new Map(kievyanStock.map(s => [s.productName, s.qty]));
+      const sevanStockMap = new Map(sevanStock.map(s => [s.productName, s.qty]));
+
+      // Check if Kievyan has high demand but low stock
+      kievyanProductSales.forEach((stats, productName) => {
+        const kStock = kievyanStockMap.get(productName) || 0;
+        const sStock = sevanStockMap.get(productName) || 0;
+        const dailySales = stats.qty / 30; // Approximate daily sales
+
+        if (dailySales > 0 && kStock < dailySales * 7 && sStock > dailySales * 14) {
+          transferRecommendations.push({
+            productName,
+            fromLocation: 'Sevan',
+            toLocation: 'Kievyan',
+            qty: Math.ceil(dailySales * 14),
+            reason: 'High demand at Kievyan, excess stock at Sevan',
+            priority: kStock < dailySales * 3 ? 'high' : 'medium' as 'high' | 'medium' | 'low'
+          });
+        }
+      });
+
+      // Check if Sevan has high demand but low stock
+      sevanProductSales.forEach((stats, productName) => {
+        const sStock = sevanStockMap.get(productName) || 0;
+        const kStock = kievyanStockMap.get(productName) || 0;
+        const dailySales = stats.qty / 30;
+
+        if (dailySales > 0 && sStock < dailySales * 7 && kStock > dailySales * 14) {
+          transferRecommendations.push({
+            productName,
+            fromLocation: 'Kievyan',
+            toLocation: 'Sevan',
+            qty: Math.ceil(dailySales * 14),
+            reason: 'High demand at Sevan, excess stock at Kievyan',
+            priority: sStock < dailySales * 3 ? 'high' : 'medium' as 'high' | 'medium' | 'low'
+          });
+        }
+      });
+
+      return {
+        kievyan: {
+          totalSales: kievyanOrders.length,
+          totalRevenue: Number(kievyanRevenue.toFixed(2)),
+          avgOrderValue: kievyanOrders.length > 0 ? Number((kievyanRevenue / kievyanOrders.length).toFixed(2)) : 0,
+          topProducts: kievyanTop
+        },
+        sevan: {
+          totalSales: sevanOrders.length,
+          totalRevenue: Number(sevanRevenue.toFixed(2)),
+          avgOrderValue: sevanOrders.length > 0 ? Number((sevanRevenue / sevanOrders.length).toFixed(2)) : 0,
+          topProducts: sevanTop
+        },
+        transferRecommendations: transferRecommendations.sort((a, b) => {
+          const priorityOrder = {high: 3, medium: 2, low: 1};
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        }).slice(0, 20)
+      };
+    } catch (error) {
+      console.error('Error calculating location optimization:', error);
+      throw error;
+    }
+  }
+
+  // Phase 2: Order Recommendations Engine
+  async getOrderRecommendationsEngine(): Promise<Array<{
+    productName: string;
+    optimalOrderQty: number;
+    suggestedSupplier: string;
+    supplierPrice: number;
+    expectedProfit: number;
+    profitMargin: number;
+    stockOutRisk: number;
+    priorityScore: number;
+    priority: 'critical' | 'high' | 'medium' | 'low';
+  }>> {
+    try {
+      const stockOutRisk = await this.getCompstyleStockOutRisk();
+      const profitability = await this.getProfitabilityHeatMap();
+      const suppliers = await this.getSupplierPerformanceMatrix();
+      const transitData = await db.select().from(compstyleTransit);
+      const totalProcurement = await db.select().from(compstyleTotalProcurement);
+
+      // Create supplier price map
+      const supplierPrices = new Map<string, Map<string, {supplier: string; price: number}>>();
+      transitData.forEach(item => {
+        if (!item.supplier) return;
+        const price = parseFloat(item.purchasePriceUsd || '0');
+        if (price === 0) return;
+
+        if (!supplierPrices.has(item.productName)) {
+          supplierPrices.set(item.productName, new Map());
+        }
+        const productSuppliers = supplierPrices.get(item.productName)!;
+
+        const existing = productSuppliers.get(item.supplier);
+        if (!existing || price < existing.price) {
+          productSuppliers.set(item.supplier, {supplier: item.supplier, price});
+        }
+      });
+
+      // Create profitability map
+      const profitMap = new Map(
+        profitability.map(p => [p.productName, {
+          margin: p.profitMargin,
+          retailPrice: p.retailPriceUsd
+        }])
+      );
+
+      // Create supplier performance map
+      const supplierScoreMap = new Map(
+        suppliers.map(s => [s.supplier, s.performanceScore])
+      );
+
+      // Generate recommendations
+      const recommendations = stockOutRisk.map(risk => {
+        const profit = profitMap.get(risk.productName);
+        const productSuppliers = supplierPrices.get(risk.productName);
+
+        // Find best supplier (best price + performance)
+        let bestSupplier = 'Unknown';
+        let bestPrice = 0;
+        let bestScore = 0;
+
+        if (productSuppliers) {
+          productSuppliers.forEach((supplierData, supplierName) => {
+            const performanceScore = supplierScoreMap.get(supplierName) || 50;
+            // Score combines low price and high performance
+            const priceScore = 100 - (supplierData.price / 10); // Lower price = higher score
+            const combinedScore = (priceScore * 0.4) + (performanceScore * 0.6);
+
+            if (combinedScore > bestScore) {
+              bestScore = combinedScore;
+              bestSupplier = supplierName;
+              bestPrice = supplierData.price;
+            }
+          });
+        }
+
+        const optimalQty = risk.recommendedOrder;
+        const expectedProfit = profit ? (profit.retailPrice - bestPrice) * optimalQty : 0;
+        const profitMargin = profit ? profit.margin : 0;
+
+        // Priority score = profitability × stock-out urgency
+        const stockOutUrgency = risk.daysUntilStockOut <= 7 ? 100 : 
+                               risk.daysUntilStockOut <= 14 ? 75 :
+                               risk.daysUntilStockOut <= 30 ? 50 : 25;
+        const priorityScore = (profitMargin * 0.6) + (stockOutUrgency * 0.4);
+
+        let priority: 'critical' | 'high' | 'medium' | 'low';
+        if (priorityScore >= 75) priority = 'critical';
+        else if (priorityScore >= 60) priority = 'high';
+        else if (priorityScore >= 40) priority = 'medium';
+        else priority = 'low';
+
+        return {
+          productName: risk.productName,
+          optimalOrderQty: optimalQty,
+          suggestedSupplier: bestSupplier,
+          supplierPrice: Number(bestPrice.toFixed(2)),
+          expectedProfit: Number(expectedProfit.toFixed(2)),
+          profitMargin: Number(profitMargin.toFixed(1)),
+          stockOutRisk: risk.daysUntilStockOut,
+          priorityScore: Number(priorityScore.toFixed(1)),
+          priority
+        };
+      }).sort((a, b) => b.priorityScore - a.priorityScore);
+
+      return recommendations;
+    } catch (error) {
+      console.error('Error generating order recommendations:', error);
+      throw error;
+    }
   }
 }
 

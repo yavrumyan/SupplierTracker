@@ -1736,6 +1736,37 @@ print(json.dumps(result))
     }
   });
 
+  // Phase 2 Analytics endpoints
+  app.get('/api/compstyle/analytics/supplier-performance', async (req, res) => {
+    try {
+      const data = await storage.getSupplierPerformanceMatrix();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching supplier performance:', error);
+      res.status(500).json({ error: 'Failed to fetch supplier performance' });
+    }
+  });
+
+  app.get('/api/compstyle/analytics/location-optimization', async (req, res) => {
+    try {
+      const data = await storage.getLocationOptimization();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching location optimization:', error);
+      res.status(500).json({ error: 'Failed to fetch location optimization' });
+    }
+  });
+
+  app.get('/api/compstyle/analytics/order-recommendations', async (req, res) => {
+    try {
+      const data = await storage.getOrderRecommendationsEngine();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching order recommendations:', error);
+      res.status(500).json({ error: 'Failed to fetch order recommendations' });
+    }
+  });
+
   app.patch('/api/compstyle/product-list/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
