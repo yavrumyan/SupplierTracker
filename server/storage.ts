@@ -857,33 +857,39 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    // Use Total Sales data which already has aggregated quantities
-    const totalSales = await db.select().from(compstyleTotalSales);
+    try {
+      // Use Total Sales data which already has aggregated quantities
+      const totalSales = await db.select().from(compstyleTotalSales);
 
-    // If no sales data, return empty array
-    if (totalSales.length === 0) {
+      // If no sales data, return empty array
+      if (totalSales.length === 0) {
+        return [];
+      }
+
+      // Default to 30 days period for velocity calculations
+      const actualPeriodDays = 30;
+
+      // Convert to result format
+      const result = totalSales.map(item => {
+        const qtySold = item.qtySold || 0;
+        const dailyVelocity = qtySold / actualPeriodDays;
+
+        return {
+          productName: item.productName,
+          qtySold,
+          salesPeriodDays: actualPeriodDays,
+          dailyVelocity: Number(dailyVelocity.toFixed(2)),
+          weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
+          monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
+        };
+      }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
+
+      return result;
+    } catch (error) {
+      console.error('Error in getCompstyleSalesVelocity:', error);
+      // Return empty array on error to prevent cascading failures
       return [];
     }
-
-    // Default to 30 days period for velocity calculations
-    const actualPeriodDays = 30;
-
-    // Convert to result format
-    const result = totalSales.map(item => {
-      const qtySold = item.qtySold || 0;
-      const dailyVelocity = qtySold / actualPeriodDays;
-
-      return {
-        productName: item.productName,
-        qtySold,
-        salesPeriodDays: actualPeriodDays,
-        dailyVelocity: Number(dailyVelocity.toFixed(2)),
-        weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
-        monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
-      };
-    }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
-
-    return result;
   }
 
   async getCompstyleStockOutRisk(): Promise<Array<{
