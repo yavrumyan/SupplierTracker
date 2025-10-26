@@ -963,14 +963,15 @@ export class DatabaseStorage implements IStorage {
     lockedValue: number;
     recommendation: string;
   }>> {
-    const productList = await db.select().from(compstyleProductList);
-    const salesVelocity = await this.getCompstyleSalesVelocity();
-    const purchaseItems = await db.select().from(compstylePurchaseItems);
-    const purchaseOrders = await db.select().from(compstylePurchaseOrders);
+    try {
+      const productList = await db.select().from(compstyleProductList);
+      const salesVelocity = await this.getCompstyleSalesVelocity();
+      const purchaseItems = await db.select().from(compstylePurchaseItems);
+      const purchaseOrders = await db.select().from(compstylePurchaseOrders);
 
-    const velocityMap = new Map(
-      salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
-    );
+      const velocityMap = new Map(
+        salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
+      );
 
     // Get the current date from Stock Kievyan Current (first record's upload date or current date)
     // In practice, we'll use the current date as a fallback
@@ -1087,7 +1088,11 @@ export class DatabaseStorage implements IStorage {
         return bVal - aVal;
       });
 
-    return deadStockAnalysis;
+      return deadStockAnalysis;
+    } catch (error) {
+      console.error('Error in getCompstyleDeadStock:', error);
+      return [];
+    }
   }
 
   async getProfitabilityHeatMap() {
