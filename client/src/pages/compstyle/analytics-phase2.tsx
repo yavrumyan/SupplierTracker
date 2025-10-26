@@ -254,6 +254,46 @@ export default function CompStyleAnalyticsPhase2() {
     }
   };
 
+  const exportStockTransfers = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
+    if (locationOptimization && locationOptimization.transferRecommendations.length > 0) {
+      const headers = ['Product', 'From Location', 'To Location', 'Quantity', 'Reason', 'Priority'];
+      const csvData = [headers];
+
+      locationOptimization.transferRecommendations.forEach(t => {
+        csvData.push([
+          t.productName,
+          t.fromLocation,
+          t.toLocation,
+          t.qty.toString(),
+          t.reason,
+          t.priority.toUpperCase()
+        ]);
+      });
+
+      const csvContent = csvData.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `stock-transfer-recommendations_${timestamp}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Export successful",
+        description: "Stock transfer recommendations exported",
+      });
+    }
+  };
+
   const exportOrderRecommendations = () => {
     const timestamp = new Date().toISOString().split('T')[0];
     
@@ -499,7 +539,13 @@ export default function CompStyleAnalyticsPhase2() {
                 {/* Transfer Recommendations */}
                 {locationOptimization.transferRecommendations.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">Stock Transfer Recommendations</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold">Stock Transfer Recommendations</h3>
+                      <Button onClick={exportStockTransfers} variant="outline" size="sm">
+                        <Download className="h-4 w-4 mr-2" />
+                        Export
+                      </Button>
+                    </div>
                     <div className="space-y-3">
                       {locationOptimization.transferRecommendations.slice(0, 10).map((transfer, index) => (
                         <div key={index} className={`p-4 rounded-lg border ${
