@@ -30,7 +30,9 @@ async function cleanupDuplicates() {
     // Delete duplicate sales orders
     if (duplicateSalesIds.length > 0) {
       console.log('🗑️  Deleting duplicate sales orders...');
-      await db.delete(compstyleSalesOrders).where(sql`id IN (${sql.join(duplicateSalesIds.map(id => sql`${id}`), sql`, `)})`);
+      for (const id of duplicateSalesIds) {
+        await db.delete(compstyleSalesOrders).where(sql`id = ${id}`);
+      }
       console.log(`✅ Deleted ${duplicateSalesIds.length} duplicate sales orders\n`);
     }
     
@@ -57,7 +59,9 @@ async function cleanupDuplicates() {
     // Delete duplicate purchase orders
     if (duplicatePurchaseIds.length > 0) {
       console.log('🗑️  Deleting duplicate purchase orders...');
-      await db.delete(compstylePurchaseOrders).where(sql`id IN (${sql.join(duplicatePurchaseIds.map(id => sql`${id}`), sql`, `)})`);
+      for (const id of duplicatePurchaseIds) {
+        await db.delete(compstylePurchaseOrders).where(sql`id = ${id}`);
+      }
       console.log(`✅ Deleted ${duplicatePurchaseIds.length} duplicate purchase orders\n`);
     }
     
