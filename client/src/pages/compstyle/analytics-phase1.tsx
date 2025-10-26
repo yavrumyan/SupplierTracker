@@ -96,10 +96,9 @@ export default function CompStyleAnalyticsPhase1() {
     }, 1000);
   };
 
-  const exportAllReports = () => {
+  const exportStockOutRisk = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-
-    // Export Stock-Out Risk Analysis
+    
     if (stockOutRisk && stockOutRisk.length > 0) {
       const headers1 = ['Product', 'Risk Level', 'Current Stock', 'In Transit', 'Total Available', 'Daily Sales', 'Days Until Stock Out', 'Recommended Order'];
       const csvData1 = [headers1];
@@ -131,9 +130,17 @@ export default function CompStyleAnalyticsPhase1() {
       link1.click();
       document.body.removeChild(link1);
       URL.revokeObjectURL(url1);
-    }
 
-    // Export Dead Stock Analysis
+      toast({
+        title: "Export successful",
+        description: "Stock-out risk analysis exported",
+      });
+    }
+  };
+
+  const exportDeadStock = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
     if (deadStock && deadStock.length > 0) {
       const headers2 = ['Product', 'Total Inventory', 'Sold (30d)', 'Daily Sales', 'Days of Stock', 'Locked Value', 'Recommendation'];
       const csvData2 = [headers2];
@@ -164,9 +171,17 @@ export default function CompStyleAnalyticsPhase1() {
       link2.click();
       document.body.removeChild(link2);
       URL.revokeObjectURL(url2);
-    }
 
-    // Export Top Sales Velocity
+      toast({
+        title: "Export successful",
+        description: "Dead stock analysis exported",
+      });
+    }
+  };
+
+  const exportSalesVelocity = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
     if (salesVelocity && salesVelocity.length > 0) {
       const headers3 = ['Product', 'Total Sold', 'Daily Velocity', 'Weekly Velocity', 'Monthly Velocity'];
       const csvData3 = [headers3];
@@ -195,9 +210,17 @@ export default function CompStyleAnalyticsPhase1() {
       link3.click();
       document.body.removeChild(link3);
       URL.revokeObjectURL(url3);
-    }
 
-    // Export Profitability Heat Map
+      toast({
+        title: "Export successful",
+        description: "Top sales velocity exported",
+      });
+    }
+  };
+
+  const exportProfitability = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
     if (profitabilityHeatMap && profitabilityHeatMap.length > 0) {
       const headers4 = ['Product', 'Avg Sale Price', 'Avg Cost', 'Profit/Unit', 'Margin %', 'Qty Sold', 'Total Profit', 'Stock', 'Days Left', 'Urgent Refill', 'Status'];
       const csvData4 = [headers4];
@@ -232,7 +255,19 @@ export default function CompStyleAnalyticsPhase1() {
       link4.click();
       document.body.removeChild(link4);
       URL.revokeObjectURL(url4);
+
+      toast({
+        title: "Export successful",
+        description: "Profitability heat map exported",
+      });
     }
+  };
+
+  const exportAllReports = () => {
+    exportStockOutRisk();
+    exportDeadStock();
+    exportSalesVelocity();
+    exportProfitability();
   };
 
   const getRiskColor = (level: string) => {
@@ -337,13 +372,21 @@ export default function CompStyleAnalyticsPhase1() {
         {/* Stock-Out Risk Analysis */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-600" />
-              Stock-Out Risk Analysis
-            </CardTitle>
-            <CardDescription>
-              Products that need reordering based on sales velocity
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-orange-600" />
+                  Stock-Out Risk Analysis
+                </CardTitle>
+                <CardDescription>
+                  Products that need reordering based on sales velocity
+                </CardDescription>
+              </div>
+              <Button onClick={exportStockOutRisk} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingRisk ? (
@@ -398,13 +441,21 @@ export default function CompStyleAnalyticsPhase1() {
         {/* Dead Stock Analysis */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="h-5 w-5 text-red-600" />
-              Dead Stock Analysis
-            </CardTitle>
-            <CardDescription>
-              Slow-moving products with high inventory levels
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-red-600" />
+                  Dead Stock Analysis
+                </CardTitle>
+                <CardDescription>
+                  Slow-moving products with high inventory levels
+                </CardDescription>
+              </div>
+              <Button onClick={exportDeadStock} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingDead ? (
@@ -463,13 +514,21 @@ export default function CompStyleAnalyticsPhase1() {
         {/* Profitability Heat Map */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-              Profitability Heat Map
-            </CardTitle>
-            <CardDescription>
-              Based on actual sales data - real profit margins and performance
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  Profitability Heat Map
+                </CardTitle>
+                <CardDescription>
+                  Based on actual sales data - real profit margins and performance
+                </CardDescription>
+              </div>
+              <Button onClick={exportProfitability} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingProfitability ? (
@@ -570,13 +629,21 @@ export default function CompStyleAnalyticsPhase1() {
         {/* Top Sales Velocity */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-              Top Sales Velocity
-            </CardTitle>
-            <CardDescription>
-              Fastest selling products by daily velocity
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  Top Sales Velocity
+                </CardTitle>
+                <CardDescription>
+                  Fastest selling products by daily velocity
+                </CardDescription>
+              </div>
+              <Button onClick={exportSalesVelocity} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingVelocity ? (
