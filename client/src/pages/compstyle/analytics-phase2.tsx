@@ -158,7 +158,7 @@ export default function CompStyleAnalyticsPhase2() {
       locationOptimization.kievyan.topProducts.forEach(p => {
         csvData.push([
           p.productName,
-          p.qtySold.toString(),
+          p.qty.toString(),
           `$${p.revenue.toFixed(2)}`
         ]);
       });
@@ -187,7 +187,7 @@ export default function CompStyleAnalyticsPhase2() {
       locationOptimization.sevan.topProducts.forEach(p => {
         csvData.push([
           p.productName,
-          p.qtySold.toString(),
+          p.qty.toString(),
           `$${p.revenue.toFixed(2)}`
         ]);
       });
