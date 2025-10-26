@@ -232,9 +232,20 @@ export interface IStorage {
     totalInventory: number;
     qtySoldLast30Days: number;
     dailyVelocity: number;
-    daysOfInventory: number;
+    daysOfInventory: number | string;
     lockedValue: number;
     recommendation: string;
+  }>>;
+  // Profitability Heat Map
+  getProfitabilityHeatMap(): Promise<Array<{
+    productName: string;
+    retailPriceUsd: number;
+    cost: number;
+    profitPerUnit: number;
+    profitMargin: number;
+    totalStock: number;
+    potentialProfit: number;
+    marginLevel: 'excellent' | 'good' | 'low' | 'negative';
   }>>;
 }
 
@@ -811,7 +822,7 @@ export class DatabaseStorage implements IStorage {
     // Get real analytics data
     const stockOutRisk = await this.getCompstyleStockOutRisk();
     const deadStock = await this.getCompstyleDeadStock();
-    
+
     // Calculate locked money from total stock
     const totalStockData = await db.select().from(compstyleTotalStock);
     const lockedMoney = totalStockData.reduce((sum, item) => {
@@ -845,7 +856,7 @@ export class DatabaseStorage implements IStorage {
     // Get all sales items with their order dates
     const salesOrders = await db.select().from(compstyleSalesOrders);
     const salesItems = await db.select().from(compstyleSalesItems);
-    
+
     // Create a map of order IDs to order dates
     const orderDateMap = new Map<number, Date>();
     salesOrders.forEach(order => {
@@ -853,11 +864,11 @@ export class DatabaseStorage implements IStorage {
         orderDateMap.set(order.id, order.orderDate);
       }
     });
-    
+
     // Find the date range across all sales orders
     let minDate: Date | null = null;
     let maxDate: Date | null = null;
-    
+
     salesOrders.forEach(order => {
       if (order.orderDate) {
         if (!minDate || order.orderDate < minDate) {
@@ -868,26 +879,26 @@ export class DatabaseStorage implements IStorage {
         }
       }
     });
-    
+
     // Calculate the actual period in days (default to 30 if no date range found)
     let actualPeriodDays = 30;
     if (minDate && maxDate) {
       const timeDiff = maxDate.getTime() - minDate.getTime();
       actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
     }
-    
+
     // Aggregate sales by product name from sales items
     const aggregatedSales = new Map<string, number>();
-    
+
     for (const item of salesItems) {
       const currentQty = aggregatedSales.get(item.productName) || 0;
       aggregatedSales.set(item.productName, currentQty + item.qty);
     }
-    
+
     // Convert aggregated data to result format
     const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
       const dailyVelocity = qtySold / actualPeriodDays;
-      
+
       return {
         productName,
         qtySold,
@@ -897,7 +908,7 @@ export class DatabaseStorage implements IStorage {
         monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
       };
     }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
-    
+
     return result;
   }
 
@@ -914,7 +925,7 @@ export class DatabaseStorage implements IStorage {
     // Get all products with stock and transit data
     const productList = await db.select().from(compstyleProductList);
     const salesVelocity = await this.getCompstyleSalesVelocity();
-    
+
     // Create velocity map for quick lookup
     const velocityMap = new Map(
       salesVelocity.map(v => [v.productName, v.dailyVelocity])
@@ -926,7 +937,7 @@ export class DatabaseStorage implements IStorage {
         const currentStock = product.stock || 0;
         const inTransit = product.transit || 0;
         const totalAvailable = currentStock + inTransit;
-        
+
         // Calculate days until stock out
         const daysUntilStockOut = dailyVelocity > 0 
           ? totalAvailable / dailyVelocity 
@@ -977,7 +988,7 @@ export class DatabaseStorage implements IStorage {
     const purchaseItems = await db.select().from(compstylePurchaseItems);
     const purchaseOrders = await db.select().from(compstylePurchaseOrders);
     const kievyanStock = await db.select().from(compstyleKievyanStock);
-    
+
     const velocityMap = new Map(
       salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
     );
@@ -988,12 +999,12 @@ export class DatabaseStorage implements IStorage {
 
     // Create a map of product names to their latest purchase date
     const purchaseMap = new Map<string, Date>();
-    
+
     // Find the latest purchase date for each product
     // Purchase items contain the product name directly
     for (const item of purchaseItems) {
       const productName = item.productName;
-      
+
       // Find any order that could contain this product
       // Since we don't have a direct order-item relationship, we use the latest order date
       // that matches the time period when this product was purchased
@@ -1006,7 +1017,7 @@ export class DatabaseStorage implements IStorage {
         }
       }
     }
-    
+
     // Also create matches for similar product names (to handle exact string matching issues)
     for (const product of productList) {
       if (!purchaseMap.has(product.productName)) {
@@ -1036,11 +1047,11 @@ export class DatabaseStorage implements IStorage {
         const currentStock = product.stock || 0;
         const inTransit = 0; // Don't include transit in dead stock analysis
         const totalInventory = currentStock; // Only count actual stock, not transit
-        
+
         // Calculate days of stock based on purchase date age
         let daysOfInventory: number | string = 'Long time ago';
         const latestPurchaseDate = purchaseMap.get(product.productName);
-        
+
         if (latestPurchaseDate) {
           const ageInMs = currentDate.getTime() - latestPurchaseDate.getTime();
           const ageInDays = Math.floor(ageInMs / (1000 * 60 * 60 * 24));
@@ -1078,16 +1089,16 @@ export class DatabaseStorage implements IStorage {
         // Dead stock criteria (ALL conditions must be met):
         // 1. Has inventory
         if (item.totalInventory <= 0) return false;
-        
+
         // 2. Old stock (90+ days or unknown age)
         const isOldStock = typeof item.daysOfInventory === 'string' || 
                           (typeof item.daysOfInventory === 'number' && item.daysOfInventory > 90);
         if (!isOldStock) return false;
-        
+
         // 3. Low recent sales (less than 10% of current inventory sold in last 30 days)
         const salesThreshold = item.currentStock * 0.1;
         const hasLowSales = item.qtySoldLast30Days < salesThreshold;
-        
+
         return hasLowSales;
       })
       .sort((a, b) => {
@@ -1098,6 +1109,57 @@ export class DatabaseStorage implements IStorage {
       });
 
     return deadStockAnalysis;
+  }
+
+  async getProfitabilityHeatMap() {
+    try {
+      // Get total stock data with prices and costs
+      const totalStock = await db.select().from(compstyleTotalStock);
+
+      const profitabilityData = totalStock
+        .map(product => {
+          const retailPriceUsd = parseFloat(product.retailPriceUsd || '0');
+          const cost = parseFloat(product.currentCost || '0');
+          const stock = product.qtyInStock || 0;
+
+          // Skip if no pricing data
+          if (retailPriceUsd === 0 && cost === 0) return null;
+
+          const profitPerUnit = retailPriceUsd - cost;
+          const profitMargin = retailPriceUsd > 0 ? (profitPerUnit / retailPriceUsd) * 100 : 0;
+          const potentialProfit = profitPerUnit * stock;
+
+          // Determine margin level
+          let marginLevel: 'excellent' | 'good' | 'low' | 'negative';
+          if (profitMargin < 0) {
+            marginLevel = 'negative';
+          } else if (profitMargin >= 30) {
+            marginLevel = 'excellent';
+          } else if (profitMargin >= 15) {
+            marginLevel = 'good';
+          } else {
+            marginLevel = 'low';
+          }
+
+          return {
+            productName: product.productName,
+            retailPriceUsd,
+            cost,
+            profitPerUnit,
+            profitMargin,
+            totalStock: stock,
+            potentialProfit,
+            marginLevel,
+          };
+        })
+        .filter(item => item !== null) // Remove nulls
+        .sort((a, b) => b!.profitMargin - a!.profitMargin); // Sort by margin (highest first)
+
+      return profitabilityData;
+    } catch (error) {
+      console.error('Error calculating profitability heat map:', error);
+      throw error;
+    }
   }
 
   async getCompstyleDataOverview(): Promise<{

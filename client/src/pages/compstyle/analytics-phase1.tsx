@@ -37,6 +37,17 @@ interface DeadStock {
   recommendation: string;
 }
 
+interface ProfitabilityHeatMap {
+  productName: string;
+  retailPriceUsd: number;
+  cost: number;
+  profitPerUnit: number;
+  profitMargin: number;
+  totalStock: number;
+  potentialProfit: number;
+  marginLevel: 'excellent' | 'good' | 'low' | 'negative';
+}
+
 export default function CompStyleAnalyticsPhase1() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -53,7 +64,11 @@ export default function CompStyleAnalyticsPhase1() {
     queryKey: ["/api/compstyle/analytics/dead-stock"],
   });
 
-  const isRefreshing = fetchingVelocity || fetchingRisk || fetchingDead;
+  const { data: profitabilityHeatMap, isLoading: loadingProfitability, isFetching: fetchingProfitability } = useQuery<ProfitabilityHeatMap[]>({
+    queryKey: ["/api/compstyle/analytics/profitability-heat-map"],
+  });
+
+  const isRefreshing = fetchingVelocity || fetchingRisk || fetchingDead || fetchingProfitability;
 
   const handleRefresh = async () => {
     toast({
@@ -65,6 +80,7 @@ export default function CompStyleAnalyticsPhase1() {
       queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/sales-velocity"] }),
       queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/stock-out-risk"] }),
       queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/dead-stock"] }),
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/analytics/profitability-heat-map"] }),
     ]);
 
     // Wait a moment for queries to complete
@@ -184,6 +200,16 @@ export default function CompStyleAnalyticsPhase1() {
       case 'high': return 'text-orange-600 bg-orange-50';
       case 'medium': return 'text-yellow-600 bg-yellow-50';
       default: return 'text-green-600 bg-green-50';
+    }
+  };
+
+  const getMarginColor = (level: string) => {
+    switch (level) {
+      case 'excellent': return 'bg-green-500 text-white';
+      case 'good': return 'bg-blue-500 text-white';
+      case 'low': return 'bg-yellow-500 text-white';
+      case 'negative': return 'bg-red-500 text-white';
+      default: return 'bg-gray-400 text-white';
     }
   };
 
@@ -388,6 +414,98 @@ export default function CompStyleAnalyticsPhase1() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Profitability Heat Map */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-green-600" />
+              Profitability Heat Map
+            </CardTitle>
+            <CardDescription>
+              Products color-coded by profit margin - identify winners and loss-makers
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingProfitability ? (
+              <div className="text-center py-8 text-slate-500">Loading profitability analysis...</div>
+            ) : !profitabilityHeatMap || profitabilityHeatMap.length === 0 ? (
+              <div className="text-center py-8 text-slate-500">No profitability data available</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="p-3 text-left">Product</th>
+                      <th className="p-3 text-right">Retail USD</th>
+                      <th className="p-3 text-right">Cost</th>
+                      <th className="p-3 text-right">Profit/Unit</th>
+                      <th className="p-3 text-right">Margin %</th>
+                      <th className="p-3 text-right">Stock</th>
+                      <th className="p-3 text-right">Potential Profit</th>
+                      <th className="p-3 text-center">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {profitabilityHeatMap.slice(0, 20).map((item, index) => (
+                      <tr key={index} className="border-b hover:bg-slate-50">
+                        <td className="p-3 font-medium max-w-xs truncate" title={item.productName}>
+                          {item.productName}
+                        </td>
+                        <td className="p-3 text-right">${item.retailPriceUsd.toFixed(2)}</td>
+                        <td className="p-3 text-right">${item.cost.toFixed(2)}</td>
+                        <td className="p-3 text-right font-semibold">
+                          <span className={item.profitPerUnit >= 0 ? 'text-green-600' : 'text-red-600'}>
+                            ${item.profitPerUnit.toFixed(2)}
+                          </span>
+                        </td>
+                        <td className="p-3 text-right font-bold">
+                          <span className={getMarginColor(item.marginLevel).includes('green') ? 'text-green-600' : 
+                                         getMarginColor(item.marginLevel).includes('blue') ? 'text-blue-600' :
+                                         getMarginColor(item.marginLevel).includes('yellow') ? 'text-yellow-600' : 'text-red-600'}>
+                            {item.profitMargin.toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="p-3 text-right">{item.totalStock}</td>
+                        <td className="p-3 text-right font-semibold">
+                          <span className={item.potentialProfit >= 0 ? 'text-green-600' : 'text-red-600'}>
+                            ${item.potentialProfit.toFixed(2)}
+                          </span>
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className={`px-3 py-1 rounded text-xs font-semibold ${getMarginColor(item.marginLevel)}`}>
+                            {item.marginLevel.toUpperCase()}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="mt-4 p-4 bg-slate-50 rounded-lg">
+                  <div className="text-sm font-semibold mb-2">Margin Legend:</div>
+                  <div className="flex flex-wrap gap-4 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded bg-green-500 text-white font-semibold">EXCELLENT</span>
+                      <span className="text-slate-600">30%+ margin</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded bg-blue-500 text-white font-semibold">GOOD</span>
+                      <span className="text-slate-600">15-30% margin</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded bg-yellow-500 text-white font-semibold">LOW</span>
+                      <span className="text-slate-600">0-15% margin</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded bg-red-500 text-white font-semibold">NEGATIVE</span>
+                      <span className="text-slate-600">Loss-making</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </CardContent>

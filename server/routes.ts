@@ -1726,6 +1726,16 @@ print(json.dumps(result))
     }
   });
 
+  app.get('/api/compstyle/analytics/profitability-heat-map', async (req, res) => {
+    try {
+      const data = await storage.getProfitabilityHeatMap();
+      res.json(data);
+    } catch (error) {
+      console.error('Error fetching profitability heat map:', error);
+      res.status(500).json({ error: 'Failed to fetch profitability heat map' });
+    }
+  });
+
   app.patch('/api/compstyle/product-list/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
