@@ -43,9 +43,13 @@ interface ProfitabilityHeatMap {
   cost: number;
   profitPerUnit: number;
   profitMargin: number;
+  qtySold: number;
+  totalProfit: number;
   totalStock: number;
   potentialProfit: number;
   marginLevel: 'excellent' | 'good' | 'low' | 'negative';
+  urgentRefill: boolean;
+  daysUntilStockOut: number;
 }
 
 export default function CompStyleAnalyticsPhase1() {
@@ -191,6 +195,43 @@ export default function CompStyleAnalyticsPhase1() {
       link3.click();
       document.body.removeChild(link3);
       URL.revokeObjectURL(url3);
+    }
+
+    // Export Profitability Heat Map
+    if (profitabilityHeatMap && profitabilityHeatMap.length > 0) {
+      const headers4 = ['Product', 'Avg Sale Price', 'Avg Cost', 'Profit/Unit', 'Margin %', 'Qty Sold', 'Total Profit', 'Stock', 'Days Left', 'Urgent Refill', 'Status'];
+      const csvData4 = [headers4];
+
+      profitabilityHeatMap.forEach(item => {
+        csvData4.push([
+          item.productName,
+          `$${item.retailPriceUsd.toFixed(2)}`,
+          `$${item.cost.toFixed(2)}`,
+          `$${item.profitPerUnit.toFixed(2)}`,
+          `${item.profitMargin.toFixed(1)}%`,
+          item.qtySold.toString(),
+          `$${item.totalProfit.toFixed(2)}`,
+          item.totalStock.toString(),
+          item.daysUntilStockOut < 999 ? item.daysUntilStockOut.toString() : '∞',
+          item.urgentRefill ? 'URGENT' : 'OK',
+          item.marginLevel.toUpperCase()
+        ]);
+      });
+
+      const csvContent4 = csvData4.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob4 = new Blob(['\ufeff' + csvContent4], { type: 'text/csv;charset=utf-8;' });
+      const link4 = document.createElement('a');
+      const url4 = URL.createObjectURL(blob4);
+      link4.setAttribute('href', url4);
+      link4.setAttribute('download', `profitability-heat-map_${timestamp}.csv`);
+      link4.style.visibility = 'hidden';
+      document.body.appendChild(link4);
+      link4.click();
+      document.body.removeChild(link4);
+      URL.revokeObjectURL(url4);
     }
   };
 
@@ -445,8 +486,9 @@ export default function CompStyleAnalyticsPhase1() {
                       <th className="p-3 text-right">Avg Cost</th>
                       <th className="p-3 text-right">Profit/Unit</th>
                       <th className="p-3 text-right">Margin %</th>
+                      <th className="p-3 text-right">Total Profit</th>
                       <th className="p-3 text-right">Stock</th>
-                      <th className="p-3 text-right">Potential Profit</th>
+                      <th className="p-3 text-center">Urgent Refill</th>
                       <th className="p-3 text-center">Status</th>
                     </tr>
                   </thead>
@@ -470,11 +512,25 @@ export default function CompStyleAnalyticsPhase1() {
                             {item.profitMargin.toFixed(1)}%
                           </span>
                         </td>
-                        <td className="p-3 text-right">{item.totalStock}</td>
-                        <td className="p-3 text-right font-semibold">
-                          <span className={item.potentialProfit >= 0 ? 'text-green-600' : 'text-red-600'}>
-                            ${item.potentialProfit.toFixed(2)}
-                          </span>
+                        <td className="p-3 text-right font-semibold text-green-600">
+                          ${item.totalProfit.toFixed(2)}
+                        </td>
+                        <td className="p-3 text-right">
+                          {item.totalStock}
+                          {item.daysUntilStockOut < 999 && (
+                            <div className="text-xs text-slate-500">
+                              ({item.daysUntilStockOut}d left)
+                            </div>
+                          )}
+                        </td>
+                        <td className="p-3 text-center">
+                          {item.urgentRefill ? (
+                            <span className="px-3 py-1 rounded text-xs font-semibold bg-red-500 text-white animate-pulse">
+                              ⚠️ URGENT
+                            </span>
+                          ) : (
+                            <span className="text-slate-400">—</span>
+                          )}
                         </td>
                         <td className="p-3 text-center">
                           <span className={`px-3 py-1 rounded text-xs font-semibold ${getMarginColor(item.marginLevel)}`}>

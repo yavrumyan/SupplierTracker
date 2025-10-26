@@ -243,9 +243,13 @@ export interface IStorage {
     cost: number;
     profitPerUnit: number;
     profitMargin: number;
+    qtySold: number;
+    totalProfit: number;
     totalStock: number;
     potentialProfit: number;
     marginLevel: 'excellent' | 'good' | 'low' | 'negative';
+    urgentRefill: boolean;
+    daysUntilStockOut: number;
   }>>;
 }
 
@@ -1116,10 +1120,16 @@ export class DatabaseStorage implements IStorage {
       // Get actual sales data from Total Sales (contains real sale prices and costs)
       const totalSales = await db.select().from(compstyleTotalSales);
       const totalStock = await db.select().from(compstyleTotalStock);
+      const salesVelocity = await this.getCompstyleSalesVelocity();
 
       // Create a stock lookup map
       const stockMap = new Map(
         totalStock.map(item => [item.productName, item.qtyInStock || 0])
+      );
+
+      // Create a velocity lookup map
+      const velocityMap = new Map(
+        salesVelocity.map(v => [v.productName, v.dailyVelocity])
       );
 
       const profitabilityData = totalSales
@@ -1135,8 +1145,17 @@ export class DatabaseStorage implements IStorage {
 
           const profitPerUnit = salePriceUsd - costPriceUsd;
           const profitMargin = salePriceUsd > 0 ? (profitPerUnit / salePriceUsd) * 100 : 0;
-          const actualProfit = profitPerUnit * qtySold; // Actual profit from sales
+          const totalProfit = profitPerUnit * qtySold; // Actual profit from all sales
           const potentialProfit = profitPerUnit * currentStock; // Potential profit from current stock
+
+          // Calculate days until stock out
+          const dailyVelocity = velocityMap.get(product.productName) || 0;
+          const daysUntilStockOut = dailyVelocity > 0 
+            ? currentStock / dailyVelocity 
+            : 999;
+
+          // Urgent refill alert: margin >20% AND (stock <10 days OR zero)
+          const urgentRefill = profitMargin > 20 && (daysUntilStockOut < 10 || currentStock === 0);
 
           // Determine margin level
           let marginLevel: 'excellent' | 'good' | 'low' | 'negative';
@@ -1156,9 +1175,13 @@ export class DatabaseStorage implements IStorage {
             cost: costPriceUsd, // Using actual cost at time of sale
             profitPerUnit,
             profitMargin,
+            qtySold, // Total quantity sold
+            totalProfit, // Actual profit from all sales
             totalStock: currentStock,
             potentialProfit, // Potential profit if we sell current stock at same margin
             marginLevel,
+            urgentRefill,
+            daysUntilStockOut: Number(daysUntilStockOut.toFixed(1)),
           };
         })
         .filter(item => item !== null) // Remove nulls
