@@ -263,13 +263,6 @@ export default function CompStyleAnalyticsPhase1() {
     }
   };
 
-  const exportAllReports = () => {
-    exportStockOutRisk();
-    exportDeadStock();
-    exportSalesVelocity();
-    exportProfitability();
-  };
-
   const getRiskColor = (level: string) => {
     switch (level) {
       case 'critical': return 'text-red-600 bg-red-50';
@@ -307,23 +300,14 @@ export default function CompStyleAnalyticsPhase1() {
                 Sales velocity, stock-out risk, and dead stock identification
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button
-                onClick={exportAllReports}
-                variant="default"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export All Reports
-              </Button>
-              <Button
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                variant="outline"
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                {isRefreshing ? 'Refreshing...' : 'Refresh Analytics'}
-              </Button>
-            </div>
+            <Button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              variant="outline"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh Analytics'}
+            </Button>
           </div>
         </div>
 
