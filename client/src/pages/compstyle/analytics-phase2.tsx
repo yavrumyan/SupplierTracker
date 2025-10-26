@@ -21,13 +21,13 @@ interface LocationOptimization {
     totalSales: number;
     totalRevenue: number;
     avgOrderValue: number;
-    topProducts: Array<{productName: string; qtySold: number; revenue: number}>;
+    topProducts: Array<{productName: string; qty: number; revenue: number}>;
   };
   sevan: {
     totalSales: number;
     totalRevenue: number;
     avgOrderValue: number;
-    topProducts: Array<{productName: string; qtySold: number; revenue: number}>;
+    topProducts: Array<{productName: string; qty: number; revenue: number}>;
   };
   transferRecommendations: Array<{
     productName: string;
@@ -125,6 +125,121 @@ export default function CompStyleAnalyticsPhase2() {
       URL.revokeObjectURL(url);
     }
 
+    // Export Location Performance Comparison
+    if (locationOptimization) {
+      const headers = ['Metric', 'Kievyan 11', 'Sevan 5'];
+      const csvData = [headers];
+
+      csvData.push(['Total Sales', locationOptimization.kievyan.totalSales.toString(), locationOptimization.sevan.totalSales.toString()]);
+      csvData.push(['Total Revenue', `$${locationOptimization.kievyan.totalRevenue.toFixed(2)}`, `$${locationOptimization.sevan.totalRevenue.toFixed(2)}`]);
+      csvData.push(['Avg Order Value', `$${locationOptimization.kievyan.avgOrderValue.toFixed(2)}`, `$${locationOptimization.sevan.avgOrderValue.toFixed(2)}`]);
+
+      const csvContent = csvData.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `location-performance-comparison_${timestamp}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Export Kievyan Top Products
+    if (locationOptimization && locationOptimization.kievyan.topProducts.length > 0) {
+      const headers = ['Product Name', 'Quantity Sold', 'Revenue'];
+      const csvData = [headers];
+
+      locationOptimization.kievyan.topProducts.forEach(p => {
+        csvData.push([
+          p.productName,
+          p.qtySold.toString(),
+          `$${p.revenue.toFixed(2)}`
+        ]);
+      });
+
+      const csvContent = csvData.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `kievyan-top-products_${timestamp}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Export Sevan Top Products
+    if (locationOptimization && locationOptimization.sevan.topProducts.length > 0) {
+      const headers = ['Product Name', 'Quantity Sold', 'Revenue'];
+      const csvData = [headers];
+
+      locationOptimization.sevan.topProducts.forEach(p => {
+        csvData.push([
+          p.productName,
+          p.qtySold.toString(),
+          `$${p.revenue.toFixed(2)}`
+        ]);
+      });
+
+      const csvContent = csvData.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `sevan-top-products_${timestamp}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Export Transfer Recommendations
+    if (locationOptimization && locationOptimization.transferRecommendations.length > 0) {
+      const headers = ['Product', 'From Location', 'To Location', 'Quantity', 'Reason', 'Priority'];
+      const csvData = [headers];
+
+      locationOptimization.transferRecommendations.forEach(t => {
+        csvData.push([
+          t.productName,
+          t.fromLocation,
+          t.toLocation,
+          t.qty.toString(),
+          t.reason,
+          t.priority.toUpperCase()
+        ]);
+      });
+
+      const csvContent = csvData.map(row => 
+        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+      ).join('\n');
+
+      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `stock-transfer-recommendations_${timestamp}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
     // Export Order Recommendations
     if (orderRecommendations && orderRecommendations.length > 0) {
       const headers = ['Product', 'Order Qty', 'Supplier', 'Price', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority'];
@@ -138,7 +253,7 @@ export default function CompStyleAnalyticsPhase2() {
           `$${r.supplierPrice.toFixed(2)}`,
           `$${r.expectedProfit.toFixed(2)}`,
           `${r.profitMargin.toFixed(1)}%`,
-          r.stockOutRisk.toString(),
+          r.stockOutRisk < 999 ? r.stockOutRisk.toString() : '∞',
           r.priorityScore.toString(),
           r.priority.toUpperCase()
         ]);
@@ -159,6 +274,11 @@ export default function CompStyleAnalyticsPhase2() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     }
+
+    toast({
+      title: "Reports exported",
+      description: "All Phase 2 analytics reports have been downloaded as CSV files",
+    });
   };
 
   const getPerformanceColor = (score: number) => {
@@ -310,7 +430,7 @@ export default function CompStyleAnalyticsPhase2() {
                         {locationOptimization.kievyan.topProducts.slice(0, 5).map((p, i) => (
                           <div key={i} className="text-xs flex justify-between">
                             <span className="truncate max-w-[200px]">{p.productName}</span>
-                            <span className="font-semibold">{p.qtySold} units</span>
+                            <span className="font-semibold">{p.qty} units</span>
                           </div>
                         ))}
                       </div>
@@ -342,7 +462,7 @@ export default function CompStyleAnalyticsPhase2() {
                         {locationOptimization.sevan.topProducts.slice(0, 5).map((p, i) => (
                           <div key={i} className="text-xs flex justify-between">
                             <span className="truncate max-w-[200px]">{p.productName}</span>
-                            <span className="font-semibold">{p.qtySold} units</span>
+                            <span className="font-semibold">{p.qty} units</span>
                           </div>
                         ))}
                       </div>
