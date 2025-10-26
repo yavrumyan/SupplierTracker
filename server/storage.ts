@@ -967,7 +967,6 @@ export class DatabaseStorage implements IStorage {
     const salesVelocity = await this.getCompstyleSalesVelocity();
     const purchaseItems = await db.select().from(compstylePurchaseItems);
     const purchaseOrders = await db.select().from(compstylePurchaseOrders);
-    const kievyanStock = await db.select().from(compstyleKievyanStock);
 
     const velocityMap = new Map(
       salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
