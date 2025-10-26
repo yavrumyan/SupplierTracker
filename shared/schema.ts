@@ -342,6 +342,7 @@ export const compstyleSalesOrders = pgTable("compstyle_sales_orders", {
 // Sales Order Line Items
 export const compstyleSalesItems = pgTable("compstyle_sales_items", {
   id: serial("id").primaryKey(),
+  salesOrderId: integer("sales_order_id").references(() => compstyleSalesOrders.id),
   productName: varchar("product_name", { length: 200 }).notNull(), // Column K (КодТовара)
   priceUsd: decimal("price_usd", { precision: 10, scale: 2 }), // Column L (Цена)
   qty: integer("qty").notNull(), // Column M (Количество)
@@ -362,6 +363,7 @@ export const compstylePurchaseOrders = pgTable("compstyle_purchase_orders", {
 // Purchase Order Line Items
 export const compstylePurchaseItems = pgTable("compstyle_purchase_items", {
   id: serial("id").primaryKey(),
+  purchaseOrderId: integer("purchase_order_id").references(() => compstylePurchaseOrders.id),
   productName: varchar("product_name", { length: 200 }).notNull(), // Column K (КодТовара)
   priceUsd: decimal("price_usd", { precision: 10, scale: 2 }), // Column L (Цена)
   qty: integer("qty").notNull(), // Column M (Количество)
@@ -371,7 +373,7 @@ export const compstylePurchaseItems = pgTable("compstyle_purchase_items", {
 // Total Sales by Goods - Aggregated sales data
 export const compstyleTotalSales = pgTable("compstyle_total_sales", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull(), // Column B (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column B (КодТовара)
   qtySold: integer("qty_sold").notNull(), // Column E (Количество)
   salePriceUsd: decimal("sale_price_usd", { precision: 10, scale: 2 }), // Column F (Цена)
   costPriceUsd: decimal("cost_price_usd", { precision: 10, scale: 2 }), // Column G (Учетная цена)
@@ -382,7 +384,7 @@ export const compstyleTotalSales = pgTable("compstyle_total_sales", {
 // Total Procurement by Goods - Aggregated purchase data
 export const compstyleTotalProcurement = pgTable("compstyle_total_procurement", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull(), // Column B (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column B (КодТовара)
   qtyPurchased: integer("qty_purchased").notNull(), // Column E (Количество)
   purchasePriceUsd: decimal("purchase_price_usd", { precision: 10, scale: 2 }), // Column F (Цена)
 });
