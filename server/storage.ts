@@ -857,54 +857,24 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    // Get all sales items with their order dates
-    const salesOrders = await db.select().from(compstyleSalesOrders);
-    const salesItems = await db.select().from(compstyleSalesItems);
+    // Use Total Sales data which already has aggregated quantities
+    const totalSales = await db.select().from(compstyleTotalSales);
 
-    // Create a map of order IDs to order dates
-    const orderDateMap = new Map<number, Date>();
-    salesOrders.forEach(order => {
-      if (order.orderDate) {
-        orderDateMap.set(order.id, order.orderDate);
-      }
-    });
-
-    // Find the date range across all sales orders
-    let minDate: Date | null = null;
-    let maxDate: Date | null = null;
-
-    salesOrders.forEach(order => {
-      if (order.orderDate) {
-        if (!minDate || order.orderDate < minDate) {
-          minDate = order.orderDate;
-        }
-        if (!maxDate || order.orderDate > maxDate) {
-          maxDate = order.orderDate;
-        }
-      }
-    });
-
-    // Calculate the actual period in days (default to 30 if no date range found)
-    let actualPeriodDays = 30;
-    if (minDate && maxDate) {
-      const timeDiff = maxDate.getTime() - minDate.getTime();
-      actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
+    // If no sales data, return empty array
+    if (totalSales.length === 0) {
+      return [];
     }
 
-    // Aggregate sales by product name from sales items
-    const aggregatedSales = new Map<string, number>();
+    // Default to 30 days period for velocity calculations
+    const actualPeriodDays = 30;
 
-    for (const item of salesItems) {
-      const currentQty = aggregatedSales.get(item.productName) || 0;
-      aggregatedSales.set(item.productName, currentQty + item.qty);
-    }
-
-    // Convert aggregated data to result format
-    const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
+    // Convert to result format
+    const result = totalSales.map(item => {
+      const qtySold = item.qtySold || 0;
       const dailyVelocity = qtySold / actualPeriodDays;
 
       return {
-        productName,
+        productName: item.productName,
         qtySold,
         salesPeriodDays: actualPeriodDays,
         dailyVelocity: Number(dailyVelocity.toFixed(2)),
