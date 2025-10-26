@@ -1,7 +1,7 @@
 
 import { db } from "./db";
-import { compstyleSalesOrders, compstylePurchaseOrders, compstyleSalesItems, compstylePurchaseItems } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { compstyleSalesOrders, compstylePurchaseOrders } from "@shared/schema";
+import { sql } from "drizzle-orm";
 
 async function cleanupDuplicates() {
   console.log('🔍 Starting duplicate cleanup...\n');
@@ -27,13 +27,10 @@ async function cleanupDuplicates() {
     
     console.log(`\n📈 Found ${duplicateSalesIds.length} duplicate sales orders`);
     
-    // Delete duplicate sales orders and their items
+    // Delete duplicate sales orders
     if (duplicateSalesIds.length > 0) {
-      console.log('🗑️  Deleting duplicate sales orders and their items...');
-      for (const orderId of duplicateSalesIds) {
-        await db.delete(compstyleSalesItems).where(eq(compstyleSalesItems.salesOrderId, orderId));
-        await db.delete(compstyleSalesOrders).where(eq(compstyleSalesOrders.id, orderId));
-      }
+      console.log('🗑️  Deleting duplicate sales orders...');
+      await db.delete(compstyleSalesOrders).where(sql`id IN (${sql.join(duplicateSalesIds.map(id => sql`${id}`), sql`, `)})`);
       console.log(`✅ Deleted ${duplicateSalesIds.length} duplicate sales orders\n`);
     }
     
@@ -57,13 +54,10 @@ async function cleanupDuplicates() {
     
     console.log(`\n📈 Found ${duplicatePurchaseIds.length} duplicate purchase orders`);
     
-    // Delete duplicate purchase orders and their items
+    // Delete duplicate purchase orders
     if (duplicatePurchaseIds.length > 0) {
-      console.log('🗑️  Deleting duplicate purchase orders and their items...');
-      for (const orderId of duplicatePurchaseIds) {
-        await db.delete(compstylePurchaseItems).where(eq(compstylePurchaseItems.purchaseOrderId, orderId));
-        await db.delete(compstylePurchaseOrders).where(eq(compstylePurchaseOrders.id, orderId));
-      }
+      console.log('🗑️  Deleting duplicate purchase orders...');
+      await db.delete(compstylePurchaseOrders).where(sql`id IN (${sql.join(duplicatePurchaseIds.map(id => sql`${id}`), sql`, `)})`);
       console.log(`✅ Deleted ${duplicatePurchaseIds.length} duplicate purchase orders\n`);
     }
     
@@ -74,7 +68,6 @@ async function cleanupDuplicates() {
     console.log(`   Total duplicates removed: ${duplicateSalesIds.length + duplicatePurchaseIds.length}`);
     
     console.log('\n✅ Cleanup completed successfully!');
-    console.log('ℹ️  You can now safely run: npm run db:push');
     
     process.exit(0);
   } catch (error) {
