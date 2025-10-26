@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal, varchar, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -337,12 +337,7 @@ export const compstyleSalesOrders = pgTable("compstyle_sales_orders", {
   contactName: text("contact_name"), // Column D (Через)
   location: text("location").notNull(), // "Kievyan" or "Sevan"
   totalAmountUsd: decimal("total_amount_usd", { precision: 12, scale: 2 }), // Column O
-  periodStart: text("period_start").notNull(), // Date range start from filename
-  periodEnd: text("period_end").notNull(), // Date range end from filename
-}, (table) => ({
-  // Unique constraint: same order number + order date cannot exist twice
-  uniqueOrder: unique().on(table.salesOrderNumber, table.orderDate),
-}));
+});
 
 // Sales Order Line Items
 export const compstyleSalesItems = pgTable("compstyle_sales_items", {
@@ -362,12 +357,7 @@ export const compstylePurchaseOrders = pgTable("compstyle_purchase_orders", {
   contactName: text("contact_name"), // Column D (Через)
   location: text("location").notNull(), // "Kievyan" or "Sevan"
   totalAmountUsd: decimal("total_amount_usd", { precision: 12, scale: 2 }), // Column O
-  periodStart: text("period_start").notNull(), // Date range start from filename
-  periodEnd: text("period_end").notNull(), // Date range end from filename
-}, (table) => ({
-  // Unique constraint: same order number + order date cannot exist twice
-  uniqueOrder: unique().on(table.purchaseOrderNumber, table.orderDate),
-}));
+});
 
 // Purchase Order Line Items
 export const compstylePurchaseItems = pgTable("compstyle_purchase_items", {

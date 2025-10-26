@@ -857,39 +857,63 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    try {
-      // Use Total Sales data which already has aggregated quantities
-      const totalSales = await db.select().from(compstyleTotalSales);
+    // Get all sales items with their order dates
+    const salesOrders = await db.select().from(compstyleSalesOrders);
+    const salesItems = await db.select().from(compstyleSalesItems);
 
-      // If no sales data, return empty array
-      if (totalSales.length === 0) {
-        return [];
+    // Create a map of order IDs to order dates
+    const orderDateMap = new Map<number, Date>();
+    salesOrders.forEach(order => {
+      if (order.orderDate) {
+        orderDateMap.set(order.id, order.orderDate);
       }
+    });
 
-      // Default to 30 days period for velocity calculations
-      const actualPeriodDays = 30;
+    // Find the date range across all sales orders
+    let minDate: Date | null = null;
+    let maxDate: Date | null = null;
 
-      // Convert to result format
-      const result = totalSales.map(item => {
-        const qtySold = item.qtySold || 0;
-        const dailyVelocity = qtySold / actualPeriodDays;
+    salesOrders.forEach(order => {
+      if (order.orderDate) {
+        if (!minDate || order.orderDate < minDate) {
+          minDate = order.orderDate;
+        }
+        if (!maxDate || order.orderDate > maxDate) {
+          maxDate = order.orderDate;
+        }
+      }
+    });
 
-        return {
-          productName: item.productName,
-          qtySold,
-          salesPeriodDays: actualPeriodDays,
-          dailyVelocity: Number(dailyVelocity.toFixed(2)),
-          weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
-          monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
-        };
-      }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
-
-      return result;
-    } catch (error) {
-      console.error('Error in getCompstyleSalesVelocity:', error);
-      // Return empty array on error to prevent cascading failures
-      return [];
+    // Calculate the actual period in days (default to 30 if no date range found)
+    let actualPeriodDays = 30;
+    if (minDate && maxDate) {
+      const timeDiff = maxDate.getTime() - minDate.getTime();
+      actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
     }
+
+    // Aggregate sales by product name from sales items
+    const aggregatedSales = new Map<string, number>();
+
+    for (const item of salesItems) {
+      const currentQty = aggregatedSales.get(item.productName) || 0;
+      aggregatedSales.set(item.productName, currentQty + item.qty);
+    }
+
+    // Convert aggregated data to result format
+    const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
+      const dailyVelocity = qtySold / actualPeriodDays;
+
+      return {
+        productName,
+        qtySold,
+        salesPeriodDays: actualPeriodDays,
+        dailyVelocity: Number(dailyVelocity.toFixed(2)),
+        weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
+        monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
+      };
+    }).sort((a, b) => b.dailyVelocity - a.dailyVelocity);
+
+    return result;
   }
 
   async getCompstyleStockOutRisk(): Promise<Array<{
@@ -963,15 +987,15 @@ export class DatabaseStorage implements IStorage {
     lockedValue: number;
     recommendation: string;
   }>> {
-    try {
-      const productList = await db.select().from(compstyleProductList);
-      const salesVelocity = await this.getCompstyleSalesVelocity();
-      const purchaseItems = await db.select().from(compstylePurchaseItems);
-      const purchaseOrders = await db.select().from(compstylePurchaseOrders);
+    const productList = await db.select().from(compstyleProductList);
+    const salesVelocity = await this.getCompstyleSalesVelocity();
+    const purchaseItems = await db.select().from(compstylePurchaseItems);
+    const purchaseOrders = await db.select().from(compstylePurchaseOrders);
+    const kievyanStock = await db.select().from(compstyleKievyanStock);
 
-      const velocityMap = new Map(
-        salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
-      );
+    const velocityMap = new Map(
+      salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
+    );
 
     // Get the current date from Stock Kievyan Current (first record's upload date or current date)
     // In practice, we'll use the current date as a fallback
@@ -1088,11 +1112,7 @@ export class DatabaseStorage implements IStorage {
         return bVal - aVal;
       });
 
-      return deadStockAnalysis;
-    } catch (error) {
-      console.error('Error in getCompstyleDeadStock:', error);
-      return [];
-    }
+    return deadStockAnalysis;
   }
 
   async getProfitabilityHeatMap() {

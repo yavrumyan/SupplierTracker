@@ -1863,71 +1863,6 @@ print(json.dumps(result))
     }
   });
 
-  // Clean up duplicate sales and purchase orders
-  app.post("/api/compstyle/cleanup-duplicates", async (req, res) => {
-    try {
-      console.log('Starting duplicate cleanup...');
-      
-      // Clean up duplicate sales orders
-      const salesOrders = await db.select().from(compstyleSalesOrders).orderBy(compstyleSalesOrders.id);
-      const seenSales = new Map<string, number>();
-      const duplicateSalesIds: number[] = [];
-      
-      for (const order of salesOrders) {
-        if (!order.orderDate) continue;
-        const key = `${order.salesOrderNumber}-${order.orderDate.toISOString()}`;
-        
-        if (seenSales.has(key)) {
-          duplicateSalesIds.push(order.id);
-        } else {
-          seenSales.set(key, order.id);
-        }
-      }
-      
-      // Delete duplicate sales orders and their items
-      for (const orderId of duplicateSalesIds) {
-        await db.delete(compstyleSalesItems).where(eq(compstyleSalesItems.salesOrderId, orderId));
-        await db.delete(compstyleSalesOrders).where(eq(compstyleSalesOrders.id, orderId));
-      }
-      
-      // Clean up duplicate purchase orders
-      const purchaseOrders = await db.select().from(compstylePurchaseOrders).orderBy(compstylePurchaseOrders.id);
-      const seenPurchase = new Map<string, number>();
-      const duplicatePurchaseIds: number[] = [];
-      
-      for (const order of purchaseOrders) {
-        if (!order.orderDate) continue;
-        const key = `${order.purchaseOrderNumber}-${order.orderDate.toISOString()}`;
-        
-        if (seenPurchase.has(key)) {
-          duplicatePurchaseIds.push(order.id);
-        } else {
-          seenPurchase.set(key, order.id);
-        }
-      }
-      
-      // Delete duplicate purchase orders and their items
-      for (const orderId of duplicatePurchaseIds) {
-        await db.delete(compstylePurchaseItems).where(eq(compstylePurchaseItems.purchaseOrderId, orderId));
-        await db.delete(compstylePurchaseOrders).where(eq(compstylePurchaseOrders.id, orderId));
-      }
-      
-      console.log(`Cleanup complete: removed ${duplicateSalesIds.length} duplicate sales orders and ${duplicatePurchaseIds.length} duplicate purchase orders`);
-      
-      res.json({
-        success: true,
-        message: `Removed ${duplicateSalesIds.length + duplicatePurchaseIds.length} duplicate orders`,
-        details: {
-          salesOrdersRemoved: duplicateSalesIds.length,
-          purchaseOrdersRemoved: duplicatePurchaseIds.length
-        }
-      });
-    } catch (error) {
-      console.error('Error cleaning duplicates:', error);
-      res.status(500).json({ error: 'Failed to clean up duplicates' });
-    }
-  });
-
   // CompStyle file upload endpoint
   app.post("/api/compstyle/upload", upload.single('file'), async (req, res) => {
     try {
@@ -2359,35 +2294,26 @@ print(json.dumps(result))
 
         // Save the order with its line items
         if (orderLineItems.length > 0) {
-          try {
-            const orderData = {
-              salesOrderNumber,
-              orderDate,
-              customer,
-              contactName,
-              location,
-              totalAmountUsd: String(orderLineItems.reduce((sum, item) => sum + parseFloat(item.sumUsd), 0)),
-              periodStart,
-              periodEnd,
-            };
+          const orderData = {
+            salesOrderNumber,
+            orderDate,
+            customer,
+            contactName,
+            location,
+            totalAmountUsd: String(orderLineItems.reduce((sum, item) => sum + parseFloat(item.sumUsd), 0)),
+            periodStart,
+            periodEnd,
+          };
 
-            const orderInDb = await storage.createCompstyleSalesOrder(orderData);
-            for (const item of orderLineItems) {
-              await storage.createCompstyleSalesItem({
-                ...item,
-                salesOrderId: orderInDb.id
-              });
-            }
-            count++;
-            console.log(`✓ Saved sales order ${salesOrderNumber} with ${orderLineItems.length} items`);
-          } catch (error: any) {
-            // Skip if duplicate (unique constraint violation)
-            if (error?.code === '23505') {
-              console.log(`⚠ Skipped duplicate sales order ${salesOrderNumber}`);
-            } else {
-              throw error;
-            }
+          const orderInDb = await storage.createCompstyleSalesOrder(orderData);
+          for (const item of orderLineItems) {
+            await storage.createCompstyleSalesItem({
+              ...item,
+              salesOrderId: orderInDb.id
+            });
           }
+          count++;
+          console.log(`✓ Saved sales order ${salesOrderNumber} with ${orderLineItems.length} items`);
         }
 
         // Skip to the row we processed last
@@ -2456,35 +2382,26 @@ print(json.dumps(result))
 
         // Save the order with its line items
         if (orderLineItems.length > 0) {
-          try {
-            const orderData = {
-              purchaseOrderNumber,
-              orderDate,
-              supplier,
-              contactName,
-              location,
-              totalAmountUsd: String(orderLineItems.reduce((sum, item) => sum + parseFloat(item.sumUsd), 0)),
-              periodStart,
-              periodEnd,
-            };
+          const orderData = {
+            purchaseOrderNumber,
+            orderDate,
+            supplier,
+            contactName,
+            location,
+            totalAmountUsd: String(orderLineItems.reduce((sum, item) => sum + parseFloat(item.sumUsd), 0)),
+            periodStart,
+            periodEnd,
+          };
 
-            const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
-            for (const item of orderLineItems) {
-              await storage.createCompstylePurchaseItem({
-                ...item,
-                purchaseOrderId: orderInDb.id
-              });
-            }
-            count++;
-            console.log(`✓ Saved purchase order ${purchaseOrderNumber} with ${orderLineItems.length} items`);
-          } catch (error: any) {
-            // Skip if duplicate (unique constraint violation)
-            if (error?.code === '23505') {
-              console.log(`⚠ Skipped duplicate purchase order ${purchaseOrderNumber}`);
-            } else {
-              throw error;
-            }
+          const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
+          for (const item of orderLineItems) {
+            await storage.createCompstylePurchaseItem({
+              ...item,
+              purchaseOrderId: orderInDb.id
+            });
           }
+          count++;
+          console.log(`✓ Saved purchase order ${purchaseOrderNumber} with ${orderLineItems.length} items`);
         }
 
         // Skip to the row we processed last
