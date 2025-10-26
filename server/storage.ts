@@ -987,11 +987,12 @@ export class DatabaseStorage implements IStorage {
     lockedValue: number;
     recommendation: string;
   }>> {
-    const productList = await db.select().from(compstyleProductList);
-    const salesVelocity = await this.getCompstyleSalesVelocity();
-    const purchaseItems = await db.select().from(compstylePurchaseItems);
-    const purchaseOrders = await db.select().from(compstylePurchaseOrders);
-    const kievyanStock = await db.select().from(compstyleKievyanStock);
+    try {
+      const productList = await db.select().from(compstyleProductList);
+      const salesVelocity = await this.getCompstyleSalesVelocity();
+      const purchaseItems = await db.select().from(compstylePurchaseItems);
+      const purchaseOrders = await db.select().from(compstylePurchaseOrders);
+      const kievyanStock = await db.select().from(compstyleKievyanStock);
 
     const velocityMap = new Map(
       salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
@@ -1113,6 +1114,10 @@ export class DatabaseStorage implements IStorage {
       });
 
     return deadStockAnalysis;
+    } catch (error) {
+      console.error('Error in getCompstyleDeadStock:', error);
+      return [];
+    }
   }
 
   async getProfitabilityHeatMap() {
