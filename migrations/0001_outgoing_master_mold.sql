@@ -1,0 +1,6 @@
+ALTER TABLE "compstyle_purchase_items" ADD COLUMN "purchase_order_id" integer;--> statement-breakpoint
+ALTER TABLE "compstyle_sales_items" ADD COLUMN "sales_order_id" integer;--> statement-breakpoint
+ALTER TABLE "compstyle_purchase_items" ADD CONSTRAINT "compstyle_purchase_items_purchase_order_id_compstyle_purchase_orders_id_fk" FOREIGN KEY ("purchase_order_id") REFERENCES "public"."compstyle_purchase_orders"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "compstyle_sales_items" ADD CONSTRAINT "compstyle_sales_items_sales_order_id_compstyle_sales_orders_id_fk" FOREIGN KEY ("sales_order_id") REFERENCES "public"."compstyle_sales_orders"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "compstyle_total_procurement" ADD CONSTRAINT "compstyle_total_procurement_product_name_unique" UNIQUE("product_name");--> statement-breakpoint
+ALTER TABLE "compstyle_total_sales" ADD CONSTRAINT "compstyle_total_sales_product_name_unique" UNIQUE("product_name");
