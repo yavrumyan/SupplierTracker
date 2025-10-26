@@ -910,25 +910,24 @@ export class DatabaseStorage implements IStorage {
     const salesOrders = await db.select().from(compstyleSalesOrders);
     const salesItems = await db.select().from(compstyleSalesItems);
 
-    // Find the actual date range across all sales orders
-    let minDate: Date | null = null;
-    let maxDate: Date | null = null;
+    // Get the reporting period from the sales orders (periodStart and periodEnd from filename)
+    // These represent the TRUE reporting period, not just when orders happened to occur
+    let periodStart: Date | null = null;
+    let periodEnd: Date | null = null;
 
-    salesOrders.forEach(order => {
-      if (order.orderDate) {
-        if (!minDate || order.orderDate < minDate) {
-          minDate = order.orderDate;
-        }
-        if (!maxDate || order.orderDate > maxDate) {
-          maxDate = order.orderDate;
-        }
+    // Find the period from any sales order (they should all have the same period)
+    for (const order of salesOrders) {
+      if (order.periodStart && order.periodEnd) {
+        periodStart = new Date(order.periodStart);
+        periodEnd = new Date(order.periodEnd);
+        break;
       }
-    });
+    }
 
-    // Calculate the actual period in days
-    let actualPeriodDays = 1; // Default to 1 to avoid division by zero
-    if (minDate && maxDate) {
-      const timeDiff = maxDate.getTime() - minDate.getTime();
+    // Calculate the actual period in days from the reporting period
+    let actualPeriodDays = 14; // Default to 14 days if no period found
+    if (periodStart && periodEnd) {
+      const timeDiff = periodEnd.getTime() - periodStart.getTime();
       actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1); // +1 to include both start and end dates
     }
 
