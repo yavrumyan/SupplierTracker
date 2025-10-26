@@ -89,10 +89,9 @@ export default function CompStyleAnalyticsPhase2() {
     }, 1000);
   };
 
-  const exportAllReports = () => {
+  const exportSupplierPerformance = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-
-    // Export Supplier Performance
+    
     if (supplierPerformance && supplierPerformance.length > 0) {
       const headers = ['Supplier', 'Total Purchases', 'Avg Price', 'Price Score', 'Lead Time (days)', 'Products', 'Performance Score'];
       const csvData = [headers];
@@ -123,10 +122,19 @@ export default function CompStyleAnalyticsPhase2() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    }
 
-    // Export Location Performance Comparison
+      toast({
+        title: "Export successful",
+        description: "Supplier performance data exported",
+      });
+    }
+  };
+
+  const exportLocationOptimization = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
     if (locationOptimization) {
+      // Export Location Performance Comparison
       const headers = ['Metric', 'Kievyan 11', 'Sevan 5'];
       const csvData = [headers];
 
@@ -148,99 +156,107 @@ export default function CompStyleAnalyticsPhase2() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    }
 
-    // Export Kievyan Top Products
-    if (locationOptimization && locationOptimization.kievyan.topProducts.length > 0) {
-      const headers = ['Product Name', 'Quantity Sold', 'Revenue'];
-      const csvData = [headers];
+      // Export Kievyan Top Products
+      if (locationOptimization.kievyan.topProducts.length > 0) {
+        const kievyanHeaders = ['Product Name', 'Quantity Sold', 'Revenue'];
+        const kievyanData = [kievyanHeaders];
 
-      locationOptimization.kievyan.topProducts.forEach(p => {
-        csvData.push([
-          p.productName,
-          p.qty.toString(),
-          `$${p.revenue.toFixed(2)}`
-        ]);
+        locationOptimization.kievyan.topProducts.forEach(p => {
+          kievyanData.push([
+            p.productName,
+            p.qty.toString(),
+            `$${p.revenue.toFixed(2)}`
+          ]);
+        });
+
+        const kievyanContent = kievyanData.map(row => 
+          row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+
+        const kievyanBlob = new Blob(['\ufeff' + kievyanContent], { type: 'text/csv;charset=utf-8;' });
+        const kievyanLink = document.createElement('a');
+        const kievyanUrl = URL.createObjectURL(kievyanBlob);
+        kievyanLink.setAttribute('href', kievyanUrl);
+        kievyanLink.setAttribute('download', `kievyan-top-products_${timestamp}.csv`);
+        kievyanLink.style.visibility = 'hidden';
+        document.body.appendChild(kievyanLink);
+        kievyanLink.click();
+        document.body.removeChild(kievyanLink);
+        URL.revokeObjectURL(kievyanUrl);
+      }
+
+      // Export Sevan Top Products
+      if (locationOptimization.sevan.topProducts.length > 0) {
+        const sevanHeaders = ['Product Name', 'Quantity Sold', 'Revenue'];
+        const sevanData = [sevanHeaders];
+
+        locationOptimization.sevan.topProducts.forEach(p => {
+          sevanData.push([
+            p.productName,
+            p.qty.toString(),
+            `$${p.revenue.toFixed(2)}`
+          ]);
+        });
+
+        const sevanContent = sevanData.map(row => 
+          row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+
+        const sevanBlob = new Blob(['\ufeff' + sevanContent], { type: 'text/csv;charset=utf-8;' });
+        const sevanLink = document.createElement('a');
+        const sevanUrl = URL.createObjectURL(sevanBlob);
+        sevanLink.setAttribute('href', sevanUrl);
+        sevanLink.setAttribute('download', `sevan-top-products_${timestamp}.csv`);
+        sevanLink.style.visibility = 'hidden';
+        document.body.appendChild(sevanLink);
+        sevanLink.click();
+        document.body.removeChild(sevanLink);
+        URL.revokeObjectURL(sevanUrl);
+      }
+
+      // Export Transfer Recommendations
+      if (locationOptimization.transferRecommendations.length > 0) {
+        const transferHeaders = ['Product', 'From Location', 'To Location', 'Quantity', 'Reason', 'Priority'];
+        const transferData = [transferHeaders];
+
+        locationOptimization.transferRecommendations.forEach(t => {
+          transferData.push([
+            t.productName,
+            t.fromLocation,
+            t.toLocation,
+            t.qty.toString(),
+            t.reason,
+            t.priority.toUpperCase()
+          ]);
+        });
+
+        const transferContent = transferData.map(row => 
+          row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+
+        const transferBlob = new Blob(['\ufeff' + transferContent], { type: 'text/csv;charset=utf-8;' });
+        const transferLink = document.createElement('a');
+        const transferUrl = URL.createObjectURL(transferBlob);
+        transferLink.setAttribute('href', transferUrl);
+        transferLink.setAttribute('download', `stock-transfer-recommendations_${timestamp}.csv`);
+        transferLink.style.visibility = 'hidden';
+        document.body.appendChild(transferLink);
+        transferLink.click();
+        document.body.removeChild(transferLink);
+        URL.revokeObjectURL(transferUrl);
+      }
+
+      toast({
+        title: "Export successful",
+        description: "Location optimization data exported",
       });
-
-      const csvContent = csvData.map(row => 
-        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
-      ).join('\n');
-
-      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `kievyan-top-products_${timestamp}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
     }
+  };
 
-    // Export Sevan Top Products
-    if (locationOptimization && locationOptimization.sevan.topProducts.length > 0) {
-      const headers = ['Product Name', 'Quantity Sold', 'Revenue'];
-      const csvData = [headers];
-
-      locationOptimization.sevan.topProducts.forEach(p => {
-        csvData.push([
-          p.productName,
-          p.qty.toString(),
-          `$${p.revenue.toFixed(2)}`
-        ]);
-      });
-
-      const csvContent = csvData.map(row => 
-        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
-      ).join('\n');
-
-      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `sevan-top-products_${timestamp}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    // Export Transfer Recommendations
-    if (locationOptimization && locationOptimization.transferRecommendations.length > 0) {
-      const headers = ['Product', 'From Location', 'To Location', 'Quantity', 'Reason', 'Priority'];
-      const csvData = [headers];
-
-      locationOptimization.transferRecommendations.forEach(t => {
-        csvData.push([
-          t.productName,
-          t.fromLocation,
-          t.toLocation,
-          t.qty.toString(),
-          t.reason,
-          t.priority.toUpperCase()
-        ]);
-      });
-
-      const csvContent = csvData.map(row => 
-        row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
-      ).join('\n');
-
-      const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', `stock-transfer-recommendations_${timestamp}.csv`);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    // Export Order Recommendations
+  const exportOrderRecommendations = () => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    
     if (orderRecommendations && orderRecommendations.length > 0) {
       const headers = ['Product', 'Order Qty', 'Supplier', 'Price', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority'];
       const csvData = [headers];
@@ -273,12 +289,12 @@ export default function CompStyleAnalyticsPhase2() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    }
 
-    toast({
-      title: "Reports exported",
-      description: "All Phase 2 analytics reports have been downloaded as CSV files",
-    });
+      toast({
+        title: "Export successful",
+        description: "Order recommendations exported",
+      });
+    }
   };
 
   const getPerformanceColor = (score: number) => {
@@ -315,29 +331,31 @@ export default function CompStyleAnalyticsPhase2() {
                 Supplier performance, location optimization, and intelligent order recommendations
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button onClick={exportAllReports} variant="default">
-                <Download className="h-4 w-4 mr-2" />
-                Export Reports
-              </Button>
-              <Button onClick={handleRefresh} disabled={isRefreshing} variant="outline">
-                <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-                {isRefreshing ? 'Refreshing...' : 'Refresh'}
-              </Button>
-            </div>
+            <Button onClick={handleRefresh} disabled={isRefreshing} variant="outline">
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              {isRefreshing ? 'Refreshing...' : 'Refresh'}
+            </Button>
           </div>
         </div>
 
         {/* Supplier Performance Matrix */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="h-5 w-5 text-blue-600" />
-              Supplier Performance Matrix
-            </CardTitle>
-            <CardDescription>
-              Price competitiveness, lead time, and overall performance scoring
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="h-5 w-5 text-blue-600" />
+                  Supplier Performance Matrix
+                </CardTitle>
+                <CardDescription>
+                  Price competitiveness, lead time, and overall performance scoring
+                </CardDescription>
+              </div>
+              <Button onClick={exportSupplierPerformance} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingSuppliers ? (
@@ -388,13 +406,21 @@ export default function CompStyleAnalyticsPhase2() {
         {/* Location Optimization */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-purple-600" />
-              Location Performance & Optimization
-            </CardTitle>
-            <CardDescription>
-              Compare Kievyan vs Sevan performance and stock transfer recommendations
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-purple-600" />
+                  Location Performance & Optimization
+                </CardTitle>
+                <CardDescription>
+                  Compare Kievyan vs Sevan performance and stock transfer recommendations
+                </CardDescription>
+              </div>
+              <Button onClick={exportLocationOptimization} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingLocation ? (
@@ -514,13 +540,21 @@ export default function CompStyleAnalyticsPhase2() {
         {/* Order Recommendations Engine */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShoppingCart className="h-5 w-5 text-green-600" />
-              Intelligent Order Recommendations
-            </CardTitle>
-            <CardDescription>
-              Optimal quantities, best suppliers, and priority ranking based on profitability × urgency
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <ShoppingCart className="h-5 w-5 text-green-600" />
+                  Intelligent Order Recommendations
+                </CardTitle>
+                <CardDescription>
+                  Optimal quantities, best suppliers, and priority ranking based on profitability × urgency
+                </CardDescription>
+              </div>
+              <Button onClick={exportOrderRecommendations} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             {loadingOrders ? (
