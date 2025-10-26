@@ -290,7 +290,7 @@ export const compstyleLocations = pgTable("compstyle_locations", {
 export const compstyleTotalStock = pgTable("compstyle_total_stock", {
   id: serial("id").primaryKey(),
   productName: varchar("product_name", { length: 200 }).notNull(), // Column B (Марка)
-  sku: text("sku").notNull(), // Column J (КодТовара) - Unique internal SKU
+  sku: text("sku").notNull().unique(), // Column J (КодТовара) - Unique internal SKU
   qtyInStock: integer("qty_in_stock").notNull(), // Column C (НаСкладе)
   retailPriceUsd: decimal("retail_price_usd", { precision: 10, scale: 2 }), // Column D (Цена)
   retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column E (ЦенаПрайса)
@@ -302,7 +302,7 @@ export const compstyleTotalStock = pgTable("compstyle_total_stock", {
 // Kievyan 11 Retail Stock
 export const compstyleKievyanStock = pgTable("compstyle_kievyan_stock", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column A (КодТовара)
   qty: integer("qty").notNull(), // Column B (Остаток)
   retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column C (БухЦена)
 });
@@ -310,7 +310,7 @@ export const compstyleKievyanStock = pgTable("compstyle_kievyan_stock", {
 // Sevan 5 Warehouse Stock
 export const compstyleSevanStock = pgTable("compstyle_sevan_stock", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column A (КодТовара)
   qty: integer("qty").notNull(), // Column B (Остаток)
   retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column C (БухЦена)
 });
@@ -318,7 +318,7 @@ export const compstyleSevanStock = pgTable("compstyle_sevan_stock", {
 // In Transit - Goods coming to locations
 export const compstyleTransit = pgTable("compstyle_transit", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (Товар)
+  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column A (Товар)
   qty: integer("qty").notNull(), // Column B (Кол.)
   purchasePriceUsd: decimal("purchase_price_usd", { precision: 10, scale: 2 }), // Column C (Цена $)
   purchasePriceAmd: decimal("purchase_price_amd", { precision: 10, scale: 2 }), // Column D (Цена AMD)
@@ -331,7 +331,7 @@ export const compstyleTransit = pgTable("compstyle_transit", {
 // Sales Orders by Location
 export const compstyleSalesOrders = pgTable("compstyle_sales_orders", {
   id: serial("id").primaryKey(),
-  salesOrderNumber: text("sales_order_number").notNull(), // Column A (Поле4)
+  salesOrderNumber: text("sales_order_number").notNull().unique(), // Column A (Поле4)
   orderDate: timestamp("order_date"), // Column B (ДатаИсполнения)
   customer: text("customer"), // Column C (Клиент)
   contactName: text("contact_name"), // Column D (Через)
@@ -351,7 +351,7 @@ export const compstyleSalesItems = pgTable("compstyle_sales_items", {
 // Purchase Orders by Location
 export const compstylePurchaseOrders = pgTable("compstyle_purchase_orders", {
   id: serial("id").primaryKey(),
-  purchaseOrderNumber: text("purchase_order_number").notNull(), // Column A (Поле4)
+  purchaseOrderNumber: text("purchase_order_number").notNull().unique(), // Column A (Поле4)
   orderDate: timestamp("order_date"), // Column B (ДатаИсполнения)
   supplier: text("supplier"), // Column C (Клиент)
   contactName: text("contact_name"), // Column D (Через)
