@@ -427,7 +427,7 @@ export default function CompStyleAnalyticsPhase1() {
               Profitability Heat Map
             </CardTitle>
             <CardDescription>
-              Products color-coded by profit margin - identify winners and loss-makers
+              Based on actual sales data - real profit margins and performance
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -441,8 +441,8 @@ export default function CompStyleAnalyticsPhase1() {
                   <thead className="bg-slate-50">
                     <tr>
                       <th className="p-3 text-left">Product</th>
-                      <th className="p-3 text-right">Retail USD</th>
-                      <th className="p-3 text-right">Cost</th>
+                      <th className="p-3 text-right">Avg Sale Price</th>
+                      <th className="p-3 text-right">Avg Cost</th>
                       <th className="p-3 text-right">Profit/Unit</th>
                       <th className="p-3 text-right">Margin %</th>
                       <th className="p-3 text-right">Stock</th>

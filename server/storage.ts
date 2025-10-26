@@ -1113,21 +1113,30 @@ export class DatabaseStorage implements IStorage {
 
   async getProfitabilityHeatMap() {
     try {
-      // Get total stock data with prices and costs
+      // Get actual sales data from Total Sales (contains real sale prices and costs)
+      const totalSales = await db.select().from(compstyleTotalSales);
       const totalStock = await db.select().from(compstyleTotalStock);
 
-      const profitabilityData = totalStock
+      // Create a stock lookup map
+      const stockMap = new Map(
+        totalStock.map(item => [item.productName, item.qtyInStock || 0])
+      );
+
+      const profitabilityData = totalSales
         .map(product => {
-          const retailPriceUsd = parseFloat(product.retailPriceUsd || '0');
-          const cost = parseFloat(product.currentCost || '0');
-          const stock = product.qtyInStock || 0;
+          const salePriceUsd = parseFloat(product.salePriceUsd || '0'); // Actual sale price
+          const costPriceUsd = parseFloat(product.costPriceUsd || '0'); // Actual cost at time of sale
+          const qtySold = product.qtySold || 0;
+          const currentStock = stockMap.get(product.productName) || 0;
 
-          // Skip if no pricing data
-          if (retailPriceUsd === 0 && cost === 0) return null;
+          // Skip if no pricing data or no sales
+          if (salePriceUsd === 0 && costPriceUsd === 0) return null;
+          if (qtySold === 0) return null;
 
-          const profitPerUnit = retailPriceUsd - cost;
-          const profitMargin = retailPriceUsd > 0 ? (profitPerUnit / retailPriceUsd) * 100 : 0;
-          const potentialProfit = profitPerUnit * stock;
+          const profitPerUnit = salePriceUsd - costPriceUsd;
+          const profitMargin = salePriceUsd > 0 ? (profitPerUnit / salePriceUsd) * 100 : 0;
+          const actualProfit = profitPerUnit * qtySold; // Actual profit from sales
+          const potentialProfit = profitPerUnit * currentStock; // Potential profit from current stock
 
           // Determine margin level
           let marginLevel: 'excellent' | 'good' | 'low' | 'negative';
@@ -1143,12 +1152,12 @@ export class DatabaseStorage implements IStorage {
 
           return {
             productName: product.productName,
-            retailPriceUsd,
-            cost,
+            retailPriceUsd: salePriceUsd, // Using actual sale price instead of retail
+            cost: costPriceUsd, // Using actual cost at time of sale
             profitPerUnit,
             profitMargin,
-            totalStock: stock,
-            potentialProfit,
+            totalStock: currentStock,
+            potentialProfit, // Potential profit if we sell current stock at same margin
             marginLevel,
           };
         })
