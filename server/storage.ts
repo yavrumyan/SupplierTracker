@@ -906,19 +906,11 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    // Get all sales items with their order dates
+    // Get all sales orders and items
     const salesOrders = await db.select().from(compstyleSalesOrders);
     const salesItems = await db.select().from(compstyleSalesItems);
 
-    // Create a map of order IDs to order dates
-    const orderDateMap = new Map<number, Date>();
-    salesOrders.forEach(order => {
-      if (order.orderDate) {
-        orderDateMap.set(order.id, order.orderDate);
-      }
-    });
-
-    // Find the date range across all sales orders
+    // Find the actual date range across all sales orders
     let minDate: Date | null = null;
     let maxDate: Date | null = null;
 
@@ -933,11 +925,11 @@ export class DatabaseStorage implements IStorage {
       }
     });
 
-    // Calculate the actual period in days (default to 30 if no date range found)
-    let actualPeriodDays = 30;
+    // Calculate the actual period in days
+    let actualPeriodDays = 1; // Default to 1 to avoid division by zero
     if (minDate && maxDate) {
       const timeDiff = maxDate.getTime() - minDate.getTime();
-      actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
+      actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1); // +1 to include both start and end dates
     }
 
     // Aggregate sales by product name from sales items
