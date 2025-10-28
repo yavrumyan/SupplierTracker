@@ -1292,6 +1292,33 @@ export class DatabaseStorage implements IStorage {
       const totalStock = await db.select().from(compstyleTotalStock);
       const salesVelocity = await this.getCompstyleSalesVelocity();
 
+      // Aggregate sales data by product name (combine multiple periods)
+      const salesByProduct = new Map<string, {
+        totalQtySold: number;
+        totalRevenue: number;
+        totalCost: number;
+      }>();
+
+      totalSales.forEach(product => {
+        const salePriceUsd = parseFloat(product.salePriceUsd || '0');
+        const costPriceUsd = parseFloat(product.costPriceUsd || '0');
+        const qtySold = product.qtySold || 0;
+
+        if (qtySold === 0) return;
+
+        const existing = salesByProduct.get(product.productName) || {
+          totalQtySold: 0,
+          totalRevenue: 0,
+          totalCost: 0,
+        };
+
+        existing.totalQtySold += qtySold;
+        existing.totalRevenue += salePriceUsd * qtySold;
+        existing.totalCost += costPriceUsd * qtySold;
+
+        salesByProduct.set(product.productName, existing);
+      });
+
       // Create a stock lookup map
       const stockMap = new Map(
         totalStock.map(item => [item.productName, item.qtyInStock || 0])
@@ -1302,24 +1329,23 @@ export class DatabaseStorage implements IStorage {
         salesVelocity.map(v => [v.productName, v.dailyVelocity])
       );
 
-      const profitabilityData = totalSales
-        .map(product => {
-          const salePriceUsd = parseFloat(product.salePriceUsd || '0'); // Actual sale price
-          const costPriceUsd = parseFloat(product.costPriceUsd || '0'); // Actual cost at time of sale
-          const qtySold = product.qtySold || 0;
-          const currentStock = stockMap.get(product.productName) || 0;
+      const profitabilityData = Array.from(salesByProduct.entries())
+        .map(([productName, sales]) => {
+          const qtySold = sales.totalQtySold;
+          const avgSalePriceUsd = sales.totalRevenue / qtySold; // Weighted average sale price
+          const avgCostPriceUsd = sales.totalCost / qtySold; // Weighted average cost
+          const currentStock = stockMap.get(productName) || 0;
 
-          // Skip if no pricing data or no sales
-          if (salePriceUsd === 0 && costPriceUsd === 0) return null;
-          if (qtySold === 0) return null;
+          // Skip if no pricing data
+          if (avgSalePriceUsd === 0 && avgCostPriceUsd === 0) return null;
 
-          const profitPerUnit = salePriceUsd - costPriceUsd;
-          const profitMargin = salePriceUsd > 0 ? (profitPerUnit / salePriceUsd) * 100 : 0;
-          const totalProfit = profitPerUnit * qtySold; // Actual profit from all sales
+          const profitPerUnit = avgSalePriceUsd - avgCostPriceUsd;
+          const profitMargin = avgSalePriceUsd > 0 ? (profitPerUnit / avgSalePriceUsd) * 100 : 0;
+          const totalProfit = sales.totalRevenue - sales.totalCost; // Actual profit from all sales
           const potentialProfit = profitPerUnit * currentStock; // Potential profit from current stock
 
           // Calculate days until stock out
-          const dailyVelocity = velocityMap.get(product.productName) || 0;
+          const dailyVelocity = velocityMap.get(productName) || 0;
           const daysUntilStockOut = dailyVelocity > 0
             ? currentStock / dailyVelocity
             : 999;
@@ -1340,12 +1366,12 @@ export class DatabaseStorage implements IStorage {
           }
 
           return {
-            productName: product.productName,
-            retailPriceUsd: salePriceUsd, // Using actual sale price instead of retail
-            cost: costPriceUsd, // Using actual cost at time of sale
+            productName,
+            retailPriceUsd: avgSalePriceUsd, // Weighted average sale price
+            cost: avgCostPriceUsd, // Weighted average cost
             profitPerUnit,
             profitMargin,
-            qtySold, // Total quantity sold
+            qtySold, // Total quantity sold across all periods
             totalProfit, // Actual profit from all sales
             totalStock: currentStock,
             potentialProfit, // Potential profit if we sell current stock at same margin
