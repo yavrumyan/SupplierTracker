@@ -1037,34 +1037,10 @@ export class DatabaseStorage implements IStorage {
     monthlyVelocity: number;
   }>> {
     // Get sales velocity data
-    const salesOrders = await db.select().from(compstyleSalesOrders);
     const salesItems = await db.select().from(compstyleSalesItems);
 
-    // Calculate sales period from ALL sales orders to get the full range
-    let periodStart: Date | null = null;
-    let periodEnd: Date | null = null;
-
-    for (const order of salesOrders) {
-      if (order.periodStart) {
-        const orderStart = new Date(order.periodStart);
-        if (!periodStart || orderStart < periodStart) {
-          periodStart = orderStart;
-        }
-      }
-      if (order.periodEnd) {
-        const orderEnd = new Date(order.periodEnd);
-        if (!periodEnd || orderEnd > periodEnd) {
-          periodEnd = orderEnd;
-        }
-      }
-    }
-
-    let salesPeriodDays = 14;
-    if (periodStart && periodEnd) {
-      const timeDiff = periodEnd.getTime() - periodStart.getTime();
-      salesPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1);
-      console.log(`Stock-out risk period: ${periodStart.toISOString().split('T')[0]} to ${periodEnd.toISOString().split('T')[0]} = ${salesPeriodDays} days`);
-    }
+    // Use fixed 30-day period for sales velocity calculation
+    const salesPeriodDays = 30;
 
     // Aggregate sales by product name from sales items
     const aggregatedSales = new Map<string, number>();

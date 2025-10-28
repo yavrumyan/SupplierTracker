@@ -2125,16 +2125,35 @@ print(json.dumps(result))
       return isNaN(date.getTime()) ? null : date;
     }
 
-    // Try to parse as string in DD.MM.YYYY or other formats
+    // If it's a string
     if (typeof value === 'string') {
-      // Try DD.MM.YYYY format first
-      const ddmmyyyyMatch = value.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-      if (ddmmyyyyMatch) {
-        const day = parseInt(ddmmyyyyMatch[1]);
-        const month = parseInt(ddmmyyyyMatch[2]) - 1; // Month is 0-indexed
-        const year = parseInt(ddmmyyyyMatch[3]);
+      // Try DD-MM-YY format (e.g., "20-08-25")
+      const ddmmyyMatch = value.match(/^(\d{1,2})-(\d{1,2})-(\d{2})$/);
+      if (ddmmyyMatch) {
+        const day = parseInt(ddmmyyMatch[1]);
+        const month = parseInt(ddmmyyMatch[2]) - 1; // Month is 0-indexed
+        const year = 2000 + parseInt(ddmmyyMatch[3]); // Assume 20xx
         const date = new Date(year, month, day);
         return isNaN(date.getTime()) ? null : date;
+      }
+
+      // Try DD-MMM-YY format in Russian (e.g., "25-июл-25")
+      const russianMonths: Record<string, number> = {
+        'янв': 0, 'фев': 1, 'мар': 2, 'апр': 3, 'май': 4, 'июн': 5,
+        'июл': 6, 'авг': 7, 'сен': 8, 'окт': 9, 'ноя': 10, 'дек': 11
+      };
+
+      const ddmmmyyMatch = value.match(/^(\d{1,2})-([а-я]{3})-(\d{2})$/i);
+      if (ddmmmyyMatch) {
+        const day = parseInt(ddmmmyyMatch[1]);
+        const monthStr = ddmmmyyMatch[2].toLowerCase();
+        const month = russianMonths[monthStr];
+        const year = 2000 + parseInt(ddmmmyyMatch[3]); // Assume 20xx
+
+        if (month !== undefined) {
+          const date = new Date(year, month, day);
+          return isNaN(date.getTime()) ? null : date;
+        }
       }
     }
 
