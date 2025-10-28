@@ -2119,14 +2119,26 @@ print(json.dumps(result))
 
     // If it's a number (Excel serial date)
     if (typeof value === 'number') {
-      // Excel stores dates as days since 1900-01-01 (with some quirks)
-      const excelEpoch = new Date(1900, 0, 1);
-      const days = value - 2; // Adjust for Excel's leap year bug
-      const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
+      // Excel stores dates as days since 1899-12-30 (not 1900-01-01 due to a bug)
+      const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
+      const date = new Date(excelEpoch.getTime() + value * 24 * 60 * 60 * 1000);
       return isNaN(date.getTime()) ? null : date;
     }
 
-    // Try to parse as string
+    // Try to parse as string in DD.MM.YYYY or other formats
+    if (typeof value === 'string') {
+      // Try DD.MM.YYYY format first
+      const ddmmyyyyMatch = value.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+      if (ddmmyyyyMatch) {
+        const day = parseInt(ddmmyyyyMatch[1]);
+        const month = parseInt(ddmmyyyyMatch[2]) - 1; // Month is 0-indexed
+        const year = parseInt(ddmmyyyyMatch[3]);
+        const date = new Date(year, month, day);
+        return isNaN(date.getTime()) ? null : date;
+      }
+    }
+
+    // Try to parse as string with default Date constructor
     const date = new Date(value);
     return isNaN(date.getTime()) ? null : date;
   }

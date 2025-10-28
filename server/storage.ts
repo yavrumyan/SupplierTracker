@@ -338,12 +338,12 @@ export interface IStorage {
   }>>;
 
   // ==================== CHIP ERP METHODS ====================
-  
+
   // Currency methods
   getChipCurrencyRates(): Promise<ChipCurrencyRate[]>;
   updateChipCurrencyRate(currency: string, rateToAMD: string): Promise<ChipCurrencyRate>;
   convertToAMD(amount: number, fromCurrency: string): Promise<number>;
-  
+
   // Product methods
   getChipProducts(): Promise<ChipProduct[]>;
   getChipProduct(id: number): Promise<ChipProduct | undefined>;
@@ -351,21 +351,21 @@ export interface IStorage {
   updateChipProduct(id: number, product: Partial<InsertChipProduct>): Promise<ChipProduct>;
   deleteChipProduct(id: number): Promise<void>;
   updateChipProductStock(id: number, stockChange: number, newAverageCost?: string): Promise<ChipProduct>;
-  
+
   // Customer methods
   getChipCustomers(): Promise<ChipCustomer[]>;
   getChipCustomer(id: number): Promise<ChipCustomer | undefined>;
   createChipCustomer(customer: InsertChipCustomer): Promise<ChipCustomer>;
   updateChipCustomer(id: number, customer: Partial<InsertChipCustomer>): Promise<ChipCustomer>;
   deleteChipCustomer(id: number): Promise<void>;
-  
+
   // Supplier methods
   getChipSuppliers(): Promise<ChipSupplier[]>;
   getChipSupplier(id: number): Promise<ChipSupplier | undefined>;
   createChipSupplier(supplier: InsertChipSupplier): Promise<ChipSupplier>;
   updateChipSupplier(id: number, supplier: Partial<InsertChipSupplier>): Promise<ChipSupplier>;
   deleteChipSupplier(id: number): Promise<void>;
-  
+
   // Purchase methods
   getChipPurchases(): Promise<ChipPurchase[]>;
   getChipPurchase(id: number): Promise<ChipPurchase | undefined>;
@@ -373,7 +373,7 @@ export interface IStorage {
   createChipPurchase(purchase: InsertChipPurchase, items: InsertChipPurchaseItem[]): Promise<ChipPurchase>;
   updateChipPurchase(id: number, purchase: Partial<InsertChipPurchase>): Promise<ChipPurchase>;
   deleteChipPurchase(id: number): Promise<void>;
-  
+
   // Sale methods
   getChipSales(): Promise<ChipSale[]>;
   getChipSale(id: number): Promise<ChipSale | undefined>;
@@ -381,7 +381,7 @@ export interface IStorage {
   createChipSale(sale: InsertChipSale, items: InsertChipSaleItem[]): Promise<ChipSale>;
   updateChipSale(id: number, sale: Partial<InsertChipSale>): Promise<ChipSale>;
   deleteChipSale(id: number): Promise<void>;
-  
+
   // Invoice methods
   getChipInvoices(): Promise<ChipInvoice[]>;
   getChipInvoice(id: number): Promise<ChipInvoice | undefined>;
@@ -389,18 +389,18 @@ export interface IStorage {
   createChipInvoice(invoice: InsertChipInvoice, items: InsertChipInvoiceItem[]): Promise<ChipInvoice>;
   updateChipInvoice(id: number, invoice: Partial<InsertChipInvoice>): Promise<ChipInvoice>;
   deleteChipInvoice(id: number): Promise<void>;
-  
+
   // Expense methods
   getChipExpenses(): Promise<ChipExpense[]>;
   getChipExpense(id: number): Promise<ChipExpense | undefined>;
   createChipExpense(expense: InsertChipExpense): Promise<ChipExpense>;
   updateChipExpense(id: number, expense: Partial<InsertChipExpense>): Promise<ChipExpense>;
   deleteChipExpense(id: number): Promise<void>;
-  
+
   // Payment methods
   getChipPayments(): Promise<ChipPayment[]>;
   createChipPayment(payment: InsertChipPayment): Promise<ChipPayment>;
-  
+
   // Dashboard & Analytics
   getChipDashboardStats(): Promise<{
     totalRevenue: number;
@@ -413,7 +413,7 @@ export interface IStorage {
     salesCount: number;
     purchaseCount: number;
   }>;
-  
+
   getChipProfitLoss(startDate: Date, endDate: Date): Promise<{
     revenue: number;
     costOfGoods: number;
@@ -422,7 +422,7 @@ export interface IStorage {
     totalExpenses: number;
     netIncome: number;
   }>;
-  
+
   getChipCashFlow(startDate: Date, endDate: Date): Promise<{
     salesRevenue: number;
     purchaseCosts: number;
@@ -1036,29 +1036,34 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    // Get all sales orders and items
+    // Get sales velocity data
     const salesOrders = await db.select().from(compstyleSalesOrders);
     const salesItems = await db.select().from(compstyleSalesItems);
 
-    // Get the reporting period from the sales orders (periodStart and periodEnd from filename)
-    // These represent the TRUE reporting period, not just when orders happened to occur
+    // Calculate sales period from ALL sales orders to get the full range
     let periodStart: Date | null = null;
     let periodEnd: Date | null = null;
 
-    // Find the period from any sales order (they should all have the same period)
     for (const order of salesOrders) {
-      if (order.periodStart && order.periodEnd) {
-        periodStart = new Date(order.periodStart);
-        periodEnd = new Date(order.periodEnd);
-        break;
+      if (order.periodStart) {
+        const orderStart = new Date(order.periodStart);
+        if (!periodStart || orderStart < periodStart) {
+          periodStart = orderStart;
+        }
+      }
+      if (order.periodEnd) {
+        const orderEnd = new Date(order.periodEnd);
+        if (!periodEnd || orderEnd > periodEnd) {
+          periodEnd = orderEnd;
+        }
       }
     }
 
-    // Calculate the actual period in days from the reporting period
-    let actualPeriodDays = 14; // Default to 14 days if no period found
+    let salesPeriodDays = 14;
     if (periodStart && periodEnd) {
       const timeDiff = periodEnd.getTime() - periodStart.getTime();
-      actualPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1); // +1 to include both start and end dates
+      salesPeriodDays = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) + 1);
+      console.log(`Stock-out risk period: ${periodStart.toISOString().split('T')[0]} to ${periodEnd.toISOString().split('T')[0]} = ${salesPeriodDays} days`);
     }
 
     // Aggregate sales by product name from sales items
@@ -1071,12 +1076,12 @@ export class DatabaseStorage implements IStorage {
 
     // Convert aggregated data to result format
     const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
-      const dailyVelocity = qtySold / actualPeriodDays;
+      const dailyVelocity = qtySold / salesPeriodDays;
 
       return {
         productName,
         qtySold,
-        salesPeriodDays: actualPeriodDays,
+        salesPeriodDays: salesPeriodDays,
         dailyVelocity: Number(dailyVelocity.toFixed(2)),
         weeklyVelocity: Number((dailyVelocity * 7).toFixed(2)),
         monthlyVelocity: Number((dailyVelocity * 30).toFixed(2))
@@ -1113,8 +1118,8 @@ export class DatabaseStorage implements IStorage {
         const totalAvailable = currentStock + inTransit;
 
         // Calculate days until stock out
-        const daysUntilStockOut = dailyVelocity > 0 
-          ? totalAvailable / dailyVelocity 
+        const daysUntilStockOut = dailyVelocity > 0
+          ? totalAvailable / dailyVelocity
           : 999;
 
         // Determine risk level
@@ -1266,7 +1271,7 @@ export class DatabaseStorage implements IStorage {
         if (item.totalInventory <= 0) return false;
 
         // 2. Old stock (90+ days or unknown age)
-        const isOldStock = typeof item.daysOfInventory === 'string' || 
+        const isOldStock = typeof item.daysOfInventory === 'string' ||
                           (typeof item.daysOfInventory === 'number' && item.daysOfInventory > 90);
         if (!isOldStock) return false;
 
@@ -1339,8 +1344,8 @@ export class DatabaseStorage implements IStorage {
 
           // Calculate days until stock out
           const dailyVelocity = velocityMap.get(product.productName) || 0;
-          const daysUntilStockOut = dailyVelocity > 0 
-            ? currentStock / dailyVelocity 
+          const daysUntilStockOut = dailyVelocity > 0
+            ? currentStock / dailyVelocity
             : 999;
 
           // Urgent refill alert: margin >20% AND (stock <10 days OR zero)
@@ -1979,7 +1984,7 @@ export class DatabaseStorage implements IStorage {
         const profitMargin = profit ? profit.margin : 0;
 
         // Priority score = profitability × stock-out urgency
-        const stockOutUrgency = risk.daysUntilStockOut <= 7 ? 100 : 
+        const stockOutUrgency = risk.daysUntilStockOut <= 7 ? 100 :
                                risk.daysUntilStockOut <= 14 ? 75 :
                                risk.daysUntilStockOut <= 30 ? 50 : 25;
         const priorityScore = (profitMargin * 0.6) + (stockOutUrgency * 0.4);
@@ -2020,7 +2025,7 @@ export class DatabaseStorage implements IStorage {
   async updateChipCurrencyRate(currency: string, rateToAMD: string): Promise<ChipCurrencyRate> {
     const [existing] = await db.select().from(chipCurrencyRates)
       .where(eq(chipCurrencyRates.currency, currency));
-    
+
     if (existing) {
       const [updated] = await db.update(chipCurrencyRates)
         .set({ rateToAMD, lastUpdated: new Date() })
@@ -2037,14 +2042,14 @@ export class DatabaseStorage implements IStorage {
 
   async convertToAMD(amount: number, fromCurrency: string): Promise<number> {
     if (fromCurrency === 'AMD') return amount;
-    
+
     const [rate] = await db.select().from(chipCurrencyRates)
       .where(eq(chipCurrencyRates.currency, fromCurrency));
-    
+
     if (!rate) {
       throw new Error(`Currency rate not found for ${fromCurrency}`);
     }
-    
+
     return amount * parseFloat(rate.rateToAMD);
   }
 
@@ -2079,7 +2084,7 @@ export class DatabaseStorage implements IStorage {
   async updateChipProductStock(id: number, stockChange: number, newAverageCost?: string): Promise<ChipProduct> {
     const [product] = await db.select().from(chipProducts)
       .where(eq(chipProducts.id, id));
-    
+
     if (!product) {
       throw new Error(`Product with id ${id} not found`);
     }
@@ -2097,7 +2102,7 @@ export class DatabaseStorage implements IStorage {
       .set(updateData)
       .where(eq(chipProducts.id, id))
       .returning();
-    
+
     return updated;
   }
 
@@ -2172,14 +2177,14 @@ export class DatabaseStorage implements IStorage {
   async getChipPurchaseWithItems(id: number): Promise<ChipPurchase & { items: ChipPurchaseItem[], supplier?: ChipSupplier }> {
     const [purchase] = await db.select().from(chipPurchases)
       .where(eq(chipPurchases.id, id));
-    
+
     if (!purchase) {
       throw new Error(`Purchase with id ${id} not found`);
     }
 
     const items = await db.select().from(chipPurchaseItems)
       .where(eq(chipPurchaseItems.purchaseId, id));
-    
+
     let supplier: ChipSupplier | undefined;
     if (purchase.supplierId) {
       const [sup] = await db.select().from(chipSuppliers)
@@ -2192,7 +2197,7 @@ export class DatabaseStorage implements IStorage {
 
   async createChipPurchase(purchase: InsertChipPurchase, items: InsertChipPurchaseItem[]): Promise<ChipPurchase> {
     const [newPurchase] = await db.insert(chipPurchases).values(purchase).returning();
-    
+
     for (const item of items) {
       const itemData = {
         purchaseId: newPurchase.id,
@@ -2203,18 +2208,18 @@ export class DatabaseStorage implements IStorage {
         serialNumbers: (item.serialNumbers || []) as string[],
         totalPrice: item.totalPrice
       };
-      
+
       await db.insert(chipPurchaseItems).values([itemData]);
 
       const [product] = await db.select().from(chipProducts)
         .where(eq(chipProducts.id, item.productId));
-      
+
       if (product) {
         const oldStock = product.currentStock || 0;
         const oldCost = parseFloat(product.averageCost || '0');
         const newQty = item.quantity;
         const newCost = parseFloat(item.unitPriceAMD);
-        
+
         const newAverageCost = oldStock + newQty > 0
           ? ((oldStock * oldCost) + (newQty * newCost)) / (oldStock + newQty)
           : newCost;
@@ -2258,14 +2263,14 @@ export class DatabaseStorage implements IStorage {
   async getChipSaleWithItems(id: number): Promise<ChipSale & { items: ChipSalesItem[], customer?: ChipCustomer }> {
     const [sale] = await db.select().from(chipSales)
       .where(eq(chipSales.id, id));
-    
+
     if (!sale) {
       throw new Error(`Sale with id ${id} not found`);
     }
 
     const items = await db.select().from(chipSalesItems)
       .where(eq(chipSalesItems.saleId, id));
-    
+
     let customer: ChipCustomer | undefined;
     if (sale.customerId) {
       const [cust] = await db.select().from(chipCustomers)
@@ -2278,11 +2283,11 @@ export class DatabaseStorage implements IStorage {
 
   async createChipSale(sale: InsertChipSale, items: InsertChipSaleItem[]): Promise<ChipSale> {
     let totalCostOfGoods = 0;
-    
+
     for (const item of items) {
       const [product] = await db.select().from(chipProducts)
         .where(eq(chipProducts.id, item.productId));
-      
+
       if (!product) {
         throw new Error(`Product with id ${item.productId} not found`);
       }
@@ -2306,11 +2311,11 @@ export class DatabaseStorage implements IStorage {
       costOfGoods: totalCostOfGoods.toFixed(2),
       profit: profit.toFixed(2)
     }).returning();
-    
+
     for (const item of items) {
       const [product] = await db.select().from(chipProducts)
         .where(eq(chipProducts.id, item.productId));
-      
+
       const unitCost = parseFloat(product!.averageCost || '0');
       const totalCost = unitCost * item.quantity;
       const itemProfit = parseFloat(item.totalPrice) - totalCost;
@@ -2362,14 +2367,14 @@ export class DatabaseStorage implements IStorage {
   async getChipInvoiceWithItems(id: number): Promise<ChipInvoice & { items: ChipInvoiceItem[], customer?: ChipCustomer }> {
     const [invoice] = await db.select().from(chipInvoices)
       .where(eq(chipInvoices.id, id));
-    
+
     if (!invoice) {
       throw new Error(`Invoice with id ${id} not found`);
     }
 
     const items = await db.select().from(chipInvoiceItems)
       .where(eq(chipInvoiceItems.invoiceId, id));
-    
+
     const [customer] = await db.select().from(chipCustomers)
       .where(eq(chipCustomers.id, invoice.customerId));
 
@@ -2378,7 +2383,7 @@ export class DatabaseStorage implements IStorage {
 
   async createChipInvoice(invoice: InsertChipInvoice, items: InsertChipInvoiceItem[]): Promise<ChipInvoice> {
     const [newInvoice] = await db.insert(chipInvoices).values(invoice).returning();
-    
+
     for (const item of items) {
       await db.insert(chipInvoiceItems).values({
         ...item,
@@ -2459,16 +2464,16 @@ export class DatabaseStorage implements IStorage {
     const expenses = await db.select().from(chipExpenses);
     const products = await db.select().from(chipProducts);
 
-    const totalRevenue = sales.reduce((sum, sale) => 
+    const totalRevenue = sales.reduce((sum, sale) =>
       sum + parseFloat(sale.totalAmountAMD || '0'), 0);
-    
-    const totalProfit = sales.reduce((sum, sale) => 
+
+    const totalProfit = sales.reduce((sum, sale) =>
       sum + parseFloat(sale.profit || '0'), 0);
-    
+
     const totalExpenses = expenses
       .filter(exp => !exp.isPersonal)
       .reduce((sum, expense) => sum + parseFloat(expense.amountAMD || '0'), 0);
-    
+
     const netIncome = totalProfit - totalExpenses;
 
     const inventoryValue = products.reduce((sum, product) => {
@@ -2527,12 +2532,12 @@ export class DatabaseStorage implements IStorage {
         eq(chipExpenses.isPersonal, false)
       ));
 
-    const revenue = sales.reduce((sum, sale) => 
+    const revenue = sales.reduce((sum, sale) =>
       sum + parseFloat(sale.totalAmountAMD || '0'), 0);
-    
-    const costOfGoods = sales.reduce((sum, sale) => 
+
+    const costOfGoods = sales.reduce((sum, sale) =>
       sum + parseFloat(sale.costOfGoods || '0'), 0);
-    
+
     const grossProfit = revenue - costOfGoods;
 
     const expensesByCategory = expenses.reduce((acc, expense) => {
@@ -2595,13 +2600,13 @@ export class DatabaseStorage implements IStorage {
         eq(chipExpenses.isPersonal, false)
       ));
 
-    const salesRevenue = sales.reduce((sum, sale) => 
+    const salesRevenue = sales.reduce((sum, sale) =>
       sum + parseFloat(sale.paidAmount || '0'), 0);
-    
-    const purchaseCosts = purchases.reduce((sum, purchase) => 
+
+    const purchaseCosts = purchases.reduce((sum, purchase) =>
       sum + parseFloat(purchase.paidAmount || '0'), 0);
-    
-    const expensesTotal = expenses.reduce((sum, expense) => 
+
+    const expensesTotal = expenses.reduce((sum, expense) =>
       sum + parseFloat(expense.amountAMD || '0'), 0);
 
     const netCashFlow = salesRevenue - purchaseCosts - expensesTotal;
