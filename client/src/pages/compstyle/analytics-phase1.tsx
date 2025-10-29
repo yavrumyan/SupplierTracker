@@ -31,10 +31,15 @@ interface DeadStock {
   inTransit: number;
   totalInventory: number;
   qtySoldLast30Days: number;
+  qtySoldLast60Days: number;
+  qtySoldLast90Days: number;
   dailyVelocity: number;
   daysOfInventory: number | string; // Changed to allow string for "long time ago"
   lockedValue: number;
   recommendation: string;
+  retailPriceUsd: number;
+  wholesalePrice1: number;
+  currentCost: number;
 }
 
 interface ProfitabilityHeatMap {
@@ -98,7 +103,7 @@ export default function CompStyleAnalyticsPhase1() {
 
   const exportStockOutRisk = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (stockOutRisk && stockOutRisk.length > 0) {
       const headers1 = ['Product', 'Risk Level', 'Current Stock', 'In Transit', 'Total Available', 'Daily Sales', 'Days Until Stock Out', 'Recommended Order'];
       const csvData1 = [headers1];
@@ -116,7 +121,7 @@ export default function CompStyleAnalyticsPhase1() {
         ]);
       });
 
-      const csvContent1 = csvData1.map(row => 
+      const csvContent1 = csvData1.map(row =>
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
 
@@ -140,9 +145,9 @@ export default function CompStyleAnalyticsPhase1() {
 
   const exportDeadStock = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (deadStock && deadStock.length > 0) {
-      const headers2 = ['Product', 'Total Inventory', 'Sold (30d)', 'Daily Sales', 'Days of Stock', 'Locked Value', 'Recommendation'];
+      const headers2 = ['Product', 'Total Inventory', 'Sold (30d)', 'Sold (60d)', 'Sold (90d)', 'Days of Stock', 'Retail Price USD', 'Wholesale Price1', 'Current Cost', 'Locked Value', 'Recommendation'];
       const csvData2 = [headers2];
 
       deadStock.forEach(item => {
@@ -150,14 +155,18 @@ export default function CompStyleAnalyticsPhase1() {
           item.productName,
           item.totalInventory.toString(),
           item.qtySoldLast30Days.toString(),
-          item.dailyVelocity.toString(),
-          typeof item.daysOfInventory === 'string' ? item.daysOfInventory : item.daysOfInventory.toString(), // Handle string or number
+          item.qtySoldLast60Days.toString(),
+          item.qtySoldLast90Days.toString(),
+          item.daysOfInventory.toString(),
+          `$${item.retailPriceUsd.toFixed(2)}`,
+          `$${item.wholesalePrice1.toFixed(2)}`,
+          `$${item.currentCost.toFixed(2)}`,
           `$${item.lockedValue.toFixed(2)}`,
           item.recommendation
         ]);
       });
 
-      const csvContent2 = csvData2.map(row => 
+      const csvContent2 = csvData2.map(row =>
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
 
@@ -181,7 +190,7 @@ export default function CompStyleAnalyticsPhase1() {
 
   const exportSalesVelocity = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (salesVelocity && salesVelocity.length > 0) {
       const headers3 = ['Product', 'Total Sold', 'Daily Velocity', 'Weekly Velocity', 'Monthly Velocity'];
       const csvData3 = [headers3];
@@ -196,7 +205,7 @@ export default function CompStyleAnalyticsPhase1() {
         ]);
       });
 
-      const csvContent3 = csvData3.map(row => 
+      const csvContent3 = csvData3.map(row =>
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
 
@@ -220,7 +229,7 @@ export default function CompStyleAnalyticsPhase1() {
 
   const exportProfitability = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (profitabilityHeatMap && profitabilityHeatMap.length > 0) {
       const headers4 = ['Product', 'Avg Sale Price', 'Avg Cost', 'Profit/Unit', 'Margin %', 'Qty Sold', 'Total Profit', 'Stock', 'Days Left', 'Urgent Refill', 'Status'];
       const csvData4 = [headers4];
@@ -241,7 +250,7 @@ export default function CompStyleAnalyticsPhase1() {
         ]);
       });
 
-      const csvContent4 = csvData4.map(row => 
+      const csvContent4 = csvData4.map(row =>
         row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
       ).join('\n');
 
@@ -454,40 +463,65 @@ export default function CompStyleAnalyticsPhase1() {
                       <th className="p-3 text-left">Product</th>
                       <th className="p-3 text-right">Total Inventory</th>
                       <th className="p-3 text-right">Sold (30d)</th>
-                      <th className="p-3 text-right">Daily Sales</th>
+                      <th className="p-3 text-right">Sold (60d)</th>
+                      <th className="p-3 text-right">Sold (90d)</th>
                       <th className="p-3 text-right">Days of Stock</th>
+                      <th className="p-3 text-right">Retail Price USD</th>
+                      <th className="p-3 text-right">Wholesale Price1</th>
+                      <th className="p-3 text-right">Current Cost</th>
                       <th className="p-3 text-right">Locked Value</th>
                       <th className="p-3 text-left">Recommendation</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {deadStock.slice(0, 20).map((item, index) => (
-                      <tr key={index} className="border-b hover:bg-slate-50">
-                        <td className="p-3 font-medium max-w-xs truncate" title={item.productName}>
-                          {item.productName}
-                        </td>
-                        <td className="p-3 text-right font-semibold">{item.totalInventory}</td>
-                        <td className="p-3 text-right">{item.qtySoldLast30Days}</td>
-                        <td className="p-3 text-right">{item.dailyVelocity}</td>
-                        <td className="p-3 text-right">
-                          <span className={`font-semibold ${
-                            typeof item.daysOfInventory === 'string' 
-                              ? 'text-red-600' 
-                              : item.daysOfInventory > 180 
-                                ? 'text-red-600' 
-                                : item.daysOfInventory > 90 
-                                  ? 'text-orange-600' 
-                                  : 'text-yellow-600'
-                          }`}>
-                            {item.daysOfInventory}
-                          </span>
-                        </td>
-                        <td className="p-3 text-right text-red-600 font-semibold">
-                          ${item.lockedValue.toFixed(2)}
-                        </td>
-                        <td className="p-3 text-xs text-slate-600">{item.recommendation}</td>
-                      </tr>
-                    ))}
+                    {deadStock.slice(0, 20).map((item, index) => {
+                      const getRecommendationColor = (rec: string) => {
+                        if (rec.includes('clearance')) return 'bg-red-100 text-red-800';
+                        if (rec.includes('slower')) return 'bg-orange-100 text-orange-800';
+                        if (rec.includes('slow')) return 'bg-yellow-100 text-yellow-800';
+                        return '';
+                      };
+
+                      return (
+                        <tr key={index} className={`border-b hover:bg-slate-50 ${
+                          item.recommendation.includes('clearance') ? 'bg-red-50' :
+                          item.recommendation.includes('slower') ? 'bg-orange-50' :
+                          item.recommendation.includes('slow') ? 'bg-yellow-50' : ''
+                        }`}>
+                          <td className="p-3 font-medium max-w-xs truncate" title={item.productName}>
+                            {item.productName}
+                          </td>
+                          <td className="p-3 text-right font-semibold">{item.totalInventory}</td>
+                          <td className="p-3 text-right">{item.qtySoldLast30Days}</td>
+                          <td className="p-3 text-right">{item.qtySoldLast60Days}</td>
+                          <td className="p-3 text-right">{item.qtySoldLast90Days}</td>
+                          <td className="p-3 text-right">
+                            <span className={`font-semibold ${
+                              typeof item.daysOfInventory === 'string'
+                                ? 'text-red-600'
+                                : item.daysOfInventory > 120
+                                  ? 'text-red-600'
+                                  : item.daysOfInventory > 90
+                                    ? 'text-orange-600'
+                                    : 'text-yellow-600'
+                            }`}>
+                              {item.daysOfInventory}
+                            </span>
+                          </td>
+                          <td className="p-3 text-right">${item.retailPriceUsd.toFixed(2)}</td>
+                          <td className="p-3 text-right">${item.wholesalePrice1.toFixed(2)}</td>
+                          <td className="p-3 text-right">${item.currentCost.toFixed(2)}</td>
+                          <td className="p-3 text-right font-semibold text-red-600">
+                            ${item.lockedValue.toFixed(2)}
+                          </td>
+                          <td className="p-3">
+                            <span className={`text-xs px-2 py-1 rounded font-semibold ${getRecommendationColor(item.recommendation)}`}>
+                              {item.recommendation}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -549,7 +583,7 @@ export default function CompStyleAnalyticsPhase1() {
                           </span>
                         </td>
                         <td className="p-3 text-right font-bold">
-                          <span className={getMarginColor(item.marginLevel).includes('green') ? 'text-green-600' : 
+                          <span className={getMarginColor(item.marginLevel).includes('green') ? 'text-green-600' :
                                          getMarginColor(item.marginLevel).includes('blue') ? 'text-blue-600' :
                                          getMarginColor(item.marginLevel).includes('yellow') ? 'text-yellow-600' : 'text-red-600'}>
                             {item.profitMargin.toFixed(1)}%

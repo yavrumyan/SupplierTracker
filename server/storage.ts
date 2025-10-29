@@ -1163,138 +1163,220 @@ export class DatabaseStorage implements IStorage {
     inTransit: number;
     totalInventory: number;
     qtySoldLast30Days: number;
-    dailyVelocity: number;
+    qtySoldLast60Days: number;
+    qtySoldLast90Days: number;
     daysOfInventory: number | string;
+    retailPriceUsd: number;
+    wholesalePrice1: number;
+    currentCost: number;
     lockedValue: number;
     recommendation: string;
   }>> {
     try {
       const productList = await db.select().from(compstyleProductList);
-      const salesVelocity = await this.getCompstyleSalesVelocity();
+      const salesOrders = await db.select().from(compstyleSalesOrders);
+      const salesItems = await db.select().from(compstyleSalesItems);
       const purchaseItems = await db.select().from(compstylePurchaseItems);
       const purchaseOrders = await db.select().from(compstylePurchaseOrders);
-      const kievyanStock = await db.select().from(compstyleKievyanStock);
 
-    const velocityMap = new Map(
-      salesVelocity.map(v => [v.productName, { velocity: v.dailyVelocity, qtySold: v.qtySold }])
-    );
-
-    // Get the current date from Stock Kievyan Current (first record's upload date or current date)
-    // In practice, we'll use the current date as a fallback
-    const currentDate = new Date();
-
-    // Create a map of product names to their latest purchase date
-    const purchaseMap = new Map<string, Date>();
-
-    // Find the latest purchase date for each product
-    // Purchase items contain the product name directly
-    for (const item of purchaseItems) {
-      const productName = item.productName;
-
-      // Find any order that could contain this product
-      // Since we don't have a direct order-item relationship, we use the latest order date
-      // that matches the time period when this product was purchased
-      for (const order of purchaseOrders) {
+      // Find the latest order date across all sales orders
+      let latestOrderDate: Date | null = null;
+      for (const order of salesOrders) {
         if (order.orderDate) {
-          const existingDate = purchaseMap.get(productName);
-          if (!existingDate || order.orderDate > existingDate) {
-            purchaseMap.set(productName, order.orderDate);
+          if (!latestOrderDate || order.orderDate > latestOrderDate) {
+            latestOrderDate = order.orderDate;
           }
         }
       }
-    }
 
-    // Also create matches for similar product names (to handle exact string matching issues)
-    for (const product of productList) {
-      if (!purchaseMap.has(product.productName)) {
-        // Try to find a purchase item with similar name
-        for (const item of purchaseItems) {
-          if (item.productName.trim() === product.productName.trim()) {
-            // Find the latest order date for this purchase item
-            for (const order of purchaseOrders) {
-              if (order.orderDate) {
-                const existingDate = purchaseMap.get(product.productName);
-                if (!existingDate || order.orderDate > existingDate) {
-                  purchaseMap.set(product.productName, order.orderDate);
+      if (!latestOrderDate) {
+        return [];
+      }
+
+      // Calculate dates for different periods
+      const thirtyDaysAgo = new Date(latestOrderDate);
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      const sixtyDaysAgo = new Date(latestOrderDate);
+      sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+      const ninetyDaysAgo = new Date(latestOrderDate);
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+      // Create maps of order IDs for each period
+      const last30DaysOrderIds = new Set<number>();
+      const last60DaysOrderIds = new Set<number>();
+      const last90DaysOrderIds = new Set<number>();
+
+      for (const order of salesOrders) {
+        if (order.orderDate && order.orderDate >= thirtyDaysAgo && order.orderDate <= latestOrderDate) {
+          last30DaysOrderIds.add(order.id);
+        }
+        if (order.orderDate && order.orderDate >= sixtyDaysAgo && order.orderDate <= latestOrderDate) {
+          last60DaysOrderIds.add(order.id);
+        }
+        if (order.orderDate && order.orderDate >= ninetyDaysAgo && order.orderDate <= latestOrderDate) {
+          last90DaysOrderIds.add(order.id);
+        }
+      }
+
+      // Aggregate sales by product for each period
+      const sales30DaysMap = new Map<string, number>();
+      const sales60DaysMap = new Map<string, number>();
+      const sales90DaysMap = new Map<string, number>();
+
+      for (const item of salesItems) {
+        if (item.salesOrderId) {
+          if (last30DaysOrderIds.has(item.salesOrderId)) {
+            const current = sales30DaysMap.get(item.productName) || 0;
+            sales30DaysMap.set(item.productName, current + item.qty);
+          }
+          if (last60DaysOrderIds.has(item.salesOrderId)) {
+            const current = sales60DaysMap.get(item.productName) || 0;
+            sales60DaysMap.set(item.productName, current + item.qty);
+          }
+          if (last90DaysOrderIds.has(item.salesOrderId)) {
+            const current = sales90DaysMap.get(item.productName) || 0;
+            sales90DaysMap.set(item.productName, current + item.qty);
+          }
+        }
+      }
+
+      // Create a map of product names to their latest purchase date
+      const purchaseMap = new Map<string, Date>();
+      const currentDate = new Date();
+
+      for (const item of purchaseItems) {
+        const productName = item.productName;
+        for (const order of purchaseOrders) {
+          if (order.orderDate) {
+            const existingDate = purchaseMap.get(productName);
+            if (!existingDate || order.orderDate > existingDate) {
+              purchaseMap.set(productName, order.orderDate);
+            }
+          }
+        }
+      }
+
+      // Also match similar product names
+      for (const product of productList) {
+        if (!purchaseMap.has(product.productName)) {
+          for (const item of purchaseItems) {
+            if (item.productName.trim() === product.productName.trim()) {
+              for (const order of purchaseOrders) {
+                if (order.orderDate) {
+                  const existingDate = purchaseMap.get(product.productName);
+                  if (!existingDate || order.orderDate > existingDate) {
+                    purchaseMap.set(product.productName, order.orderDate);
+                  }
                 }
               }
+              break;
             }
-            break;
           }
         }
       }
-    }
 
-    const deadStockAnalysis = productList
-      .map(product => {
-        const salesData = velocityMap.get(product.productName);
-        const dailyVelocity = salesData?.velocity || 0;
-        const qtySold = salesData?.qtySold || 0;
-        const currentStock = product.stock || 0;
-        const inTransit = 0; // Don't include transit in dead stock analysis
-        const totalInventory = currentStock; // Only count actual stock, not transit
+      const deadStockAnalysis = productList
+        .map(product => {
+          const qtySold30Days = sales30DaysMap.get(product.productName) || 0;
+          const qtySold60Days = sales60DaysMap.get(product.productName) || 0;
+          const qtySold90Days = sales90DaysMap.get(product.productName) || 0;
+          const currentStock = product.stock || 0;
+          const inTransit = 0;
+          const totalInventory = currentStock;
 
-        // Calculate days of stock based on purchase date age
-        let daysOfInventory: number | string = 'Long time ago';
-        const latestPurchaseDate = purchaseMap.get(product.productName);
+          // Calculate days of stock based on purchase date age
+          let daysOfInventory: number | string = 'Long time ago';
+          const latestPurchaseDate = purchaseMap.get(product.productName);
 
-        if (latestPurchaseDate) {
-          const ageInMs = currentDate.getTime() - latestPurchaseDate.getTime();
-          const ageInDays = Math.floor(ageInMs / (1000 * 60 * 60 * 24));
-          daysOfInventory = ageInDays;
-        }
+          if (latestPurchaseDate) {
+            const ageInMs = currentDate.getTime() - latestPurchaseDate.getTime();
+            const ageInDays = Math.floor(ageInMs / (1000 * 60 * 60 * 24));
+            daysOfInventory = ageInDays;
+          }
 
-        // Calculate locked value
-        const cost = parseFloat(String(product.cost || 0));
-        const lockedValue = cost * totalInventory;
+          // Get pricing information
+          const retailPriceUsd = parseFloat(String(product.retailPriceUsd || 0));
+          const wholesalePrice1 = parseFloat(String(product.dealerPrice1 || 0));
+          const currentCost = parseFloat(String(product.cost || 0));
+          const lockedValue = currentCost * totalInventory;
 
-        // Determine recommendation based on age and velocity
-        let recommendation = '';
-        if (typeof daysOfInventory === 'number') {
-          if (daysOfInventory > 180 && dailyVelocity < 0.5) recommendation = 'Clearance sale recommended';
-          else if (daysOfInventory > 90 && dailyVelocity < 1) recommendation = 'Reduce price to move stock';
-          else recommendation = 'Monitor closely';
-        } else {
-          if (dailyVelocity === 0) recommendation = 'Very old stock - clearance needed';
-          else recommendation = 'Old stock - check manually';
-        }
+          // Determine recommendation based on three-tier system
+          let recommendation = '';
+          
+          // Yellow tier: >60d old, sales < 10% of inventory in last 30 days
+          if (currentStock > 0) {
+            const isOldEnough60 = typeof daysOfInventory === 'string' || 
+                                 (typeof daysOfInventory === 'number' && daysOfInventory > 60);
+            const salesThreshold30 = currentStock * 0.1;
+            
+            if (isOldEnough60 && qtySold30Days < salesThreshold30) {
+              recommendation = '>60d old stock/slow sales - check';
+            }
+          }
 
-        return {
-          productName: product.productName,
-          currentStock,
-          inTransit,
-          totalInventory,
-          qtySoldLast30Days: qtySold,
-          dailyVelocity: Number(dailyVelocity.toFixed(2)),
-          daysOfInventory,
-          lockedValue: Number(lockedValue.toFixed(2)),
-          recommendation
-        };
-      })
-      .filter(item => {
-        // Dead stock criteria (ALL conditions must be met):
-        // 1. Has inventory
-        if (item.totalInventory <= 0) return false;
+          // Orange tier: >90d old, sales < 10% of inventory in last 60 days
+          if (currentStock > 0 && recommendation === '') {
+            const isOldEnough90 = typeof daysOfInventory === 'string' || 
+                                 (typeof daysOfInventory === 'number' && daysOfInventory > 90);
+            const salesThreshold60 = currentStock * 0.1;
+            
+            if (isOldEnough90 && qtySold60Days < salesThreshold60) {
+              recommendation = '>90d old stock/slower sales - check';
+            }
+          }
 
-        // 2. Old stock (90+ days or unknown age)
-        const isOldStock = typeof item.daysOfInventory === 'string' ||
-                          (typeof item.daysOfInventory === 'number' && item.daysOfInventory > 90);
-        if (!isOldStock) return false;
+          // Red tier: >120d old, sales < 10% of inventory in last 90 days
+          if (currentStock > 0 && recommendation === '') {
+            const isOldEnough120 = typeof daysOfInventory === 'string' || 
+                                  (typeof daysOfInventory === 'number' && daysOfInventory > 120);
+            const salesThreshold90 = currentStock * 0.1;
+            
+            if (isOldEnough120 && qtySold90Days < salesThreshold90) {
+              recommendation = '>120d old stock - no sales - clearance';
+            }
+          }
 
-        // 3. Low recent sales (less than 10% of current inventory sold in last 30 days)
-        const salesThreshold = item.currentStock * 0.1;
-        const hasLowSales = item.qtySoldLast30Days < salesThreshold;
+          return {
+            productName: product.productName,
+            currentStock,
+            inTransit,
+            totalInventory,
+            qtySoldLast30Days: qtySold30Days,
+            qtySoldLast60Days: qtySold60Days,
+            qtySoldLast90Days: qtySold90Days,
+            daysOfInventory,
+            retailPriceUsd,
+            wholesalePrice1,
+            currentCost,
+            lockedValue: Number(lockedValue.toFixed(2)),
+            recommendation
+          };
+        })
+        .filter(item => {
+          // Only include items with recommendations (those that meet criteria)
+          return item.recommendation !== '';
+        })
+        .sort((a, b) => {
+          // Sort by severity: red > orange > yellow, then by days of inventory
+          const getPriority = (rec: string) => {
+            if (rec.includes('clearance')) return 3;
+            if (rec.includes('slower')) return 2;
+            if (rec.includes('slow')) return 1;
+            return 0;
+          };
+          
+          const priorityDiff = getPriority(b.recommendation) - getPriority(a.recommendation);
+          if (priorityDiff !== 0) return priorityDiff;
+          
+          // Within same priority, sort by days of inventory
+          const aVal = typeof a.daysOfInventory === 'string' ? 999999 : a.daysOfInventory;
+          const bVal = typeof b.daysOfInventory === 'string' ? 999999 : b.daysOfInventory;
+          return bVal - aVal;
+        });
 
-        return hasLowSales;
-      })
-      .sort((a, b) => {
-        // Sort by days of inventory, treating "Long time ago" as highest
-        const aVal = typeof a.daysOfInventory === 'string' ? 999999 : a.daysOfInventory;
-        const bVal = typeof b.daysOfInventory === 'string' ? 999999 : b.daysOfInventory;
-        return bVal - aVal;
-      });
-
-    return deadStockAnalysis;
+      return deadStockAnalysis;
     } catch (error) {
       console.error('Error in getCompstyleDeadStock:', error);
       return [];
