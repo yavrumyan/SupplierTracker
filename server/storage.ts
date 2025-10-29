@@ -1036,19 +1036,49 @@ export class DatabaseStorage implements IStorage {
     weeklyVelocity: number;
     monthlyVelocity: number;
   }>> {
-    // Get sales velocity data
+    // Get all sales orders and items
+    const salesOrders = await db.select().from(compstyleSalesOrders);
     const salesItems = await db.select().from(compstyleSalesItems);
 
-    // Use fixed 30-day period for sales velocity calculation
-    const salesPeriodDays = 30;
+    // Find the latest order date across all sales orders
+    let latestOrderDate: Date | null = null;
+    for (const order of salesOrders) {
+      if (order.orderDate) {
+        if (!latestOrderDate || order.orderDate > latestOrderDate) {
+          latestOrderDate = order.orderDate;
+        }
+      }
+    }
 
-    // Aggregate sales by product name from sales items
+    // If no orders found, return empty array
+    if (!latestOrderDate) {
+      return [];
+    }
+
+    // Calculate the date 30 days before the latest order date
+    const thirtyDaysAgo = new Date(latestOrderDate);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    // Create a map of order IDs that fall within the last 30 days
+    const recentOrderIds = new Set<number>();
+    for (const order of salesOrders) {
+      if (order.orderDate && order.orderDate >= thirtyDaysAgo && order.orderDate <= latestOrderDate) {
+        recentOrderIds.add(order.id);
+      }
+    }
+
+    // Aggregate sales by product name from items belonging to recent orders only
     const aggregatedSales = new Map<string, number>();
 
     for (const item of salesItems) {
-      const currentQty = aggregatedSales.get(item.productName) || 0;
-      aggregatedSales.set(item.productName, currentQty + item.qty);
+      // Only include items from orders within the last 30 days
+      if (item.salesOrderId && recentOrderIds.has(item.salesOrderId)) {
+        const currentQty = aggregatedSales.get(item.productName) || 0;
+        aggregatedSales.set(item.productName, currentQty + item.qty);
+      }
     }
+
+    const salesPeriodDays = 30;
 
     // Convert aggregated data to result format
     const result = Array.from(aggregatedSales.entries()).map(([productName, qtySold]) => {
