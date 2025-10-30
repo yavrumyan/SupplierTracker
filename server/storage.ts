@@ -1012,8 +1012,7 @@ export class DatabaseStorage implements IStorage {
 
     // Only count products with ">120d old stock - no sales - clearance" recommendation
     const clearanceProducts = deadStock.filter(item =>
-      item.recommendation.includes('>120d old stock') &&
-      item.recommendation.includes('clearance')
+      item.recommendation === '>120d old stock - no sales - clearance'
     );
     const deadProducts = clearanceProducts.length;
 
