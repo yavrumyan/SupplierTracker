@@ -1025,12 +1025,11 @@ export class DatabaseStorage implements IStorage {
 
     // Use Drizzle's select statement for better type safety and integration
     const salesData = await db.select({
-      totalSales: sql<number>`SUM(si.sumUsd)`
+      totalSales: sql<number>`SUM(${compstyleSalesItems.sumUsd})`
     })
     .from(compstyleSalesItems)
     .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
-    .where(sql`so.orderDate >= ${thirtyDaysAgo.toISOString()}`);
-
+    .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo.toISOString()}`);
 
     const salesVolume30Days = salesData[0]?.totalSales || 0;
 
