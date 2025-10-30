@@ -1303,16 +1303,17 @@ export class DatabaseStorage implements IStorage {
           const lockedValue = currentCost * totalInventory;
 
           // Determine recommendation based on three-tier system
+          // Check from most severe to least severe (longest period first)
           let recommendation = '';
           
-          // Yellow tier: >60d old, sales < 10% of inventory in last 30 days
+          // Red tier: >120d old, sales < 10% of inventory in last 90 days
           if (currentStock > 0) {
-            const isOldEnough60 = typeof daysOfInventory === 'string' || 
-                                 (typeof daysOfInventory === 'number' && daysOfInventory > 60);
-            const salesThreshold30 = currentStock * 0.1;
+            const isOldEnough120 = typeof daysOfInventory === 'string' || 
+                                  (typeof daysOfInventory === 'number' && daysOfInventory > 120);
+            const salesThreshold90 = currentStock * 0.1;
             
-            if (isOldEnough60 && qtySold30Days < salesThreshold30) {
-              recommendation = '>60d old stock/slow sales - check';
+            if (isOldEnough120 && qtySold90Days < salesThreshold90) {
+              recommendation = '>120d old stock - no sales - clearance';
             }
           }
 
@@ -1327,14 +1328,14 @@ export class DatabaseStorage implements IStorage {
             }
           }
 
-          // Red tier: >120d old, sales < 10% of inventory in last 90 days
+          // Yellow tier: >60d old, sales < 10% of inventory in last 30 days
           if (currentStock > 0 && recommendation === '') {
-            const isOldEnough120 = typeof daysOfInventory === 'string' || 
-                                  (typeof daysOfInventory === 'number' && daysOfInventory > 120);
-            const salesThreshold90 = currentStock * 0.1;
+            const isOldEnough60 = typeof daysOfInventory === 'string' || 
+                                 (typeof daysOfInventory === 'number' && daysOfInventory > 60);
+            const salesThreshold30 = currentStock * 0.1;
             
-            if (isOldEnough120 && qtySold90Days < salesThreshold90) {
-              recommendation = '>120d old stock - no sales - clearance';
+            if (isOldEnough60 && qtySold30Days < salesThreshold30) {
+              recommendation = '>60d old stock/slow sales - check';
             }
           }
 
