@@ -342,7 +342,7 @@ export default function CompStyleAnalyticsPhase1() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-red-600">
-                {loadingDead ? "..." : deadStock?.length || 0}
+                {loadingDead ? "..." : deadStock?.filter(item => item.recommendation === '>120d old stock - no sales - clearance').length || 0}
               </div>
               <p className="text-xs text-slate-600">Slow moving inventory</p>
             </CardContent>
@@ -355,7 +355,7 @@ export default function CompStyleAnalyticsPhase1() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-600">
-                ${loadingDead ? "..." : deadStock?.reduce((sum, item) => sum + item.lockedValue, 0).toLocaleString(undefined, {maximumFractionDigits: 0}) || 0}
+                ${loadingDead ? "..." : deadStock?.filter(item => item.recommendation === '>120d old stock - no sales - clearance').reduce((sum, item) => sum + item.lockedValue, 0).toLocaleString(undefined, {maximumFractionDigits: 0}) || 0}
               </div>
               <p className="text-xs text-slate-600">In dead stock</p>
             </CardContent>
