@@ -267,7 +267,8 @@ export interface IStorage {
     inTransit: number;
     totalInventory: number;
     qtySoldLast30Days: number;
-    dailyVelocity: number;
+    qtySoldLast60Days: number;
+    qtySoldLast90Days: number;
     daysOfInventory: number | string;
     lockedValue: number;
     recommendation: string;
@@ -1002,29 +1003,43 @@ export class DatabaseStorage implements IStorage {
     lockedMoney: number;
     salesVolume30Days: number;
   }> {
-    // Get real analytics data
+    // Get stock-out risk count (products to order)
     const stockOutRisk = await this.getCompstyleStockOutRisk();
+    const productsToOrder = stockOutRisk.length;
+
+    // Get dead stock analysis
     const deadStock = await this.getCompstyleDeadStock();
 
-    // Calculate locked money from total stock
-    const totalStockData = await db.select().from(compstyleTotalStock);
-    const lockedMoney = totalStockData.reduce((sum, item) => {
-      const cost = parseFloat(String(item.currentCost || 0));
-      return sum + (cost * item.qtyInStock);
-    }, 0);
+    // Only count products with ">120d old stock - no sales - clearance" recommendation
+    const clearanceProducts = deadStock.filter(item =>
+      item.recommendation.includes('>120d old stock') &&
+      item.recommendation.includes('clearance')
+    );
+    const deadProducts = clearanceProducts.length;
 
-    // Calculate 30-day sales volume
-    const salesData = await db.select().from(compstyleTotalSales);
-    const salesVolume = salesData.reduce((sum, item) => {
-      const price = parseFloat(String(item.salePriceUsd || 0));
-      return sum + (price * item.qtySold);
-    }, 0);
+    // Get locked money (total value of only clearance products)
+    const lockedMoney = clearanceProducts.reduce((sum, item) => sum + item.lockedValue, 0);
+
+    // Get 30-day sales volume (last 30 days only)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    // Use Drizzle's select statement for better type safety and integration
+    const salesData = await db.select({
+      totalSales: sql<number>`SUM(si.sumUsd)`
+    })
+    .from(compstyleSalesItems)
+    .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
+    .where(sql`so.orderDate >= ${thirtyDaysAgo.toISOString()}`);
+
+
+    const salesVolume30Days = salesData[0]?.totalSales || 0;
 
     return {
-      productsToOrder: stockOutRisk.length,
-      deadProducts: deadStock.length,
+      productsToOrder,
+      deadProducts,
       lockedMoney: Math.round(lockedMoney),
-      salesVolume30Days: Math.round(salesVolume)
+      salesVolume30Days: Math.round(salesVolume30Days)
     };
   }
 
@@ -1166,9 +1181,6 @@ export class DatabaseStorage implements IStorage {
     qtySoldLast60Days: number;
     qtySoldLast90Days: number;
     daysOfInventory: number | string;
-    retailPriceUsd: number;
-    wholesalePrice1: number;
-    currentCost: number;
     lockedValue: number;
     recommendation: string;
   }>> {
@@ -1305,13 +1317,13 @@ export class DatabaseStorage implements IStorage {
           // Determine recommendation based on three-tier system
           // Check from most severe to least severe (longest period first)
           let recommendation = '';
-          
+
           // Red tier: >120d old, sales < 10% of inventory in last 90 days
           if (currentStock > 0) {
-            const isOldEnough120 = typeof daysOfInventory === 'string' || 
+            const isOldEnough120 = typeof daysOfInventory === 'string' ||
                                   (typeof daysOfInventory === 'number' && daysOfInventory > 120);
             const salesThreshold90 = currentStock * 0.1;
-            
+
             if (isOldEnough120 && qtySold90Days < salesThreshold90) {
               recommendation = '>120d old stock - no sales - clearance';
             }
@@ -1319,10 +1331,10 @@ export class DatabaseStorage implements IStorage {
 
           // Orange tier: >90d old, sales < 10% of inventory in last 60 days
           if (currentStock > 0 && recommendation === '') {
-            const isOldEnough90 = typeof daysOfInventory === 'string' || 
+            const isOldEnough90 = typeof daysOfInventory === 'string' ||
                                  (typeof daysOfInventory === 'number' && daysOfInventory > 90);
             const salesThreshold60 = currentStock * 0.1;
-            
+
             if (isOldEnough90 && qtySold60Days < salesThreshold60) {
               recommendation = '>90d old stock/slower sales - check';
             }
@@ -1330,10 +1342,10 @@ export class DatabaseStorage implements IStorage {
 
           // Yellow tier: >60d old, sales < 10% of inventory in last 30 days
           if (currentStock > 0 && recommendation === '') {
-            const isOldEnough60 = typeof daysOfInventory === 'string' || 
+            const isOldEnough60 = typeof daysOfInventory === 'string' ||
                                  (typeof daysOfInventory === 'number' && daysOfInventory > 60);
             const salesThreshold30 = currentStock * 0.1;
-            
+
             if (isOldEnough60 && qtySold30Days < salesThreshold30) {
               recommendation = '>60d old stock/slow sales - check';
             }
@@ -1367,10 +1379,10 @@ export class DatabaseStorage implements IStorage {
             if (rec.includes('slow')) return 1;
             return 0;
           };
-          
+
           const priorityDiff = getPriority(b.recommendation) - getPriority(a.recommendation);
           if (priorityDiff !== 0) return priorityDiff;
-          
+
           // Within same priority, sort by days of inventory
           const aVal = typeof a.daysOfInventory === 'string' ? 999999 : a.daysOfInventory;
           const bVal = typeof b.daysOfInventory === 'string' ? 999999 : b.daysOfInventory;
