@@ -2202,21 +2202,32 @@ export class DatabaseStorage implements IStorage {
       // Find last supplier and last price for each product
       const lastPurchaseInfo = new Map<string, {supplier: string; price: number; date: Date}>();
 
+      // Create a map of purchase order IDs to their details
+      const purchaseOrderMap = new Map<number, {supplier: string; orderDate: Date}>();
+      for (const order of purchaseOrders) {
+        if (order.orderDate) {
+          purchaseOrderMap.set(order.id, {
+            supplier: order.supplier || 'Unknown',
+            orderDate: order.orderDate
+          });
+        }
+      }
+
+      // Now match purchase items with their orders
       for (const item of purchaseItems) {
         const productName = item.productName;
         
-        // Find the purchase order for this item
-        for (const order of purchaseOrders) {
-          if (order.orderDate) {
+        if (item.purchaseOrderId) {
+          const orderInfo = purchaseOrderMap.get(item.purchaseOrderId);
+          if (orderInfo) {
             const price = parseFloat(item.priceUsd || '0');
-            const supplier = order.supplier || 'Unknown';
-            
             const existing = lastPurchaseInfo.get(productName);
-            if (!existing || order.orderDate > existing.date) {
+            
+            if (!existing || orderInfo.orderDate > existing.date) {
               lastPurchaseInfo.set(productName, {
-                supplier: supplier,
+                supplier: orderInfo.supplier,
                 price: price,
-                date: order.orderDate
+                date: orderInfo.orderDate
               });
             }
           }
@@ -2241,14 +2252,23 @@ export class DatabaseStorage implements IStorage {
         }])
       );
 
-      // Generate recommendations
-      const recommendations = stockOutRisk.map(risk => {
-        const productInfo = productInfoMap.get(risk.productName);
-        const profit = profitMap.get(risk.productName);
-        const sales = salesByPeriod.get(risk.productName) || {
+      // Generate recommendations for all products (not just stock-out risk)
+      const allProductNames = new Set<string>();
+      
+      // Add all products from product list that have stock or transit
+      for (const product of productList) {
+        if ((product.stock && product.stock > 0) || (product.transit && product.transit > 0)) {
+          allProductNames.add(product.productName);
+        }
+      }
+
+      const recommendations = Array.from(allProductNames).map(productName => {
+        const productInfo = productInfoMap.get(productName);
+        const profit = profitMap.get(productName);
+        const sales = salesByPeriod.get(productName) || {
           sold30d: 0, sold60d: 0, sold90d: 0, sold120d: 0, sold150d: 0, sold180d: 0
         };
-        const lastPurchase = lastPurchaseInfo.get(risk.productName);
+        const lastPurchase = lastPurchaseInfo.get(productName);
 
         const stock = productInfo?.stock || 0;
         const transit = productInfo?.transit || 0;
@@ -2256,19 +2276,23 @@ export class DatabaseStorage implements IStorage {
         const lastSupplier = lastPurchase?.supplier || 'Unknown';
         const lastPrice = lastPurchase?.price || 0;
 
-        const optimalQty = risk.recommendedOrder;
+        // Find if this product has a stock-out risk recommendation
+        const riskInfo = stockOutRisk.find(r => r.productName === productName);
+        const optimalQty = riskInfo?.recommendedOrder || 0;
+        const daysUntilStockOut = riskInfo?.daysUntilStockOut || 999;
+
         const avgSalePrice = profit?.retailPrice || 0;
         
         // Calculate expected profit using current cost
         const expectedProfit = (avgSalePrice - currentCost) * optimalQty;
         
-        // Calculate margin % using current cost
+        // Calculate margin % using current cost: ((Sale Price - Cost) / Sale Price) × 100
         const profitMargin = avgSalePrice > 0 ? ((avgSalePrice - currentCost) / avgSalePrice) * 100 : 0;
 
         // Priority score = profitability × stock-out urgency
-        const stockOutUrgency = risk.daysUntilStockOut <= 7 ? 100 :
-                               risk.daysUntilStockOut <= 14 ? 75 :
-                               risk.daysUntilStockOut <= 30 ? 50 : 25;
+        const stockOutUrgency = daysUntilStockOut <= 7 ? 100 :
+                               daysUntilStockOut <= 14 ? 75 :
+                               daysUntilStockOut <= 30 ? 50 : 25;
         const priorityScore = (profitMargin * 0.6) + (stockOutUrgency * 0.4);
 
         let priority: 'critical' | 'high' | 'medium' | 'low';
@@ -2278,7 +2302,7 @@ export class DatabaseStorage implements IStorage {
         else priority = 'low';
 
         return {
-          productName: risk.productName,
+          productName,
           stock,
           transit,
           sold30d: sales.sold30d,
@@ -2293,7 +2317,7 @@ export class DatabaseStorage implements IStorage {
           currentCost: Number(currentCost.toFixed(2)),
           expectedProfit: Number(expectedProfit.toFixed(2)),
           profitMargin: Number(profitMargin.toFixed(1)),
-          stockOutRisk: risk.daysUntilStockOut,
+          stockOutRisk: daysUntilStockOut,
           priorityScore: Number(priorityScore.toFixed(1)),
           priority
         };
