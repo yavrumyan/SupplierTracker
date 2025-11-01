@@ -701,7 +701,7 @@ export default function CompStyleAnalyticsPhase2() {
                     <br />
                     <strong>Expected Profit:</strong> (Avg Sale Price - Current Cost) × Order Qty
                     <br />
-                    <strong>Margin %:</strong> ((Avg Sale Price - Current Cost) / Avg Sale Price) × 100
+                    <strong>Margin %:</strong> ((Avg Sale Price - Current Cost) / Current Cost) × 100
                     <br />
                     <strong>Priority Score:</strong> (Margin % × 0.6) + (Stock-Out Urgency × 0.4)
                   </p>

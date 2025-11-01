@@ -2286,8 +2286,8 @@ export class DatabaseStorage implements IStorage {
         // Calculate expected profit using current cost
         const expectedProfit = (avgSalePrice - currentCost) * optimalQty;
         
-        // Calculate margin % using current cost: ((Sale Price - Cost) / Sale Price) × 100
-        const profitMargin = avgSalePrice > 0 ? ((avgSalePrice - currentCost) / avgSalePrice) * 100 : 0;
+        // Calculate margin % using current cost: ((Sale Price - Cost) / Cost) × 100
+        const profitMargin = currentCost > 0 ? ((avgSalePrice - currentCost) / currentCost) * 100 : 0;
 
         // Priority score = profitability × stock-out urgency
         const stockOutUrgency = daysUntilStockOut <= 7 ? 100 :
