@@ -1019,19 +1019,32 @@ export class DatabaseStorage implements IStorage {
     // Get locked money (total value of only clearance products)
     const lockedMoney = clearanceProducts.reduce((sum, item) => sum + item.lockedValue, 0);
 
-    // Get 30-day sales volume (last 30 days only)
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    // Use Drizzle's select statement for better type safety and integration
-    const salesData = await db.select({
-      totalSales: sql<number>`SUM(${compstyleSalesItems.sumUsd})`
+    // Get 30-day sales volume based on last recorded transaction date
+    // First, find the latest order date
+    const latestOrderData = await db.select({
+      latestDate: sql<Date>`MAX(${compstyleSalesOrders.orderDate})`
     })
-    .from(compstyleSalesItems)
-    .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
-    .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo.toISOString()}`);
+    .from(compstyleSalesOrders);
 
-    const salesVolume30Days = salesData[0]?.totalSales || 0;
+    const latestOrderDate = latestOrderData[0]?.latestDate;
+
+    let salesVolume30Days = 0;
+
+    if (latestOrderDate) {
+      // Calculate 30 days before the last transaction date
+      const thirtyDaysAgo = new Date(latestOrderDate);
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      // Use Drizzle's select statement for better type safety and integration
+      const salesData = await db.select({
+        totalSales: sql<number>`SUM(${compstyleSalesItems.sumUsd})`
+      })
+      .from(compstyleSalesItems)
+      .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
+      .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo.toISOString()} AND ${compstyleSalesOrders.orderDate} <= ${latestOrderDate.toISOString()}`);
+
+      salesVolume30Days = salesData[0]?.totalSales || 0;
+    }
 
     return {
       productsToOrder,
