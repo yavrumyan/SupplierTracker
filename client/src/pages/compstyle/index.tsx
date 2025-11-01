@@ -36,7 +36,7 @@ export default function CompStyleDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-800">
-                {isLoading ? "..." : stats?.productsToOrder?.toLocaleString() || "0"}
+                {isLoading ? "..." : (stats?.productsToOrder || 0).toLocaleString()}
               </div>
               <p className="text-xs text-slate-600">Recommended reorders</p>
             </CardContent>
@@ -49,7 +49,7 @@ export default function CompStyleDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-red-600">
-                {isLoading ? "..." : stats?.deadProducts?.toLocaleString() || "0"}
+                {isLoading ? "..." : (stats?.deadProducts || 0).toLocaleString()}
               </div>
               <p className="text-xs text-slate-600">Dead stock items</p>
             </CardContent>
@@ -62,7 +62,7 @@ export default function CompStyleDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-red-800">
-                {isLoading ? "..." : `$${stats?.lockedMoney?.toLocaleString() || "0"}`}
+                ${isLoading ? "..." : (stats?.lockedMoney || 0).toLocaleString()}
               </div>
               <p className="text-xs text-slate-600">Dead stock value</p>
             </CardContent>
@@ -75,7 +75,7 @@ export default function CompStyleDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-800">
-                {isLoading ? "..." : `$${stats?.salesVolume30Days?.toLocaleString() || "0"}`}
+                ${isLoading ? "..." : (stats?.salesVolume30Days || 0).toLocaleString()}
               </div>
               <p className="text-xs text-slate-600">Last 30 days total</p>
             </CardContent>
