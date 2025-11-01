@@ -1003,55 +1003,67 @@ export class DatabaseStorage implements IStorage {
     lockedMoney: number;
     salesVolume30Days: number;
   }> {
-    // Get stock-out risk count (products to order)
-    const stockOutRisk = await this.getCompstyleStockOutRisk();
-    const productsToOrder = stockOutRisk.length;
+    try {
+      // Get stock-out risk count (products to order)
+      const stockOutRisk = await this.getCompstyleStockOutRisk();
+      const productsToOrder = stockOutRisk.length;
 
-    // Get dead stock analysis
-    const deadStock = await this.getCompstyleDeadStock();
+      // Get dead stock analysis
+      const deadStock = await this.getCompstyleDeadStock();
 
-    // Only count products with ">120d old stock - no sales - clearance" recommendation
-    const clearanceProducts = deadStock.filter(item =>
-      item.recommendation === '>120d old stock - no sales - clearance'
-    );
-    const deadProducts = clearanceProducts.length;
+      // Only count products with ">120d old stock - no sales - clearance" recommendation
+      const clearanceProducts = deadStock.filter(item =>
+        item.recommendation === '>120d old stock - no sales - clearance'
+      );
+      const deadProducts = clearanceProducts.length;
 
-    // Get locked money (total value of only clearance products)
-    const lockedMoney = clearanceProducts.reduce((sum, item) => sum + item.lockedValue, 0);
+      // Get locked money (total value of only clearance products)
+      const lockedMoney = clearanceProducts.reduce((sum, item) => sum + item.lockedValue, 0);
 
-    // Get 30-day sales volume based on last recorded transaction date
-    // First, find the latest order date
-    const latestOrderData = await db.select({
-      latestDate: sql<Date>`MAX(${compstyleSalesOrders.orderDate})`
-    })
-    .from(compstyleSalesOrders);
-
-    const latestOrderDate = latestOrderData[0]?.latestDate;
-
-    let salesVolume30Days = 0;
-
-    if (latestOrderDate) {
-      // Calculate 30 days before the last transaction date
-      const thirtyDaysAgo = new Date(latestOrderDate);
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-      // Use Drizzle's select statement for better type safety and integration
-      const salesData = await db.select({
-        totalSales: sql<number>`COALESCE(SUM(${compstyleSalesItems.sumUsd}), 0)`
+      // Get 30-day sales volume based on last recorded transaction date
+      // First, find the latest order date
+      const latestOrderData = await db.select({
+        latestDate: sql<Date>`MAX(${compstyleSalesOrders.orderDate})`
       })
-      .from(compstyleSalesItems)
-      .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
-      .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo.toISOString()} AND ${compstyleSalesOrders.orderDate} <= ${latestOrderDate.toISOString()}`);
+      .from(compstyleSalesOrders);
 
-      salesVolume30Days = Number(salesData[0]?.totalSales) || 0;
+      const latestOrderDate = latestOrderData[0]?.latestDate;
+
+      let salesVolume30Days = 0;
+
+      if (latestOrderDate) {
+        // Calculate 30 days before the last transaction date
+        const thirtyDaysAgo = new Date(latestOrderDate);
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        // Use Drizzle's select statement for better type safety and integration
+        const salesData = await db.select({
+          totalSales: sql<string>`COALESCE(SUM(CAST(${compstyleSalesItems.sumUsd} AS DECIMAL)), 0)`
+        })
+        .from(compstyleSalesItems)
+        .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
+        .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo.toISOString()} AND ${compstyleSalesOrders.orderDate} <= ${latestOrderDate.toISOString()}`);
+
+        salesVolume30Days = parseFloat(salesData[0]?.totalSales || '0');
+      }
+
+      console.log('Dashboard stats calculated:', {
+        productsToOrder,
+        deadProducts,
+        lockedMoney: Math.round(lockedMoney),
+        salesVolume30Days: Math.round(salesVolume30Days)
+      });
+
+      return {
+        productsToOrder,
+        deadProducts,
+        lockedMoney: Math.round(lockedMoney),
+        salesVolume30Days: Math.round(salesVolume30Days)
+      };
+    } catch (error) {
+      console.error('Error in getCompstyleDashboardStats:', error);
+      throw error;
     }
-
-    return {
-      productsToOrder,
-      deadProducts,
-      lockedMoney: Math.round(lockedMoney),
-      salesVolume30Days: Math.round(salesVolume30Days)
-    };
   }
 
   async getCompstyleSalesVelocity(): Promise<Array<{
