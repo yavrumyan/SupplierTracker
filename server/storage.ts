@@ -1936,8 +1936,46 @@ export class DatabaseStorage implements IStorage {
       const kievyanStock = await db.select().from(compstyleKievyanStock);
       const sevanStock = await db.select().from(compstyleSevanStock);
 
-      // Analyze Kievyan performance
-      const kievyanOrders = salesOrders.filter(o => o.location === 'Kievyan');
+      // Find the latest order date across all sales orders
+      let latestOrderDate: Date | null = null;
+      for (const order of salesOrders) {
+        if (order.orderDate) {
+          if (!latestOrderDate || order.orderDate > latestOrderDate) {
+            latestOrderDate = order.orderDate;
+          }
+        }
+      }
+
+      // If no orders found, return empty data
+      if (!latestOrderDate) {
+        return {
+          kievyan: {
+            totalSales: 0,
+            totalRevenue: 0,
+            avgOrderValue: 0,
+            topProducts: []
+          },
+          sevan: {
+            totalSales: 0,
+            totalRevenue: 0,
+            avgOrderValue: 0,
+            topProducts: []
+          },
+          transferRecommendations: []
+        };
+      }
+
+      // Calculate the date 30 days before the latest order date
+      const thirtyDaysAgo = new Date(latestOrderDate);
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      // Filter orders to only include last 30 days
+      const recentOrders = salesOrders.filter(o => 
+        o.orderDate && o.orderDate >= thirtyDaysAgo && o.orderDate <= latestOrderDate
+      );
+
+      // Analyze Kievyan performance (last 30 days only)
+      const kievyanOrders = recentOrders.filter(o => o.location === 'Kievyan');
       const kievyanOrderIds = new Set(kievyanOrders.map(o => o.id));
       const kievyanItems = salesItems.filter(i => i.salesOrderId && kievyanOrderIds.has(i.salesOrderId));
 
@@ -1951,8 +1989,8 @@ export class DatabaseStorage implements IStorage {
         kievyanProductSales.set(item.productName, stats);
       });
 
-      // Analyze Sevan performance
-      const sevanOrders = salesOrders.filter(o => o.location === 'Sevan');
+      // Analyze Sevan performance (last 30 days only)
+      const sevanOrders = recentOrders.filter(o => o.location === 'Sevan');
       const sevanOrderIds = new Set(sevanOrders.map(o => o.id));
       const sevanItems = salesItems.filter(i => i.salesOrderId && sevanOrderIds.has(i.salesOrderId));
 
