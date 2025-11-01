@@ -2083,9 +2083,18 @@ export class DatabaseStorage implements IStorage {
   // Phase 2: Order Recommendations Engine
   async getOrderRecommendationsEngine(): Promise<Array<{
     productName: string;
+    stock: number;
+    transit: number;
+    sold30d: number;
+    sold60d: number;
+    sold90d: number;
+    sold120d: number;
+    sold150d: number;
+    sold180d: number;
     optimalOrderQty: number;
-    suggestedSupplier: string;
-    supplierPrice: number;
+    lastSupplier: string;
+    lastPrice: number;
+    currentCost: number;
     expectedProfit: number;
     profitMargin: number;
     stockOutRisk: number;
@@ -2095,27 +2104,134 @@ export class DatabaseStorage implements IStorage {
     try {
       const stockOutRisk = await this.getCompstyleStockOutRisk();
       const profitability = await this.getProfitabilityHeatMap();
-      const suppliers = await this.getSupplierPerformanceMatrix();
-      const transitData = await db.select().from(compstyleTransit);
-      const totalProcurement = await db.select().from(compstyleTotalProcurement);
+      const productList = await db.select().from(compstyleProductList);
+      const purchaseOrders = await db.select().from(compstylePurchaseOrders);
+      const purchaseItems = await db.select().from(compstylePurchaseItems);
+      const salesOrders = await db.select().from(compstyleSalesOrders);
+      const salesItems = await db.select().from(compstyleSalesItems);
 
-      // Create supplier price map
-      const supplierPrices = new Map<string, Map<string, {supplier: string; price: number}>>();
-      transitData.forEach(item => {
-        if (!item.supplier) return;
-        const price = parseFloat(item.purchasePriceUsd || '0');
-        if (price === 0) return;
-
-        if (!supplierPrices.has(item.productName)) {
-          supplierPrices.set(item.productName, new Map());
+      // Find the latest sales order date
+      let latestOrderDate: Date | null = null;
+      for (const order of salesOrders) {
+        if (order.orderDate) {
+          if (!latestOrderDate || order.orderDate > latestOrderDate) {
+            latestOrderDate = order.orderDate;
+          }
         }
-        const productSuppliers = supplierPrices.get(item.productName)!;
+      }
 
-        const existing = productSuppliers.get(item.supplier);
-        if (!existing || price < existing.price) {
-          productSuppliers.set(item.supplier, {supplier: item.supplier, price});
+      if (!latestOrderDate) {
+        return [];
+      }
+
+      // Calculate historical sales periods
+      const thirtyDaysAgo = new Date(latestOrderDate);
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      const sixtyDaysAgo = new Date(latestOrderDate);
+      sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
+
+      const ninetyDaysAgo = new Date(latestOrderDate);
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+      const oneHundredTwentyDaysAgo = new Date(latestOrderDate);
+      oneHundredTwentyDaysAgo.setDate(oneHundredTwentyDaysAgo.getDate() - 120);
+
+      const oneHundredFiftyDaysAgo = new Date(latestOrderDate);
+      oneHundredFiftyDaysAgo.setDate(oneHundredFiftyDaysAgo.getDate() - 150);
+
+      const oneHundredEightyDaysAgo = new Date(latestOrderDate);
+      oneHundredEightyDaysAgo.setDate(oneHundredEightyDaysAgo.getDate() - 180);
+
+      // Create order ID sets for each period
+      const orders30d = new Set<number>();
+      const orders60d = new Set<number>();
+      const orders90d = new Set<number>();
+      const orders120d = new Set<number>();
+      const orders150d = new Set<number>();
+      const orders180d = new Set<number>();
+
+      for (const order of salesOrders) {
+        if (order.orderDate && order.orderDate >= thirtyDaysAgo && order.orderDate <= latestOrderDate) {
+          orders30d.add(order.id);
         }
-      });
+        if (order.orderDate && order.orderDate >= sixtyDaysAgo && order.orderDate <= latestOrderDate) {
+          orders60d.add(order.id);
+        }
+        if (order.orderDate && order.orderDate >= ninetyDaysAgo && order.orderDate <= latestOrderDate) {
+          orders90d.add(order.id);
+        }
+        if (order.orderDate && order.orderDate >= oneHundredTwentyDaysAgo && order.orderDate <= latestOrderDate) {
+          orders120d.add(order.id);
+        }
+        if (order.orderDate && order.orderDate >= oneHundredFiftyDaysAgo && order.orderDate <= latestOrderDate) {
+          orders150d.add(order.id);
+        }
+        if (order.orderDate && order.orderDate >= oneHundredEightyDaysAgo && order.orderDate <= latestOrderDate) {
+          orders180d.add(order.id);
+        }
+      }
+
+      // Calculate sales for each product in each period
+      const salesByPeriod = new Map<string, {
+        sold30d: number;
+        sold60d: number;
+        sold90d: number;
+        sold120d: number;
+        sold150d: number;
+        sold180d: number;
+      }>();
+
+      for (const item of salesItems) {
+        const stats = salesByPeriod.get(item.productName) || {
+          sold30d: 0, sold60d: 0, sold90d: 0, sold120d: 0, sold150d: 0, sold180d: 0
+        };
+
+        if (item.salesOrderId) {
+          if (orders30d.has(item.salesOrderId)) stats.sold30d += item.qty;
+          if (orders60d.has(item.salesOrderId)) stats.sold60d += item.qty;
+          if (orders90d.has(item.salesOrderId)) stats.sold90d += item.qty;
+          if (orders120d.has(item.salesOrderId)) stats.sold120d += item.qty;
+          if (orders150d.has(item.salesOrderId)) stats.sold150d += item.qty;
+          if (orders180d.has(item.salesOrderId)) stats.sold180d += item.qty;
+        }
+
+        salesByPeriod.set(item.productName, stats);
+      }
+
+      // Find last supplier and last price for each product
+      const lastPurchaseInfo = new Map<string, {supplier: string; price: number; date: Date}>();
+
+      for (const item of purchaseItems) {
+        const productName = item.productName;
+        
+        // Find the purchase order for this item
+        for (const order of purchaseOrders) {
+          if (order.orderDate) {
+            const price = parseFloat(item.priceUsd || '0');
+            const supplier = order.supplier || 'Unknown';
+            
+            const existing = lastPurchaseInfo.get(productName);
+            if (!existing || order.orderDate > existing.date) {
+              lastPurchaseInfo.set(productName, {
+                supplier: supplier,
+                price: price,
+                date: order.orderDate
+              });
+            }
+          }
+        }
+      }
+
+      // Create product info map
+      const productInfoMap = new Map(
+        productList.map(p => [p.productName, {
+          stock: p.stock || 0,
+          transit: p.transit || 0,
+          cost: parseFloat(p.cost || '0'),
+          latestCost: parseFloat(p.latestCost || '0')
+        }])
+      );
 
       // Create profitability map
       const profitMap = new Map(
@@ -2125,39 +2241,29 @@ export class DatabaseStorage implements IStorage {
         }])
       );
 
-      // Create supplier performance map
-      const supplierScoreMap = new Map(
-        suppliers.map(s => [s.supplier, s.performanceScore])
-      );
-
       // Generate recommendations
       const recommendations = stockOutRisk.map(risk => {
+        const productInfo = productInfoMap.get(risk.productName);
         const profit = profitMap.get(risk.productName);
-        const productSuppliers = supplierPrices.get(risk.productName);
+        const sales = salesByPeriod.get(risk.productName) || {
+          sold30d: 0, sold60d: 0, sold90d: 0, sold120d: 0, sold150d: 0, sold180d: 0
+        };
+        const lastPurchase = lastPurchaseInfo.get(risk.productName);
 
-        // Find best supplier (best price + performance)
-        let bestSupplier = 'Unknown';
-        let bestPrice = 0;
-        let bestScore = 0;
-
-        if (productSuppliers) {
-          productSuppliers.forEach((supplierData, supplierName) => {
-            const performanceScore = supplierScoreMap.get(supplierName) || 50;
-            // Score combines low price and high performance
-            const priceScore = 100 - (supplierData.price / 10); // Lower price = higher score
-            const combinedScore = (priceScore * 0.4) + (performanceScore * 0.6);
-
-            if (combinedScore > bestScore) {
-              bestScore = combinedScore;
-              bestSupplier = supplierName;
-              bestPrice = supplierData.price;
-            }
-          });
-        }
+        const stock = productInfo?.stock || 0;
+        const transit = productInfo?.transit || 0;
+        const currentCost = productInfo?.cost || productInfo?.latestCost || 0;
+        const lastSupplier = lastPurchase?.supplier || 'Unknown';
+        const lastPrice = lastPurchase?.price || 0;
 
         const optimalQty = risk.recommendedOrder;
-        const expectedProfit = profit ? (profit.retailPrice - bestPrice) * optimalQty : 0;
-        const profitMargin = profit ? profit.margin : 0;
+        const avgSalePrice = profit?.retailPrice || 0;
+        
+        // Calculate expected profit using current cost
+        const expectedProfit = (avgSalePrice - currentCost) * optimalQty;
+        
+        // Calculate margin % using current cost
+        const profitMargin = avgSalePrice > 0 ? ((avgSalePrice - currentCost) / avgSalePrice) * 100 : 0;
 
         // Priority score = profitability × stock-out urgency
         const stockOutUrgency = risk.daysUntilStockOut <= 7 ? 100 :
@@ -2173,9 +2279,18 @@ export class DatabaseStorage implements IStorage {
 
         return {
           productName: risk.productName,
+          stock,
+          transit,
+          sold30d: sales.sold30d,
+          sold60d: sales.sold60d,
+          sold90d: sales.sold90d,
+          sold120d: sales.sold120d,
+          sold150d: sales.sold150d,
+          sold180d: sales.sold180d,
           optimalOrderQty: optimalQty,
-          suggestedSupplier: bestSupplier,
-          supplierPrice: Number(bestPrice.toFixed(2)),
+          lastSupplier,
+          lastPrice: Number(lastPrice.toFixed(2)),
+          currentCost: Number(currentCost.toFixed(2)),
           expectedProfit: Number(expectedProfit.toFixed(2)),
           profitMargin: Number(profitMargin.toFixed(1)),
           stockOutRisk: risk.daysUntilStockOut,

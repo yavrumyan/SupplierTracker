@@ -41,9 +41,18 @@ interface LocationOptimization {
 
 interface OrderRecommendation {
   productName: string;
+  stock: number;
+  transit: number;
+  sold30d: number;
+  sold60d: number;
+  sold90d: number;
+  sold120d: number;
+  sold150d: number;
+  sold180d: number;
   optimalOrderQty: number;
-  suggestedSupplier: string;
-  supplierPrice: number;
+  lastSupplier: string;
+  lastPrice: number;
+  currentCost: number;
   expectedProfit: number;
   profitMargin: number;
   stockOutRisk: number;
@@ -298,15 +307,24 @@ export default function CompStyleAnalyticsPhase2() {
     const timestamp = new Date().toISOString().split('T')[0];
     
     if (orderRecommendations && orderRecommendations.length > 0) {
-      const headers = ['Product', 'Order Qty', 'Supplier', 'Price', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority'];
+      const headers = ['Product', 'Stock', 'Transit', 'Sold (30d)', 'Sold (60d)', 'Sold (90d)', 'Sold (120d)', 'Sold (150d)', 'Sold (180d)', 'Order Qty', 'Last Supplier', 'Last Price', 'Current Cost', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority'];
       const csvData = [headers];
 
       orderRecommendations.forEach(r => {
         csvData.push([
           r.productName,
+          r.stock.toString(),
+          r.transit.toString(),
+          r.sold30d.toString(),
+          r.sold60d.toString(),
+          r.sold90d.toString(),
+          r.sold120d.toString(),
+          r.sold150d.toString(),
+          r.sold180d.toString(),
           r.optimalOrderQty.toString(),
-          r.suggestedSupplier,
-          `$${r.supplierPrice.toFixed(2)}`,
+          r.lastSupplier,
+          `$${r.lastPrice.toFixed(2)}`,
+          `$${r.currentCost.toFixed(2)}`,
           `$${r.expectedProfit.toFixed(2)}`,
           `${r.profitMargin.toFixed(1)}%`,
           r.stockOutRisk < 999 ? r.stockOutRisk.toString() : '∞',
@@ -613,11 +631,20 @@ export default function CompStyleAnalyticsPhase2() {
                   <thead className="bg-slate-50">
                     <tr>
                       <th className="p-3 text-left">Product</th>
+                      <th className="p-3 text-right">Stock</th>
+                      <th className="p-3 text-right">Transit</th>
+                      <th className="p-3 text-right">Sold (30d)</th>
+                      <th className="p-3 text-right">Sold (60d)</th>
+                      <th className="p-3 text-right">Sold (90d)</th>
+                      <th className="p-3 text-right">Sold (120d)</th>
+                      <th className="p-3 text-right">Sold (150d)</th>
+                      <th className="p-3 text-right">Sold (180d)</th>
                       <th className="p-3 text-right">Order Qty</th>
-                      <th className="p-3 text-left">Supplier</th>
-                      <th className="p-3 text-right">Price</th>
+                      <th className="p-3 text-left">Last Supplier</th>
+                      <th className="p-3 text-right">Last Price</th>
+                      <th className="p-3 text-right">Current Cost</th>
                       <th className="p-3 text-right">Expected Profit</th>
-                      <th className="p-3 text-right">Margin</th>
+                      <th className="p-3 text-right">Margin %</th>
                       <th className="p-3 text-right">Days Left</th>
                       <th className="p-3 text-center">Priority</th>
                     </tr>
@@ -630,9 +657,18 @@ export default function CompStyleAnalyticsPhase2() {
                         <td className="p-3 font-medium max-w-xs truncate" title={rec.productName}>
                           {rec.productName}
                         </td>
+                        <td className="p-3 text-right">{rec.stock}</td>
+                        <td className="p-3 text-right">{rec.transit}</td>
+                        <td className="p-3 text-right">{rec.sold30d}</td>
+                        <td className="p-3 text-right">{rec.sold60d}</td>
+                        <td className="p-3 text-right">{rec.sold90d}</td>
+                        <td className="p-3 text-right">{rec.sold120d}</td>
+                        <td className="p-3 text-right">{rec.sold150d}</td>
+                        <td className="p-3 text-right">{rec.sold180d}</td>
                         <td className="p-3 text-right font-bold text-blue-600">{rec.optimalOrderQty}</td>
-                        <td className="p-3">{rec.suggestedSupplier}</td>
-                        <td className="p-3 text-right">${rec.supplierPrice.toFixed(2)}</td>
+                        <td className="p-3">{rec.lastSupplier}</td>
+                        <td className="p-3 text-right">${rec.lastPrice.toFixed(2)}</td>
+                        <td className="p-3 text-right">${rec.currentCost.toFixed(2)}</td>
                         <td className="p-3 text-right font-semibold text-green-600">
                           ${rec.expectedProfit.toFixed(2)}
                         </td>
@@ -655,11 +691,19 @@ export default function CompStyleAnalyticsPhase2() {
                   </tbody>
                 </table>
                 <div className="mt-4 p-4 bg-slate-50 rounded-lg">
-                  <div className="text-sm font-semibold mb-2">Priority Calculation:</div>
+                  <div className="text-sm font-semibold mb-2">Calculation Logic:</div>
                   <p className="text-xs text-slate-600">
-                    Priority Score = (Profit Margin × 0.6) + (Stock-Out Urgency × 0.4)
+                    <strong>Last Supplier:</strong> Most recent supplier from procurement data
                     <br />
-                    Recommendations sorted by highest priority score (profitability × urgency)
+                    <strong>Last Price:</strong> Most recent purchase price
+                    <br />
+                    <strong>Current Cost:</strong> Product cost (or latest cost if unavailable)
+                    <br />
+                    <strong>Expected Profit:</strong> (Avg Sale Price - Current Cost) × Order Qty
+                    <br />
+                    <strong>Margin %:</strong> ((Avg Sale Price - Current Cost) / Avg Sale Price) × 100
+                    <br />
+                    <strong>Priority Score:</strong> (Margin % × 0.6) + (Stock-Out Urgency × 0.4)
                   </p>
                 </div>
               </div>
