@@ -1042,7 +1042,7 @@ export class DatabaseStorage implements IStorage {
         })
         .from(compstyleSalesItems)
         .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
-        .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo.toISOString()} AND ${compstyleSalesOrders.orderDate} <= ${latestOrderDate.toISOString()}`);
+        .where(sql`${compstyleSalesOrders.orderDate} >= ${thirtyDaysAgo} AND ${compstyleSalesOrders.orderDate} <= ${latestOrderDate}`);
 
         salesVolume30Days = parseFloat(salesData[0]?.totalSales || '0');
       }
