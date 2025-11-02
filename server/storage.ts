@@ -1018,11 +1018,19 @@ export class DatabaseStorage implements IStorage {
       let totalTransitValue = 0;
       for (const item of transitData) {
         const qty = item.qty || 0;
-        const cost = parseFloat(item.currentCost || '0');
+        const cost = parseFloat(item.purchasePriceUsd || item.currentCost || '0');
         totalTransitValue += qty * cost;
       }
 
       const totalInventory = currentStockValue + totalTransitValue;
+
+      console.log('Inventory calculation details:', {
+        currentStockValue: currentStockValue.toFixed(2),
+        totalTransitValue: totalTransitValue.toFixed(2),
+        totalInventory: totalInventory.toFixed(2),
+        stockItemsCount: totalStockData.length,
+        transitItemsCount: transitData.length
+      });
 
       // Get dead stock analysis
       const deadStock = await this.getCompstyleDeadStock();
