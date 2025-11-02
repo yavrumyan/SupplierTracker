@@ -308,22 +308,17 @@ export default function CompStyleAnalyticsPhase2() {
   const exportOrderRecommendations = () => {
     const timestamp = new Date().toISOString().split('T')[0];
 
-    if (orderRecommendations && orderRecommendations.length > 0) {
-      const headers = ['Product', 'Stock', 'Transit', 'Sold (30d)', 'Sold (60d)', 'Sold (90d)', 'Sold (120d)', 'Sold (150d)', 'Sold (180d)', 'Order Qty', 'Last Supplier', 'Last Price', 'Current Cost', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority'];
+    if (filteredOrderRecommendations && filteredOrderRecommendations.length > 0) {
+      const headers = ['Product', 'Stock', 'Transit', `Sold (${selectedSalesPeriod})`, 'Order Qty', 'Last Supplier', 'Last Price', 'Current Cost', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority', 'Sales Period', 'Transit Time'];
       const csvData = [headers];
 
-      orderRecommendations.forEach(r => {
+      filteredOrderRecommendations.forEach(r => {
         csvData.push([
           r.productName,
           r.stock.toString(),
           r.transit.toString(),
-          r.sold30d.toString(),
-          r.sold60d.toString(),
-          r.sold90d.toString(),
-          r.sold120d.toString(),
-          r.sold150d.toString(),
-          r.sold180d.toString(),
-          r.optimalOrderQty.toString(),
+          r.soldQty.toString(),
+          r.calculatedOrderQty.toString(),
           r.lastSupplier,
           `$${r.lastPrice.toFixed(2)}`,
           `$${r.currentCost.toFixed(2)}`,
@@ -331,7 +326,9 @@ export default function CompStyleAnalyticsPhase2() {
           `${r.profitMargin.toFixed(1)}%`,
           r.stockOutRisk < 999 ? r.stockOutRisk.toString() : '∞',
           r.priorityScore.toString(),
-          r.priority.toUpperCase()
+          r.priority.toUpperCase(),
+          selectedSalesPeriod,
+          `${transitLabels[selectedTransitTime]} (${transitMultipliers[selectedTransitTime]}x)`
         ]);
       });
 
@@ -343,7 +340,7 @@ export default function CompStyleAnalyticsPhase2() {
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      link.setAttribute('download', `order-recommendations_${timestamp}.csv`);
+      link.setAttribute('download', `order-recommendations_${selectedSalesPeriod}_${selectedTransitTime}_${timestamp}.csv`);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
       link.click();
@@ -352,7 +349,7 @@ export default function CompStyleAnalyticsPhase2() {
 
       toast({
         title: "Export successful",
-        description: "Order recommendations exported",
+        description: `Order recommendations exported with ${selectedSalesPeriod} sales and ${transitLabels[selectedTransitTime]} transit time`,
       });
     }
   };
