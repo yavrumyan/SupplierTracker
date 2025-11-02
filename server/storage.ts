@@ -1077,7 +1077,7 @@ export class DatabaseStorage implements IStorage {
       }
 
       // Calculate Business Health Index
-      // 1. Sales Volume Score (30% weight) - compare current 30d sales to historical average (last 6 months)
+      // 1. Sales Volume Score (40% weight) - compare current 30d sales to historical average (last 6 months)
       // Calculate sales for each of the 6 historical 30-day periods
       const historicalPeriods = [];
       for (let i = 1; i <= 6; i++) {
@@ -1110,7 +1110,7 @@ export class DatabaseStorage implements IStorage {
         ? Math.min(100, (salesVolume30Days / historicalAverage) * 100)
         : 100;
 
-      // 2. Profitability Score (35% weight) - based on overall profit margin
+      // 2. Profitability Score (30% weight) - based on overall profit margin
       // Get profitability data to calculate average margin
       const profitabilityData = await this.getProfitabilityHeatMap();
       let totalRevenue = 0;
@@ -1131,10 +1131,10 @@ export class DatabaseStorage implements IStorage {
       const targetMargin = 17.5;
       const profitabilityScore = Math.min(100, (averageMargin / targetMargin) * 100);
 
-      // 3. Stock Health Score (25% weight) - already calculated above
+      // 3. Stock Health Score (15% weight) - already calculated above
       const stockHealthScore = stockHealth;
 
-      // 4. Inventory Health Score (25% weight) - optimal inventory = 3x monthly sales
+      // 4. Inventory Health Score (15% weight) - optimal inventory = 3x monthly sales
       const optimalInventory = salesVolume30Days * 3; // 90 days of inventory
       let inventoryHealthScore = 100;
       
@@ -1156,10 +1156,10 @@ export class DatabaseStorage implements IStorage {
 
       // Calculate weighted Business Health Index (updated weights)
       const businessHealthIndex = 
-        (salesVolumeScore * 0.30) + 
+        (salesVolumeScore * 0.40) + 
         (profitabilityScore * 0.30) + 
-        (stockHealthScore * 0.20) +
-        (inventoryHealthScore * 0.20);
+        (stockHealthScore * 0.15) +
+        (inventoryHealthScore * 0.15);
 
       console.log('Dashboard stats calculated:', {
         totalInventory: Math.round(totalInventory),
