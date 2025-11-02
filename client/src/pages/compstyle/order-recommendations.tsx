@@ -150,20 +150,20 @@ export default function CompStyleOrderRecommendations() {
         </div>
 
         {/* Filters */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Order Parameters</CardTitle>
+        <Card className="mb-8 bg-white shadow-sm">
+          <CardHeader className="bg-slate-50 border-b">
+            <CardTitle className="text-lg">Order Parameters</CardTitle>
             <CardDescription>
               Adjust sales period and transit time to customize order quantities
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Sales Period</label>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 block">Sales Period</label>
                 <Select value={salesPeriod} onValueChange={(value) => setSalesPeriod(value as SalesPeriod)}>
-                  <SelectTrigger>
-                    <SelectValue />
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="Select sales period" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="30d">Sold (30d)</SelectItem>
@@ -174,15 +174,15 @@ export default function CompStyleOrderRecommendations() {
                     <SelectItem value="180d">Sold (180d)</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500">
                   Historical sales period to base calculations on
                 </p>
               </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Transit Time</label>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 block">Transit Time</label>
                 <Select value={transitTime} onValueChange={(value) => setTransitTime(value as TransitTime)}>
-                  <SelectTrigger>
-                    <SelectValue />
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue placeholder="Select transit time" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="2w">2 weeks (×0.5)</SelectItem>
@@ -194,10 +194,15 @@ export default function CompStyleOrderRecommendations() {
                     <SelectItem value="12w">12 weeks (×3.0)</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500">
                   Expected delivery time multiplier for order quantity
                 </p>
               </div>
+            </div>
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-800">
+                <strong>Current Settings:</strong> Using <span className="font-semibold">{salesPeriod}</span> sales data with <span className="font-semibold">{transitLabels[transitTime]}</span> transit time (multiplier: {transitMultipliers[transitTime]}×)
+              </p>
             </div>
           </CardContent>
         </Card>
