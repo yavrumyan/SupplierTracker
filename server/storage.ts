@@ -1107,24 +1107,53 @@ export class DatabaseStorage implements IStorage {
       // 3. Stock Health Score (25% weight) - already calculated above
       const stockHealthScore = stockHealth;
 
-      // Calculate weighted Business Health Index
+      // 4. Inventory Health Score (25% weight) - optimal inventory = 3x monthly sales
+      const optimalInventory = salesVolume30Days * 3; // 90 days of inventory
+      let inventoryHealthScore = 100;
+      
+      if (optimalInventory > 0) {
+        // Score = (Optimal / Actual) × 100, capped at 100
+        // If actual = optimal (3x), score = 100%
+        // If actual > optimal (overstocked), score decreases
+        // If actual < optimal (understocked), score decreases
+        const ratio = optimalInventory / totalInventory;
+        
+        if (totalInventory > optimalInventory) {
+          // Overstocked: penalize excess inventory
+          inventoryHealthScore = Math.max(0, ratio * 100);
+        } else {
+          // Understocked: penalize insufficient inventory
+          inventoryHealthScore = Math.max(0, (totalInventory / optimalInventory) * 100);
+        }
+      }
+
+      // Calculate weighted Business Health Index (updated weights)
       const businessHealthIndex = 
-        (salesVolumeScore * 0.40) + 
-        (profitabilityScore * 0.35) + 
-        (stockHealthScore * 0.25);
+        (salesVolumeScore * 0.30) + 
+        (profitabilityScore * 0.30) + 
+        (stockHealthScore * 0.20) +
+        (inventoryHealthScore * 0.20);
 
       console.log('Dashboard stats calculated:', {
         totalInventory: Math.round(totalInventory),
         stockHealth: stockHealth.toFixed(1),
         businessHealthIndex: businessHealthIndex.toFixed(1),
-        salesVolume30Days: Math.round(salesVolume30Days)
+        salesVolume30Days: Math.round(salesVolume30Days),
+        salesVolumeScore: salesVolumeScore.toFixed(1),
+        profitabilityScore: profitabilityScore.toFixed(1),
+        inventoryHealthScore: inventoryHealthScore.toFixed(1)
       });
 
       return {
         totalInventory: Math.round(totalInventory),
         stockHealth: Math.round(stockHealth * 10) / 10, // Round to 1 decimal
         businessHealthIndex: Math.round(businessHealthIndex * 10) / 10, // Round to 1 decimal
-        salesVolume30Days: Math.round(salesVolume30Days)
+        salesVolume30Days: Math.round(salesVolume30Days),
+        // Component scores for detailed insight
+        salesVolumeScore: Math.round(salesVolumeScore * 10) / 10,
+        profitabilityScore: Math.round(profitabilityScore * 10) / 10,
+        stockHealthScore: Math.round(stockHealth * 10) / 10,
+        inventoryHealthScore: Math.round(inventoryHealthScore * 10) / 10
       };
     } catch (error) {
       console.error('Error in getCompstyleDashboardStats:', error);

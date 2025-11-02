@@ -9,6 +9,10 @@ interface DashboardStats {
   stockHealth: number;
   businessHealthIndex: number;
   salesVolume30Days: number;
+  salesVolumeScore: number;
+  profitabilityScore: number;
+  stockHealthScore: number;
+  inventoryHealthScore: number;
 }
 
 export default function CompStyleDashboard() {
@@ -43,12 +47,49 @@ export default function CompStyleDashboard() {
               }`}>
                 {isLoading ? "..." : (stats?.businessHealthIndex || 0).toFixed(1)}
               </div>
-              <p className="text-xs text-slate-600">
-                {isLoading ? "Calculating..." :
-                (stats?.businessHealthIndex || 0) >= 90 ? 'Excellent' :
-                (stats?.businessHealthIndex || 0) >= 75 ? 'Good' :
-                (stats?.businessHealthIndex || 0) >= 60 ? 'Fair' : 'Needs Attention'}
-              </p>
+              {!isLoading && stats && (
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-600">Sales Volume:</span>
+                    <span className={`font-semibold ${
+                      stats.salesVolumeScore >= 80 ? 'text-green-600' :
+                      stats.salesVolumeScore >= 60 ? 'text-orange-500' : 'text-red-600'
+                    }`}>
+                      {stats.salesVolumeScore.toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-600">Profitability:</span>
+                    <span className={`font-semibold ${
+                      stats.profitabilityScore >= 80 ? 'text-green-600' :
+                      stats.profitabilityScore >= 60 ? 'text-orange-500' : 'text-red-600'
+                    }`}>
+                      {stats.profitabilityScore.toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-600">Stock Health:</span>
+                    <span className={`font-semibold ${
+                      stats.stockHealthScore >= 80 ? 'text-green-600' :
+                      stats.stockHealthScore >= 70 ? 'text-orange-500' : 'text-red-600'
+                    }`}>
+                      {stats.stockHealthScore.toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-600">Inventory Health:</span>
+                    <span className={`font-semibold ${
+                      stats.inventoryHealthScore >= 80 ? 'text-green-600' :
+                      stats.inventoryHealthScore >= 60 ? 'text-orange-500' : 'text-red-600'
+                    }`}>
+                      {stats.inventoryHealthScore.toFixed(0)}%
+                    </span>
+                  </div>
+                </div>
+              )}
+              {isLoading && (
+                <p className="text-xs text-slate-600 mt-2">Calculating components...</p>
+              )}
             </CardContent>
           </Card>
 
