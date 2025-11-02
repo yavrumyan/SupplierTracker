@@ -1024,21 +1024,6 @@ export class DatabaseStorage implements IStorage {
 
       const totalInventory = currentStockValue + totalTransitValue;
 
-      // Calculate Locked-in Money (dead stock value)
-      const deadStock = await this.getCompstyleDeadStock();
-      const lockedMoney = deadStock
-        .filter(item => item.recommendation === '>120d old stock - no sales - clearance')
-        .reduce((sum, item) => sum + item.lockedValue, 0);
-
-      // Calculate Stock Health: ((Total Inventory - Locked-in Money) / Total Inventory) × 100%
-      const stockHealth = totalInventory > 0 
-        ? ((totalInventory - lockedMoney) / totalInventory) * 100 
-        : 100;
-
-      // Get stock-out risk count (products to order)
-      const stockOutRisk = await this.getCompstyleStockOutRisk();
-      const productsToOrder = stockOutRisk.length;
-
       // Get dead stock analysis
       const deadStock = await this.getCompstyleDeadStock();
 
@@ -1046,10 +1031,14 @@ export class DatabaseStorage implements IStorage {
       const clearanceProducts = deadStock.filter(item =>
         item.recommendation === '>120d old stock - no sales - clearance'
       );
-      const deadProducts = clearanceProducts.length;
 
-      // Get locked money (total value of only clearance products)
+      // Calculate Locked-in Money (dead stock value)
       const lockedMoney = clearanceProducts.reduce((sum, item) => sum + item.lockedValue, 0);
+
+      // Calculate Stock Health: ((Total Inventory - Locked-in Money) / Total Inventory) × 100%
+      const stockHealth = totalInventory > 0 
+        ? ((totalInventory - lockedMoney) / totalInventory) * 100 
+        : 100;
 
       // Get 30-day sales volume based on last recorded transaction date
       // First, find the latest order date
