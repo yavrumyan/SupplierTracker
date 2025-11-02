@@ -1077,11 +1077,38 @@ export class DatabaseStorage implements IStorage {
       }
 
       // Calculate Business Health Index
-      // 1. Sales Volume Score (40% weight) - compare current 30d sales to historical average
-      // For simplicity, we'll use a baseline threshold approach
-      // Target: $200,000 monthly sales as baseline (can be adjusted)
-      const salesVolumeTarget = 200000;
-      const salesVolumeScore = Math.min(100, (salesVolume30Days / salesVolumeTarget) * 100);
+      // 1. Sales Volume Score (30% weight) - compare current 30d sales to historical average (last 6 months)
+      // Calculate sales for each of the 6 historical 30-day periods
+      const historicalPeriods = [];
+      for (let i = 1; i <= 6; i++) {
+        const periodEnd = new Date(latestOrderDate);
+        periodEnd.setDate(periodEnd.getDate() - (30 * i));
+        
+        const periodStart = new Date(periodEnd);
+        periodStart.setDate(periodStart.getDate() - 30);
+
+        const periodSalesData = await db.select({
+          totalSales: sql<string>`COALESCE(SUM(CAST(${compstyleSalesItems.sumUsd} AS DECIMAL)), 0)`
+        })
+        .from(compstyleSalesItems)
+        .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
+        .where(sql`${compstyleSalesOrders.orderDate} >= ${periodStart} AND ${compstyleSalesOrders.orderDate} <= ${periodEnd}`);
+
+        const periodSales = parseFloat(periodSalesData[0]?.totalSales || '0');
+        if (periodSales > 0) {
+          historicalPeriods.push(periodSales);
+        }
+      }
+
+      // Calculate historical average (only if we have data)
+      const historicalAverage = historicalPeriods.length > 0
+        ? historicalPeriods.reduce((sum, val) => sum + val, 0) / historicalPeriods.length
+        : salesVolume30Days; // Fallback to current if no history
+
+      // Sales Volume Score: min(100, (Current / Historical Average) × 100)
+      const salesVolumeScore = historicalAverage > 0
+        ? Math.min(100, (salesVolume30Days / historicalAverage) * 100)
+        : 100;
 
       // 2. Profitability Score (35% weight) - based on overall profit margin
       // Get profitability data to calculate average margin
