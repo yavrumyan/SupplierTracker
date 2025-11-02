@@ -374,16 +374,31 @@ export default function CompStyleAnalyticsPhase2() {
   };
 
   // State for filters
-  const [selectedSalesPeriod, setSelectedSalesPeriod] = useState('90d'); // Default to 90 days
-  const [selectedPriority, setSelectedPriority] = useState('all'); // Default to all priorities
+  const [selectedSalesPeriod, setSelectedSalesPeriod] = useState('30d');
+  const [selectedTransitTime, setSelectedTransitTime] = useState('4w');
 
-  const filteredOrderRecommendations = orderRecommendations?.filter(rec => {
-    let matchesPriority = true;
-    if (selectedPriority !== 'all') {
-      matchesPriority = rec.priority === selectedPriority;
-    }
-    return matchesPriority;
-  }).map(rec => {
+  // Transit time multipliers
+  const transitMultipliers: { [key: string]: number } = {
+    '2w': 0.5,
+    '3w': 0.75,
+    '4w': 1.0,
+    '5w': 1.25,
+    '6w': 1.5,
+    '8w': 2.0,
+    '12w': 3.0
+  };
+
+  const transitLabels: { [key: string]: string } = {
+    '2w': '2 weeks',
+    '3w': '3 weeks',
+    '4w': '4 weeks',
+    '5w': '5 weeks',
+    '6w': '6 weeks',
+    '8w': '8 weeks',
+    '12w': '12 weeks'
+  };
+
+  const filteredOrderRecommendations = orderRecommendations?.map(rec => {
     let soldQty = 0;
     switch (selectedSalesPeriod) {
       case '30d':
@@ -405,13 +420,13 @@ export default function CompStyleAnalyticsPhase2() {
         soldQty = rec.sold180d;
         break;
       default:
-        soldQty = rec.sold180d; // Default to 180d if not specified
+        soldQty = rec.sold30d;
     }
 
-    // Example calculation: Let's assume optimalOrderQty is based on some logic,
-    // here we'll just display it as is or a placeholder if unavailable.
-    // In a real scenario, you might have a more complex calculation.
-    const calculatedOrderQty = rec.optimalOrderQty; // Or some calculated value
+    // Calculate Order Qty: (Sold [Selected Period] - Stock - Transit) × [Transit Time Multiplier]
+    const multiplier = transitMultipliers[selectedTransitTime];
+    const baseOrderQty = soldQty - rec.stock - rec.transit;
+    const calculatedOrderQty = Math.max(0, Math.ceil(baseOrderQty * multiplier));
 
     return {
       ...rec,
@@ -678,7 +693,7 @@ export default function CompStyleAnalyticsPhase2() {
             ) : (
               <div className="space-y-4">
                 {/* Filters */}
-                <div className="flex justify-between items-center p-4 bg-slate-100 rounded-lg">
+                <div className="p-4 bg-slate-100 rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <label htmlFor="sales-period" className="text-sm font-medium">Sales Period:</label>
@@ -697,22 +712,28 @@ export default function CompStyleAnalyticsPhase2() {
                       </Select>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <label htmlFor="priority" className="text-sm font-medium">Priority:</label>
-                      <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                      <label htmlFor="transit-time" className="text-sm font-medium">Transit Time:</label>
+                      <Select value={selectedTransitTime} onValueChange={setSelectedTransitTime}>
                         <SelectTrigger className="w-[150px]">
-                          <SelectValue placeholder="Select priority" />
+                          <SelectValue placeholder="Select transit time" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">All</SelectItem>
-                          <SelectItem value="critical">Critical</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="2w">2 weeks (×0.5)</SelectItem>
+                          <SelectItem value="3w">3 weeks (×0.75)</SelectItem>
+                          <SelectItem value="4w">4 weeks (×1.0)</SelectItem>
+                          <SelectItem value="5w">5 weeks (×1.25)</SelectItem>
+                          <SelectItem value="6w">6 weeks (×1.5)</SelectItem>
+                          <SelectItem value="8w">8 weeks (×2.0)</SelectItem>
+                          <SelectItem value="12w">12 weeks (×3.0)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
-                  {/* Export button can be here too if desired */}
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <p className="text-sm text-blue-800">
+                      <strong>Current Settings:</strong> Using <span className="font-semibold">Sold ({selectedSalesPeriod})</span> with <span className="font-semibold">{transitLabels[selectedTransitTime]}</span> transit time (multiplier: {transitMultipliers[selectedTransitTime]}×)
+                    </p>
+                  </div>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -779,6 +800,8 @@ export default function CompStyleAnalyticsPhase2() {
                 <div className="mt-4 p-4 bg-slate-50 rounded-lg">
                   <div className="text-sm font-semibold mb-2">Calculation Logic:</div>
                   <p className="text-xs text-slate-600">
+                    <strong>Order Qty:</strong> (Sold [Selected Period] - Stock - Transit) × [Transit Time Multiplier]
+                    <br />
                     <strong>Last Supplier:</strong> Most recent supplier from procurement data
                     <br />
                     <strong>Last Price:</strong> Most recent purchase price
