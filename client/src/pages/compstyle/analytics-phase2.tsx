@@ -1,10 +1,11 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp, Building2, ShoppingCart, RefreshCw, Download, Award, MapPin, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 interface SupplierPerformance {
   supplier: string;
@@ -100,7 +101,7 @@ export default function CompStyleAnalyticsPhase2() {
 
   const exportSupplierPerformance = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (supplierPerformance && supplierPerformance.length > 0) {
       const headers = ['Supplier', 'Total Purchases', 'Avg Price', 'Price Score', 'Lead Time (days)', 'Products', 'Performance Score'];
       const csvData = [headers];
@@ -141,7 +142,7 @@ export default function CompStyleAnalyticsPhase2() {
 
   const exportLocationOptimization = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (locationOptimization) {
       // Export Location Performance Comparison
       const headers = ['Metric', 'Kievyan 11', 'Sevan 5'];
@@ -265,7 +266,7 @@ export default function CompStyleAnalyticsPhase2() {
 
   const exportStockTransfers = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (locationOptimization && locationOptimization.transferRecommendations.length > 0) {
       const headers = ['Product', 'From Location', 'To Location', 'Quantity', 'Reason', 'Priority'];
       const csvData = [headers];
@@ -305,7 +306,7 @@ export default function CompStyleAnalyticsPhase2() {
 
   const exportOrderRecommendations = () => {
     const timestamp = new Date().toISOString().split('T')[0];
-    
+
     if (orderRecommendations && orderRecommendations.length > 0) {
       const headers = ['Product', 'Stock', 'Transit', 'Sold (30d)', 'Sold (60d)', 'Sold (90d)', 'Sold (120d)', 'Sold (150d)', 'Sold (180d)', 'Order Qty', 'Last Supplier', 'Last Price', 'Current Cost', 'Expected Profit', 'Margin %', 'Stock-Out Days', 'Priority Score', 'Priority'];
       const csvData = [headers];
@@ -370,6 +371,54 @@ export default function CompStyleAnalyticsPhase2() {
       default: return 'bg-blue-500 text-white';
     }
   };
+
+  // State for filters
+  const [selectedSalesPeriod, setSelectedSalesPeriod] = useState('90d'); // Default to 90 days
+  const [selectedPriority, setSelectedPriority] = useState('all'); // Default to all priorities
+
+  const filteredOrderRecommendations = orderRecommendations?.filter(rec => {
+    let matchesPriority = true;
+    if (selectedPriority !== 'all') {
+      matchesPriority = rec.priority === selectedPriority;
+    }
+    return matchesPriority;
+  }).map(rec => {
+    let soldQty = 0;
+    switch (selectedSalesPeriod) {
+      case '30d':
+        soldQty = rec.sold30d;
+        break;
+      case '60d':
+        soldQty = rec.sold60d;
+        break;
+      case '90d':
+        soldQty = rec.sold90d;
+        break;
+      case '120d':
+        soldQty = rec.sold120d;
+        break;
+      case '150d':
+        soldQty = rec.sold150d;
+        break;
+      case '180d':
+        soldQty = rec.sold180d;
+        break;
+      default:
+        soldQty = rec.sold180d; // Default to 180d if not specified
+    }
+
+    // Example calculation: Let's assume optimalOrderQty is based on some logic,
+    // here we'll just display it as is or a placeholder if unavailable.
+    // In a real scenario, you might have a more complex calculation.
+    const calculatedOrderQty = rec.optimalOrderQty; // Or some calculated value
+
+    return {
+      ...rec,
+      soldQty: soldQty,
+      calculatedOrderQty: calculatedOrderQty,
+    };
+  });
+
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -626,70 +675,106 @@ export default function CompStyleAnalyticsPhase2() {
             ) : !orderRecommendations || orderRecommendations.length === 0 ? (
               <div className="text-center py-8 text-slate-500">No order recommendations available</div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="p-3 text-left">Product</th>
-                      <th className="p-3 text-right">Stock</th>
-                      <th className="p-3 text-right">Transit</th>
-                      <th className="p-3 text-right">Sold (30d)</th>
-                      <th className="p-3 text-right">Sold (60d)</th>
-                      <th className="p-3 text-right">Sold (90d)</th>
-                      <th className="p-3 text-right">Sold (120d)</th>
-                      <th className="p-3 text-right">Sold (150d)</th>
-                      <th className="p-3 text-right">Sold (180d)</th>
-                      <th className="p-3 text-right">Order Qty</th>
-                      <th className="p-3 text-left">Last Supplier</th>
-                      <th className="p-3 text-right">Last Price</th>
-                      <th className="p-3 text-right">Current Cost</th>
-                      <th className="p-3 text-right">Expected Profit</th>
-                      <th className="p-3 text-right">Margin %</th>
-                      <th className="p-3 text-right">Days Left</th>
-                      <th className="p-3 text-center">Priority</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orderRecommendations.slice(0, 20).map((rec, index) => (
-                      <tr key={index} className={`border-b hover:bg-slate-50 ${
-                        rec.priority === 'critical' ? 'bg-red-50' : ''
-                      }`}>
-                        <td className="p-3 font-medium max-w-xs truncate" title={rec.productName}>
-                          {rec.productName}
-                        </td>
-                        <td className="p-3 text-right">{rec.stock}</td>
-                        <td className="p-3 text-right">{rec.transit}</td>
-                        <td className="p-3 text-right">{rec.sold30d}</td>
-                        <td className="p-3 text-right">{rec.sold60d}</td>
-                        <td className="p-3 text-right">{rec.sold90d}</td>
-                        <td className="p-3 text-right">{rec.sold120d}</td>
-                        <td className="p-3 text-right">{rec.sold150d}</td>
-                        <td className="p-3 text-right">{rec.sold180d}</td>
-                        <td className="p-3 text-right font-bold text-blue-600">{rec.optimalOrderQty}</td>
-                        <td className="p-3">{rec.lastSupplier}</td>
-                        <td className="p-3 text-right">${rec.lastPrice.toFixed(2)}</td>
-                        <td className="p-3 text-right">${rec.currentCost.toFixed(2)}</td>
-                        <td className="p-3 text-right font-semibold text-green-600">
-                          ${rec.expectedProfit.toFixed(2)}
-                        </td>
-                        <td className="p-3 text-right">{rec.profitMargin.toFixed(1)}%</td>
-                        <td className="p-3 text-right">
-                          <span className={`font-semibold ${
-                            rec.stockOutRisk <= 7 ? 'text-red-600' : 
-                            rec.stockOutRisk <= 14 ? 'text-orange-600' : 'text-slate-600'
-                          }`}>
-                            {rec.stockOutRisk < 999 ? rec.stockOutRisk : '∞'}
-                          </span>
-                        </td>
-                        <td className="p-3 text-center">
-                          <span className={`px-3 py-1 rounded text-xs font-semibold ${getPriorityColor(rec.priority)}`}>
-                            {rec.priority.toUpperCase()}
-                          </span>
-                        </td>
+              <div className="space-y-4">
+                {/* Filters */}
+                <div className="flex justify-between items-center p-4 bg-slate-100 rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <label htmlFor="sales-period" className="text-sm font-medium">Sales Period:</label>
+                      <Select value={selectedSalesPeriod} onValueChange={setSelectedSalesPeriod}>
+                        <SelectTrigger className="w-[120px]">
+                          <SelectValue placeholder="Select period" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="30d">30 Days</SelectItem>
+                          <SelectItem value="60d">60 Days</SelectItem>
+                          <SelectItem value="90d">90 Days</SelectItem>
+                          <SelectItem value="120d">120 Days</SelectItem>
+                          <SelectItem value="150d">150 Days</SelectItem>
+                          <SelectItem value="180d">180 Days</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <label htmlFor="priority" className="text-sm font-medium">Priority:</label>
+                      <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                        <SelectTrigger className="w-[150px]">
+                          <SelectValue placeholder="Select priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All</SelectItem>
+                          <SelectItem value="critical">Critical</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="low">Low</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  {/* Export button can be here too if desired */}
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-50">
+                      <tr>
+                        <th className="p-3 text-left">Product</th>
+                        <th className="p-3 text-right">Stock</th>
+                        <th className="p-3 text-right">Transit</th>
+                        <th className="p-3 text-right">Sold ({selectedSalesPeriod})</th>
+                        <th className="p-3 text-right">Order Qty</th>
+                        <th className="p-3 text-left">Last Supplier</th>
+                        <th className="p-3 text-right">Last Price</th>
+                        <th className="p-3 text-right">Current Cost</th>
+                        <th className="p-3 text-right">Expected Profit</th>
+                        <th className="p-3 text-right">Margin %</th>
+                        <th className="p-3 text-right">Days Left</th>
+                        <th className="p-3 text-center">Priority</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {filteredOrderRecommendations?.map((rec, index) => {
+                        const soldQty = rec.soldQty;
+                        const calculatedOrderQty = rec.calculatedOrderQty;
+                        return (
+                          <tr key={index} className={`border-b hover:bg-slate-50 ${
+                            rec.priority === 'critical' ? 'bg-red-50' : ''
+                          }`}>
+                            <td className="p-3 font-medium max-w-xs truncate" title={rec.productName}>
+                              {rec.productName}
+                            </td>
+                            <td className="p-3 text-right">{rec.stock}</td>
+                            <td className="p-3 text-right">{rec.transit}</td>
+                            <td className="p-3 text-right font-medium">{soldQty}</td>
+                            <td className="p-3 text-right">
+                              <span className="text-blue-600 font-bold">{calculatedOrderQty}</span>
+                            </td>
+                            <td className="p-3">{rec.lastSupplier}</td>
+                            <td className="p-3 text-right">${rec.lastPrice.toFixed(2)}</td>
+                            <td className="p-3 text-right">${rec.currentCost.toFixed(2)}</td>
+                            <td className="p-3 text-right font-semibold text-green-600">
+                              ${rec.expectedProfit.toFixed(2)}
+                            </td>
+                            <td className="p-3 text-right">{rec.profitMargin.toFixed(1)}%</td>
+                            <td className="p-3 text-right">
+                              <span className={`font-semibold ${
+                                rec.stockOutRisk <= 7 ? 'text-red-600' : 
+                                rec.stockOutRisk <= 14 ? 'text-orange-600' : 'text-slate-600'
+                              }`}>
+                                {rec.stockOutRisk < 999 ? rec.stockOutRisk : '∞'}
+                              </span>
+                            </td>
+                            <td className="p-3 text-center">
+                              <span className={`px-3 py-1 rounded text-xs font-semibold ${getPriorityColor(rec.priority)}`}>
+                                {rec.priority.toUpperCase()}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="mt-4 p-4 bg-slate-50 rounded-lg">
                   <div className="text-sm font-semibold mb-2">Calculation Logic:</div>
                   <p className="text-xs text-slate-600">
