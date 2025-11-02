@@ -5,9 +5,9 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 
 interface DashboardStats {
-  productsToOrder: number;
-  deadProducts: number;
-  lockedMoney: number;
+  totalInventory: number;
+  stockHealth: number;
+  businessHealthIndex: number;
   salesVolume30Days: number;
 }
 
@@ -31,40 +31,54 @@ export default function CompStyleDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Products to be ordered</CardTitle>
-              <Package className="h-4 w-4 text-blue-800" />
+              <CardTitle className="text-sm font-medium">Business Health Index</CardTitle>
+              <Award className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${
+                isLoading ? 'text-slate-600' :
+                (stats?.businessHealthIndex || 0) >= 90 ? 'text-green-600' :
+                (stats?.businessHealthIndex || 0) >= 75 ? 'text-blue-600' :
+                (stats?.businessHealthIndex || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+              }`}>
+                {isLoading ? "..." : (stats?.businessHealthIndex || 0).toFixed(1)}
+              </div>
+              <p className="text-xs text-slate-600">
+                {isLoading ? "Calculating..." :
+                (stats?.businessHealthIndex || 0) >= 90 ? 'Excellent' :
+                (stats?.businessHealthIndex || 0) >= 75 ? 'Good' :
+                (stats?.businessHealthIndex || 0) >= 60 ? 'Fair' : 'Needs Attention'}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Stock Health</CardTitle>
+              <Package className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${
+                isLoading ? 'text-slate-600' :
+                (stats?.stockHealth || 0) > 80 ? 'text-green-600' :
+                (stats?.stockHealth || 0) >= 70 ? 'text-orange-600' : 'text-red-600'
+              }`}>
+                {isLoading ? "..." : (stats?.stockHealth || 0).toFixed(1)}%
+              </div>
+              <p className="text-xs text-slate-600">Healthy inventory ratio</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Inventory</CardTitle>
+              <DollarSign className="h-4 w-4 text-blue-800" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-800">
-                {isLoading ? "..." : (stats?.productsToOrder || 0).toLocaleString()}
+                ${isLoading ? "..." : (stats?.totalInventory || 0).toLocaleString()}
               </div>
-              <p className="text-xs text-slate-600">Recommended reorders</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Dead products</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-red-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {isLoading ? "..." : (stats?.deadProducts || 0).toLocaleString()}
-              </div>
-              <p className="text-xs text-slate-600">Dead stock items</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Locked-in money</CardTitle>
-              <DollarSign className="h-4 w-4 text-red-800" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-800">
-                ${isLoading ? "..." : (stats?.lockedMoney || 0).toLocaleString()}
-              </div>
-              <p className="text-xs text-slate-600">Dead stock value</p>
+              <p className="text-xs text-slate-600">Stock + Transit value</p>
             </CardContent>
           </Card>
 

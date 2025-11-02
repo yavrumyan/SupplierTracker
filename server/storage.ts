@@ -998,12 +998,43 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getCompstyleDashboardStats(): Promise<{
-    productsToOrder: number;
-    deadProducts: number;
-    lockedMoney: number;
+    totalInventory: number;
+    stockHealth: number;
+    businessHealthIndex: number;
     salesVolume30Days: number;
   }> {
     try {
+      // Calculate Total Inventory (Current Stock Value + Total Transit Value)
+      const totalStockData = await db.select().from(compstyleTotalStock);
+      const transitData = await db.select().from(compstyleTransit);
+
+      let currentStockValue = 0;
+      for (const item of totalStockData) {
+        const qty = item.qtyInStock || 0;
+        const cost = parseFloat(item.currentCost || '0');
+        currentStockValue += qty * cost;
+      }
+
+      let totalTransitValue = 0;
+      for (const item of transitData) {
+        const qty = item.qty || 0;
+        const cost = parseFloat(item.currentCost || '0');
+        totalTransitValue += qty * cost;
+      }
+
+      const totalInventory = currentStockValue + totalTransitValue;
+
+      // Calculate Locked-in Money (dead stock value)
+      const deadStock = await this.getCompstyleDeadStock();
+      const lockedMoney = deadStock
+        .filter(item => item.recommendation === '>120d old stock - no sales - clearance')
+        .reduce((sum, item) => sum + item.lockedValue, 0);
+
+      // Calculate Stock Health: ((Total Inventory - Locked-in Money) / Total Inventory) × 100%
+      const stockHealth = totalInventory > 0 
+        ? ((totalInventory - lockedMoney) / totalInventory) * 100 
+        : 100;
+
       // Get stock-out risk count (products to order)
       const stockOutRisk = await this.getCompstyleStockOutRisk();
       const productsToOrder = stockOutRisk.length;
@@ -1047,17 +1078,54 @@ export class DatabaseStorage implements IStorage {
         salesVolume30Days = parseFloat(salesData[0]?.totalSales || '0');
       }
 
+      // Calculate Business Health Index
+      // 1. Sales Volume Score (40% weight) - compare current 30d sales to historical average
+      // For simplicity, we'll use a baseline threshold approach
+      // Target: $200,000 monthly sales as baseline (can be adjusted)
+      const salesVolumeTarget = 200000;
+      const salesVolumeScore = Math.min(100, (salesVolume30Days / salesVolumeTarget) * 100);
+
+      // 2. Profitability Score (35% weight) - based on overall profit margin
+      // Get profitability data to calculate average margin
+      const profitabilityData = await this.getProfitabilityHeatMap();
+      let totalRevenue = 0;
+      let totalCost = 0;
+      
+      for (const item of profitabilityData) {
+        const revenue = item.retailPriceUsd * item.qtySold;
+        const cost = item.cost * item.qtySold;
+        totalRevenue += revenue;
+        totalCost += cost;
+      }
+
+      const averageMargin = totalRevenue > 0 
+        ? ((totalRevenue - totalCost) / totalCost) * 100 
+        : 0;
+
+      // Target margin: 17.5%
+      const targetMargin = 17.5;
+      const profitabilityScore = Math.min(100, (averageMargin / targetMargin) * 100);
+
+      // 3. Stock Health Score (25% weight) - already calculated above
+      const stockHealthScore = stockHealth;
+
+      // Calculate weighted Business Health Index
+      const businessHealthIndex = 
+        (salesVolumeScore * 0.40) + 
+        (profitabilityScore * 0.35) + 
+        (stockHealthScore * 0.25);
+
       console.log('Dashboard stats calculated:', {
-        productsToOrder,
-        deadProducts,
-        lockedMoney: Math.round(lockedMoney),
+        totalInventory: Math.round(totalInventory),
+        stockHealth: stockHealth.toFixed(1),
+        businessHealthIndex: businessHealthIndex.toFixed(1),
         salesVolume30Days: Math.round(salesVolume30Days)
       });
 
       return {
-        productsToOrder,
-        deadProducts,
-        lockedMoney: Math.round(lockedMoney),
+        totalInventory: Math.round(totalInventory),
+        stockHealth: Math.round(stockHealth * 10) / 10, // Round to 1 decimal
+        businessHealthIndex: Math.round(businessHealthIndex * 10) / 10, // Round to 1 decimal
         salesVolume30Days: Math.round(salesVolume30Days)
       };
     } catch (error) {
