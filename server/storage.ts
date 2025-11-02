@@ -1488,7 +1488,7 @@ export class DatabaseStorage implements IStorage {
           if (avgSalePriceUsd === 0 && avgCostPriceUsd === 0) return null;
 
           const profitPerUnit = avgSalePriceUsd - avgCostPriceUsd;
-          const profitMargin = avgSalePriceUsd > 0 ? (profitPerUnit / avgSalePriceUsd) * 100 : 0;
+          const profitMargin = avgCostPriceUsd > 0 ? ((avgSalePriceUsd - avgCostPriceUsd) / avgCostPriceUsd) * 100 : 0;
           const totalProfit = sales.totalRevenue - sales.totalCost; // Actual profit from all sales
           const potentialProfit = profitPerUnit * currentStock; // Potential profit from current stock
 
