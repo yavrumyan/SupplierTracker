@@ -2423,16 +2423,40 @@ export class DatabaseStorage implements IStorage {
         // Calculate margin % using current cost: ((Sale Price - Cost) / Cost) × 100
         const profitMargin = currentCost > 0 ? ((avgSalePrice - currentCost) / currentCost) * 100 : 0;
 
-        // Priority score = profitability × stock-out urgency
+        // Enhanced Priority Calculation
+        // 1. Sales Activity Score (0-100): Based on recent sales across multiple periods
+        const totalSalesLast180d = sales.sold180d || 0;
+        const salesActivityScore = totalSalesLast180d > 0 ? Math.min(100, (totalSalesLast180d / 180) * 100 * 10) : 0;
+        
+        // 2. Stock Urgency Score (0-100): How critical is the stockout risk
         const stockOutUrgency = daysUntilStockOut <= 7 ? 100 :
-                               daysUntilStockOut <= 14 ? 75 :
-                               daysUntilStockOut <= 30 ? 50 : 25;
-        const priorityScore = (profitMargin * 0.6) + (stockOutUrgency * 0.4);
+                               daysUntilStockOut <= 14 ? 80 :
+                               daysUntilStockOut <= 30 ? 60 :
+                               daysUntilStockOut <= 60 ? 40 : 20;
+        
+        // 3. Profit Opportunity Score (0-100): Normalized expected profit
+        // Scale based on expected profit (products with $1000+ expected profit get 100)
+        const profitOpportunityScore = Math.min(100, (expectedProfit / 1000) * 100);
+        
+        // 4. Margin Quality Score (0-100): Normalized margin percentage
+        const marginQualityScore = Math.min(100, profitMargin * 2); // 50% margin = 100 score
+        
+        // Combined Priority Score with weights:
+        // - Sales Activity: 35% (must have sales to be priority)
+        // - Stock Urgency: 30% (how soon we'll run out)
+        // - Profit Opportunity: 20% (total profit potential)
+        // - Margin Quality: 15% (profit per unit)
+        const priorityScore = 
+          (salesActivityScore * 0.35) + 
+          (stockOutUrgency * 0.30) + 
+          (profitOpportunityScore * 0.20) + 
+          (marginQualityScore * 0.15);
 
+        // Priority levels based on combined score
         let priority: 'critical' | 'high' | 'medium' | 'low';
-        if (priorityScore >= 75) priority = 'critical';
-        else if (priorityScore >= 60) priority = 'high';
-        else if (priorityScore >= 40) priority = 'medium';
+        if (priorityScore >= 70 && salesActivityScore > 0) priority = 'critical';
+        else if (priorityScore >= 50 && salesActivityScore > 0) priority = 'high';
+        else if (priorityScore >= 30) priority = 'medium';
         else priority = 'low';
 
         return {
