@@ -1018,7 +1018,8 @@ export class DatabaseStorage implements IStorage {
       let totalTransitValue = 0;
       for (const item of transitData) {
         const qty = item.qty || 0;
-        const cost = parseFloat(item.purchasePriceUsd || item.currentCost || '0');
+        // Use Purchase Price USD (the price that was actually paid for transit goods)
+        const cost = parseFloat(item.purchasePriceUsd || '0');
         totalTransitValue += qty * cost;
       }
 
