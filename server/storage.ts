@@ -2041,6 +2041,197 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  // Inventory Movement Recommendations
+  async getInventoryMovementRecommendations(): Promise<{
+    recommendations: Array<{
+      productName: string;
+      currentKievyan: number;
+      currentSevan: number;
+      totalQty: number;
+      optimalKievyan: number;
+      optimalSevan: number;
+      moveToKievyan: number;
+      moveToSevan: number;
+      priority: 'High' | 'Medium' | 'Low';
+      kievyanSales90d: number;
+      sevanSales90d: number;
+    }>;
+    summary: {
+      totalProducts: number;
+      productsNeedingTransfer: number;
+      totalUnitsToMove: number;
+    };
+  }> {
+    try {
+      const kievyanStock = await db.select().from(compstyleKievyanStock);
+      const sevanStock = await db.select().from(compstyleSevanStock);
+      const salesOrders = await db.select().from(compstyleSalesOrders);
+      const salesItems = await db.select().from(compstyleSalesItems);
+
+      // Find latest order date
+      let latestOrderDate: Date | null = null;
+      for (const order of salesOrders) {
+        if (order.orderDate) {
+          if (!latestOrderDate || order.orderDate > latestOrderDate) {
+            latestOrderDate = order.orderDate;
+          }
+        }
+      }
+
+      // Calculate 90 days sales by product and location
+      const sales90dByProduct = new Map<string, { kievyan: number; sevan: number }>();
+      
+      if (latestOrderDate) {
+        const ninetyDaysAgo = new Date(latestOrderDate);
+        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+        for (const order of salesOrders) {
+          if (order.orderDate && order.orderDate >= ninetyDaysAgo && order.orderDate <= latestOrderDate) {
+            const orderItems = salesItems.filter(item => item.salesOrderId === order.id);
+            for (const item of orderItems) {
+              if (!sales90dByProduct.has(item.productName)) {
+                sales90dByProduct.set(item.productName, { kievyan: 0, sevan: 0 });
+              }
+              const sales = sales90dByProduct.get(item.productName)!;
+              if (order.location === 'Kievyan') {
+                sales.kievyan += item.qty;
+              } else if (order.location === 'Sevan') {
+                sales.sevan += item.qty;
+              }
+            }
+          }
+        }
+      }
+
+      // Build product name set
+      const allProductNames = new Set<string>();
+      kievyanStock.forEach(s => allProductNames.add(s.productName));
+      sevanStock.forEach(s => allProductNames.add(s.productName));
+
+      // Create stock maps
+      const kievyanStockMap = new Map(kievyanStock.map(s => [s.productName, s.qty]));
+      const sevanStockMap = new Map(sevanStock.map(s => [s.productName, s.qty]));
+
+      // Helper function for optimal distribution (from stockmove.py)
+      const getKievyanOptimal = (name: string, totalQty: number): number => {
+        const nameLower = name.toLowerCase();
+        const startsWith = (prefix: string) => nameLower.startsWith(prefix.toLowerCase());
+
+        // 0% (all in Sevan)
+        const zeroPrefixes = [
+          "экран для проектора", "шурупы", "шкаф", "стол", "стул", "патч-панель", "кресло",
+          "корпус racktower", "кабельный ввод", "компьютер cs"
+        ];
+        if (zeroPrefixes.some(p => startsWith(p))) return 0;
+
+        // 1 piece only
+        const onePrefixes = [
+          "сумка для ноутбука", "принтер", "проектор", "ноутбук", "монитор",
+          "корпус miditower", "корпус minitower", "ибп ups"
+        ];
+        if (onePrefixes.some(p => startsWith(p))) return Math.min(1, totalQty);
+
+        // 10% (at least 1)
+        const tenPrefixes = [
+          "шредер", "кулер", "кронштейн", "колонки", "коврик для мыши", "картридж",
+          "источник питания", "инструмент", "зарядное устройство", "док-станция",
+          "джойстик", "держатель", "графический планшет", "батарейка", "kvm-коммуникатор"
+        ];
+        if (tenPrefixes.some(p => startsWith(p))) return Math.max(1, Math.ceil(totalQty * 0.1));
+
+        // 100% (all in Kievyan)
+        const hundredPrefixes = ["компьютер led"];
+        if (hundredPrefixes.some(p => startsWith(p))) return totalQty;
+
+        // Default: 20% (at least 1)
+        return Math.max(1, Math.ceil(totalQty * 0.2));
+      };
+
+      // Calculate priorities based on sales velocity
+      const calculatePriority = (productName: string, moveToKievyan: number, moveToSevan: number): 'High' | 'Medium' | 'Low' => {
+        const sales = sales90dByProduct.get(productName) || { kievyan: 0, sevan: 0 };
+        
+        if (moveToKievyan > 0) {
+          // Moving to Kievyan - priority based on Kievyan sales
+          if (sales.kievyan >= 10) return 'High';
+          if (sales.kievyan >= 5) return 'Medium';
+          return 'Low';
+        } else if (moveToSevan > 0) {
+          // Moving to Sevan - priority based on Sevan sales
+          if (sales.sevan >= 10) return 'High';
+          if (sales.sevan >= 5) return 'Medium';
+          return 'Low';
+        }
+        return 'Low';
+      };
+
+      // Process each product
+      const recommendations = [];
+      let totalUnitsToMove = 0;
+      let productsNeedingTransfer = 0;
+
+      for (const productName of Array.from(allProductNames).sort()) {
+        const kievyanQty = kievyanStockMap.get(productName) || 0;
+        const sevanQty = sevanStockMap.get(productName) || 0;
+        const totalQty = kievyanQty + sevanQty;
+
+        if (totalQty === 0) continue;
+
+        const kievyanOptimal = getKievyanOptimal(productName, totalQty);
+        const sevanOptimal = totalQty - kievyanOptimal;
+
+        const moveToKievyan = Math.max(0, kievyanOptimal - kievyanQty);
+        const moveToSevan = Math.max(0, kievyanQty - kievyanOptimal);
+
+        const sales = sales90dByProduct.get(productName) || { kievyan: 0, sevan: 0 };
+
+        if (moveToKievyan > 0 || moveToSevan > 0) {
+          productsNeedingTransfer++;
+          totalUnitsToMove += moveToKievyan + moveToSevan;
+
+          const priority = calculatePriority(productName, moveToKievyan, moveToSevan);
+
+          recommendations.push({
+            productName,
+            currentKievyan: kievyanQty,
+            currentSevan: sevanQty,
+            totalQty,
+            optimalKievyan: kievyanOptimal,
+            optimalSevan: sevanOptimal,
+            moveToKievyan,
+            moveToSevan,
+            priority,
+            kievyanSales90d: sales.kievyan,
+            sevanSales90d: sales.sevan
+          });
+        }
+      }
+
+      // Sort by priority and quantity to move
+      recommendations.sort((a, b) => {
+        const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        }
+        const aQty = a.moveToKievyan + a.moveToSevan;
+        const bQty = b.moveToKievyan + b.moveToSevan;
+        return bQty - aQty;
+      });
+
+      return {
+        recommendations,
+        summary: {
+          totalProducts: allProductNames.size,
+          productsNeedingTransfer,
+          totalUnitsToMove
+        }
+      };
+    } catch (error) {
+      console.error('Error calculating inventory movement:', error);
+      throw error;
+    }
+  }
+
   // Phase 2: Location Optimization
   async getLocationOptimization(): Promise<{
     kievyan: {

@@ -2560,6 +2560,17 @@ print(json.dumps(result))
     return count;
   }
 
+  // Inventory Movement API
+  app.get("/api/compstyle/inventory-movement", async (req, res) => {
+    try {
+      const movementData = await storage.getInventoryMovementRecommendations();
+      res.json(movementData);
+    } catch (error) {
+      console.error("Error fetching inventory movement:", error);
+      res.status(500).json({ error: "Failed to fetch inventory movement data" });
+    }
+  });
+
   // ==================== CHIP ERP API ROUTES ====================
 
   // Currency Routes
