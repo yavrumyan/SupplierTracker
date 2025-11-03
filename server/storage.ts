@@ -1045,8 +1045,8 @@ export class DatabaseStorage implements IStorage {
       const lockedMoney = clearanceProducts.reduce((sum, item) => sum + item.lockedValue, 0);
 
       // Calculate Stock Health: ((Total Inventory - Locked-in Money) / Total Inventory) × 100%
-      const stockHealth = totalInventory > 0 
-        ? ((totalInventory - lockedMoney) / totalInventory) * 100 
+      const stockHealth = totalInventory > 0
+        ? ((totalInventory - lockedMoney) / totalInventory) * 100
         : 100;
 
       // Get 30-day sales volume based on last recorded transaction date
@@ -1083,7 +1083,7 @@ export class DatabaseStorage implements IStorage {
       for (let i = 1; i <= 6; i++) {
         const periodEnd = new Date(latestOrderDate);
         periodEnd.setDate(periodEnd.getDate() - (30 * i));
-        
+
         const periodStart = new Date(periodEnd);
         periodStart.setDate(periodStart.getDate() - 30);
 
@@ -1115,7 +1115,7 @@ export class DatabaseStorage implements IStorage {
       const profitabilityData = await this.getProfitabilityHeatMap();
       let totalRevenue = 0;
       let totalCost = 0;
-      
+
       for (const item of profitabilityData) {
         const revenue = item.retailPriceUsd * item.qtySold;
         const cost = item.cost * item.qtySold;
@@ -1123,8 +1123,8 @@ export class DatabaseStorage implements IStorage {
         totalCost += cost;
       }
 
-      const averageMargin = totalRevenue > 0 
-        ? ((totalRevenue - totalCost) / totalCost) * 100 
+      const averageMargin = totalRevenue > 0
+        ? ((totalRevenue - totalCost) / totalCost) * 100
         : 0;
 
       // Target margin: 17.5%
@@ -1137,14 +1137,14 @@ export class DatabaseStorage implements IStorage {
       // 4. Inventory Health Score (15% weight) - optimal inventory = 3x monthly sales
       const optimalInventory = salesVolume30Days * 3; // 90 days of inventory
       let inventoryHealthScore = 100;
-      
+
       if (optimalInventory > 0) {
         // Score = (Optimal / Actual) × 100, capped at 100
         // If actual = optimal (3x), score = 100%
         // If actual > optimal (overstocked), score decreases
         // If actual < optimal (understocked), score decreases
         const ratio = optimalInventory / totalInventory;
-        
+
         if (totalInventory > optimalInventory) {
           // Overstocked: penalize excess inventory
           inventoryHealthScore = Math.max(0, ratio * 100);
@@ -1155,9 +1155,9 @@ export class DatabaseStorage implements IStorage {
       }
 
       // Calculate weighted Business Health Index (updated weights)
-      const businessHealthIndex = 
-        (salesVolumeScore * 0.40) + 
-        (profitabilityScore * 0.30) + 
+      const businessHealthIndex =
+        (salesVolumeScore * 0.40) +
+        (profitabilityScore * 0.30) +
         (stockHealthScore * 0.15) +
         (inventoryHealthScore * 0.15);
 
@@ -2080,7 +2080,7 @@ export class DatabaseStorage implements IStorage {
 
       // Calculate 90 days sales by product and location
       const sales90dByProduct = new Map<string, { kievyan: number; sevan: number }>();
-      
+
       if (latestOrderDate) {
         const ninetyDaysAgo = new Date(latestOrderDate);
         ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
@@ -2108,9 +2108,18 @@ export class DatabaseStorage implements IStorage {
       kievyanStock.forEach(s => allProductNames.add(s.productName));
       sevanStock.forEach(s => allProductNames.add(s.productName));
 
-      // Create stock maps
-      const kievyanStockMap = new Map(kievyanStock.map(s => [s.productName, s.qty]));
-      const sevanStockMap = new Map(sevanStock.map(s => [s.productName, s.qty]));
+      // Create stock maps - aggregate quantities for duplicate products
+      const kievyanStockMap = new Map<string, number>();
+      kievyanStock.forEach(s => {
+        const current = kievyanStockMap.get(s.productName) || 0;
+        kievyanStockMap.set(s.productName, current + s.qty);
+      });
+
+      const sevanStockMap = new Map<string, number>();
+      sevanStock.forEach(s => {
+        const current = sevanStockMap.get(s.productName) || 0;
+        sevanStockMap.set(s.productName, current + s.qty);
+      });
 
       // Helper function for optimal distribution (from stockmove.py)
       const getKievyanOptimal = (name: string, totalQty: number): number => {
@@ -2150,7 +2159,7 @@ export class DatabaseStorage implements IStorage {
       // Calculate priorities based on sales velocity
       const calculatePriority = (productName: string, moveToKievyan: number, moveToSevan: number): 'High' | 'Medium' | 'Low' => {
         const sales = sales90dByProduct.get(productName) || { kievyan: 0, sevan: 0 };
-        
+
         if (moveToKievyan > 0) {
           // Moving to Kievyan - priority based on Kievyan sales
           if (sales.kievyan >= 10) return 'High';
@@ -2295,7 +2304,7 @@ export class DatabaseStorage implements IStorage {
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
       // Filter orders to only include last 30 days
-      const recentOrders = salesOrders.filter(o => 
+      const recentOrders = salesOrders.filter(o =>
         o.orderDate && o.orderDate >= thirtyDaysAgo && o.orderDate <= latestOrderDate
       );
 
@@ -2541,13 +2550,13 @@ export class DatabaseStorage implements IStorage {
       // Now match purchase items with their orders
       for (const item of purchaseItems) {
         const productName = item.productName;
-        
+
         if (item.purchaseOrderId) {
           const orderInfo = purchaseOrderMap.get(item.purchaseOrderId);
           if (orderInfo) {
             const price = parseFloat(item.priceUsd || '0');
             const existing = lastPurchaseInfo.get(productName);
-            
+
             if (!existing || orderInfo.orderDate > existing.date) {
               lastPurchaseInfo.set(productName, {
                 supplier: orderInfo.supplier,
@@ -2579,7 +2588,7 @@ export class DatabaseStorage implements IStorage {
 
       // Generate recommendations for all products (not just stock-out risk)
       const allProductNames = new Set<string>();
-      
+
       // Add all products from product list that have stock or transit
       for (const product of productList) {
         if ((product.stock && product.stock > 0) || (product.transit && product.transit > 0)) {
@@ -2607,10 +2616,10 @@ export class DatabaseStorage implements IStorage {
         const daysUntilStockOut = riskInfo?.daysUntilStockOut || 999;
 
         const avgSalePrice = profit?.retailPrice || 0;
-        
+
         // Calculate expected profit using current cost
         const expectedProfit = (avgSalePrice - currentCost) * optimalQty;
-        
+
         // Calculate margin % using current cost: ((Sale Price - Cost) / Cost) × 100
         const profitMargin = currentCost > 0 ? ((avgSalePrice - currentCost) / currentCost) * 100 : 0;
 
@@ -2618,29 +2627,29 @@ export class DatabaseStorage implements IStorage {
         // 1. Sales Activity Score (0-100): Based on recent sales across multiple periods
         const totalSalesLast180d = sales.sold180d || 0;
         const salesActivityScore = totalSalesLast180d > 0 ? Math.min(100, (totalSalesLast180d / 180) * 100 * 10) : 0;
-        
+
         // 2. Stock Urgency Score (0-100): How critical is the stockout risk
         const stockOutUrgency = daysUntilStockOut <= 7 ? 100 :
                                daysUntilStockOut <= 14 ? 80 :
                                daysUntilStockOut <= 30 ? 60 :
                                daysUntilStockOut <= 60 ? 40 : 20;
-        
+
         // 3. Profit Opportunity Score (0-100): Normalized expected profit
         // Scale based on expected profit (products with $1000+ expected profit get 100)
         const profitOpportunityScore = Math.min(100, (expectedProfit / 1000) * 100);
-        
+
         // 4. Margin Quality Score (0-100): Normalized margin percentage
         const marginQualityScore = Math.min(100, profitMargin * 2); // 50% margin = 100 score
-        
+
         // Combined Priority Score with weights:
         // - Sales Activity: 35% (must have sales to be priority)
         // - Stock Urgency: 30% (how soon we'll run out)
         // - Profit Opportunity: 20% (total profit potential)
         // - Margin Quality: 15% (profit per unit)
-        const priorityScore = 
-          (salesActivityScore * 0.35) + 
-          (stockOutUrgency * 0.30) + 
-          (profitOpportunityScore * 0.20) + 
+        const priorityScore =
+          (salesActivityScore * 0.35) +
+          (stockOutUrgency * 0.30) +
+          (profitOpportunityScore * 0.20) +
           (marginQualityScore * 0.15);
 
         // Priority levels based on combined score
@@ -3101,6 +3110,8 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Payment methods
+  async getChipPayments(): Promise<ChipPayment[]>;
+  async createChipPayment(payment: InsertChipPayment): Promise<ChipPayment>;
   async getChipPayments(): Promise<ChipPayment[]> {
     return await db.select().from(chipPayments)
       .orderBy(desc(chipPayments.paymentDate));
@@ -3149,7 +3160,7 @@ export class DatabaseStorage implements IStorage {
     const accountsReceivable = sales
       .filter(sale => sale.paymentStatus !== 'paid')
       .reduce((sum, sale) => {
-        const total = parseFloat(sale.totalWithVat || '0');
+        const total = parseFloat(sale.totalAmountAMD || '0');
         const paid = parseFloat(sale.paidAmount || '0');
         return sum + (total - paid);
       }, 0);
@@ -3265,10 +3276,10 @@ export class DatabaseStorage implements IStorage {
       ));
 
     const salesRevenue = sales.reduce((sum, sale) =>
-      sum + parseFloat(sale.paidAmount || '0'), 0);
+      sum + parseFloat(sale.totalAmountAMD || '0'), 0);
 
     const purchaseCosts = purchases.reduce((sum, purchase) =>
-      sum + parseFloat(purchase.paidAmount || '0'), 0);
+      sum + parseFloat(purchase.totalAmountAMD || '0'), 0);
 
     const expensesTotal = expenses.reduce((sum, expense) =>
       sum + parseFloat(expense.amountAMD || '0'), 0);

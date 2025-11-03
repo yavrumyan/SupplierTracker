@@ -309,7 +309,7 @@ export const compstyleTotalStock = pgTable("compstyle_total_stock", {
 // Kievyan 11 Retail Stock
 export const compstyleKievyanStock = pgTable("compstyle_kievyan_stock", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column A (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (КодТовара)
   qty: integer("qty").notNull(), // Column B (Остаток)
   retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column C (БухЦена)
 });
@@ -317,7 +317,7 @@ export const compstyleKievyanStock = pgTable("compstyle_kievyan_stock", {
 // Sevan 5 Warehouse Stock
 export const compstyleSevanStock = pgTable("compstyle_sevan_stock", {
   id: serial("id").primaryKey(),
-  productName: varchar("product_name", { length: 200 }).notNull().unique(), // Column A (КодТовара)
+  productName: varchar("product_name", { length: 200 }).notNull(), // Column A (КодТовара)
   qty: integer("qty").notNull(), // Column B (Остаток)
   retailPriceAmd: decimal("retail_price_amd", { precision: 10, scale: 2 }), // Column C (БухЦена)
 });
