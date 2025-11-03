@@ -211,12 +211,14 @@ export default function CompStyleDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="p-4 bg-slate-50 rounded-lg">
-                  <h4 className="font-semibold mb-2">📊 Inventory Movement</h4>
-                  <p className="text-sm text-slate-600">
-                    Optimize stock distribution between Kievyan 11 and Sevan 5 locations
-                  </p>
-                </div>
+                <Link href="/compstyle/inventory-movement">
+                  <div className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors">
+                    <h4 className="font-semibold mb-2">📊 Inventory Movement</h4>
+                    <p className="text-sm text-slate-600">
+                      Optimize stock distribution between Kievyan 11 and Sevan 5 locations
+                    </p>
+                  </div>
+                </Link>
 
                 <div className="p-4 bg-slate-50 rounded-lg">
                   <h4 className="font-semibold mb-2">📈 Sales Analysis</h4>
