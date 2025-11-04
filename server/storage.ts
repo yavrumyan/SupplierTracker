@@ -2136,7 +2136,7 @@ export class DatabaseStorage implements IStorage {
         // 1 piece only
         const onePrefixes = [
           "сумка для ноутбука", "принтер", "проектор", "ноутбук", "монитор",
-          "корпус miditower", "корпус minitower", "ибп ups"
+          "корпус minitower", "корпус minitower", "ибп ups"
         ];
         if (onePrefixes.some(p => startsWith(p))) return Math.min(1, totalQty);
 
