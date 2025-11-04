@@ -57,10 +57,20 @@ export default function CompStyleInventoryMovement() {
       "Sevan Sales (90d)"
     ];
 
+    // Helper function to properly escape CSV fields
+    const escapeCSVField = (field: any): string => {
+      const str = String(field);
+      // If field contains comma, quote, or newline, wrap in quotes and escape internal quotes
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
     const csvContent = [
-      headers.join(","),
+      headers.map(escapeCSVField).join(","),
       ...filteredRecommendations.map(rec => [
-        `"${rec.productName}"`,
+        rec.productName,
         rec.currentKievyan,
         rec.currentSevan,
         rec.totalQty,
@@ -71,7 +81,7 @@ export default function CompStyleInventoryMovement() {
         rec.priority,
         rec.kievyanSales90d,
         rec.sevanSales90d
-      ].join(","))
+      ].map(escapeCSVField).join(","))
     ].join("\n");
 
     const blob = new Blob(['\ufeff' + csvContent], { type: "text/csv;charset=utf-8;" });
