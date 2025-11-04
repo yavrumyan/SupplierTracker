@@ -1166,9 +1166,11 @@ export class DatabaseStorage implements IStorage {
         stockHealth: stockHealth.toFixed(1),
         businessHealthIndex: businessHealthIndex.toFixed(1),
         salesVolume30Days: Math.round(salesVolume30Days),
-        salesVolumeScore: salesVolumeScore.toFixed(1),
-        profitabilityScore: profitabilityScore.toFixed(1),
-        inventoryHealthScore: inventoryHealthScore.toFixed(1)
+        // Component scores for detailed insight
+        salesVolumeScore: Math.round(salesVolumeScore * 10) / 10,
+        profitabilityScore: Math.round(profitabilityScore * 10) / 10,
+        stockHealthScore: Math.round(stockHealth * 10) / 10,
+        inventoryHealthScore: Math.round(inventoryHealthScore * 10) / 10
       });
 
       return {
@@ -2123,54 +2125,93 @@ export class DatabaseStorage implements IStorage {
 
       // Helper function for optimal distribution (from stockmove.py)
       const getKievyanOptimal = (name: string, totalQty: number): number => {
-        const nameLower = name.toLowerCase();
-        const startsWith = (prefix: string) => nameLower.startsWith(prefix.toLowerCase());
+        const lowerName = name.toLowerCase();
+        const startsWith = (prefix: string) => lowerName.startsWith(prefix.toLowerCase());
+        const sales = sales90dByProduct.get(name) || { kievyan: 0, sevan: 0 };
 
         // 0% (all in Sevan)
         const zeroPrefixes = [
-          "экран для проектора", "шурупы", "шкаф", "стол", "стул", "патч-панель", "кресло",
-          "корпус racktower", "кабельный ввод", "компьютер cs"
+          "экран для проектора", "шурупы", "шкаф", "стол", "кресло",
+          "патч-панель", "корпус rack"
         ];
         if (zeroPrefixes.some(p => startsWith(p))) return 0;
 
-        // 1 piece only
-        const onePrefixes = [
-          "сумка для ноутбука", "принтер", "проектор", "ноутбук", "монитор",
-          "корпус minitower", "корпус minitower", "ибп ups"
+        // 1-2 pieces based on total inventory
+        const oneOrTwoPrefixes = [
+          "сумка для ноутбука", "сумка для фотоаппарата", "сумка/рюкзак для ноутбука",
+          "сумка/чехол для ноутбука", "кулер для ноутбука", "принтер", "сканнер",
+          "проектор", "ноутбук", "моноблок", "монитор",
+          "корпус miditower", "корпус minitower", "корпус fulltower", "ибп ups"
         ];
-        if (onePrefixes.some(p => startsWith(p))) return Math.min(1, totalQty);
+        if (oneOrTwoPrefixes.some(p => startsWith(p))) {
+          let baseQty = totalQty <= 10 ? 1 : 2;
+          // Apply sales velocity adjustment
+          if (sales.kievyan > sales.sevan) {
+            baseQty = Math.min(totalQty, baseQty * 2); // Up to 100% increase
+          }
+          return Math.min(baseQty, totalQty);
+        }
 
-        // 10% (at least 1)
+        // 10% to Kievyan / 90% to Sevan (at least 1)
         const tenPrefixes = [
-          "шредер", "кулер", "кронштейн", "колонки", "коврик для мыши", "картридж",
-          "источник питания", "инструмент", "зарядное устройство", "док-станция",
-          "джойстик", "держатель", "графический планшет", "батарейка", "kvm-коммуникатор"
+          "шредер", "кулер", "кронштейн для мониторов", "кронштейн для проектора",
+          "кронштейн для телевизора", "колонки", "колонка", "саундбар",
+          "джойстик", "клавиатура", "коврик", "микрофон", "мышь",
+          "наушники", "сетевой фильтр", "батарейка", "батарейка-аккумулятор"
         ];
-        if (tenPrefixes.some(p => startsWith(p))) return Math.max(1, Math.ceil(totalQty * 0.1));
+        // Exclude "кулер для ноутбука" from general "кулер" category
+        if (tenPrefixes.some(p => startsWith(p)) && !startsWith("кулер для ноутбука")) {
+          let baseQty = Math.max(1, Math.ceil(totalQty * 0.1));
+          // Apply sales velocity adjustment
+          if (sales.kievyan > sales.sevan) {
+            baseQty = Math.min(totalQty, Math.ceil(baseQty * 2)); // Up to 100% increase
+          }
+          return baseQty;
+        }
 
-        // 100% (all in Kievyan)
-        const hundredPrefixes = ["компьютер led"];
+        // 100% to Kievyan (all in Kievyan)
+        const hundredPrefixes = ["компьютер led", "компьютер cs"];
         if (hundredPrefixes.some(p => startsWith(p))) return totalQty;
 
-        // Default: 20% (at least 1)
-        return Math.max(1, Math.ceil(totalQty * 0.2));
+        // Default: 20% to Kievyan / 80% to Sevan (at least 1)
+        let baseQty = Math.max(1, Math.ceil(totalQty * 0.2));
+        // Apply sales velocity adjustment
+        if (sales.kievyan > sales.sevan) {
+          baseQty = Math.min(totalQty, Math.ceil(baseQty * 2)); // Up to 100% increase
+        }
+        return baseQty;
       };
 
-      // Calculate priorities based on sales velocity
-      const calculatePriority = (productName: string, moveToKievyan: number, moveToSevan: number): 'High' | 'Medium' | 'Low' => {
-        const sales = sales90dByProduct.get(productName) || { kievyan: 0, sevan: 0 };
+      // Calculate priorities based on stock level and deviation from optimal
+      const calculatePriority = (
+        currentQty: number,
+        optimalQty: number,
+        moveToKievyan: number,
+        moveToSevan: number
+      ): 'Highest' | 'High' | 'Medium' | 'Low' => {
+        const destinationQty = moveToKievyan > 0 ? currentQty : currentQty;
 
-        if (moveToKievyan > 0) {
-          // Moving to Kievyan - priority based on Kievyan sales
-          if (sales.kievyan >= 10) return 'High';
-          if (sales.kievyan >= 5) return 'Medium';
-          return 'Low';
-        } else if (moveToSevan > 0) {
-          // Moving to Sevan - priority based on Sevan sales
-          if (sales.sevan >= 10) return 'High';
-          if (sales.sevan >= 5) return 'Medium';
-          return 'Low';
+        // Highest Priority: Zero stock at destination
+        if (destinationQty === 0 && (moveToKievyan > 0 || moveToSevan > 0)) {
+          return 'Highest';
         }
+
+        // Calculate deviation percentage
+        let deviationPercent = 0;
+        if (optimalQty > 0) {
+          deviationPercent = Math.abs(currentQty - optimalQty) / optimalQty * 100;
+        } else if (currentQty > 0) {
+          // For zero optimal cases, use absolute difference
+          deviationPercent = currentQty > 5 ? 100 : currentQty * 20;
+        }
+
+        // High Deviation: > 50%
+        if (deviationPercent > 50) return 'High';
+
+        // Medium Deviation: 25-50%
+        if (deviationPercent >= 25) return 'Medium';
+
+        // Low Deviation: < 25%
         return 'Low';
       };
 
@@ -2198,7 +2239,11 @@ export class DatabaseStorage implements IStorage {
           productsNeedingTransfer++;
           totalUnitsToMove += moveToKievyan + moveToSevan;
 
-          const priority = calculatePriority(productName, moveToKievyan, moveToSevan);
+          const priority = calculatePriority(
+            productName,
+            moveToKievyan,
+            moveToSevan
+          );
 
           recommendations.push({
             productName,

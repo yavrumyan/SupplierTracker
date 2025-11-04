@@ -169,6 +169,7 @@ export default function CompStyleInventoryMovement() {
                   className="border rounded px-3 py-2 text-sm"
                 >
                   <option value="all">All Priorities</option>
+                  <option value="Highest">Highest Priority</option>
                   <option value="High">High Priority</option>
                   <option value="Medium">Medium Priority</option>
                   <option value="Low">Low Priority</option>
@@ -189,6 +190,7 @@ export default function CompStyleInventoryMovement() {
               ) : (
                 filteredRecommendations.map((rec, index) => (
                   <div key={index} className={`p-4 rounded-lg border ${
+                    rec.priority === 'Highest' ? 'bg-purple-50 border-purple-200' :
                     rec.priority === 'High' ? 'bg-red-50 border-red-200' : 
                     rec.priority === 'Medium' ? 'bg-yellow-50 border-yellow-200' : 
                     'bg-slate-50 border-slate-200'
@@ -222,6 +224,7 @@ export default function CompStyleInventoryMovement() {
                           </div>
                         )}
                         <div className={`px-3 py-1 rounded text-xs font-medium ${
+                          rec.priority === 'Highest' ? 'bg-purple-100 text-purple-800' :
                           rec.priority === 'High' ? 'bg-red-100 text-red-800' : 
                           rec.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' : 
                           'bg-slate-100 text-slate-800'
@@ -246,17 +249,19 @@ export default function CompStyleInventoryMovement() {
             <div className="text-xs text-slate-600 space-y-2">
               <p><strong>Distribution Rules:</strong></p>
               <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>0% to Kievyan: Projector screens, screws, cabinets, furniture, patch panels, racktower cases, CS computers</li>
-                <li>1 piece to Kievyan: Laptop bags, printers, projectors, laptops, monitors, tower cases, UPS</li>
-                <li>10% to Kievyan: Shredders, coolers, brackets, speakers, accessories, batteries</li>
-                <li>100% to Kievyan: LED computers</li>
+                <li>0% to Kievyan: Projector screens, screws, cabinets, furniture, patch panels, racktower cases</li>
+                <li>1-2 pieces to Kievyan: Laptop bags/coolers, printers, scanners, projectors, laptops, AIO, monitors, cases, UPS (1 pc if total ≤10, 2 pcs if total &gt;10)</li>
+                <li>10% to Kievyan: Shredders, coolers (excluding laptop coolers), brackets, speakers, accessories, batteries</li>
+                <li>100% to Kievyan: LED computers, CS computers</li>
                 <li>20% to Kievyan: Default for all other products</li>
+                <li><strong>Sales Velocity Boost:</strong> If Kievyan sold more than Sevan in last 90 days, allocation can increase up to 100%</li>
               </ul>
-              <p className="mt-3"><strong>Priority Calculation (Based on 90-day Sales):</strong></p>
+              <p className="mt-3"><strong>Priority Calculation (Stock Level & Deviation):</strong></p>
               <ul className="list-disc list-inside space-y-1 ml-2">
-                <li><strong>High Priority:</strong> Products with ≥10 units sold at destination location in last 90 days</li>
-                <li><strong>Medium Priority:</strong> Products with 5-9 units sold at destination location in last 90 days</li>
-                <li><strong>Low Priority:</strong> Products with &lt;5 units sold at destination location in last 90 days</li>
+                <li><strong>Highest Priority:</strong> Zero stock at destination location</li>
+                <li><strong>High Priority:</strong> &gt;50% deviation from optimal levels at destination</li>
+                <li><strong>Medium Priority:</strong> 25-50% deviation from optimal levels at destination</li>
+                <li><strong>Low Priority:</strong> &lt;25% deviation from optimal levels at destination</li>
               </ul>
             </div>
           </CardContent>
