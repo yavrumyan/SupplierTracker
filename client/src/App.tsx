@@ -22,6 +22,7 @@ import CompStyleProfitability from "@/pages/compstyle/profitability";
 import CompStyleOrderRecommendations from "@/pages/compstyle/order-recommendations";
 import CompStyleAnalyticsPhase1 from "@/pages/compstyle/analytics-phase1";
 import CompStyleAnalyticsPhase2 from "@/pages/compstyle/analytics-phase2";
+import CompStyleTransitTracking from "@/pages/compstyle/transit-tracking";
 import ChipDashboard from "@/pages/chip";
 import ChipProducts from "@/pages/chip/products";
 import ChipProductForm from "@/pages/chip/product-form";
@@ -65,6 +66,7 @@ function Router() {
         <Route path="/compstyle/analytics-phase1" component={CompStyleAnalyticsPhase1} />
         <Route path="/compstyle/analytics-phase2" component={CompStyleAnalyticsPhase2} />
         <Route path="/compstyle/inventory-movement" component={CompStyleInventoryMovement} />
+        <Route path="/compstyle/transit-tracking" component={CompStyleTransitTracking} />
         <Route path="/compstyle/sales-analysis" component={CompStyleSalesAnalysis} />
         <Route path="/compstyle/profitability" component={CompStyleProfitability} />
         <Route path="/compstyle/order-recommendations" component={CompStyleOrderRecommendations} />

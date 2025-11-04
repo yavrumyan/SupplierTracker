@@ -248,12 +248,14 @@ export default function CompStyleDashboard() {
                   </p>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-lg">
-                  <h4 className="font-semibold mb-2">🚚 Transit Tracking</h4>
-                  <p className="text-sm text-slate-600">
-                    Monitor incoming inventory and plan accordingly
-                  </p>
-                </div>
+                <Link href="/compstyle/transit-tracking">
+                  <div className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors">
+                    <h4 className="font-semibold mb-2">🚚 Transit Tracking</h4>
+                    <p className="text-sm text-slate-600">
+                      Monitor incoming inventory and plan accordingly
+                    </p>
+                  </div>
+                </Link>
               </div>
             </CardContent>
           </Card>
