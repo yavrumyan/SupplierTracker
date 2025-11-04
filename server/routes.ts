@@ -2485,10 +2485,20 @@ print(json.dumps(result))
 
   // Process Total sales by goods files according to specifications
   async function processTotalSalesFile(data: any[], filename: string): Promise<number> {
-    let count = 0;
+    console.log('Processing Total Sales file - clearing existing data...');
+
+    // Clear existing total sales data before processing new file
+    await db.delete(compstyleTotalSales);
 
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
+
+    // Aggregate sales by product name (to handle duplicates in the same file)
+    const productSalesMap = new Map<string, {
+      qtySold: number;
+      totalRevenue: number;
+      totalCost: number;
+    }>();
 
     // Start from row 2 (skip header rows 0 and 1)
     for (let i = 2; i < data.length; i++) {
@@ -2509,28 +2519,60 @@ print(json.dumps(result))
 
       const safeSalePrice = salePriceUsd || 0;
       const safeCostPrice = costPriceUsd || 0;
+      const productName = String(row[1]).trim();
+
+      // Aggregate data for this product
+      const existing = productSalesMap.get(productName) || {
+        qtySold: 0,
+        totalRevenue: 0,
+        totalCost: 0
+      };
+
+      existing.qtySold += qtySold;
+      existing.totalRevenue += safeSalePrice * qtySold;
+      existing.totalCost += safeCostPrice * qtySold;
+
+      productSalesMap.set(productName, existing);
+    }
+
+    // Insert aggregated data
+    let count = 0;
+    for (const [productName, data] of productSalesMap) {
+      const avgSalePrice = data.qtySold > 0 ? data.totalRevenue / data.qtySold : 0;
+      const avgCostPrice = data.qtySold > 0 ? data.totalCost / data.qtySold : 0;
 
       await storage.createCompstyleTotalSales({
-        productName: String(row[1]), // Column B (КодТовара): Name of product
-        qtySold,
-        salePriceUsd: String(safeSalePrice),
-        costPriceUsd: String(safeCostPrice),
-        profitPerUnit: String(safeSalePrice - safeCostPrice), // Column F - Column G: Profit per unit
-        totalProfit: String((safeSalePrice - safeCostPrice) * qtySold), // (Column F - Column G) * Column E: Total profit
+        productName,
+        qtySold: data.qtySold,
+        salePriceUsd: String(avgSalePrice.toFixed(2)),
+        costPriceUsd: String(avgCostPrice.toFixed(2)),
+        profitPerUnit: String((avgSalePrice - avgCostPrice).toFixed(2)),
+        totalProfit: String((data.totalRevenue - data.totalCost).toFixed(2)),
         periodStart,
         periodEnd,
       });
       count++;
     }
+
+    console.log(`Total Sales processed: ${count} unique products saved`);
     return count;
   }
 
   // Process Total procurement by goods files according to specifications
   async function processTotalProcurementFile(data: any[], filename: string): Promise<number> {
-    let count = 0;
+    console.log('Processing Total Procurement file - clearing existing data...');
+
+    // Clear existing total procurement data before processing new file
+    await db.delete(compstyleTotalProcurement);
 
     // Extract period from filename
     const { periodStart, periodEnd } = extractPeriodFromFilename(filename);
+
+    // Aggregate procurement by product name (to handle duplicates in the same file)
+    const productProcurementMap = new Map<string, {
+      qtyPurchased: number;
+      totalCost: number;
+    }>();
 
     // Start from row 1 (skip header row 0)
     for (let i = 1; i < data.length; i++) {
@@ -2548,15 +2590,37 @@ print(json.dumps(result))
 
       if (qtyPurchased === null || qtyPurchased <= 0) continue;
 
+      const safePurchasePrice = purchasePriceUsd || 0;
+      const productName = String(row[1]).trim();
+
+      // Aggregate data for this product
+      const existing = productProcurementMap.get(productName) || {
+        qtyPurchased: 0,
+        totalCost: 0
+      };
+
+      existing.qtyPurchased += qtyPurchased;
+      existing.totalCost += safePurchasePrice * qtyPurchased;
+
+      productProcurementMap.set(productName, existing);
+    }
+
+    // Insert aggregated data
+    let count = 0;
+    for (const [productName, data] of productProcurementMap) {
+      const avgPurchasePrice = data.qtyPurchased > 0 ? data.totalCost / data.qtyPurchased : 0;
+
       await storage.createCompstyleTotalProcurement({
-        productName: String(row[1]), // Column B (КодТовара): Name of product
-        qtyPurchased,
-        purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null,
+        productName,
+        qtyPurchased: data.qtyPurchased,
+        purchasePriceUsd: avgPurchasePrice > 0 ? String(avgPurchasePrice.toFixed(2)) : null,
         periodStart,
         periodEnd,
       });
       count++;
     }
+
+    console.log(`Total Procurement processed: ${count} unique products saved`);
     return count;
   }
 
