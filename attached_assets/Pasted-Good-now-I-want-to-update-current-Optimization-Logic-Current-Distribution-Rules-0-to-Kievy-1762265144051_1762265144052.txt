@@ -1,0 +1,60 @@
+Good, now I want to update current Optimization Logic.
+
+Current Distribution Rules:
+
+0% to Kievyan: Projector screens, screws, cabinets, furniture, patch panels, racktower cases, CS computers
+1 piece to Kievyan: Laptop bags, printers, projectors, laptops, monitors, tower cases, UPS
+10% to Kievyan: Shredders, coolers, brackets, speakers, accessories, batteries
+100% to Kievyan: LED computers
+20% to Kievyan: Default for all other products
+
+Priority Calculation (Based on 90-day Sales):
+High Priority: Products with ≥10 units sold at destination location in last 90 days
+Medium Priority: Products with 5-9 units sold at destination location in last 90 days
+Low Priority: Products with <5 units sold at destination location in last 90 days
+
+New rules (Optimal Distribution):
+
+0 pieces to Kievyan:
+Projector screens (Starting with: "Экран для проектора")
+Screws (Starting with: "Шурупы")
+Cabinets (Starting with: "Шкаф")
+Furniture (Starting with: "Стол", "Кресло")
+Patch panels (Starting with: "Патч-панель", "Кресло")
+Racktower cases (Starting with: "Корпус Rack")
+
+1 or 2 pieces to Kievyan (1 pcs if total inventory is less or equal to 10, 2 pcs to Kievyan if total inventory is >10):
+Laptop bags (Starting with: "Сумка для ноутбука", "Сумка для фотоаппарата", "Сумка/Рюкзак для ноутбука", "Сумка/Чехол для ноутбука")
+Laptop Coolers (Starting with: "Кулер для ноутбука")
+Printers (Starting with: "Принтер", "Сканнер")
+Projectors (Starting with: "Проектор")
+Laptops and AIO (Starting with: "Ноутбук", "Моноблок")
+Monitors (Starting with: "Монитор")
+Cases (Starting with: "Корпус MidiTower", "Корпус MiniTower", "Корпус FullTower")
+UPS (Starting with: "ИБП UPS")
+
+10% to Kievyan / 90% to Sevan:
+Shredders (Starting with: "Шредер")
+Coolers (Starting with: "Кулер". Excluding "Кулер для ноутбука")
+Brackets (Starting with: "Кронштейн для мониторов", "Кронштейн для проектора", "Кронштейн для телевизора")
+Speakers (Starting with: "Колонки", "Колонка", "Саундбар")
+Accessories (Starting with: "Джойстик", "Клавиатура", "Коврик", "Микрофон", "Мышь", "Наушники", "Сетевой фильтр")
+Batteries (Starting with: "Батарейка", "Батарейка-аккумулятор")
+
+20% to Kievyan / 80% to Sevan:
+Default for all other products
+
+All stock to Kievyan:
+LED computers (Starting with: "Компьютер LED", "Компьютер CS")
+
+*Based on 90-day Sales velocity the abovementioned rules can be adjusted to up to 100% (For example, if based on above rules we see that Kievyan should have 2 pcs (out of 10 pcs) of "Блок питания 1000W Be quiet! Pure Power 12 BP005EU 80+ Gold (ATX3.1, PCIe 5.1)", but Kievyan has sold more of that product than Sevan in last 90 days, then the 2 pcs can be increased by 100%, and final quantities will become 4 pcs to Kievyan (out of 10 pcs).
+
+Priority Calculation (Based on stock level and 90-day Sales):
+Highest Priority: Products with zero stock at destination location
+High Priority: Products with high deviation level from the optimal levels at destination location
+Medium Priority: Products with medium deviation level from the optimal levels at destination location
+Low Priority: Products with low deviation level from the optimal levels at destination location
+
+*Regarding the deviation levels I want you to suggest a formula.
+
+Also confirm that you understood everything correctly
