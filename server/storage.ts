@@ -2184,25 +2184,31 @@ export class DatabaseStorage implements IStorage {
 
       // Calculate priorities based on stock level and deviation from optimal
       const calculatePriority = (
-        currentQty: number,
-        optimalQty: number,
+        productName: string,
+        currentKievyan: number,
+        currentSevan: number,
+        optimalKievyan: number,
+        optimalSevan: number,
         moveToKievyan: number,
         moveToSevan: number
       ): 'Highest' | 'High' | 'Medium' | 'Low' => {
-        const destinationQty = moveToKievyan > 0 ? currentQty : currentQty;
+        // Determine which location is receiving stock
+        const isMovingToKievyan = moveToKievyan > 0;
+        const destinationQty = isMovingToKievyan ? currentKievyan : currentSevan;
+        const optimalQty = isMovingToKievyan ? optimalKievyan : optimalSevan;
 
-        // Highest Priority: Zero stock at destination
+        // Highest Priority: Zero stock at destination location
         if (destinationQty === 0 && (moveToKievyan > 0 || moveToSevan > 0)) {
           return 'Highest';
         }
 
-        // Calculate deviation percentage
+        // Calculate deviation percentage at destination
         let deviationPercent = 0;
         if (optimalQty > 0) {
-          deviationPercent = Math.abs(currentQty - optimalQty) / optimalQty * 100;
-        } else if (currentQty > 0) {
+          deviationPercent = Math.abs(destinationQty - optimalQty) / optimalQty * 100;
+        } else if (destinationQty > 0) {
           // For zero optimal cases, use absolute difference
-          deviationPercent = currentQty > 5 ? 100 : currentQty * 20;
+          deviationPercent = destinationQty > 5 ? 100 : destinationQty * 20;
         }
 
         // High Deviation: > 50%
@@ -2241,6 +2247,10 @@ export class DatabaseStorage implements IStorage {
 
           const priority = calculatePriority(
             productName,
+            kievyanQty,
+            sevanQty,
+            kievyanOptimal,
+            sevanOptimal,
             moveToKievyan,
             moveToSevan
           );
