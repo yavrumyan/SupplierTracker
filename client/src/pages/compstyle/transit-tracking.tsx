@@ -358,7 +358,7 @@ export default function CompStyleTransitTracking() {
                             </Badge>
                           )}
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-sm">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                           <div className="flex items-center gap-2 text-slate-600">
                             <User className="h-4 w-4" />
                             <span className="font-medium">{order.supplier || "Unknown"}</span>
@@ -375,18 +375,21 @@ export default function CompStyleTransitTracking() {
                             <DollarSign className="h-4 w-4" />
                             <span>${order.totalValue.toLocaleString()}</span>
                           </div>
-                          {order.orderDate && (
-                            <div className="flex items-center gap-2 text-slate-600">
-                              <Calendar className="h-4 w-4" />
-                              <span>{new Date(order.orderDate).toLocaleDateString()}</span>
-                            </div>
-                          )}
-                          {daysInTransit !== null && (
-                            <div className="flex items-center gap-2 text-slate-600">
-                              <Truck className="h-4 w-4" />
-                              <span>{daysInTransit} days in transit</span>
-                            </div>
-                          )}
+                          <div className="flex items-center gap-2 text-slate-600">
+                            <Calendar className="h-4 w-4" />
+                            <span className="font-medium">
+                              {order.orderDate 
+                                ? new Date(order.orderDate).toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                  })
+                                : "No date"}
+                            </span>
+                            {daysInTransit !== null && daysInTransit > 0 && (
+                              <span className="text-xs text-slate-500">({daysInTransit}d)</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <Button variant="ghost" size="sm">
