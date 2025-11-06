@@ -2122,7 +2122,7 @@ print(json.dumps(result))
 
   // Helper function to safely parse Excel date values
   function parseExcelDate(value: any): Date | null {
-    if (value === null || value === undefined || value === "") return null;
+    if (!value) return null;
 
     // If it's already a Date object
     if (value instanceof Date) {
@@ -2131,37 +2131,32 @@ print(json.dumps(result))
 
     // If it's a number (Excel serial date)
     if (typeof value === 'number') {
-      // Excel stores dates as days since 1899-12-30 (not 1900-01-01 due to a bug)
-      const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
+      // Excel stores dates as days since 1900-01-01 (with leap year bug)
+      const excelEpoch = new Date(1899, 11, 30);
       const date = new Date(excelEpoch.getTime() + value * 24 * 60 * 60 * 1000);
       return isNaN(date.getTime()) ? null : date;
     }
 
-    // If it's a string
+    // If it's a string, check for Russian date format (e.g., "28-окт-2025")
     if (typeof value === 'string') {
-      // Try DD-MM-YY format (e.g., "20-08-25")
-      const ddmmyyMatch = value.match(/^(\d{1,2})-(\d{1,2})-(\d{2})$/);
-      if (ddmmyyMatch) {
-        const day = parseInt(ddmmyyMatch[1]);
-        const month = parseInt(ddmmyyMatch[2]) - 1; // Month is 0-indexed
-        const year = 2000 + parseInt(ddmmyyMatch[3]); // Assume 20xx
-        const date = new Date(year, month, day);
-        return isNaN(date.getTime()) ? null : date;
-      }
-
-      // Try DD-MMM-YY format in Russian (e.g., "25-июл-25")
       const russianMonths: Record<string, number> = {
         'янв': 0, 'фев': 1, 'мар': 2, 'апр': 3, 'май': 4, 'июн': 5,
         'июл': 6, 'авг': 7, 'сен': 8, 'окт': 9, 'ноя': 10, 'дек': 11
       };
 
-      const ddmmmyyMatch = value.match(/^(\d{1,2})-([а-я]{3})-(\d{2})$/i);
-      if (ddmmmyyMatch) {
-        const day = parseInt(ddmmmyyMatch[1]);
-        const monthStr = ddmmmyyMatch[2].toLowerCase();
-        const month = russianMonths[monthStr];
-        const year = 2000 + parseInt(ddmmmyyMatch[3]); // Assume 20xx
+      // Match format: "28-окт-2025" or "28-окт-25"
+      const russianDateMatch = value.match(/^(\d{1,2})-([а-я]{3})-(\d{2,4})$/i);
+      if (russianDateMatch) {
+        const day = parseInt(russianDateMatch[1], 10);
+        const monthKey = russianDateMatch[2].toLowerCase();
+        let year = parseInt(russianDateMatch[3], 10);
 
+        // Handle 2-digit year
+        if (year < 100) {
+          year += 2000;
+        }
+
+        const month = russianMonths[monthKey];
         if (month !== undefined) {
           const date = new Date(year, month, day);
           return isNaN(date.getTime()) ? null : date;
