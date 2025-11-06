@@ -2204,8 +2204,8 @@ export class DatabaseStorage implements IStorage {
       ): 'High' | 'Medium' | 'Low' => {
         // Determine which location is receiving stock
         const isMovingToKievyan = moveToKievyan > 0;
-        const destinationQty = isMovingTo Kievyan ? currentKievyan : currentSevan;
-        const optimalQty = isMovingTo Kievyan ? optimalKievyan : optimalSevan;
+        const destinationQty = isMovingToKievyan ? currentKievyan : currentSevan;
+        const optimalQty = isMovingToKievyan ? optimalKievyan : optimalSevan;
 
         // Highest Priority: Zero stock at destination location
         if (destinationQty === 0 && (moveToKievyan > 0 || moveToSevan > 0)) {
