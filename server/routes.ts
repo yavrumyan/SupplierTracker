@@ -1626,6 +1626,12 @@ print(json.dumps(result))
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
+      
+      // Convert orderDate string to Date if provided
+      if (updates.orderDate && typeof updates.orderDate === 'string') {
+        updates.orderDate = new Date(updates.orderDate);
+      }
+      
       const updatedItem = await storage.updateCompstyleTransit(id, updates);
       res.json(updatedItem);
     } catch (error) {

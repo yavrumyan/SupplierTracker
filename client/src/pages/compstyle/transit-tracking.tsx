@@ -450,9 +450,8 @@ export default function CompStyleTransitTracking() {
                           </label>
                           <Input 
                             type="date" 
-                            value={order.orderDate ? new Date(order.orderDate).toISOString().split('T')[0] : ''} 
-                            disabled
-                            className="bg-slate-50"
+                            value={getOrderValue(order, 'orderDate') ? new Date(getOrderValue(order, 'orderDate')).toISOString().split('T')[0] : ''} 
+                            onChange={(e) => handleFieldChange(order.orderNumber, 'orderDate', e.target.value ? new Date(e.target.value).toISOString() : null)}
                           />
                         </div>
 
