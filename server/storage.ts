@@ -2193,9 +2193,9 @@ export class DatabaseStorage implements IStorage {
         moveToSevan: number
       ): 'Highest' | 'High' | 'Medium' | 'Low' => {
         // Determine which location is receiving stock
-        const isMovingToKievyan = moveToKievyan > 0;
+        const isMovingTo Kievyan = moveToKievyan > 0;
         const destinationQty = isMovingToKievyan ? currentKievyan : currentSevan;
-        const optimalQty = isMovingToKievyan ? optimalKievyan : optimalSevan;
+        const optimalQty = isMovingTo Kievyan ? optimalKievyan : optimalSevan;
 
         // Highest Priority: Zero stock at destination location
         if (destinationQty === 0 && (moveToKievyan > 0 || moveToSevan > 0)) {
@@ -2488,7 +2488,7 @@ export class DatabaseStorage implements IStorage {
     profitMargin: number;
     stockOutRisk: number;
     priorityScore: number;
-    priority: 'critical' | 'high' | 'medium' | 'low';
+    priority: 'critical' | 'high' | 'medium' | 'low' | 'no';
   }>> {
     try {
       const stockOutRisk = await this.getCompstyleStockOutRisk();
@@ -2637,16 +2637,24 @@ export class DatabaseStorage implements IStorage {
       const profitMap = new Map(
         profitability.map(p => [p.productName, {
           margin: p.profitMargin,
-          retailPrice: p.retailPriceUsd
+          retailPrice: p.retailPriceUsd,
+          avgSalePrice: p.retailPriceUsd, // Alias for clarity
+          profitMargin: p.profitMargin, // Alias for clarity
+          expectedProfit: p.potentialProfit // Use potential profit for expected profit calculation
         }])
       );
 
-      // Generate recommendations for all products (not just stock-out risk)
+      // Generate recommendations for all products with sales history
       const allProductNames = new Set<string>();
 
-      // Add all products from product list that have stock or transit
+      // Add all products from product list that have sales history (stock/transit not required)
       for (const product of productList) {
-        if ((product.stock && product.stock > 0) || (product.transit && product.transit > 0)) {
+        const sales = salesByPeriod.get(product.productName);
+        const hasSales = sales && (
+          sales.sold30d > 0 || sales.sold60d > 0 || sales.sold90d > 0 ||
+          sales.sold120d > 0 || sales.sold150d > 0 || sales.sold180d > 0
+        );
+        if (hasSales) {
           allProductNames.add(product.productName);
         }
       }
@@ -2668,49 +2676,67 @@ export class DatabaseStorage implements IStorage {
         // Find if this product has a stock-out risk recommendation
         const riskInfo = stockOutRisk.find(r => r.productName === productName);
         const optimalQty = riskInfo?.recommendedOrder || 0;
-        const daysUntilStockOut = riskInfo?.daysUntilStockOut || 999;
-
         const avgSalePrice = profit?.retailPrice || 0;
+        const profitMargin = profit?.profitMargin || 0;
+        const daysUntilStockOut = riskInfo?.daysUntilStockOut || 999;
+        const expectedProfit = optimalQty * currentCost * (profitMargin / 100);
 
-        // Calculate expected profit using current cost
-        const expectedProfit = (avgSalePrice - currentCost) * optimalQty;
+        // COMPONENT 1 (50% weight): Current priority formula
+        // 1. Sales Activity (35% weight) - Must have sales to be priority
+        const maxSales = Math.max(sales.sold30d, sales.sold60d, sales.sold90d, sales.sold120d, sales.sold150d, sales.sold180d);
+        const salesActivityScore = maxSales > 0 ? Math.min(100, (maxSales / 50) * 100) : 0;
 
-        // Calculate margin % using current cost: ((Sale Price - Cost) / Cost) × 100
-        const profitMargin = currentCost > 0 ? ((avgSalePrice - currentCost) / currentCost) * 100 : 0;
-
-        // Enhanced Priority Calculation
-        // 1. Sales Activity Score (0-100): Based on recent sales across multiple periods
-        const totalSalesLast180d = sales.sold180d || 0;
-        const salesActivityScore = totalSalesLast180d > 0 ? Math.min(100, (totalSalesLast180d / 180) * 100 * 10) : 0;
-
-        // 2. Stock Urgency Score (0-100): How critical is the stockout risk
+        // 2. Stock Urgency (30% weight) - How soon we'll run out
         const stockOutUrgency = daysUntilStockOut <= 7 ? 100 :
-                               daysUntilStockOut <= 14 ? 80 :
-                               daysUntilStockOut <= 30 ? 60 :
-                               daysUntilStockOut <= 60 ? 40 : 20;
+                                daysUntilStockOut <= 14 ? 80 :
+                                daysUntilStockOut <= 30 ? 60 :
+                                daysUntilStockOut <= 60 ? 40 : 20;
 
-        // 3. Profit Opportunity Score (0-100): Normalized expected profit
-        // Scale based on expected profit (products with $1000+ expected profit get 100)
-        const profitOpportunityScore = Math.min(100, (expectedProfit / 1000) * 100);
+        // 3. Profit Opportunity (20% weight) - Total profit potential
+        const profitOpportunityScore = expectedProfit > 1000 ? 100 :
+                                       expectedProfit > 500 ? 80 :
+                                       expectedProfit > 200 ? 60 :
+                                       expectedProfit > 50 ? 40 : 20;
 
-        // 4. Margin Quality Score (0-100): Normalized margin percentage
-        const marginQualityScore = Math.min(100, profitMargin * 2); // 50% margin = 100 score
+        // 4. Margin Quality (15% weight) - Profit per unit
+        const marginQualityScore = profitMargin >= 30 ? 100 :
+                                   profitMargin >= 20 ? 80 :
+                                   profitMargin >= 15 ? 60 :
+                                   profitMargin >= 10 ? 40 : 20;
 
-        // Combined Priority Score with weights:
-        // - Sales Activity: 35% (must have sales to be priority)
-        // - Stock Urgency: 30% (how soon we'll run out)
-        // - Profit Opportunity: 20% (total profit potential)
-        // - Margin Quality: 15% (profit per unit)
-        const priorityScore =
+        // Component 1 Score
+        const component1Score =
           (salesActivityScore * 0.35) +
           (stockOutUrgency * 0.30) +
           (profitOpportunityScore * 0.20) +
           (marginQualityScore * 0.15);
 
-        // Priority levels based on combined score
-        let priority: 'critical' | 'high' | 'medium' | 'low';
-        if (priorityScore >= 70 && salesActivityScore > 0) priority = 'critical';
-        else if (priorityScore >= 50 && salesActivityScore > 0) priority = 'high';
+        // COMPONENT 2 (50% weight): Order Urgency Ratio
+        // Formula: Order Qty / (Stock + Transit)
+        const totalAvailable = stock + transit;
+        let urgencyRatioScore = 0;
+
+        if (optimalQty === 0) {
+          urgencyRatioScore = 0; // No order needed
+        } else if (totalAvailable === 0) {
+          urgencyRatioScore = 100; // Critical - no stock/transit but need to order
+        } else {
+          const urgencyRatio = optimalQty / totalAvailable;
+          if (urgencyRatio >= 3.0) urgencyRatioScore = 100; // Critical
+          else if (urgencyRatio >= 2.0) urgencyRatioScore = 75; // High
+          else if (urgencyRatio >= 1.0) urgencyRatioScore = 50; // Medium
+          else if (urgencyRatio > 0.0) urgencyRatioScore = 25; // Low
+          else urgencyRatioScore = 0; // No urgency
+        }
+
+        // FINAL PRIORITY SCORE: 50% Component 1 + 50% Component 2
+        const priorityScore = (component1Score * 0.5) + (urgencyRatioScore * 0.5);
+
+        // Priority levels based on final combined score
+        let priority: 'critical' | 'high' | 'medium' | 'low' | 'no';
+        if (optimalQty === 0) priority = 'no';
+        else if (priorityScore >= 70) priority = 'critical';
+        else if (priorityScore >= 50) priority = 'high';
         else if (priorityScore >= 30) priority = 'medium';
         else priority = 'low';
 
@@ -2734,7 +2760,7 @@ export class DatabaseStorage implements IStorage {
           priorityScore: Number(priorityScore.toFixed(1)),
           priority
         };
-      }).sort((a, b) => b.priorityScore - a.priorityScore);
+      });
 
       return recommendations;
     } catch (error) {

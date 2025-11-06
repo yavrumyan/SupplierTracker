@@ -235,12 +235,13 @@ export default function CompStyleOrderRecommendations() {
                 {enrichedRecommendations.map((item: any, index: number) => {
                   const salesKey = `sold${salesPeriod.replace('d', 'D')}` as keyof typeof item;
                   const soldQty = item[salesKey] || 0;
-                  
+
                   return (
                     <TableRow key={index} className={
                       item.priority === 'critical' ? 'bg-red-50' :
                       item.priority === 'high' ? 'bg-orange-50' :
-                      item.priority === 'medium' ? 'bg-yellow-50' : ''
+                      item.priority === 'medium' ? 'bg-yellow-50' :
+                      item.priority === 'no' ? 'bg-slate-100' : ''
                     }>
                       <TableCell className="font-medium max-w-xs">
                         <div className="truncate">{item.productName}</div>
@@ -272,7 +273,7 @@ export default function CompStyleOrderRecommendations() {
                           item.priority === 'critical' ? 'bg-red-100 text-red-800' :
                           item.priority === 'high' ? 'bg-orange-100 text-orange-800' :
                           item.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-slate-100 text-slate-800'
+                          item.priority === 'no' ? 'bg-slate-100 text-slate-800' : ''
                         }`}>
                           {item.priority}
                         </span>
