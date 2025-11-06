@@ -21,6 +21,10 @@ interface TransitItem {
   purchaseOrderNumber: string | null;
   destinationLocation: string | null;
   supplier: string | null;
+  orderDate: string | null;
+  status?: string;
+  priority?: string;
+  notes?: string;
 }
 
 interface TransitOrder {
@@ -40,15 +44,12 @@ interface TransitOrder {
 
 const STATUS_OPTIONS = [
   { value: "ordered", label: "Ordered", color: "bg-blue-100 text-blue-800" },
-  { value: "in_transit", label: "In Transit", color: "bg-yellow-100 text-yellow-800" },
-  { value: "customs", label: "At Customs", color: "bg-orange-100 text-orange-800" },
-  { value: "arrived", label: "Arrived", color: "bg-green-100 text-green-800" },
-  { value: "completed", label: "Completed", color: "bg-slate-100 text-slate-800" },
+  { value: "shipped", label: "Shipped", color: "bg-yellow-100 text-yellow-800" },
+  { value: "at_customs", label: "At Customs", color: "bg-orange-100 text-orange-800" },
 ];
 
 const PRIORITY_OPTIONS = [
   { value: "normal", label: "Normal", color: "bg-slate-100 text-slate-800" },
-  { value: "high", label: "High", color: "bg-orange-100 text-orange-800" },
   { value: "urgent", label: "Urgent", color: "bg-red-100 text-red-800" },
 ];
 
@@ -59,9 +60,37 @@ export default function CompStyleTransitTracking() {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterSupplier, setFilterSupplier] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [editedOrders, setEditedOrders] = useState<Record<string, any>>({});
 
   const { data: transitData, isLoading } = useQuery<TransitItem[]>({
     queryKey: ["/api/compstyle/transit"],
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: any }) => {
+      const response = await fetch(`/api/compstyle/transit/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      if (!response.ok) throw new Error('Failed to update transit item');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
+      toast({
+        title: "Success",
+        description: "Transit order updated successfully",
+      });
+      setEditedOrders({});
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update transit order",
+        variant: "destructive",
+      });
+    },
   });
 
   // Group transit items by order number
@@ -89,8 +118,10 @@ export default function CompStyleTransitTracking() {
           totalValue,
           totalQty,
           destination: items[0]?.destinationLocation || null,
-          status: "in_transit",
-          priority: "normal",
+          status: items[0]?.status || "ordered",
+          priority: items[0]?.priority || "normal",
+          notes: items[0]?.notes || "",
+          orderDate: items[0]?.orderDate || null,
         };
       })
     : [];
@@ -127,6 +158,42 @@ export default function CompStyleTransitTracking() {
     if (!orderDate) return null;
     const days = Math.floor((Date.now() - new Date(orderDate).getTime()) / (1000 * 60 * 60 * 24));
     return days;
+  };
+
+  const handleFieldChange = (orderNumber: string, field: string, value: any) => {
+    setEditedOrders(prev => ({
+      ...prev,
+      [orderNumber]: {
+        ...(prev[orderNumber] || {}),
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleSaveChanges = async (order: TransitOrder) => {
+    const changes = editedOrders[order.orderNumber];
+    if (!changes) return;
+
+    // Update all items in this order with the same changes
+    for (const item of order.items) {
+      await updateMutation.mutateAsync({
+        id: item.id,
+        updates: changes,
+      });
+    }
+  };
+
+  const handleCancelChanges = (orderNumber: string) => {
+    setEditedOrders(prev => {
+      const newEdited = { ...prev };
+      delete newEdited[orderNumber];
+      return newEdited;
+    });
+  };
+
+  const getOrderValue = (order: TransitOrder, field: string) => {
+    const edited = editedOrders[order.orderNumber];
+    return edited && edited[field] !== undefined ? edited[field] : order[field as keyof TransitOrder];
   };
 
   if (isLoading) {
@@ -264,7 +331,8 @@ export default function CompStyleTransitTracking() {
           ) : (
             filteredOrders.map((order) => {
               const isExpanded = expandedOrders.has(order.orderNumber);
-              const daysInTransit = calculateDaysInTransit(order.orderDate);
+              const daysInTransit = calculateDaysInTransit(order.orderDate || undefined);
+              const hasChanges = !!editedOrders[order.orderNumber];
 
               return (
                 <Card key={order.orderNumber} className="overflow-hidden">
@@ -278,14 +346,19 @@ export default function CompStyleTransitTracking() {
                           <CardTitle className="text-lg">
                             Order #{order.orderNumber}
                           </CardTitle>
-                          <Badge className={getStatusColor(order.status)}>
-                            {STATUS_OPTIONS.find(s => s.value === order.status)?.label || "In Transit"}
+                          <Badge className={getStatusColor(getOrderValue(order, 'status'))}>
+                            {STATUS_OPTIONS.find(s => s.value === getOrderValue(order, 'status'))?.label || "Ordered"}
                           </Badge>
-                          <Badge className={getPriorityColor(order.priority)}>
-                            {PRIORITY_OPTIONS.find(p => p.value === order.priority)?.label || "Normal"}
+                          <Badge className={getPriorityColor(getOrderValue(order, 'priority'))}>
+                            {PRIORITY_OPTIONS.find(p => p.value === getOrderValue(order, 'priority'))?.label || "Normal"}
                           </Badge>
+                          {hasChanges && (
+                            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                              Unsaved Changes
+                            </Badge>
+                          )}
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+                        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 text-sm">
                           <div className="flex items-center gap-2 text-slate-600">
                             <User className="h-4 w-4" />
                             <span className="font-medium">{order.supplier || "Unknown"}</span>
@@ -302,9 +375,15 @@ export default function CompStyleTransitTracking() {
                             <DollarSign className="h-4 w-4" />
                             <span>${order.totalValue.toLocaleString()}</span>
                           </div>
-                          {daysInTransit !== null && (
+                          {order.orderDate && (
                             <div className="flex items-center gap-2 text-slate-600">
                               <Calendar className="h-4 w-4" />
+                              <span>{new Date(order.orderDate).toLocaleDateString()}</span>
+                            </div>
+                          )}
+                          {daysInTransit !== null && (
+                            <div className="flex items-center gap-2 text-slate-600">
+                              <Truck className="h-4 w-4" />
                               <span>{daysInTransit} days in transit</span>
                             </div>
                           )}
@@ -317,14 +396,17 @@ export default function CompStyleTransitTracking() {
                   </CardHeader>
 
                   {isExpanded && (
-                    <CardContent className="border-t border-slate-200 bg-slate-50">
+                    <CardContent className="border-t border-slate-200 bg-blue-50">
                       {/* Order Management Section */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 p-4 bg-white rounded-lg">
                         <div>
                           <label className="text-sm font-semibold text-slate-700 mb-2 block">
                             Status
                           </label>
-                          <Select defaultValue={order.status}>
+                          <Select 
+                            value={getOrderValue(order, 'status')} 
+                            onValueChange={(value) => handleFieldChange(order.orderNumber, 'status', value)}
+                          >
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
@@ -342,7 +424,10 @@ export default function CompStyleTransitTracking() {
                           <label className="text-sm font-semibold text-slate-700 mb-2 block">
                             Priority
                           </label>
-                          <Select defaultValue={order.priority}>
+                          <Select 
+                            value={getOrderValue(order, 'priority')} 
+                            onValueChange={(value) => handleFieldChange(order.orderNumber, 'priority', value)}
+                          >
                             <SelectTrigger>
                               <SelectValue />
                             </SelectTrigger>
@@ -358,25 +443,21 @@ export default function CompStyleTransitTracking() {
 
                         <div>
                           <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                            Expected Arrival
+                            Order Date
                           </label>
-                          <Input type="date" defaultValue={order.expectedArrival} />
+                          <Input 
+                            type="date" 
+                            value={order.orderDate ? new Date(order.orderDate).toISOString().split('T')[0] : ''} 
+                            disabled
+                            className="bg-slate-50"
+                          />
                         </div>
 
                         <div>
                           <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                            Documents
+                            Expected Arrival
                           </label>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm" className="flex-1">
-                              <Upload className="h-4 w-4 mr-2" />
-                              Upload
-                            </Button>
-                            <Button variant="outline" size="sm" className="flex-1">
-                              <FileText className="h-4 w-4 mr-2" />
-                              View ({order.documents?.length || 0})
-                            </Button>
-                          </div>
+                          <Input type="date" defaultValue={order.expectedArrival} />
                         </div>
 
                         <div className="md:col-span-2">
@@ -385,14 +466,15 @@ export default function CompStyleTransitTracking() {
                           </label>
                           <Textarea
                             placeholder="Add action items, tracking notes, or important information..."
-                            defaultValue={order.notes}
+                            value={getOrderValue(order, 'notes') || ''}
+                            onChange={(e) => handleFieldChange(order.orderNumber, 'notes', e.target.value)}
                             rows={3}
                           />
                         </div>
                       </div>
 
                       {/* Items Table */}
-                      <div className="overflow-x-auto">
+                      <div className="overflow-x-auto bg-white rounded-lg">
                         <table className="w-full text-sm">
                           <thead className="bg-slate-100 border-b border-slate-200">
                             <tr>
@@ -408,7 +490,7 @@ export default function CompStyleTransitTracking() {
                               const priceUsd = parseFloat(item.purchasePriceUsd || "0");
                               const totalUsd = priceUsd * item.qty;
                               return (
-                                <tr key={idx} className="border-b border-slate-100 hover:bg-white">
+                                <tr key={idx} className="border-b border-slate-100 hover:bg-slate-50">
                                   <td className="p-3">{item.productName}</td>
                                   <td className="p-3 text-center">{item.qty}</td>
                                   <td className="p-3 text-right">
@@ -428,11 +510,21 @@ export default function CompStyleTransitTracking() {
                       </div>
 
                       <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-slate-200">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleCancelChanges(order.orderNumber)}
+                          disabled={!hasChanges}
+                        >
                           Cancel
                         </Button>
-                        <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                          Save Changes
+                        <Button 
+                          size="sm" 
+                          className="bg-blue-600 hover:bg-blue-700"
+                          onClick={() => handleSaveChanges(order)}
+                          disabled={!hasChanges || updateMutation.isPending}
+                        >
+                          {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
                         </Button>
                       </div>
                     </CardContent>

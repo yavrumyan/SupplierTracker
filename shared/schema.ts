@@ -333,6 +333,10 @@ export const compstyleTransit = pgTable("compstyle_transit", {
   purchaseOrderNumber: text("purchase_order_number"), // Column J (Связь)
   destinationLocation: text("destination_location"), // Column O (Склад)
   supplier: text("supplier"), // Column P (Поставщик)
+  orderDate: timestamp("order_date"), // Column Q (Дата заказа)
+  status: text("status").default("ordered"), // Ordered, Shipped, At Customs
+  priority: text("priority").default("normal"), // Normal, Urgent
+  notes: text("notes"), // Additional notes field
 });
 
 // Sales Orders by Location
@@ -440,6 +444,12 @@ export const insertCompstyleSevanStockSchema = createInsertSchema(compstyleSevan
 
 export const insertCompstyleTransitSchema = createInsertSchema(compstyleTransit).omit({
   id: true,
+  createdAt: true,
+}).extend({
+  orderDate: z.union([z.string(), z.date()]).optional().nullable(),
+  status: z.string().optional(),
+  priority: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 export const insertCompstyleSalesOrderSchema = createInsertSchema(compstyleSalesOrders).omit({

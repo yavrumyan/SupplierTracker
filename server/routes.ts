@@ -1622,6 +1622,18 @@ print(json.dumps(result))
     }
   });
 
+  app.put('/api/compstyle/transit/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const updatedItem = await storage.updateCompstyleTransit(id, updates);
+      res.json(updatedItem);
+    } catch (error) {
+      console.error('Error updating transit item:', error);
+      res.status(500).json({ error: 'Failed to update transit item' });
+    }
+  });
+
   app.get('/api/compstyle/sales-orders', async (req, res) => {
     try {
       const data = await storage.getCompstyleSalesOrders();
@@ -2225,6 +2237,8 @@ print(json.dumps(result))
       const purchasePriceAmd = parseNumericValue(row[3]);
       const currentCost = parseNumericValue(row[6]);
 
+      const orderDate = parseExcelDate(row[16]); // Column Q (Дата заказа): Order date
+
       const transitRecord = {
         productName, // Column A (Товар): Name of product
         qty, // Column B (Кол.): Quantity purchased
@@ -2234,6 +2248,10 @@ print(json.dumps(result))
         purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь): Purchase Order Number
         destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад): Destination warehouse/store
         supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик): Supplier name
+        orderDate: orderDate, // Column Q (Дата заказа): Order date
+        status: 'ordered',
+        priority: 'normal',
+        notes: null,
       };
 
       // Check if we already processed this product in this file

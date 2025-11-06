@@ -198,6 +198,7 @@ export interface IStorage {
   createCompstyleKievyanStock(stock: InsertCompstyleKievyanStock): Promise<CompstyleKievyanStock>;
   createCompstyleSevanStock(stock: InsertCompstyleSevanStock): Promise<CompstyleSevanStock>;
   createCompstyleTransit(transit: InsertCompstyleTransit): Promise<CompstyleTransit>;
+  updateCompstyleTransit(id: number, updates: any): Promise<CompstyleTransit>;
   createCompstyleSalesOrder(order: InsertCompstyleSalesOrder): Promise<CompstyleSalesOrder>;
   createCompstyleSalesItem(item: InsertCompstyleSalesItem): Promise<CompstyleSalesItem>;
   createCompstylePurchaseOrder(order: InsertCompstylePurchaseOrder): Promise<CompstylePurchaseOrder>;
@@ -965,6 +966,15 @@ export class DatabaseStorage implements IStorage {
   async createCompstyleTransit(transit: InsertCompstyleTransit): Promise<CompstyleTransit> {
     const [newTransit] = await db.insert(compstyleTransit).values(transit).returning();
     return newTransit;
+  }
+
+  async updateCompstyleTransit(id: number, updates: any): Promise<CompstyleTransit> {
+    const [updated] = await db
+      .update(compstyleTransit)
+      .set(updates)
+      .where(eq(compstyleTransit.id, id))
+      .returning();
+    return updated;
   }
 
   async createCompstyleSalesOrder(order: InsertCompstyleSalesOrder): Promise<CompstyleSalesOrder> {
@@ -2191,15 +2201,15 @@ export class DatabaseStorage implements IStorage {
         optimalSevan: number,
         moveToKievyan: number,
         moveToSevan: number
-      ): 'Highest' | 'High' | 'Medium' | 'Low' => {
+      ): 'High' | 'Medium' | 'Low' => {
         // Determine which location is receiving stock
-        const isMovingToKievyan = moveToKievyan > 0;
-        const destinationQty = isMovingToKievyan ? currentKievyan : currentSevan;
-        const optimalQty = isMovingToKievyan ? optimalKievyan : optimalSevan;
+        const isMovingTo Kievyan = moveToKievyan > 0;
+        const destinationQty = isMovingTo Kievyan ? currentKievyan : currentSevan;
+        const optimalQty = isMovingTo Kievyan ? optimalKievyan : optimalSevan;
 
         // Highest Priority: Zero stock at destination location
         if (destinationQty === 0 && (moveToKievyan > 0 || moveToSevan > 0)) {
-          return 'Highest';
+          return 'High';
         }
 
         // Calculate deviation percentage at destination
