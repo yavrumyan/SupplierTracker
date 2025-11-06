@@ -256,8 +256,8 @@ export default function CompStyleOrderRecommendations() {
                       </TableCell>
                       <TableCell className="text-center text-sm">{item.lastSupplier}</TableCell>
                       <TableCell className="text-center">${item.lastPrice.toFixed(2)}</TableCell>
-                      <TableCell className="text-center font-medium">
-                        <span className={(item.calculatedOrderQty * item.currentCost * (item.profitMargin / 100)) >= 0 ? 'text-green-600' : 'text-red-600'}>
+                      <TableCell className="text-center">
+                        <span className={`font-medium ${(item.calculatedOrderQty * item.currentCost * (item.profitMargin / 100)) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           ${(item.calculatedOrderQty * item.currentCost * (item.profitMargin / 100)).toFixed(0)}
                         </span>
                       </TableCell>
