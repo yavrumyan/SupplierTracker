@@ -335,9 +335,9 @@ export default function CompStyleTransitTracking() {
               const hasChanges = !!editedOrders[order.orderNumber];
 
               return (
-                <Card key={order.orderNumber} className={`overflow-hidden ${isExpanded ? 'bg-blue-50' : 'bg-orange-50'}`}>
+                <Card key={order.orderNumber} className={`overflow-hidden ${isExpanded ? 'bg-green-50' : 'bg-orange-50'}`}>
                   <CardHeader
-                    className={`cursor-pointer transition-colors ${isExpanded ? 'hover:bg-blue-100' : 'hover:bg-orange-100'}`}
+                    className={`cursor-pointer transition-colors ${isExpanded ? 'hover:bg-green-100' : 'hover:bg-orange-100'}`}
                     onClick={() => toggleOrder(order.orderNumber)}
                   >
                     <div className="flex items-center justify-between">
