@@ -969,7 +969,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateCompstyleTransit(id: number, updates: any): Promise<CompstyleTransit> {
-    // Filter out undefined/null values and ensure we have valid fields to update
+    // Filter out undefined values and ensure we have valid fields to update
     const validUpdates: any = {};
     
     // List of valid fields that can be updated
@@ -980,10 +980,15 @@ export class DatabaseStorage implements IStorage {
     ];
     
     for (const field of validFields) {
-      if (updates[field] !== undefined && updates[field] !== null) {
+      if (updates.hasOwnProperty(field) && updates[field] !== undefined) {
         // Handle date fields specially - ensure they're Date objects or null
         if (field === 'orderDate' || field === 'expectedArrival') {
-          validUpdates[field] = updates[field] ? new Date(updates[field]) : null;
+          // Allow null values for dates, convert string dates to Date objects
+          if (updates[field] === null || updates[field] === '') {
+            validUpdates[field] = null;
+          } else if (updates[field]) {
+            validUpdates[field] = new Date(updates[field]);
+          }
         } else {
           validUpdates[field] = updates[field];
         }
