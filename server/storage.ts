@@ -969,9 +969,32 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateCompstyleTransit(id: number, updates: any): Promise<CompstyleTransit> {
+    // Filter out undefined/null values and ensure we have valid fields to update
+    const validUpdates: any = {};
+    
+    // List of valid fields that can be updated
+    const validFields = [
+      'productName', 'qty', 'purchasePriceUsd', 'purchasePriceAmd', 
+      'currentCost', 'purchaseOrderNumber', 'destinationLocation', 
+      'supplier', 'orderDate', 'expectedArrival', 'status', 'priority', 'notes'
+    ];
+    
+    for (const field of validFields) {
+      if (updates[field] !== undefined) {
+        validUpdates[field] = updates[field];
+      }
+    }
+    
+    // If no valid updates, return the existing record
+    if (Object.keys(validUpdates).length === 0) {
+      const [existing] = await db.select().from(compstyleTransit)
+        .where(eq(compstyleTransit.id, id));
+      return existing;
+    }
+    
     const [updated] = await db
       .update(compstyleTransit)
-      .set(updates)
+      .set(validUpdates)
       .where(eq(compstyleTransit.id, id))
       .returning();
     return updated;
