@@ -969,11 +969,58 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateCompstyleTransit(id: number, updates: any): Promise<CompstyleTransit> {
-    const [updated] = await db
-      .update(compstyleTransit)
-      .set(updates)
+    // Filter out undefined values and ensure we have valid fields to update
+    const validUpdates: any = {};
+
+    // List of valid fields that can be updated
+    const validFields = [
+      'productName', 'qty', 'priceUsd', 'sumUsd', 'sumAmd',
+      'supplier', 'orderDate', 'expectedArrival', 'invoice',
+      'transitMode', 'trackingNumber', 'notes'
+    ];
+
+    for (const field of validFields) {
+      if (updates.hasOwnProperty(field)) {
+        // Handle date fields specially - ensure they're Date objects or null
+        if (field === 'orderDate' || field === 'expectedArrival') {
+          const value = updates[field];
+          // Convert string dates to Date objects, handle null/empty
+          if (value === null) {
+            validUpdates[field] = null;
+          } else if (value && value !== '') {
+            validUpdates[field] = new Date(value);
+          }
+          // Skip undefined and empty strings - they don't represent a real update
+        } else {
+          const value = updates[field];
+          // Add all other fields if they're not undefined
+          if (value !== undefined) {
+            validUpdates[field] = value;
+          }
+        }
+      }
+    }
+
+    // If there are no valid updates, return the existing record
+    if (Object.keys(validUpdates).length === 0) {
+      const [existing] = await db.select()
+        .from(compstyleTransit)
+        .where(eq(compstyleTransit.id, id));
+      if (!existing) {
+        throw new Error(`Transit item with id ${id} not found`);
+      }
+      return existing;
+    }
+
+    const [updated] = await db.update(compstyleTransit)
+      .set(validUpdates)
       .where(eq(compstyleTransit.id, id))
       .returning();
+
+    if (!updated) {
+      throw new Error(`Failed to update transit item with id ${id}`);
+    }
+
     return updated;
   }
 
