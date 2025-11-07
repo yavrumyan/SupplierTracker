@@ -983,14 +983,21 @@ export class DatabaseStorage implements IStorage {
       if (updates.hasOwnProperty(field) && updates[field] !== undefined) {
         // Handle date fields specially - ensure they're Date objects or null
         if (field === 'orderDate' || field === 'expectedArrival') {
-          // Allow null values for dates, convert string dates to Date objects
-          if (updates[field] === null || updates[field] === '') {
-            validUpdates[field] = null;
-          } else if (updates[field]) {
+          // Only add to validUpdates if there's an actual date value
+          if (updates[field] && updates[field] !== '') {
             validUpdates[field] = new Date(updates[field]);
+          } else if (updates[field] === null) {
+            // Explicitly setting to null (clearing the field)
+            validUpdates[field] = null;
           }
+          // Skip empty strings - they don't represent a real update
         } else {
-          validUpdates[field] = updates[field];
+          // For non-date fields, add if not null/empty
+          if (updates[field] !== null && updates[field] !== '') {
+            validUpdates[field] = updates[field];
+          } else if (updates[field] === null) {
+            validUpdates[field] = null;
+          }
         }
       }
     }
