@@ -459,7 +459,11 @@ export default function CompStyleTransitTracking() {
                           <label className="text-sm font-semibold text-slate-700 mb-2 block">
                             Expected Arrival
                           </label>
-                          <Input type="date" defaultValue={order.expectedArrival} />
+                          <Input 
+                            type="date" 
+                            value={getOrderValue(order, 'expectedArrival') ? new Date(getOrderValue(order, 'expectedArrival')).toISOString().split('T')[0] : ''} 
+                            onChange={(e) => handleFieldChange(order.orderNumber, 'expectedArrival', e.target.value ? new Date(e.target.value).toISOString() : null)}
+                          />
                         </div>
 
                         <div className="md:col-span-2">
