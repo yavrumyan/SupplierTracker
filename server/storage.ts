@@ -980,12 +980,17 @@ export class DatabaseStorage implements IStorage {
     ];
     
     for (const field of validFields) {
-      if (updates[field] !== undefined) {
-        validUpdates[field] = updates[field];
+      if (updates[field] !== undefined && updates[field] !== null) {
+        // Handle date fields specially - ensure they're Date objects or null
+        if (field === 'orderDate' || field === 'expectedArrival') {
+          validUpdates[field] = updates[field] ? new Date(updates[field]) : null;
+        } else {
+          validUpdates[field] = updates[field];
+        }
       }
     }
     
-    // If no valid updates, return the existing record
+    // If no valid updates, return the existing record without hitting the database
     if (Object.keys(validUpdates).length === 0) {
       const [existing] = await db.select().from(compstyleTransit)
         .where(eq(compstyleTransit.id, id));
