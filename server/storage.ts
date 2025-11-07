@@ -969,49 +969,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateCompstyleTransit(id: number, updates: any): Promise<CompstyleTransit> {
-    // Filter out undefined values and ensure we have valid fields to update
-    const validUpdates: any = {};
-    
-    // List of valid fields that can be updated
-    const validFields = [
-      'productName', 'qty', 'purchasePriceUsd', 'purchasePriceAmd', 
-      'currentCost', 'purchaseOrderNumber', 'destinationLocation', 
-      'supplier', 'orderDate', 'expectedArrival', 'status', 'priority', 'notes'
-    ];
-    
-    for (const field of validFields) {
-      if (updates.hasOwnProperty(field) && updates[field] !== undefined) {
-        // Handle date fields specially - ensure they're Date objects or null
-        if (field === 'orderDate' || field === 'expectedArrival') {
-          // Only add to validUpdates if there's an actual date value
-          if (updates[field] && updates[field] !== '') {
-            validUpdates[field] = new Date(updates[field]);
-          } else if (updates[field] === null) {
-            // Explicitly setting to null (clearing the field)
-            validUpdates[field] = null;
-          }
-          // Skip empty strings - they don't represent a real update
-        } else {
-          // For non-date fields, add if not null/empty
-          if (updates[field] !== null && updates[field] !== '') {
-            validUpdates[field] = updates[field];
-          } else if (updates[field] === null) {
-            validUpdates[field] = null;
-          }
-        }
-      }
-    }
-    
-    // If no valid updates, return the existing record without hitting the database
-    if (Object.keys(validUpdates).length === 0) {
-      const [existing] = await db.select().from(compstyleTransit)
-        .where(eq(compstyleTransit.id, id));
-      return existing;
-    }
-    
     const [updated] = await db
       .update(compstyleTransit)
-      .set(validUpdates)
+      .set(updates)
       .where(eq(compstyleTransit.id, id))
       .returning();
     return updated;
