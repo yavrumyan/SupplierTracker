@@ -334,6 +334,7 @@ export const compstyleTransit = pgTable("compstyle_transit", {
   destinationLocation: text("destination_location"), // Column O (Склад)
   supplier: text("supplier"), // Column P (Поставщик)
   orderDate: timestamp("order_date"), // Column Q (Дата заказа)
+  expectedArrival: timestamp("expected_arrival"), // Added field for expected arrival date
   status: text("status").default("ordered"), // Ordered, Shipped, At Customs
   priority: text("priority").default("normal"), // Normal, Urgent
   notes: text("notes"), // Additional notes field
@@ -447,6 +448,7 @@ export const insertCompstyleTransitSchema = createInsertSchema(compstyleTransit)
   createdAt: true,
 }).extend({
   orderDate: z.union([z.string(), z.date()]).optional().nullable(),
+  expectedArrival: z.union([z.string(), z.date()]).optional().nullable(), // Added schema for expectedArrival
   status: z.string().optional(),
   priority: z.string().optional(),
   notes: z.string().optional(),
