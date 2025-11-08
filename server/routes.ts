@@ -2726,14 +2726,27 @@ print(json.dumps(result))
         let lastSupplier = null;
         let latestPurchaseDate: Date | null = null;
 
-        // Check purchase items matched with their orders
+        // Check transit data first (these are most recent purchases)
+        const transitItems = transitData.filter((t: any) => t.productName === productName);
+        for (const item of transitItems) {
+          if (item.orderDate) {
+            const orderDate = new Date(item.orderDate);
+            if (!isNaN(orderDate.getTime()) && (!latestPurchaseDate || orderDate > latestPurchaseDate)) {
+              latestPurchaseDate = orderDate;
+              lastSupplier = item.supplier || null;
+              lastPrice = item.purchasePriceUsd ? parseFloat(item.purchasePriceUsd) : null;
+            }
+          }
+        }
+
+        // Check purchase items matched with their orders (fallback if no transit data)
         const purchaseItemsForProduct = purchaseItems.filter((p: any) => p.productName === productName);
         
         for (const item of purchaseItemsForProduct) {
           const order = purchaseOrders.find((o: any) => o.id === item.purchaseOrderId);
           if (order && order.orderDate) {
             const orderDate = new Date(order.orderDate);
-            if (!latestPurchaseDate || orderDate > latestPurchaseDate) {
+            if (!isNaN(orderDate.getTime()) && (!latestPurchaseDate || orderDate > latestPurchaseDate)) {
               latestPurchaseDate = orderDate;
               lastSupplier = order.supplier || null;
               lastPrice = item.priceUsd ? parseFloat(item.priceUsd) : null;
@@ -2741,17 +2754,14 @@ print(json.dumps(result))
           }
         }
 
-        // Check transit data (these are more recent purchases)
-        const transitItems = transitData.filter((t: any) => t.productName === productName);
-        for (const item of transitItems) {
-          if (item.orderDate) {
-            const orderDate = new Date(item.orderDate);
-            if (!latestPurchaseDate || orderDate > latestPurchaseDate) {
-              latestPurchaseDate = orderDate;
-              lastSupplier = item.supplier || null;
-              lastPrice = item.purchasePriceUsd ? parseFloat(item.purchasePriceUsd) : null;
-            }
-          }
+        // Log for debugging specific products
+        if (productName.includes('Intel Core i5 12400') || productName.includes('Intel Core i3')) {
+          console.log(`Product Search Debug - ${productName}:`);
+          console.log(`  Transit items: ${transitItems.length}`);
+          console.log(`  Purchase items: ${purchaseItemsForProduct.length}`);
+          console.log(`  Last Supplier: ${lastSupplier}`);
+          console.log(`  Last Price: ${lastPrice}`);
+          console.log(`  Latest Date: ${latestPurchaseDate}`);
         }
 
         results.push({
