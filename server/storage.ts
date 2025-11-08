@@ -1795,24 +1795,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getCompstyleTransit(): Promise<CompstyleTransit[]> {
-    // Ensure expectedArrival is selected
-    return db.select({
-      id: compstyleTransit.id,
-      productName: compstyleTransit.productName,
-      qty: compstyleTransit.qty,
-      priceUsd: compstyleTransit.priceUsd,
-      sumUsd: compstyleTransit.sumUsd,
-      sumAmd: compstyleTransit.sumAmd,
-      supplier: compstyleTransit.supplier,
-      orderDate: compstyleTransit.orderDate,
-      expectedArrival: compstyleTransit.expectedArrival, // Added this field
-      invoice: compstyleTransit.invoice,
-      transitMode: compstyleTransit.transitMode,
-      trackingNumber: compstyleTransit.trackingNumber,
-      notes: compstyleTransit.notes,
-      createdAt: compstyleTransit.createdAt,
-      updatedAt: compstyleTransit.updatedAt,
-    }).from(compstyleTransit);
+    return await db.select().from(compstyleTransit);
   }
 
   async getCompstyleSalesOrders(): Promise<CompstyleSalesOrder[]> {
