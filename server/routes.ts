@@ -2677,15 +2677,26 @@ print(json.dumps(result))
       const searchQuery = query.toLowerCase().trim();
       const results = [];
 
-      // Search in product list
+      // Search in product list (only products with stock, transit, or sales history)
       const productList = await storage.getCompstyleProductList();
-      const matchingProducts = productList.filter((p: any) =>
-        p.productName.toLowerCase().includes(searchQuery) ||
-        (p.sku && p.sku.toLowerCase().includes(searchQuery))
-      );
+      const totalSales = await storage.getCompstyleTotalSales();
+      const transitData = await storage.getCompstyleTransit();
+      
+      const matchingProducts = productList.filter((p: any) => {
+        const nameMatch = p.productName.toLowerCase().includes(searchQuery) ||
+          (p.sku && p.sku.toLowerCase().includes(searchQuery));
+        
+        if (!nameMatch) return false;
+        
+        // Only include products that have stock, transit, or sales history
+        const hasStock = p.stock && p.stock > 0;
+        const hasTransit = transitData.some((t: any) => t.productName === p.productName && t.qty > 0);
+        const hasSalesHistory = totalSales.some((s: any) => s.productName === p.productName);
+        
+        return hasStock || hasTransit || hasSalesHistory;
+      });
 
       // Get additional data for matching products
-      const totalSales = await storage.getCompstyleTotalSales();
       const profitabilityData = await storage.getProfitabilityHeatMap();
       const kievyanStock = await storage.getCompstyleKievyanStock();
       const sevanStock = await storage.getCompstyleSevanStock();
@@ -2712,6 +2723,16 @@ print(json.dumps(result))
           o.productName === product.productName
         );
 
+        // Search for supplier offers for this specific product
+        const supplierSearchResponse = await storage.searchProducts(product.productName, {});
+        const supplierOffers = supplierSearchResponse.map((result: any) => ({
+          supplier: result.supplier,
+          price: result.price || 'N/A',
+          currency: result.currency || 'N/A',
+          stock: result.stock || 'N/A',
+          sourceType: result.sourceType,
+        }));
+
         results.push({
           productName: product.productName,
           stock: product.stock || 0,
@@ -2728,62 +2749,8 @@ print(json.dumps(result))
           profitPerUnit: profitData?.profitPerUnit || null,
           kievyanStock: kievyan,
           sevanStock: sevan,
-          supplierOffers: [],
+          supplierOffers: supplierOffers,
         });
-      }
-
-      // Search in supplier database (price lists and offers)
-      const supplierSearchResponse = await storage.searchProducts(searchQuery, {});
-
-      if (supplierSearchResponse && supplierSearchResponse.length > 0) {
-        const offersByProduct = new Map<string, any[]>();
-
-        for (const result of supplierSearchResponse) {
-          const productName = result.productName || result.model || '';
-          if (!productName) continue;
-
-          if (!offersByProduct.has(productName)) {
-            offersByProduct.set(productName, []);
-          }
-
-          offersByProduct.get(productName)!.push({
-            supplier: result.supplier,
-            price: result.price || 'N/A',
-            currency: result.currency || 'N/A',
-            stock: result.stock || 'N/A',
-            sourceType: result.sourceType,
-          });
-        }
-
-        // Add supplier offers to existing results or create new entries
-        for (const [productName, offers] of offersByProduct) {
-          const existingResult = results.find(r => 
-            r.productName.toLowerCase() === productName.toLowerCase()
-          );
-
-          if (existingResult) {
-            existingResult.supplierOffers = offers;
-          } else {
-            results.push({
-              productName,
-              stock: 0,
-              transit: 0,
-              retailPriceUsd: null,
-              wholesalePrice1: null,
-              currentCost: null,
-              lastPrice: null,
-              lastSupplier: null,
-              sold30d: 0,
-              sold60d: 0,
-              sold90d: 0,
-              avgSalePrice: null,
-              profitPerUnit: null,
-              kievyanStock: 0,
-              sevanStock: 0,
-              supplierOffers: offers,
-            });
-          }
-        }
       }
 
       res.json({ results, totalCount: results.length });
