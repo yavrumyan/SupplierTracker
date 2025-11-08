@@ -2721,51 +2721,35 @@ print(json.dumps(result))
 
         const orderRec = orderRecommendations.find((o: any) => o.productName === productName);
 
-        // Find last purchase information
+        // Find last purchase information - improved logic
         let lastPrice = null;
         let lastSupplier = null;
+        let latestPurchaseDate: Date | null = null;
 
-        // First, check transit data for most recent purchase
-        const transitItems = transitData.filter((t: any) => t.productName === productName);
-        if (transitItems.length > 0) {
-          // Sort by order date (most recent first)
-          const sortedTransit = transitItems.sort((a, b) => {
-            const dateA = a.orderDate ? new Date(a.orderDate).getTime() : 0;
-            const dateB = b.orderDate ? new Date(b.orderDate).getTime() : 0;
-            return dateB - dateA;
-          });
-          
-          const mostRecent = sortedTransit[0];
-          lastPrice = mostRecent.purchasePriceUsd ? parseFloat(mostRecent.purchasePriceUsd) : null;
-          lastSupplier = mostRecent.supplier || null;
+        // Check purchase items matched with their orders
+        const purchaseItemsForProduct = purchaseItems.filter((p: any) => p.productName === productName);
+        
+        for (const item of purchaseItemsForProduct) {
+          const order = purchaseOrders.find((o: any) => o.id === item.purchaseOrderId);
+          if (order && order.orderDate) {
+            const orderDate = new Date(order.orderDate);
+            if (!latestPurchaseDate || orderDate > latestPurchaseDate) {
+              latestPurchaseDate = orderDate;
+              lastSupplier = order.supplier || null;
+              lastPrice = item.priceUsd ? parseFloat(item.priceUsd) : null;
+            }
+          }
         }
 
-        // If not found in transit, check purchase items
-        if (!lastPrice || !lastSupplier) {
-          const purchaseItemsForProduct = purchaseItems.filter((p: any) => p.productName === productName);
-          
-          if (purchaseItemsForProduct.length > 0) {
-            // Find the most recent purchase order
-            let mostRecentOrder = null;
-            let mostRecentDate = null;
-
-            for (const item of purchaseItemsForProduct) {
-              const order = purchaseOrders.find((o: any) => o.id === item.purchaseOrderId);
-              if (order && order.orderDate) {
-                const orderDate = new Date(order.orderDate).getTime();
-                if (!mostRecentDate || orderDate > mostRecentDate) {
-                  mostRecentDate = orderDate;
-                  mostRecentOrder = order;
-                  
-                  if (!lastPrice && item.priceUsd) {
-                    lastPrice = parseFloat(item.priceUsd);
-                  }
-                }
-              }
-            }
-
-            if (mostRecentOrder && !lastSupplier) {
-              lastSupplier = mostRecentOrder.supplier;
+        // Check transit data (these are more recent purchases)
+        const transitItems = transitData.filter((t: any) => t.productName === productName);
+        for (const item of transitItems) {
+          if (item.orderDate) {
+            const orderDate = new Date(item.orderDate);
+            if (!latestPurchaseDate || orderDate > latestPurchaseDate) {
+              latestPurchaseDate = orderDate;
+              lastSupplier = item.supplier || null;
+              lastPrice = item.purchasePriceUsd ? parseFloat(item.purchasePriceUsd) : null;
             }
           }
         }
