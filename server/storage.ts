@@ -1795,7 +1795,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getCompstyleTransit(): Promise<CompstyleTransit[]> {
-    return await db.select().from(compstyleTransit);
+    // Ensure expectedArrival is selected
+    return db.select({
+      id: compstyleTransit.id,
+      productName: compstyleTransit.productName,
+      qty: compstyleTransit.qty,
+      priceUsd: compstyleTransit.priceUsd,
+      sumUsd: compstyleTransit.sumUsd,
+      sumAmd: compstyleTransit.sumAmd,
+      supplier: compstyleTransit.supplier,
+      orderDate: compstyleTransit.orderDate,
+      expectedArrival: compstyleTransit.expectedArrival, // Added this field
+      invoice: compstyleTransit.invoice,
+      transitMode: compstyleTransit.transitMode,
+      trackingNumber: compstyleTransit.trackingNumber,
+      notes: compstyleTransit.notes,
+      createdAt: compstyleTransit.createdAt,
+      updatedAt: compstyleTransit.updatedAt,
+    }).from(compstyleTransit);
   }
 
   async getCompstyleSalesOrders(): Promise<CompstyleSalesOrder[]> {
@@ -2250,9 +2267,9 @@ export class DatabaseStorage implements IStorage {
         moveToSevan: number
       ): 'High' | 'Medium' | 'Low' => {
         // Determine which location is receiving stock
-        const isMovingToKievyan = moveToKievyan > 0;
-        const destinationQty = isMovingToKievyan ? currentKievyan : currentSevan;
-        const optimalQty = isMovingToKievyan ? optimalKievyan : optimalSevan;
+        const isMovingTo Kievyan = moveToKievyan > 0;
+        const destinationQty = isMovingTo Kievyan ? currentKievyan : currentSevan;
+        const optimalQty = isMovingTo Kievyan ? optimalKievyan : optimalSevan;
 
         // Highest Priority: Zero stock at destination location
         if (destinationQty === 0 && (moveToKievyan > 0 || moveToSevan > 0)) {

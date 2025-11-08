@@ -1612,13 +1612,12 @@ print(json.dumps(result))
     }
   });
 
-  app.get('/api/compstyle/transit', async (req, res) => {
+  app.get("/api/compstyle/transit", async (req, res) => {
     try {
-      const data = await storage.getCompstyleTransit();
-      res.json(data);
-    } catch (error) {
-      console.error('Error fetching transit data:', error);
-      res.status(500).json({ error: 'Failed to fetch transit data' });
+      const transitData = await storage.getCompstyleTransit();
+      res.json(transitData);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
   });
 
@@ -1626,12 +1625,16 @@ print(json.dumps(result))
     try {
       const id = parseInt(req.params.id);
       const updates = req.body;
-      
+
       // Convert orderDate string to Date if provided
       if (updates.orderDate && typeof updates.orderDate === 'string') {
         updates.orderDate = new Date(updates.orderDate);
       }
-      
+      // Convert expectedArrival string to Date if provided
+      if (updates.expectedArrival && typeof updates.expectedArrival === 'string') {
+        updates.expectedArrival = new Date(updates.expectedArrival);
+      }
+
       const updatedItem = await storage.updateCompstyleTransit(id, updates);
       res.json(updatedItem);
     } catch (error) {
@@ -2239,6 +2242,7 @@ print(json.dumps(result))
       const currentCost = parseNumericValue(row[6]);
 
       const orderDate = parseExcelDate(row[16]); // Column Q (Дата заказа): Order date
+      const expectedArrival = parseExcelDate(row[17]); // Column R (Expected arrival): Expected arrival date
 
       const transitRecord = {
         productName, // Column A (Товар): Name of product
@@ -2250,6 +2254,7 @@ print(json.dumps(result))
         destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад): Destination warehouse/store
         supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик): Supplier name
         orderDate: orderDate, // Column Q (Дата заказа): Order date
+        expectedArrival: expectedArrival, // Column R: Expected arrival date
         status: 'ordered',
         priority: 'normal',
         notes: null,
@@ -2282,6 +2287,11 @@ print(json.dumps(result))
         if (transitRecord.supplier && !existing.supplier) {
           existing.supplier = transitRecord.supplier;
         }
+        // Update expected arrival if it's newer
+        if (transitRecord.expectedArrival && (!existing.expectedArrival || transitRecord.expectedArrival > existing.expectedArrival)) {
+          existing.expectedArrival = transitRecord.expectedArrival;
+        }
+
 
         console.log(`Found duplicate ${productName.substring(0, 50)}...: adding ${qty} to existing ${oldQty}, total now: ${existing.qty}`);
       } else {
@@ -2311,6 +2321,7 @@ print(json.dumps(result))
         console.log(`Final quantity: ${record.qty}`);
         console.log(`Supplier: ${record.supplier}`);
         console.log(`Price USD: ${record.purchasePriceUsd}`);
+        console.log(`Expected Arrival: ${record.expectedArrival}`);
       }
 
       await storage.createCompstyleTransit(recordData);

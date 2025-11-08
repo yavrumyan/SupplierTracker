@@ -22,6 +22,7 @@ interface TransitItem {
   destinationLocation: string | null;
   supplier: string | null;
   orderDate: string | null;
+  expectedArrival?: string | null;
   status?: string;
   priority?: string;
   notes?: string;
@@ -127,6 +128,7 @@ export default function CompStyleTransitTracking() {
           priority: items[0]?.priority || "normal",
           notes: items[0]?.notes || "",
           orderDate: items[0]?.orderDate || null,
+          expectedArrival: items[0]?.expectedArrival || null,
         };
       })
     : [];
