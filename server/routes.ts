@@ -2694,11 +2694,15 @@ print(json.dumps(result))
         productName.toLowerCase().includes(searchQuery)
       );
 
-      // Get additional data for matching products - including order recommendations which has lastPrice and lastSupplier
+      // Get additional data for matching products
       const profitabilityData = await storage.getProfitabilityHeatMap();
       const kievyanStock = await storage.getCompstyleKievyanStock();
       const sevanStock = await storage.getCompstyleSevanStock();
       const orderRecommendations = await storage.getOrderRecommendationsEngine();
+      
+      // Get all purchase data to find last purchase price and supplier
+      const purchaseOrders = await storage.getCompstylePurchaseOrders();
+      const purchaseItems = await storage.getCompstylePurchaseItems();
 
       for (const productName of matchingProducts) {
         const stockData = totalStock.find((s: any) => s.productName === productName);
@@ -2717,9 +2721,26 @@ print(json.dumps(result))
           .filter((t: any) => t.productName === productName)
           .reduce((sum, item) => sum + (item.qty || 0), 0) || 0;
 
-        // Get lastPrice and lastSupplier from order recommendations (same data source as Intelligent Order Recommendations table)
-        const lastPrice = orderRec?.lastPrice || null;
-        const lastSupplier = orderRec?.lastSupplier || null;
+        // Find the most recent purchase for this product
+        const productPurchaseItems = purchaseItems
+          .filter((item: any) => item.productName === productName)
+          .sort((a: any, b: any) => {
+            const orderA = purchaseOrders.find((o: any) => o.id === a.purchaseOrderId);
+            const orderB = purchaseOrders.find((o: any) => o.id === b.purchaseOrderId);
+            if (!orderA || !orderB) return 0;
+            return new Date(orderB.orderDate).getTime() - new Date(orderA.orderDate).getTime();
+          });
+
+        let lastPrice = null;
+        let lastSupplier = null;
+
+        if (productPurchaseItems.length > 0) {
+          const latestPurchaseItem = productPurchaseItems[0];
+          lastPrice = latestPurchaseItem.priceUsd ? parseFloat(latestPurchaseItem.priceUsd) : null;
+          
+          const latestPurchaseOrder = purchaseOrders.find((o: any) => o.id === latestPurchaseItem.purchaseOrderId);
+          lastSupplier = latestPurchaseOrder?.supplier || null;
+        }
 
         results.push({
           productName: productName,
