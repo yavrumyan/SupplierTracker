@@ -976,7 +976,7 @@ export class DatabaseStorage implements IStorage {
     const validFields = [
       'productName', 'qty', 'priceUsd', 'sumUsd', 'sumAmd',
       'supplier', 'orderDate', 'expectedArrival', 'invoice',
-      'transitMode', 'trackingNumber', 'notes'
+      'transitMode', 'trackingNumber', 'notes', 'status', 'priority'
     ];
 
     for (const field of validFields) {
