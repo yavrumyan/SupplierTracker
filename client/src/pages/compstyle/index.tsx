@@ -169,6 +169,26 @@ export default function CompStyleDashboard() {
             </CardContent>
           </Card>
 
+          {/* Product Search */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Product Search
+              </CardTitle>
+              <CardDescription>
+                Unified search across inventory and supplier databases
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/compstyle/product-search">
+                <Button className="w-full" variant="outline">
+                  Search Products
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
           {/* Analytics */}
           <Card>
             <CardHeader>
