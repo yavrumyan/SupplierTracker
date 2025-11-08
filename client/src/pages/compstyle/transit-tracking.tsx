@@ -179,20 +179,21 @@ export default function CompStyleTransitTracking() {
         )
       );
 
-      // Show success toast only once after all updates complete
-      toast({
-        title: "Success",
-        description: "Transit order updated successfully",
-      });
-
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
-
-      // Clear the edited state for this order
+      // Clear the edited state FIRST before invalidating queries
+      // This ensures fresh data from the database is displayed
       setEditedOrders(prev => {
         const newEdited = { ...prev };
         delete newEdited[order.orderNumber];
         return newEdited;
+      });
+
+      // Invalidate queries to refresh data
+      await queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
+
+      // Show success toast only after everything is done
+      toast({
+        title: "Success",
+        description: "Transit order updated successfully",
       });
     } catch (error) {
       // Error toast is already handled by mutation's onError
