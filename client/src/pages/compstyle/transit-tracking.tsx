@@ -209,7 +209,21 @@ export default function CompStyleTransitTracking() {
 
   const getOrderValue = (order: TransitOrder, field: string) => {
     const edited = editedOrders[order.orderNumber];
-    return edited && edited[field] !== undefined ? edited[field] : order[field as keyof TransitOrder];
+    if (edited && edited[field] !== undefined) {
+      return edited[field];
+    }
+    
+    // For status, priority, dates, and notes, get from first item if not on order
+    if (field === 'status' || field === 'priority' || field === 'orderDate' || field === 'expectedArrival' || field === 'notes') {
+      const orderField = order[field as keyof TransitOrder];
+      if (orderField !== undefined) {
+        return orderField;
+      }
+      // Fallback to first item
+      return order.items[0]?.[field as keyof TransitItem];
+    }
+    
+    return order[field as keyof TransitOrder];
   };
 
   if (isLoading) {
