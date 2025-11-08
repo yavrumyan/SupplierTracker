@@ -67,22 +67,27 @@ export default function CompStyleTransitTracking() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, updates }: { id: number; updates: any }) => {
+    mutationFn: async ({ id, updates, orderNumber }: { id: number; updates: any; orderNumber: string }) => {
       const response = await fetch(`/api/compstyle/transit/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
       });
       if (!response.ok) throw new Error('Failed to update transit item');
-      return response.json();
+      return { data: await response.json(), orderNumber };
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
       toast({
         title: "Success",
         description: "Transit order updated successfully",
       });
-      setEditedOrders({});
+      // Only clear the edited state for the specific order that was saved
+      setEditedOrders(prev => {
+        const newEdited = { ...prev };
+        delete newEdited[result.orderNumber];
+        return newEdited;
+      });
     },
     onError: () => {
       toast({
@@ -179,6 +184,7 @@ export default function CompStyleTransitTracking() {
       await updateMutation.mutateAsync({
         id: item.id,
         updates: changes,
+        orderNumber: order.orderNumber,
       });
     }
   };
