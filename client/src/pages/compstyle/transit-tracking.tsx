@@ -377,18 +377,28 @@ export default function CompStyleTransitTracking() {
                           </div>
                           <div className="flex items-center gap-2 text-slate-600">
                             <Calendar className="h-4 w-4" />
-                            <span className="font-medium">
-                              {order.orderDate 
-                                ? new Date(order.orderDate).toLocaleDateString('en-US', { 
-                                    year: 'numeric', 
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {order.orderDate 
+                                  ? new Date(order.orderDate).toLocaleDateString('en-US', { 
+                                      year: 'numeric', 
+                                      month: 'short', 
+                                      day: 'numeric' 
+                                    })
+                                  : "No date"}
+                                {daysInTransit !== null && daysInTransit > 0 && (
+                                  <span className="text-xs text-slate-500"> ({daysInTransit}d)</span>
+                                )}
+                              </span>
+                              {getOrderValue(order, 'expectedArrival') && (
+                                <span className="text-xs text-green-600">
+                                  ETA: {new Date(getOrderValue(order, 'expectedArrival')).toLocaleDateString('en-US', { 
                                     month: 'short', 
                                     day: 'numeric' 
-                                  })
-                                : "No date"}
-                            </span>
-                            {daysInTransit !== null && daysInTransit > 0 && (
-                              <span className="text-xs text-slate-500">({daysInTransit}d)</span>
-                            )}
+                                  })}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -459,7 +469,11 @@ export default function CompStyleTransitTracking() {
                           <label className="text-sm font-semibold text-slate-700 mb-2 block">
                             Expected Arrival
                           </label>
-                          <Input type="date" defaultValue={order.expectedArrival} />
+                          <Input 
+                            type="date" 
+                            value={getOrderValue(order, 'expectedArrival') ? new Date(getOrderValue(order, 'expectedArrival')).toISOString().split('T')[0] : ''} 
+                            onChange={(e) => handleFieldChange(order.orderNumber, 'expectedArrival', e.target.value ? new Date(e.target.value).toISOString() : null)}
+                          />
                         </div>
 
                         <div className="md:col-span-2">
