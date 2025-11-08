@@ -2723,16 +2723,6 @@ print(json.dumps(result))
           o.productName === product.productName
         );
 
-        // Search for supplier offers for this specific product
-        const supplierSearchResponse = await storage.searchProducts(product.productName, {});
-        const supplierOffers = supplierSearchResponse.map((result: any) => ({
-          supplier: result.supplier,
-          price: result.price || 'N/A',
-          currency: result.currency || 'N/A',
-          stock: result.stock || 'N/A',
-          sourceType: result.sourceType,
-        }));
-
         results.push({
           productName: product.productName,
           stock: product.stock || 0,
@@ -2749,7 +2739,6 @@ print(json.dumps(result))
           profitPerUnit: profitData?.profitPerUnit || null,
           kievyanStock: kievyan,
           sevanStock: sevan,
-          supplierOffers: supplierOffers,
         });
       }
 

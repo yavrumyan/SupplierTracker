@@ -23,13 +23,6 @@ interface ProductSearchResult {
   profitPerUnit: number | null;
   kievyanStock: number;
   sevanStock: number;
-  supplierOffers: Array<{
-    supplier: string;
-    price: string;
-    currency: string;
-    stock: string;
-    sourceType: string;
-  }>;
 }
 
 export default function CompStyleProductSearch() {
@@ -222,44 +215,6 @@ export default function CompStyleProductSearch() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Supplier Offers */}
-                  {result.supplierOffers.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                        <Truck className="h-5 w-5 text-orange-600" />
-                        Supplier Offers ({result.supplierOffers.length})
-                      </h3>
-                      <div className="space-y-2">
-                        {result.supplierOffers.map((offer, offerIndex) => (
-                          <div key={offerIndex} className="p-4 bg-orange-50 rounded-lg border border-orange-100">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                              <div>
-                                <div className="text-xs text-slate-600">Supplier</div>
-                                <div className="font-semibold text-slate-900">{offer.supplier}</div>
-                              </div>
-                              <div>
-                                <div className="text-xs text-slate-600">Price</div>
-                                <div className="font-semibold text-slate-900">
-                                  {offer.price} {offer.currency}
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-xs text-slate-600">Stock</div>
-                                <div className="font-semibold text-slate-900">{offer.stock}</div>
-                              </div>
-                              <div>
-                                <div className="text-xs text-slate-600">Source</div>
-                                <div className="text-xs font-semibold text-orange-600 uppercase">
-                                  {offer.sourceType}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             ))}
