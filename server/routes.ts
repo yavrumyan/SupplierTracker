@@ -2681,8 +2681,6 @@ print(json.dumps(result))
       const totalStock = await storage.getCompstyleTotalStock();
       const totalSales = await storage.getCompstyleTotalSales();
       const transitData = await storage.getCompstyleTransit();
-      const purchaseOrders = await storage.getCompstylePurchaseOrders();
-      const purchaseItems = await storage.getCompstylePurchaseItems();
       
       // Build a set of unique product names that actually exist in CompStyle
       const compstyleProducts = new Set<string>();
@@ -2696,7 +2694,7 @@ print(json.dumps(result))
         productName.toLowerCase().includes(searchQuery)
       );
 
-      // Get additional data for matching products
+      // Get additional data for matching products - including order recommendations which has lastPrice and lastSupplier
       const profitabilityData = await storage.getProfitabilityHeatMap();
       const kievyanStock = await storage.getCompstyleKievyanStock();
       const sevanStock = await storage.getCompstyleSevanStock();
@@ -2704,8 +2702,8 @@ print(json.dumps(result))
 
       for (const productName of matchingProducts) {
         const stockData = totalStock.find((s: any) => s.productName === productName);
-        const salesData = totalSales.find((s: any) => s.productName === productName);
         const profitData = profitabilityData.find((p: any) => p.productName === productName);
+        const orderRec = orderRecommendations.find((o: any) => o.productName === productName);
 
         const kievyan = kievyanStock
           .filter((k: any) => k.productName === productName)
@@ -2719,50 +2717,9 @@ print(json.dumps(result))
           .filter((t: any) => t.productName === productName)
           .reduce((sum, item) => sum + (item.qty || 0), 0) || 0;
 
-        const orderRec = orderRecommendations.find((o: any) => o.productName === productName);
-
-        // Find last purchase information - improved logic
-        let lastPrice = null;
-        let lastSupplier = null;
-        let latestPurchaseDate: Date | null = null;
-
-        // Check transit data first (these are most recent purchases)
-        const transitItems = transitData.filter((t: any) => t.productName === productName);
-        for (const item of transitItems) {
-          if (item.orderDate) {
-            const orderDate = new Date(item.orderDate);
-            if (!isNaN(orderDate.getTime()) && (!latestPurchaseDate || orderDate > latestPurchaseDate)) {
-              latestPurchaseDate = orderDate;
-              lastSupplier = item.supplier || null;
-              lastPrice = item.purchasePriceUsd ? parseFloat(item.purchasePriceUsd) : null;
-            }
-          }
-        }
-
-        // Check purchase items matched with their orders (fallback if no transit data)
-        const purchaseItemsForProduct = purchaseItems.filter((p: any) => p.productName === productName);
-        
-        for (const item of purchaseItemsForProduct) {
-          const order = purchaseOrders.find((o: any) => o.id === item.purchaseOrderId);
-          if (order && order.orderDate) {
-            const orderDate = new Date(order.orderDate);
-            if (!isNaN(orderDate.getTime()) && (!latestPurchaseDate || orderDate > latestPurchaseDate)) {
-              latestPurchaseDate = orderDate;
-              lastSupplier = order.supplier || null;
-              lastPrice = item.priceUsd ? parseFloat(item.priceUsd) : null;
-            }
-          }
-        }
-
-        // Log for debugging specific products
-        if (productName.includes('Intel Core i5 12400') || productName.includes('Intel Core i3')) {
-          console.log(`Product Search Debug - ${productName}:`);
-          console.log(`  Transit items: ${transitItems.length}`);
-          console.log(`  Purchase items: ${purchaseItemsForProduct.length}`);
-          console.log(`  Last Supplier: ${lastSupplier}`);
-          console.log(`  Last Price: ${lastPrice}`);
-          console.log(`  Latest Date: ${latestPurchaseDate}`);
-        }
+        // Get lastPrice and lastSupplier from order recommendations (same data source as Intelligent Order Recommendations table)
+        const lastPrice = orderRec?.lastPrice || null;
+        const lastSupplier = orderRec?.lastSupplier || null;
 
         results.push({
           productName: productName,
