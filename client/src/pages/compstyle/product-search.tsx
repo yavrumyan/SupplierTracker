@@ -37,160 +37,25 @@ export default function CompStyleProductSearch() {
   const [searchResults, setSearchResults] = useState<ProductSearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Fetch all necessary data for search
-  const { data: productList } = useQuery({
-    queryKey: ['/api/compstyle/product-list'],
-    enabled: false,
-  });
-
-  const { data: totalSales } = useQuery({
-    queryKey: ['/api/compstyle/total-sales'],
-    enabled: false,
-  });
-
-  const { data: profitabilityData } = useQuery({
-    queryKey: ['/api/compstyle/analytics/profitability-heat-map'],
-    enabled: false,
-  });
-
-  const { data: kievyanStock } = useQuery({
-    queryKey: ['/api/compstyle/kievyan-stock'],
-    enabled: false,
-  });
-
-  const { data: sevanStock } = useQuery({
-    queryKey: ['/api/compstyle/sevan-stock'],
-    enabled: false,
-  });
-
-  const { data: orderRecommendations } = useQuery({
-    queryKey: ['/api/compstyle/analytics/order-recommendations'],
-    enabled: false,
-  });
-
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
     setIsSearching(true);
 
     try {
-      // Search in CompStyle data
-      const normalizedQuery = searchQuery.toLowerCase().trim();
-      const results: ProductSearchResult[] = [];
-
-      // Search in product list
-      if (productList) {
-        const matchingProducts = (productList as any[]).filter((p: any) =>
-          p.productName.toLowerCase().includes(normalizedQuery)
-        );
-
-        for (const product of matchingProducts) {
-          // Get sales data
-          const salesData = (totalSales as any[])?.find((s: any) => 
-            s.productName === product.productName
-          );
-
-          // Get profitability data
-          const profitData = (profitabilityData as any[])?.find((p: any) => 
-            p.productName === product.productName
-          );
-
-          // Get location stock
-          const kievyan = (kievyanStock as any[])?.filter((k: any) => 
-            k.productName === product.productName
-          ).reduce((sum, item) => sum + item.qty, 0) || 0;
-
-          const sevan = (sevanStock as any[])?.filter((s: any) => 
-            s.productName === product.productName
-          ).reduce((sum, item) => sum + item.qty, 0) || 0;
-
-          // Get order recommendation data for sold quantities
-          const orderRec = (orderRecommendations as any[])?.find((o: any) => 
-            o.productName === product.productName
-          );
-
-          results.push({
-            productName: product.productName,
-            stock: product.stock || 0,
-            transit: product.transit || 0,
-            retailPriceUsd: product.retailPriceUsd ? parseFloat(product.retailPriceUsd) : null,
-            wholesalePrice1: product.dealerPrice1 ? parseFloat(product.dealerPrice1) : null,
-            currentCost: product.cost ? parseFloat(product.cost) : null,
-            lastPrice: product.latestPurchase ? parseFloat(product.latestPurchase) : null,
-            lastSupplier: product.supplier,
-            sold30d: orderRec?.sold30D || 0,
-            sold60d: orderRec?.sold60D || 0,
-            sold90d: orderRec?.sold90D || 0,
-            avgSalePrice: profitData?.retailPriceUsd || null,
-            profitPerUnit: profitData?.profitPerUnit || null,
-            kievyanStock: kievyan,
-            sevanStock: sevan,
-            supplierOffers: [],
-          });
-        }
-      }
-
-      // Search in supplier database (price lists and offers)
-      const supplierSearchResponse = await fetch(
-        `/api/search?keyword1=${encodeURIComponent(searchQuery)}`
+      const response = await fetch(
+        `/api/compstyle/product-search?query=${encodeURIComponent(searchQuery)}`
       );
-      const supplierSearchData = await supplierSearchResponse.json();
-
-      if (supplierSearchData.results) {
-        // Group supplier offers by product name
-        const offersByProduct = new Map<string, any[]>();
-
-        for (const result of supplierSearchData.results) {
-          const productName = result.productName || result.model || '';
-          if (!productName) continue;
-
-          if (!offersByProduct.has(productName)) {
-            offersByProduct.set(productName, []);
-          }
-
-          offersByProduct.get(productName)!.push({
-            supplier: result.supplier,
-            price: result.price || 'N/A',
-            currency: result.currency || 'N/A',
-            stock: result.stock || 'N/A',
-            sourceType: result.sourceType,
-          });
-        }
-
-        // Add supplier offers to existing results or create new entries
-        for (const [productName, offers] of offersByProduct) {
-          const existingResult = results.find(r => 
-            r.productName.toLowerCase() === productName.toLowerCase()
-          );
-
-          if (existingResult) {
-            existingResult.supplierOffers = offers;
-          } else {
-            results.push({
-              productName,
-              stock: 0,
-              transit: 0,
-              retailPriceUsd: null,
-              wholesalePrice1: null,
-              currentCost: null,
-              lastPrice: null,
-              lastSupplier: null,
-              sold30d: 0,
-              sold60d: 0,
-              sold90d: 0,
-              avgSalePrice: null,
-              profitPerUnit: null,
-              kievyanStock: 0,
-              sevanStock: 0,
-              supplierOffers: offers,
-            });
-          }
-        }
+      
+      if (!response.ok) {
+        throw new Error('Search failed');
       }
 
-      setSearchResults(results);
+      const data = await response.json();
+      setSearchResults(data.results || []);
     } catch (error) {
       console.error('Search error:', error);
+      setSearchResults([]);
     } finally {
       setIsSearching(false);
     }

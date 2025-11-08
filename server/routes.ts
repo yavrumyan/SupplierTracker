@@ -2665,6 +2665,134 @@ print(json.dumps(result))
     }
   });
 
+  // CompStyle Product Search API
+  app.get("/api/compstyle/product-search", async (req, res) => {
+    try {
+      const { query } = req.query;
+      
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ error: "Search query is required" });
+      }
+
+      const searchQuery = query.toLowerCase().trim();
+      const results = [];
+
+      // Search in product list
+      const productList = await storage.getCompstyleProductList();
+      const matchingProducts = productList.filter((p: any) =>
+        p.productName.toLowerCase().includes(searchQuery) ||
+        (p.sku && p.sku.toLowerCase().includes(searchQuery))
+      );
+
+      // Get additional data for matching products
+      const totalSales = await storage.getCompstyleTotalSales();
+      const profitabilityData = await storage.getProfitabilityHeatMap();
+      const kievyanStock = await storage.getCompstyleKievyanStock();
+      const sevanStock = await storage.getCompstyleSevanStock();
+      const orderRecommendations = await storage.getOrderRecommendationsEngine();
+
+      for (const product of matchingProducts) {
+        const salesData = totalSales.find((s: any) => 
+          s.productName === product.productName
+        );
+
+        const profitData = profitabilityData.find((p: any) => 
+          p.productName === product.productName
+        );
+
+        const kievyan = kievyanStock
+          .filter((k: any) => k.productName === product.productName)
+          .reduce((sum, item) => sum + item.qty, 0) || 0;
+
+        const sevan = sevanStock
+          .filter((s: any) => s.productName === product.productName)
+          .reduce((sum, item) => sum + item.qty, 0) || 0;
+
+        const orderRec = orderRecommendations.find((o: any) => 
+          o.productName === product.productName
+        );
+
+        results.push({
+          productName: product.productName,
+          stock: product.stock || 0,
+          transit: product.transit || 0,
+          retailPriceUsd: product.retailPriceUsd ? parseFloat(product.retailPriceUsd) : null,
+          wholesalePrice1: product.dealerPrice1 ? parseFloat(product.dealerPrice1) : null,
+          currentCost: product.cost ? parseFloat(product.cost) : null,
+          lastPrice: product.latestPurchase ? parseFloat(product.latestPurchase) : null,
+          lastSupplier: product.supplier,
+          sold30d: orderRec?.sold30D || 0,
+          sold60d: orderRec?.sold60D || 0,
+          sold90d: orderRec?.sold90D || 0,
+          avgSalePrice: profitData?.retailPriceUsd || null,
+          profitPerUnit: profitData?.profitPerUnit || null,
+          kievyanStock: kievyan,
+          sevanStock: sevan,
+          supplierOffers: [],
+        });
+      }
+
+      // Search in supplier database (price lists and offers)
+      const supplierSearchResponse = await storage.searchProducts(searchQuery, {});
+
+      if (supplierSearchResponse && supplierSearchResponse.length > 0) {
+        const offersByProduct = new Map<string, any[]>();
+
+        for (const result of supplierSearchResponse) {
+          const productName = result.productName || result.model || '';
+          if (!productName) continue;
+
+          if (!offersByProduct.has(productName)) {
+            offersByProduct.set(productName, []);
+          }
+
+          offersByProduct.get(productName)!.push({
+            supplier: result.supplier,
+            price: result.price || 'N/A',
+            currency: result.currency || 'N/A',
+            stock: result.stock || 'N/A',
+            sourceType: result.sourceType,
+          });
+        }
+
+        // Add supplier offers to existing results or create new entries
+        for (const [productName, offers] of offersByProduct) {
+          const existingResult = results.find(r => 
+            r.productName.toLowerCase() === productName.toLowerCase()
+          );
+
+          if (existingResult) {
+            existingResult.supplierOffers = offers;
+          } else {
+            results.push({
+              productName,
+              stock: 0,
+              transit: 0,
+              retailPriceUsd: null,
+              wholesalePrice1: null,
+              currentCost: null,
+              lastPrice: null,
+              lastSupplier: null,
+              sold30d: 0,
+              sold60d: 0,
+              sold90d: 0,
+              avgSalePrice: null,
+              profitPerUnit: null,
+              kievyanStock: 0,
+              sevanStock: 0,
+              supplierOffers: offers,
+            });
+          }
+        }
+      }
+
+      res.json({ results, totalCount: results.length });
+    } catch (error) {
+      console.error("CompStyle product search error:", error);
+      res.status(500).json({ error: "Failed to search products" });
+    }
+  });
+
   // ==================== CHIP ERP API ROUTES ====================
 
   // Currency Routes
