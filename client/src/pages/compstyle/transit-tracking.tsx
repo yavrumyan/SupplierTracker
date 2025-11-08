@@ -179,17 +179,20 @@ export default function CompStyleTransitTracking() {
         )
       );
 
-      // Clear the edited state BEFORE invalidating queries
+      // Clear the edited state immediately
       setEditedOrders(prev => {
         const newEdited = { ...prev };
         delete newEdited[order.orderNumber];
         return newEdited;
       });
 
-      // Invalidate and refetch queries (this happens automatically)
-      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
+      // Force an immediate refetch to get fresh data from the server
+      await queryClient.refetchQueries({ 
+        queryKey: ["/api/compstyle/transit"],
+        type: 'active'
+      });
 
-      // Show success toast
+      // Show success toast after refetch completes
       toast({
         title: "Success",
         description: "Transit order updated successfully",
