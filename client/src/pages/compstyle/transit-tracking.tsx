@@ -179,20 +179,15 @@ export default function CompStyleTransitTracking() {
         )
       );
 
-      // Remove the query from cache to force a fresh fetch
-      queryClient.removeQueries({ queryKey: ["/api/compstyle/transit"] });
-
-      // Fetch fresh data from the server
-      await queryClient.refetchQueries({ 
-        queryKey: ["/api/compstyle/transit"]
-      });
-
-      // Clear the edited state after fresh data is loaded
+      // Clear the edited state FIRST
       setEditedOrders(prev => {
         const newEdited = { ...prev };
         delete newEdited[order.orderNumber];
         return newEdited;
       });
+
+      // Invalidate and refetch to get fresh data
+      await queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
 
       // Show success toast
       toast({
