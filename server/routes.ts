@@ -2681,6 +2681,8 @@ print(json.dumps(result))
       const totalStock = await storage.getCompstyleTotalStock();
       const totalSales = await storage.getCompstyleTotalSales();
       const transitData = await storage.getCompstyleTransit();
+      const purchaseOrders = await storage.getCompstylePurchaseOrders();
+      const purchaseItems = await storage.getCompstylePurchaseItems();
       
       // Build a set of unique product names that actually exist in CompStyle
       const compstyleProducts = new Set<string>();
@@ -2719,6 +2721,55 @@ print(json.dumps(result))
 
         const orderRec = orderRecommendations.find((o: any) => o.productName === productName);
 
+        // Find last purchase information
+        let lastPrice = null;
+        let lastSupplier = null;
+
+        // First, check transit data for most recent purchase
+        const transitItems = transitData.filter((t: any) => t.productName === productName);
+        if (transitItems.length > 0) {
+          // Sort by order date (most recent first)
+          const sortedTransit = transitItems.sort((a, b) => {
+            const dateA = a.orderDate ? new Date(a.orderDate).getTime() : 0;
+            const dateB = b.orderDate ? new Date(b.orderDate).getTime() : 0;
+            return dateB - dateA;
+          });
+          
+          const mostRecent = sortedTransit[0];
+          lastPrice = mostRecent.purchasePriceUsd ? parseFloat(mostRecent.purchasePriceUsd) : null;
+          lastSupplier = mostRecent.supplier || null;
+        }
+
+        // If not found in transit, check purchase items
+        if (!lastPrice || !lastSupplier) {
+          const purchaseItemsForProduct = purchaseItems.filter((p: any) => p.productName === productName);
+          
+          if (purchaseItemsForProduct.length > 0) {
+            // Find the most recent purchase order
+            let mostRecentOrder = null;
+            let mostRecentDate = null;
+
+            for (const item of purchaseItemsForProduct) {
+              const order = purchaseOrders.find((o: any) => o.id === item.purchaseOrderId);
+              if (order && order.orderDate) {
+                const orderDate = new Date(order.orderDate).getTime();
+                if (!mostRecentDate || orderDate > mostRecentDate) {
+                  mostRecentDate = orderDate;
+                  mostRecentOrder = order;
+                  
+                  if (!lastPrice && item.priceUsd) {
+                    lastPrice = parseFloat(item.priceUsd);
+                  }
+                }
+              }
+            }
+
+            if (mostRecentOrder && !lastSupplier) {
+              lastSupplier = mostRecentOrder.supplier;
+            }
+          }
+        }
+
         results.push({
           productName: productName,
           stock: stockData?.qtyInStock || 0,
@@ -2726,8 +2777,8 @@ print(json.dumps(result))
           retailPriceUsd: stockData?.retailPriceUsd ? parseFloat(stockData.retailPriceUsd) : null,
           wholesalePrice1: stockData?.wholesalePrice1 ? parseFloat(stockData.wholesalePrice1) : null,
           currentCost: stockData?.currentCost ? parseFloat(stockData.currentCost) : null,
-          lastPrice: null, // Can be enhanced later
-          lastSupplier: null, // Can be enhanced later
+          lastPrice: lastPrice,
+          lastSupplier: lastSupplier,
           sold30d: orderRec?.sold30d || 0,
           sold60d: orderRec?.sold60d || 0,
           sold90d: orderRec?.sold90d || 0,
