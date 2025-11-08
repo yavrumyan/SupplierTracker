@@ -179,16 +179,18 @@ export default function CompStyleTransitTracking() {
         )
       );
 
-      // Clear the edited state FIRST before invalidating queries
-      // This ensures fresh data from the database is displayed
+      // Invalidate queries to refresh data from database
+      await queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
+
+      // Wait for the refetch to complete
+      await queryClient.refetchQueries({ queryKey: ["/api/compstyle/transit"] });
+
+      // Clear the edited state AFTER fresh data is loaded
       setEditedOrders(prev => {
         const newEdited = { ...prev };
         delete newEdited[order.orderNumber];
         return newEdited;
       });
-
-      // Invalidate queries to refresh data
-      await queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
 
       // Show success toast only after everything is done
       toast({
