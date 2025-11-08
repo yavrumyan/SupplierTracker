@@ -67,8 +67,8 @@ function Router() {
         <Route path="/compstyle/analytics-phase1" component={CompStyleAnalyticsPhase1} />
         <Route path="/compstyle/analytics-phase2" component={CompStyleAnalyticsPhase2} />
         <Route path="/compstyle/inventory-movement" component={CompStyleInventoryMovement} />
-        <Route path="/compstyle/transit-tracking" component={TransitTracking} />
-          <Route path="/compstyle/product-search" component={ProductSearch} />
+        <Route path="/compstyle/transit-tracking" component={CompStyleTransitTracking} />
+        <Route path="/compstyle/product-search" component={ProductSearch} />
         <Route path="/compstyle/sales-analysis" component={CompStyleSalesAnalysis} />
         <Route path="/compstyle/profitability" component={CompStyleProfitability} />
         <Route path="/compstyle/order-recommendations" component={CompStyleOrderRecommendations} />
