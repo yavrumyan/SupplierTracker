@@ -179,20 +179,22 @@ export default function CompStyleTransitTracking() {
         )
       );
 
-      // Clear the edited state immediately
+      // Remove the query from cache to force a fresh fetch
+      queryClient.removeQueries({ queryKey: ["/api/compstyle/transit"] });
+
+      // Fetch fresh data from the server
+      await queryClient.refetchQueries({ 
+        queryKey: ["/api/compstyle/transit"]
+      });
+
+      // Clear the edited state after fresh data is loaded
       setEditedOrders(prev => {
         const newEdited = { ...prev };
         delete newEdited[order.orderNumber];
         return newEdited;
       });
 
-      // Force an immediate refetch to get fresh data from the server
-      await queryClient.refetchQueries({ 
-        queryKey: ["/api/compstyle/transit"],
-        type: 'active'
-      });
-
-      // Show success toast after refetch completes
+      // Show success toast
       toast({
         title: "Success",
         description: "Transit order updated successfully",
