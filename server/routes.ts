@@ -2677,24 +2677,22 @@ print(json.dumps(result))
       const searchQuery = query.toLowerCase().trim();
       const results = [];
 
-      // Search in product list (only products with stock, transit, or sales history)
-      const productList = await storage.getCompstyleProductList();
+      // Get all CompStyle data sources
+      const totalStock = await storage.getCompstyleTotalStock();
       const totalSales = await storage.getCompstyleTotalSales();
       const transitData = await storage.getCompstyleTransit();
       
-      const matchingProducts = productList.filter((p: any) => {
-        const nameMatch = p.productName.toLowerCase().includes(searchQuery) ||
-          (p.sku && p.sku.toLowerCase().includes(searchQuery));
-        
-        if (!nameMatch) return false;
-        
-        // Only include products that have stock, transit, or sales history
-        const hasStock = p.stock && p.stock > 0;
-        const hasTransit = transitData.some((t: any) => t.productName === p.productName && t.qty > 0);
-        const hasSalesHistory = totalSales.some((s: any) => s.productName === p.productName);
-        
-        return hasStock || hasTransit || hasSalesHistory;
-      });
+      // Build a set of unique product names that actually exist in CompStyle
+      const compstyleProducts = new Set<string>();
+      
+      totalStock.forEach(item => compstyleProducts.add(item.productName));
+      totalSales.forEach(item => compstyleProducts.add(item.productName));
+      transitData.forEach(item => compstyleProducts.add(item.productName));
+      
+      // Filter to only search CompStyle products that match the query
+      const matchingProducts = Array.from(compstyleProducts).filter(productName => 
+        productName.toLowerCase().includes(searchQuery)
+      );
 
       // Get additional data for matching products
       const profitabilityData = await storage.getProfitabilityHeatMap();
@@ -2702,39 +2700,37 @@ print(json.dumps(result))
       const sevanStock = await storage.getCompstyleSevanStock();
       const orderRecommendations = await storage.getOrderRecommendationsEngine();
 
-      for (const product of matchingProducts) {
-        const salesData = totalSales.find((s: any) => 
-          s.productName === product.productName
-        );
-
-        const profitData = profitabilityData.find((p: any) => 
-          p.productName === product.productName
-        );
+      for (const productName of matchingProducts) {
+        const stockData = totalStock.find((s: any) => s.productName === productName);
+        const salesData = totalSales.find((s: any) => s.productName === productName);
+        const profitData = profitabilityData.find((p: any) => p.productName === productName);
 
         const kievyan = kievyanStock
-          .filter((k: any) => k.productName === product.productName)
+          .filter((k: any) => k.productName === productName)
           .reduce((sum, item) => sum + item.qty, 0) || 0;
 
         const sevan = sevanStock
-          .filter((s: any) => s.productName === product.productName)
+          .filter((s: any) => s.productName === productName)
           .reduce((sum, item) => sum + item.qty, 0) || 0;
 
-        const orderRec = orderRecommendations.find((o: any) => 
-          o.productName === product.productName
-        );
+        const transit = transitData
+          .filter((t: any) => t.productName === productName)
+          .reduce((sum, item) => sum + (item.qty || 0), 0) || 0;
+
+        const orderRec = orderRecommendations.find((o: any) => o.productName === productName);
 
         results.push({
-          productName: product.productName,
-          stock: product.stock || 0,
-          transit: product.transit || 0,
-          retailPriceUsd: product.retailPriceUsd ? parseFloat(product.retailPriceUsd) : null,
-          wholesalePrice1: product.dealerPrice1 ? parseFloat(product.dealerPrice1) : null,
-          currentCost: product.cost ? parseFloat(product.cost) : null,
-          lastPrice: product.latestPurchase ? parseFloat(product.latestPurchase) : null,
-          lastSupplier: product.supplier,
-          sold30d: orderRec?.sold30D || 0,
-          sold60d: orderRec?.sold60D || 0,
-          sold90d: orderRec?.sold90D || 0,
+          productName: productName,
+          stock: stockData?.qtyInStock || 0,
+          transit: transit,
+          retailPriceUsd: stockData?.retailPriceUsd ? parseFloat(stockData.retailPriceUsd) : null,
+          wholesalePrice1: stockData?.wholesalePrice1 ? parseFloat(stockData.wholesalePrice1) : null,
+          currentCost: stockData?.currentCost ? parseFloat(stockData.currentCost) : null,
+          lastPrice: null, // Can be enhanced later
+          lastSupplier: null, // Can be enhanced later
+          sold30d: orderRec?.sold30d || 0,
+          sold60d: orderRec?.sold60d || 0,
+          sold90d: orderRec?.sold90d || 0,
           avgSalePrice: profitData?.retailPriceUsd || null,
           profitPerUnit: profitData?.profitPerUnit || null,
           kievyanStock: kievyan,
