@@ -220,93 +220,55 @@ export default function CompStyleTransitTracking() {
       return;
     }
 
-    // Create CSV with order summary
-    const summaryHeaders = [
-      'Order Number', 'Supplier', 'Destination', 'Status', 'Priority',
-      'Order Date', 'Expected Arrival', 'Total Items', 'Total Quantity', 
-      'Total Value (USD)', 'Notes'
-    ];
-    const summaryData = [summaryHeaders];
-
-    filteredOrders.forEach(order => {
-      summaryData.push([
-        order.orderNumber,
-        order.supplier || 'N/A',
-        order.destination || 'N/A',
-        getOrderValue(order, 'status') || 'ordered',
-        getOrderValue(order, 'priority') || 'normal',
-        order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A',
-        getOrderValue(order, 'expectedArrival') ? new Date(getOrderValue(order, 'expectedArrival')).toLocaleDateString() : 'N/A',
-        order.items.length.toString(),
-        order.totalQty.toString(),
-        order.totalValue.toFixed(2),
-        (getOrderValue(order, 'notes') || '').replace(/"/g, '""')
-      ]);
-    });
-
-    const summaryContent = summaryData.map(row => 
-      row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
-    ).join('\n');
-
-    const summaryBlob = new Blob(['\ufeff' + summaryContent], { type: 'text/csv;charset=utf-8;' });
-    const summaryLink = document.createElement('a');
-    const summaryUrl = URL.createObjectURL(summaryBlob);
-    summaryLink.setAttribute('href', summaryUrl);
-    summaryLink.setAttribute('download', `transit-orders-summary_${timestamp}.csv`);
-    summaryLink.style.visibility = 'hidden';
-    document.body.appendChild(summaryLink);
-    summaryLink.click();
-    document.body.removeChild(summaryLink);
-    URL.revokeObjectURL(summaryUrl);
-
     // Create CSV with detailed line items
-    const detailHeaders = [
-      'Order Number', 'Supplier', 'Product Name', 'Quantity',
-      'Price USD', 'Price AMD', 'Total USD', 'Destination',
-      'Order Date', 'Expected Arrival', 'Status', 'Priority'
+    const headers = [
+      'Order Number', 'Supplier', 'Destination', 'Status', 'Priority',
+      'Order Date', 'Expected Arrival', 'Product Name', 'Quantity',
+      'Price USD', 'Price AMD', 'Total USD', 'Notes'
     ];
-    const detailData = [detailHeaders];
+    const csvData = [headers];
 
     filteredOrders.forEach(order => {
       order.items.forEach(item => {
         const priceUsd = parseFloat(item.purchasePriceUsd || '0');
         const totalUsd = priceUsd * item.qty;
         
-        detailData.push([
+        csvData.push([
           order.orderNumber,
           order.supplier || 'N/A',
+          order.destination || 'N/A',
+          getOrderValue(order, 'status') || 'ordered',
+          getOrderValue(order, 'priority') || 'normal',
+          order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A',
+          getOrderValue(order, 'expectedArrival') ? new Date(getOrderValue(order, 'expectedArrival')).toLocaleDateString() : 'N/A',
           item.productName,
           item.qty.toString(),
           priceUsd > 0 ? priceUsd.toFixed(2) : 'N/A',
           item.purchasePriceAmd || 'N/A',
           totalUsd.toFixed(2),
-          order.destination || 'N/A',
-          order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A',
-          getOrderValue(order, 'expectedArrival') ? new Date(getOrderValue(order, 'expectedArrival')).toLocaleDateString() : 'N/A',
-          getOrderValue(order, 'status') || 'ordered',
-          getOrderValue(order, 'priority') || 'normal'
+          (getOrderValue(order, 'notes') || '').replace(/"/g, '""')
         ]);
       });
     });
 
-    const detailContent = detailData.map(row => 
+    const csvContent = csvData.map(row => 
       row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
     ).join('\n');
 
-    const detailBlob = new Blob(['\ufeff' + detailContent], { type: 'text/csv;charset=utf-8;' });
-    const detailLink = document.createElement('a');
-    const detailUrl = URL.createObjectURL(detailBlob);
-    detailLink.setAttribute('href', detailUrl);
-    detailLink.setAttribute('download', `transit-orders-detailed_${timestamp}.csv`);
-    detailLink.style.visibility = 'hidden';
-    document.body.appendChild(detailLink);
-    detailLink.click();
-    document.body.removeChild(detailLink);
-    URL.revokeObjectURL(detailUrl);
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `transit-orders_${timestamp}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 
     toast({
       title: "Export successful",
-      description: `Exported ${filteredOrders.length} transit orders (summary and detailed views)`,
+      description: `Exported ${filteredOrders.length} transit orders with ${csvData.length - 1} line items`,
     });
   };
 
