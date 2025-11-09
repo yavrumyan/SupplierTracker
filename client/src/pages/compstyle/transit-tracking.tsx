@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Package, Truck, AlertCircle, Upload, Download, Calendar, DollarSign, MapPin, User, FileText, Plus, X } from "lucide-react";
+import { ArrowLeft, Package, Truck, AlertCircle, Upload, Download, Calendar, DollarSign, MapPin, User, FileText, Plus, X, Paperclip } from "lucide-react";
 import { Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface TransitItem {
@@ -26,6 +26,12 @@ interface TransitItem {
   status?: string;
   priority?: string;
   notes?: string;
+  documents?: Array<{
+    filename: string;
+    originalName: string;
+    filePath: string;
+    uploadedAt: string;
+  }>;
 }
 
 interface TransitOrder {
@@ -62,6 +68,8 @@ export default function CompStyleTransitTracking() {
   const [filterSupplier, setFilterSupplier] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [editedOrders, setEditedOrders] = useState<Record<string, any>>({});
+  const [uploadingFiles, setUploadingFiles] = useState<Set<number>>(new Set());
+  const fileInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   const { data: transitData, isLoading } = useQuery<TransitItem[]>({
     queryKey: ["/api/compstyle/transit"],
@@ -81,6 +89,57 @@ export default function CompStyleTransitTracking() {
       toast({
         title: "Error",
         description: "Failed to update transit order",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const uploadDocumentMutation = useMutation({
+    mutationFn: async ({ id, file }: { id: number; file: File }) => {
+      const formData = new FormData();
+      formData.append('document', file);
+      
+      const response = await fetch(`/api/compstyle/transit/${id}/documents`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) throw new Error('Failed to upload document');
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
+      toast({
+        title: "Success",
+        description: "Document uploaded successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to upload document",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteDocumentMutation = useMutation({
+    mutationFn: async ({ id, filename }: { id: number; filename: string }) => {
+      const response = await fetch(`/api/compstyle/transit/${id}/documents/${filename}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete document');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/compstyle/transit"] });
+      toast({
+        title: "Success",
+        description: "Document deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete document",
         variant: "destructive",
       });
     },
@@ -205,6 +264,36 @@ export default function CompStyleTransitTracking() {
       delete newEdited[orderNumber];
       return newEdited;
     });
+  };
+
+  const handleFileUpload = async (orderId: number, file: File) => {
+    setUploadingFiles(prev => new Set(prev).add(orderId));
+    try {
+      await uploadDocumentMutation.mutateAsync({ id: orderId, file });
+    } finally {
+      setUploadingFiles(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(orderId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleFileSelect = (orderId: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleFileUpload(orderId, file);
+    }
+    // Reset input
+    if (fileInputRefs.current[orderId]) {
+      fileInputRefs.current[orderId]!.value = '';
+    }
+  };
+
+  const handleDeleteDocument = (orderId: number, filename: string) => {
+    if (confirm('Are you sure you want to delete this document?')) {
+      deleteDocumentMutation.mutate({ id: orderId, filename });
+    }
   };
 
   const handleExport = () => {
@@ -618,6 +707,70 @@ export default function CompStyleTransitTracking() {
                             })}
                           </tbody>
                         </table>
+                      </div>
+
+                      {/* Documents Section */}
+                      <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                            <Paperclip className="h-4 w-4" />
+                            Attached Documents
+                          </h3>
+                          <div>
+                            <input
+                              ref={el => fileInputRefs.current[order.items[0]?.id] = el}
+                              type="file"
+                              className="hidden"
+                              onChange={(e) => handleFileSelect(order.items[0]?.id, e)}
+                              accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                            />
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => fileInputRefs.current[order.items[0]?.id]?.click()}
+                              disabled={uploadingFiles.has(order.items[0]?.id)}
+                            >
+                              <Upload className="h-4 w-4 mr-2" />
+                              {uploadingFiles.has(order.items[0]?.id) ? 'Uploading...' : 'Upload Document'}
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        {order.items[0]?.documents && order.items[0].documents.length > 0 ? (
+                          <div className="space-y-2">
+                            {order.items[0].documents.map((doc, idx) => (
+                              <div key={idx} className="flex items-center justify-between p-2 bg-white rounded border border-slate-200">
+                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                  <FileText className="h-4 w-4 text-slate-500 flex-shrink-0" />
+                                  <span className="text-sm truncate">{doc.originalName}</span>
+                                  <span className="text-xs text-slate-500 flex-shrink-0">
+                                    {new Date(doc.uploadedAt).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <div className="flex gap-1">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => window.open(`/api/compstyle/transit/${order.items[0].id}/documents/${doc.filename}`, '_blank')}
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleDeleteDocument(order.items[0].id, doc.filename)}
+                                  >
+                                    <X className="h-4 w-4 text-red-500" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-slate-500 text-center py-4">
+                            No documents attached yet. Upload invoices, shipping documents, or customs paperwork.
+                          </p>
+                        )}
                       </div>
 
                       <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-slate-200">

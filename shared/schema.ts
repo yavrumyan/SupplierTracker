@@ -338,6 +338,7 @@ export const compstyleTransit = pgTable("compstyle_transit", {
   status: text("status").default("ordered"), // Ordered, Shipped, At Customs
   priority: text("priority").default("normal"), // Normal, Urgent
   notes: text("notes"), // Additional notes field
+  documents: jsonb("documents").$type<Array<{filename: string; originalName: string; filePath: string; uploadedAt: string}>>().default([]), // Attached documents
 });
 
 // Sales Orders by Location
@@ -452,6 +453,12 @@ export const insertCompstyleTransitSchema = createInsertSchema(compstyleTransit)
   status: z.string().optional(),
   priority: z.string().optional(),
   notes: z.string().optional(),
+  documents: z.array(z.object({
+    filename: z.string(),
+    originalName: z.string(),
+    filePath: z.string(),
+    uploadedAt: z.string()
+  })).optional(),
 });
 
 export const insertCompstyleSalesOrderSchema = createInsertSchema(compstyleSalesOrders).omit({

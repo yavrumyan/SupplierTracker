@@ -1643,6 +1643,126 @@ print(json.dumps(result))
     }
   });
 
+  // Upload document to transit order
+  app.post("/api/compstyle/transit/:id/documents", upload.single('document'), async (req, res) => {
+    try {
+      const transitId = parseInt(req.params.id);
+      const file = req.file;
+
+      if (!file) {
+        return res.status(400).json({ error: "No document file uploaded" });
+      }
+
+      // Get current transit item
+      const transitData = await db.select().from(compstyleTransit).where(eq(compstyleTransit.id, transitId));
+      if (transitData.length === 0) {
+        // Delete uploaded file
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+        return res.status(404).json({ error: "Transit order not found" });
+      }
+
+      const transit = transitData[0];
+      const currentDocuments = transit.documents || [];
+
+      // Add new document to the list
+      const newDocument = {
+        filename: file.filename,
+        originalName: file.originalname,
+        filePath: file.path,
+        uploadedAt: new Date().toISOString()
+      };
+
+      const updatedDocuments = [...currentDocuments, newDocument];
+
+      // Update transit item with new documents array
+      const [updated] = await db.update(compstyleTransit)
+        .set({ documents: updatedDocuments })
+        .where(eq(compstyleTransit.id, transitId))
+        .returning();
+
+      res.status(201).json(updated);
+    } catch (error) {
+      console.error("Error uploading transit document:", error);
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      res.status(500).json({ error: "Failed to upload document" });
+    }
+  });
+
+  // Download transit order document
+  app.get("/api/compstyle/transit/:id/documents/:filename", async (req, res) => {
+    try {
+      const transitId = parseInt(req.params.id);
+      const filename = req.params.filename;
+
+      const transitData = await db.select().from(compstyleTransit).where(eq(compstyleTransit.id, transitId));
+      if (transitData.length === 0) {
+        return res.status(404).json({ error: "Transit order not found" });
+      }
+
+      const transit = transitData[0];
+      const documents = transit.documents || [];
+      const document = documents.find(d => d.filename === filename);
+
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+
+      if (!fs.existsSync(document.filePath)) {
+        return res.status(404).json({ error: "Document file no longer exists on disk" });
+      }
+
+      res.setHeader('Content-Disposition', `attachment; filename="${document.originalName}"`);
+      const fileStream = fs.createReadStream(document.filePath);
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error("Error downloading transit document:", error);
+      res.status(500).json({ error: "Failed to download document" });
+    }
+  });
+
+  // Delete transit order document
+  app.delete("/api/compstyle/transit/:id/documents/:filename", async (req, res) => {
+    try {
+      const transitId = parseInt(req.params.id);
+      const filename = req.params.filename;
+
+      const transitData = await db.select().from(compstyleTransit).where(eq(compstyleTransit.id, transitId));
+      if (transitData.length === 0) {
+        return res.status(404).json({ error: "Transit order not found" });
+      }
+
+      const transit = transitData[0];
+      const documents = transit.documents || [];
+      const document = documents.find(d => d.filename === filename);
+
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+
+      // Delete the physical file
+      if (fs.existsSync(document.filePath)) {
+        fs.unlinkSync(document.filePath);
+      }
+
+      // Remove document from array
+      const updatedDocuments = documents.filter(d => d.filename !== filename);
+
+      // Update transit item
+      await db.update(compstyleTransit)
+        .set({ documents: updatedDocuments })
+        .where(eq(compstyleTransit.id, transitId));
+
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting transit document:", error);
+      res.status(500).json({ error: "Failed to delete document" });
+    }
+  });
+
   app.get('/api/compstyle/sales-orders', async (req, res) => {
     try {
       const data = await storage.getCompstyleSalesOrders();
