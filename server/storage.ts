@@ -2697,7 +2697,8 @@ export class DatabaseStorage implements IStorage {
           retailPrice: p.retailPriceUsd,
           avgSalePrice: p.retailPriceUsd, // Alias for clarity
           profitMargin: p.profitMargin, // Alias for clarity
-          expectedProfit: p.potentialProfit // Use potential profit for expected profit calculation
+          expectedProfit: p.potentialProfit, // Use potential profit for expected profit calculation
+          cost: p.cost // Include cost from Total Sales for fallback
         }])
       );
 
@@ -2726,7 +2727,19 @@ export class DatabaseStorage implements IStorage {
 
         const stock = productInfo?.stock || 0;
         const transit = productInfo?.transit || 0;
-        const currentCost = productInfo?.cost || productInfo?.latestCost || 0;
+        
+        // Get current cost with fallback logic:
+        // 1. Try productInfo.cost (from Total Stock)
+        // 2. Try productInfo.latestCost (from Total Sales)
+        // 3. Try profit.cost (from Total Sales - most recent cost_price_usd)
+        // 4. Default to 0
+        let currentCost = productInfo?.cost || productInfo?.latestCost || 0;
+        
+        // If still no cost, try to get it from Total Sales costPriceUsd
+        if (currentCost === 0 && profit?.cost) {
+          currentCost = profit.cost;
+        }
+        
         const lastSupplier = lastPurchase?.supplier || 'Unknown';
         const lastPrice = lastPurchase?.price || 0;
 
