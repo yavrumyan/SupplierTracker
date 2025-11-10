@@ -2680,14 +2680,6 @@ export class DatabaseStorage implements IStorage {
         }
       }
 
-      // Get total procurement data for cost fallback
-      const totalProcurement = await db.select().from(compstyleTotalProcurement);
-      
-      // Create procurement cost map (from Total Procurement by Goods, Column G)
-      const procurementCostMap = new Map(
-        totalProcurement.map(p => [p.productName, parseFloat(p.purchasePriceUsd || '0')])
-      );
-
       // Create product info map
       const productInfoMap = new Map(
         productList.map(p => [p.productName, {
@@ -2734,13 +2726,7 @@ export class DatabaseStorage implements IStorage {
 
         const stock = productInfo?.stock || 0;
         const transit = productInfo?.transit || 0;
-        
-        // Priority: 1) Total Stock cost, 2) Total Procurement cost, 3) Latest cost, 4) 0
-        const currentCost = productInfo?.cost || 
-                           procurementCostMap.get(productName) || 
-                           productInfo?.latestCost || 
-                           0;
-        
+        const currentCost = productInfo?.cost || productInfo?.latestCost || 0;
         const lastSupplier = lastPurchase?.supplier || 'Unknown';
         const lastPrice = lastPurchase?.price || 0;
 
