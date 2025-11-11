@@ -2421,8 +2421,8 @@ print(json.dumps(result))
       // Find all records with this order number
       const recordsToDelete = existingRecords.filter(r => r.purchaseOrderNumber === orderNumber);
       
+      // Delete physical document files for all records in this order
       for (const record of recordsToDelete) {
-        // Delete physical document files if they exist
         if (record.documents && Array.isArray(record.documents)) {
           for (const doc of record.documents) {
             if (doc.filePath && fs.existsSync(doc.filePath)) {
@@ -2435,12 +2435,15 @@ print(json.dumps(result))
             }
           }
         }
-
-        // Delete from database
-        await db.delete(compstyleTransit).where(eq(compstyleTransit.id, record.id));
-        totalDeletedItems++;
-        console.log(`Deleted item: ${record.productName.substring(0, 50)}... from order ${orderNumber}`);
+        console.log(`Will delete item: ${record.productName.substring(0, 50)}... from order ${orderNumber}`);
       }
+
+      // Delete ALL records with this order number in a single query
+      const deletedCount = await db.delete(compstyleTransit)
+        .where(eq(compstyleTransit.purchaseOrderNumber, orderNumber));
+      
+      totalDeletedItems += recordsToDelete.length;
+      console.log(`Deleted ${recordsToDelete.length} items from order ${orderNumber}`);
     }
 
     console.log(`Transit sync complete: ${count} new orders added, ${orderNumbersToDelete.length} orders deleted (${totalDeletedItems} total items)`);
