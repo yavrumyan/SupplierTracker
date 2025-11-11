@@ -2812,6 +2812,30 @@ print(json.dumps(result))
       
       console.log(`Product Search: Searching for "${searchQuery}" in ${compstyleProducts.size} total products`);
       
+      // Debug: Check if the specific product exists in any source table
+      const debugProductName = "Модуль памяти DIMM 32GB DDR4 PATRIOT PSD432G3200K Kit (2x16GB, 3200MHz, 1.2v)";
+      if (searchQuery.includes("PATRIOT PSD432G3200K")) {
+        console.log(`\n=== DEBUG: Searching for PATRIOT product ===`);
+        console.log(`Total Stock contains: ${totalStock.some(p => p.productName.includes("PATRIOT PSD432G3200K"))}`);
+        console.log(`Total Sales contains: ${totalSales.some(p => p.productName.includes("PATRIOT PSD432G3200K"))}`);
+        console.log(`Transit contains: ${transitData.some(p => p.productName.includes("PATRIOT PSD432G3200K"))}`);
+        
+        // Check exact match
+        const exactInStock = totalStock.find(p => p.productName === debugProductName);
+        const exactInSales = totalSales.find(p => p.productName === debugProductName);
+        const exactInTransit = transitData.find(p => p.productName === debugProductName);
+        
+        console.log(`Exact match in Total Stock: ${exactInStock ? 'YES' : 'NO'}`);
+        console.log(`Exact match in Total Sales: ${exactInSales ? 'YES' : 'NO'}`);
+        console.log(`Exact match in Transit: ${exactInTransit ? 'YES' : 'NO'}`);
+        
+        if (exactInStock) console.log(`Stock product name: "${exactInStock.productName}"`);
+        if (exactInSales) console.log(`Sales product name: "${exactInSales.productName}"`);
+        if (exactInTransit) console.log(`Transit product name: "${exactInTransit.productName}"`);
+        
+        console.log(`=== END DEBUG ===\n`);
+      }
+      
       // Filter to only search CompStyle products that match the query
       // Use case-insensitive search and also try trimming whitespace
       const matchingProducts = Array.from(compstyleProducts).filter(productName => {
