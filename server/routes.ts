@@ -2407,37 +2407,43 @@ print(json.dumps(result))
     console.log(`Transit file processed: ${count} new orders added`);
 
     // Delete orders that exist in DB but not in the uploaded file (only those with purchase order numbers)
-    const ordersToDelete: number[] = [];
+    const orderNumbersToDelete: string[] = [];
     for (const [orderNumber, record] of existingByOrderNumber) {
       if (!processedOrderNumbers.has(orderNumber)) {
-        ordersToDelete.push(record.id);
-        console.log(`Deleting order not in file: ${orderNumber} for product: ${record.productName.substring(0, 50)}...`);
+        orderNumbersToDelete.push(orderNumber);
+        console.log(`Order ${orderNumber} not in file - will delete all items for this order`);
       }
     }
 
-    // Delete records and their documents
-    for (const id of ordersToDelete) {
-      const record = existingRecords.find(r => r.id === id);
+    // Delete all records with these order numbers (all products in each order)
+    let totalDeletedItems = 0;
+    for (const orderNumber of orderNumbersToDelete) {
+      // Find all records with this order number
+      const recordsToDelete = existingRecords.filter(r => r.purchaseOrderNumber === orderNumber);
       
-      // Delete physical document files if they exist
-      if (record && record.documents && Array.isArray(record.documents)) {
-        for (const doc of record.documents) {
-          if (doc.filePath && fs.existsSync(doc.filePath)) {
-            try {
-              fs.unlinkSync(doc.filePath);
-              console.log(`Deleted document file: ${doc.originalName}`);
-            } catch (err) {
-              console.error(`Failed to delete document file: ${doc.filePath}`, err);
+      for (const record of recordsToDelete) {
+        // Delete physical document files if they exist
+        if (record.documents && Array.isArray(record.documents)) {
+          for (const doc of record.documents) {
+            if (doc.filePath && fs.existsSync(doc.filePath)) {
+              try {
+                fs.unlinkSync(doc.filePath);
+                console.log(`Deleted document file: ${doc.originalName}`);
+              } catch (err) {
+                console.error(`Failed to delete document file: ${doc.filePath}`, err);
+              }
             }
           }
         }
-      }
 
-      // Delete from database
-      await db.delete(compstyleTransit).where(eq(compstyleTransit.id, id));
+        // Delete from database
+        await db.delete(compstyleTransit).where(eq(compstyleTransit.id, record.id));
+        totalDeletedItems++;
+        console.log(`Deleted item: ${record.productName.substring(0, 50)}... from order ${orderNumber}`);
+      }
     }
 
-    console.log(`Transit sync complete: ${count} new orders, ${ordersToDelete.length} orders deleted`);
+    console.log(`Transit sync complete: ${count} new orders added, ${orderNumbersToDelete.length} orders deleted (${totalDeletedItems} total items)`);
     return count;
   }
 
