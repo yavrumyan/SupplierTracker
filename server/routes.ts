@@ -2316,13 +2316,21 @@ print(json.dumps(result))
 
   // Process In Transit Current file according to specifications
   async function processTransitFile(data: any[]): Promise<number> {
-    console.log('Processing Transit file - clearing existing data...');
+    console.log('Processing Transit file with sync logic...');
 
-    // Clear existing transit data before processing new file
-    await db.delete(compstyleTransit);
+    // Get existing transit records
+    const existingRecords = await db.select().from(compstyleTransit);
+    const existingByOrderNumber = new Map<string, any>();
+    
+    for (const record of existingRecords) {
+      if (record.purchaseOrderNumber) {
+        existingByOrderNumber.set(record.purchaseOrderNumber, record);
+      }
+    }
 
     let count = 0;
-    const processedProducts = new Map<string, any>(); // Track products to avoid duplicates within same file
+    const processedOrderNumbers = new Set<string>(); // Track order numbers in uploaded file
+    const newRecordsToInsert: any[] = []; // Collect new records to insert
 
     // Start from row 1 (skip header row)
     for (let i = 1; i < data.length; i++) {
@@ -2342,19 +2350,7 @@ print(json.dumps(result))
       }
 
       const productName = String(row[0]).trim();
-
-      // Debug logging for specific products
-      const isTargetProduct = productName.includes('Процессор Intel Core i5 12400') || 
-                              productName.includes('Принтер струйный МФУ Canon PIXMA MG2541S');
-
-      if (isTargetProduct) {
-        console.log(`\n=== ROW ${i} DEBUG ===`);
-        console.log(`Product: "${productName}"`);
-        console.log(`Quantity: ${qty}`);
-        console.log(`Raw row data: [${row.slice(0, 5).join(', ')}...]`);
-        console.log(`Product name length: ${productName.length}`);
-        console.log(`Product name hex: ${Buffer.from(productName).toString('hex')}`);
-      }
+      const purchaseOrderNumber = row[9] ? String(row[9]).trim() : null;
 
       // Parse optional numeric fields
       const purchasePriceUsd = parseNumericValue(row[2]);
@@ -2364,13 +2360,27 @@ print(json.dumps(result))
       const orderDate = parseExcelDate(row[16]); // Column Q (Дата заказа): Order date
       const expectedArrival = parseExcelDate(row[17]); // Column R (Expected arrival): Expected arrival date
 
+      // Check if this order number already exists
+      if (purchaseOrderNumber && existingByOrderNumber.has(purchaseOrderNumber)) {
+        // Order exists - skip it, keep existing data
+        console.log(`Skipping existing order: ${purchaseOrderNumber} for product: ${productName.substring(0, 50)}...`);
+        processedOrderNumbers.add(purchaseOrderNumber);
+        continue;
+      }
+
+      // Track this order number as processed
+      if (purchaseOrderNumber) {
+        processedOrderNumbers.add(purchaseOrderNumber);
+      }
+
+      // This is a new order - prepare for insertion
       const transitRecord = {
         productName, // Column A (Товар): Name of product
         qty, // Column B (Кол.): Quantity purchased
         purchasePriceUsd: purchasePriceUsd ? String(purchasePriceUsd) : null, // Column C (Цена $): Purchasing price in USD
         purchasePriceAmd: purchasePriceAmd ? String(purchasePriceAmd) : null, // Column D (Цена AMD): Purchasing price in AMD
         currentCost: currentCost ? String(currentCost) : null, // Column G (Уч. цена): Current actual cost
-        purchaseOrderNumber: row[9] ? String(row[9]) : null, // Column J (Связь): Purchase Order Number
+        purchaseOrderNumber: purchaseOrderNumber, // Column J (Связь): Purchase Order Number
         destinationLocation: row[14] ? String(row[14]) : null, // Column O (Склад): Destination warehouse/store
         supplier: row[15] ? String(row[15]) : null, // Column P (Поставщик): Supplier name
         orderDate: orderDate, // Column Q (Дата заказа): Order date
@@ -2380,79 +2390,49 @@ print(json.dumps(result))
         notes: null,
       };
 
-      // Check if we already processed this product in this file
-      if (processedProducts.has(productName)) {
-        // Sum quantities for duplicate products
-        const existing = processedProducts.get(productName);
-        const oldQty = existing.qty;
-        existing.qty += qty; // Add quantity to existing total
-
-        if (isTargetProduct) {
-          console.log(`*** DUPLICATE FOUND ***`);
-          console.log(`Previous quantity: ${oldQty}`);
-          console.log(`Adding quantity: ${qty}`);
-          console.log(`New total quantity: ${existing.qty}`);
-        }
-
-        // Keep other data from first occurrence, but update some fields if new ones have values
-        if (transitRecord.purchasePriceUsd && !existing.purchasePriceUsd) {
-          existing.purchasePriceUsd = transitRecord.purchasePriceUsd;
-        }
-        if (transitRecord.purchasePriceAmd && !existing.purchasePriceAmd) {
-          existing.purchasePriceAmd = transitRecord.purchasePriceAmd;
-        }
-        if (transitRecord.currentCost && !existing.currentCost) {
-          existing.currentCost = transitRecord.currentCost;
-        }
-        if (transitRecord.supplier && !existing.supplier) {
-          existing.supplier = transitRecord.supplier;
-        }
-        // Update expected arrival if it's newer
-        if (transitRecord.expectedArrival && (!existing.expectedArrival || transitRecord.expectedArrival > existing.expectedArrival)) {
-          existing.expectedArrival = transitRecord.expectedArrival;
-        }
-
-
-        console.log(`Found duplicate ${productName.substring(0, 50)}...: adding ${qty} to existing ${oldQty}, total now: ${existing.qty}`);
-      } else {
-        if (isTargetProduct) {
-          console.log(`*** FIRST OCCURRENCE ***`);
-          console.log(`Storing product with quantity: ${qty}`);
-        }
-        processedProducts.set(productName, { ...transitRecord, rowIndex: i });
-      }
-
-      if (isTargetProduct) {
-        console.log(`=== END ROW ${i} DEBUG ===\n`);
-      }
+      newRecordsToInsert.push(transitRecord);
     }
 
-    // Insert aggregated record for each unique product (with summed quantities)
-    for (const [productName, record] of processedProducts) {
-      const { rowIndex, ...recordData } = record;
-
-      // Debug logging for specific products before database insertion
-      const isTargetProduct = productName.includes('Процессор Intel Core i5 12400') || 
-                              productName.includes('Принтер струйный МФУ Canon PIXMA MG2541S');
-
-      if (isTargetProduct) {
-        console.log(`\n*** FINAL DATABASE INSERT ***`);
-        console.log(`Product: "${productName}"`);
-        console.log(`Final quantity: ${record.qty}`);
-        console.log(`Supplier: ${record.supplier}`);
-        console.log(`Price USD: ${record.purchasePriceUsd}`);
-        console.log(`Expected Arrival: ${record.expectedArrival}`);
-      }
-
-      await storage.createCompstyleTransit(recordData);
+    // Insert all new records
+    for (const record of newRecordsToInsert) {
+      await storage.createCompstyleTransit(record);
       count++;
+    }
 
-      if (productName.includes('Адаптер Bluetooth Orico BTA-508-BK-BP')) {
-        console.log(`Processed ${productName}: qty=${record.qty}, supplier=${record.supplier}`);
+    console.log(`Transit file processed: ${count} new orders added`);
+
+    // Delete orders that exist in DB but not in the uploaded file
+    const ordersToDelete: number[] = [];
+    for (const [orderNumber, record] of existingByOrderNumber) {
+      if (!processedOrderNumbers.has(orderNumber)) {
+        ordersToDelete.push(record.id);
+        console.log(`Deleting order not in file: ${orderNumber} for product: ${record.productName.substring(0, 50)}...`);
       }
     }
 
-    console.log(`Transit file processed: ${count} unique products saved`);
+    // Delete records and their documents
+    for (const id of ordersToDelete) {
+      const record = existingRecords.find(r => r.id === id);
+      
+      // Delete physical document files if they exist
+      if (record && record.documents && Array.isArray(record.documents)) {
+        for (const doc of record.documents) {
+          if (doc.filePath && fs.existsSync(doc.filePath)) {
+            try {
+              fs.unlinkSync(doc.filePath);
+              console.log(`Deleted document file: ${doc.originalName}`);
+            } catch (err) {
+              console.error(`Failed to delete document file: ${doc.filePath}`, err);
+            }
+          }
+        }
+      }
+
+      // Delete from database
+      await db.delete(compstyleTransit).where(eq(compstyleTransit.id, id));
+    }
+
+    console.log(`Transit sync complete: ${count} new orders, ${ordersToDelete.length} orders deleted`);
     return count;
   }
 
