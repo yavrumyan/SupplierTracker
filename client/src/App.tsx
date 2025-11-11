@@ -1,3 +1,4 @@
+
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -5,6 +6,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout";
 import { CategoriesBrandsProvider } from "@/lib/categories-brands-context";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Shield, AlertCircle } from "lucide-react";
 import Home from "@/pages/home";
 import SupplierDetail from "@/pages/supplier-detail";
 import AddSupplier from "@/pages/add-supplier";
@@ -49,6 +54,117 @@ import ChipFinanceReport from "@/pages/chip/reports/finance";
 import ChipProfitLossReport from "@/pages/chip/reports/profit-loss";
 import ChipCashFlowReport from "@/pages/chip/reports/cash-flow";
 import NotFound from "@/pages/not-found";
+
+function LoginPage() {
+  const handleLogin = () => {
+    window.addEventListener("message", authComplete);
+    const h = 500;
+    const w = 350;
+    const left = screen.width / 2 - w / 2;
+    const top = screen.height / 2 - h / 2;
+
+    const authWindow = window.open(
+      "https://replit.com/auth_with_repl_site?domain=" + location.host,
+      "_blank",
+      "modal=yes, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=" +
+        w +
+        ", height=" +
+        h +
+        ", top=" +
+        top +
+        ", left=" +
+        left
+    );
+
+    function authComplete(e: MessageEvent) {
+      if (e.data !== "auth_complete") {
+        return;
+      }
+
+      window.removeEventListener("message", authComplete);
+      authWindow?.close();
+      location.reload();
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Shield className="h-6 w-6 text-primary" />
+          </div>
+          <CardTitle className="text-2xl">Welcome to SupHub</CardTitle>
+          <CardDescription>
+            Sign in with your Replit account to access the system
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button onClick={handleLogin} className="w-full" size="lg">
+            <Shield className="mr-2 h-4 w-4" />
+            Sign in with Replit
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function PendingApprovalPage() {
+  const { user } = useAuth();
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
+            <AlertCircle className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+          </div>
+          <CardTitle className="text-2xl">Pending Approval</CardTitle>
+          <CardDescription>
+            Your account is awaiting administrator approval
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="text-sm text-muted-foreground text-center">
+            <p>Welcome, <strong>{user?.firstName || user?.email}</strong>!</p>
+            <p className="mt-2">An administrator will review your access request shortly.</p>
+            <p className="mt-4">Please contact your system administrator if you need immediate access.</p>
+          </div>
+          <Button
+            onClick={() => location.reload()}
+            variant="outline"
+            className="w-full"
+          >
+            Refresh Status
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function AuthGate({ children }: { children: React.ReactNode }) {
+  const { user, loading, isAuthenticated } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
+  if (!user?.isApproved && !user?.isAdmin) {
+    return <PendingApprovalPage />;
+  }
+
+  return <>{children}</>;
+}
 
 function Router() {
   return (
@@ -109,12 +225,16 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <CategoriesBrandsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </CategoriesBrandsProvider>
+      <AuthProvider>
+        <CategoriesBrandsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <AuthGate>
+              <Router />
+            </AuthGate>
+          </TooltipProvider>
+        </CategoriesBrandsProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

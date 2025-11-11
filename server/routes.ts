@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
@@ -45,9 +45,56 @@ import {
   compstylePurchaseItems,
   compstyleTotalSales,
   compstyleTotalProcurement,
-  compstyleProductList
+  compstyleProductList,
+  users
 } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
+
+// Authentication middleware
+async function requireAuth(req: Request, res: Response, next: NextFunction) {
+  const userId = req.headers['x-replit-user-id'] as string;
+  const userName = req.headers['x-replit-user-name'] as string;
+  const userEmail = req.headers['x-replit-user-email'] as string;
+  const userProfileImage = req.headers['x-replit-user-profile-image'] as string;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+
+  // Check if user exists in database
+  let user = await storage.getUserById(userId);
+
+  if (!user) {
+    // Auto-create user on first login
+    user = await storage.createUser({
+      id: userId,
+      email: userEmail || `${userName}@replit.com`,
+      firstName: userName || null,
+      lastName: null,
+      profileImageUrl: userProfileImage || null,
+      isAdmin: false,
+      isApproved: false,
+    });
+  }
+
+  // Check if user is approved
+  if (!user.isApproved && !user.isAdmin) {
+    return res.status(403).json({ error: "Your account is pending approval. Please contact an administrator." });
+  }
+
+  // Attach user to request
+  (req as any).user = user;
+  next();
+}
+
+// Admin-only middleware
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (!user || !user.isAdmin) {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+}
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
@@ -67,6 +114,75 @@ const storage_config = multer.diskStorage({
 const upload = multer({ storage: storage_config });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Public route to get current user info
+  app.get("/api/auth/user", async (req, res) => {
+    const userId = req.headers['x-replit-user-id'] as string;
+    
+    if (!userId) {
+      return res.json({ authenticated: false });
+    }
+
+    const user = await storage.getUserById(userId);
+    if (!user) {
+      return res.json({ authenticated: false });
+    }
+
+    res.json({
+      authenticated: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        profileImageUrl: user.profileImageUrl,
+        isAdmin: user.isAdmin,
+        isApproved: user.isApproved,
+      }
+    });
+  });
+
+  // Admin routes for user management
+  app.get("/api/admin/users", requireAuth, requireAdmin, async (req, res) => {
+    try {
+      const allUsers = await storage.getAllUsers();
+      res.json(allUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
+  app.patch("/api/admin/users/:id/approve", requireAuth, requireAdmin, async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await storage.approveUser(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error("Error approving user:", error);
+      res.status(500).json({ error: "Failed to approve user" });
+    }
+  });
+
+  app.patch("/api/admin/users/:id/make-admin", requireAuth, requireAdmin, async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await storage.makeUserAdmin(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error("Error making user admin:", error);
+      res.status(500).json({ error: "Failed to make user admin" });
+    }
+  });
+
+  // Apply authentication middleware to all routes below
+  app.use("/api", requireAuth);
+
   // Supplier routes
   app.get("/api/suppliers", async (req, res) => {
     try {
