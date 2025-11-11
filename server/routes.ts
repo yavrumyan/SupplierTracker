@@ -2794,7 +2794,8 @@ print(json.dumps(result))
         return res.status(400).json({ error: "Search query is required" });
       }
 
-      const searchQuery = query.toLowerCase().trim();
+      const searchQuery = query.trim();
+      const searchQueryLower = searchQuery.toLowerCase();
       const results = [];
 
       // Get all CompStyle data sources
@@ -2809,10 +2810,24 @@ print(json.dumps(result))
       totalSales.forEach(item => compstyleProducts.add(item.productName));
       transitData.forEach(item => compstyleProducts.add(item.productName));
       
+      console.log(`Product Search: Searching for "${searchQuery}" in ${compstyleProducts.size} total products`);
+      
       // Filter to only search CompStyle products that match the query
-      const matchingProducts = Array.from(compstyleProducts).filter(productName => 
-        productName.toLowerCase().includes(searchQuery)
-      );
+      // Use case-insensitive search and also try trimming whitespace
+      const matchingProducts = Array.from(compstyleProducts).filter(productName => {
+        const productNameLower = productName.toLowerCase().trim();
+        const queryLower = searchQueryLower.trim();
+        
+        // Try exact match first (case-insensitive)
+        if (productNameLower === queryLower) {
+          return true;
+        }
+        
+        // Then try partial match
+        return productNameLower.includes(queryLower);
+      });
+      
+      console.log(`Product Search: Found ${matchingProducts.length} matching products`);
 
       // Get additional data for matching products
       const profitabilityData = await storage.getProfitabilityHeatMap();
@@ -2823,6 +2838,8 @@ print(json.dumps(result))
       // Get all purchase data to find last purchase price and supplier
       const purchaseOrders = await storage.getCompstylePurchaseOrders();
       const purchaseItems = await storage.getCompstylePurchaseItems();
+
+      console.log(`Product Search: Processing ${matchingProducts.length} matching products...`);
 
       for (const productName of matchingProducts) {
         const stockData = totalStock.find((s: any) => s.productName === productName);
@@ -2881,6 +2898,8 @@ print(json.dumps(result))
         });
       }
 
+      console.log(`Product Search: Returning ${results.length} complete product records`);
+      
       res.json({ results, totalCount: results.length });
     } catch (error) {
       console.error("CompStyle product search error:", error);
