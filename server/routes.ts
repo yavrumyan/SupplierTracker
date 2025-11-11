@@ -2322,6 +2322,7 @@ print(json.dumps(result))
     const existingRecords = await db.select().from(compstyleTransit);
     const existingByOrderNumber = new Map<string, any>();
     
+    // Only track records that have a purchase order number
     for (const record of existingRecords) {
       if (record.purchaseOrderNumber) {
         existingByOrderNumber.set(record.purchaseOrderNumber, record);
@@ -2360,8 +2361,14 @@ print(json.dumps(result))
       const orderDate = parseExcelDate(row[16]); // Column Q (Дата заказа): Order date
       const expectedArrival = parseExcelDate(row[17]); // Column R (Expected arrival): Expected arrival date
 
+      // Only process records that have a purchase order number
+      if (!purchaseOrderNumber) {
+        console.log(`Row ${i}: Skipping - no purchase order number for product: ${productName.substring(0, 50)}...`);
+        continue;
+      }
+
       // Check if this order number already exists
-      if (purchaseOrderNumber && existingByOrderNumber.has(purchaseOrderNumber)) {
+      if (existingByOrderNumber.has(purchaseOrderNumber)) {
         // Order exists - skip it, keep existing data
         console.log(`Skipping existing order: ${purchaseOrderNumber} for product: ${productName.substring(0, 50)}...`);
         processedOrderNumbers.add(purchaseOrderNumber);
@@ -2369,9 +2376,7 @@ print(json.dumps(result))
       }
 
       // Track this order number as processed
-      if (purchaseOrderNumber) {
-        processedOrderNumbers.add(purchaseOrderNumber);
-      }
+      processedOrderNumbers.add(purchaseOrderNumber);
 
       // This is a new order - prepare for insertion
       const transitRecord = {
@@ -2401,7 +2406,7 @@ print(json.dumps(result))
 
     console.log(`Transit file processed: ${count} new orders added`);
 
-    // Delete orders that exist in DB but not in the uploaded file
+    // Delete orders that exist in DB but not in the uploaded file (only those with purchase order numbers)
     const ordersToDelete: number[] = [];
     for (const [orderNumber, record] of existingByOrderNumber) {
       if (!processedOrderNumbers.has(orderNumber)) {
