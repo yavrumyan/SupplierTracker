@@ -441,6 +441,11 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
+  async getUserById(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user || undefined;
@@ -449,6 +454,26 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
+  }
+
+  async approveUser(id: string): Promise<User | undefined> {
+    const [user] = await db.update(users)
+      .set({ isApproved: true })
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async makeUserAdmin(id: string): Promise<User | undefined> {
+    const [user] = await db.update(users)
+      .set({ isAdmin: true })
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(users.email);
   }
 
   // Supplier methods
