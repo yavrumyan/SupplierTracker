@@ -83,7 +83,11 @@ function LoginPage() {
 
       window.removeEventListener("message", authComplete);
       authWindow?.close();
-      location.reload();
+      
+      // Wait a moment for the auth cookie to be set before reloading
+      setTimeout(() => {
+        location.reload();
+      }, 500);
     }
   };
 
