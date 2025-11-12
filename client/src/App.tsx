@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout";
 import { CategoriesBrandsProvider } from "@/lib/categories-brands-context";
+
 import Home from "@/pages/home";
 import SupplierDetail from "@/pages/supplier-detail";
 import AddSupplier from "@/pages/add-supplier";

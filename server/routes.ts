@@ -33,7 +33,11 @@ import fs from "fs";
 import XLSX from "xlsx";
 import { spawn } from "child_process";
 import archiver from "archiver";
+// Removed bcrypt and cookie-parser as they are related to authentication
+// import bcrypt from "bcrypt";
+// import cookieParser from "cookie-parser";
 import { db } from "./db";
+import { users } from "@shared/schema";
 import { 
   compstyleTotalStock,
   compstyleKievyanStock, 
@@ -67,8 +71,130 @@ const storage_config = multer.diskStorage({
 const upload = multer({ storage: storage_config });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Removed cookie-parser middleware as it was for authentication
+  // app.use(cookieParser());
+
+  // Removed authentication middleware and endpoints
+  // const requireAuth = async (req: any, res: any, next: any) => {
+  //   const sessionId = req.cookies.sessionId;
+  //   if (!sessionId) {
+  //     return res.status(401).json({ error: "Not authenticated" });
+  //   }
+
+  //   try {
+  //     const [user] = await db.select().from(users).where(eq(users.id, sessionId));
+  //     if (!user) {
+  //       return res.status(401).json({ error: "Invalid session" });
+  //     }
+  //     req.user = user;
+  //     next();
+  //   } catch (error) {
+  //     res.status(500).json({ error: "Authentication error" });
+  //   }
+  // };
+
+  // Removed Register endpoint
+  // app.post("/api/auth/register", async (req, res) => {
+  //   try {
+  //     const { email, password, firstName, lastName } = req.body;
+
+  //     if (!email || !password) {
+  //       return res.status(400).json({ error: "Email and password are required" });
+  //     }
+
+  //     // Check if user already exists
+  //     const [existingUser] = await db.select().from(users).where(eq(users.email, email));
+  //     if (existingUser) {
+  //       return res.status(400).json({ error: "User already exists" });
+  //     }
+
+  //     // Hash password
+  //     const hashedPassword = await bcrypt.hash(password, 10);
+  //     const userId = `user_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+  //     // Create user
+  //     const [newUser] = await db.insert(users).values({
+  //       id: userId,
+  //       email,
+  //       password: hashedPassword,
+  //       firstName: firstName || null,
+  //       lastName: lastName || null,
+  //       isApproved: true, // Auto-approve for now
+  //     }).returning();
+
+  //     // Set session cookie
+  //     res.cookie('sessionId', newUser.id, {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV === 'production',
+  //       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  //     });
+
+  //     res.json({
+  //       id: newUser.id,
+  //       email: newUser.email,
+  //       firstName: newUser.firstName,
+  //       lastName: newUser.lastName,
+  //     });
+  //   } catch (error) {
+  //     console.error("Registration error:", error);
+  //     res.status(500).json({ error: "Registration failed" });
+  //   }
+  // });
+
+  // Removed Login endpoint
+  // app.post("/api/auth/login", async (req, res) => {
+  //   try {
+  //     const { email, password } = req.body;
+
+  //     if (!email || !password) {
+  //       return res.status(400).json({ error: "Email and password are required" });
+  //     }
+
+  //     // Find user
+  //     const [user] = await db.select().from(users).where(eq(users.email, email));
+  //     if (!user) {
+  //       return res.status(401).json({ error: "Invalid credentials" });
+  //     }
+
+  //     // Verify password
+  //     const validPassword = await bcrypt.compare(password, user.password);
+  //     if (!validPassword) {
+  //       return res.status(401).json({ error: "Invalid credentials" });
+  //     }
+
+  //     // Set session cookie
+  //     res.cookie('sessionId', user.id, {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV === 'production',
+  //       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  //     });
+
+  //     res.json({
+  //       id: user.id,
+  //       email: user.email,
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //     });
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     res.status(500).json({ error: "Login failed" });
+  //   }
+  // });
+
+  // Removed Logout endpoint
+  // app.post("/api/auth/logout", (req, res) => {
+  //   res.clearCookie('sessionId');
+  //   res.json({ message: "Logged out successfully" });
+  // });
+
+  // Removed Get current user endpoint
+  // app.get("/api/auth/me", requireAuth, (req: any, res) => {
+  //   const { password, ...userWithoutPassword } = req.user;
+  //   res.json(userWithoutPassword);
+  // });
+
   // Supplier routes
-  app.get("/api/suppliers", async (req, res) => {
+  app.get("/api/suppliers", requireAuth, async (req, res) => {
     try {
       const { query, country, category, brand, minReputation, workingStyle } = req.query;
 
@@ -2064,7 +2190,7 @@ print(json.dumps(result))
       const workbook = XLSX.readFile(file.path);
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-
+      
       // Convert to JSON with header row handling
       const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
       console.log("Parsed data rows:", rawData.length);
@@ -2321,7 +2447,7 @@ print(json.dumps(result))
     // Get existing transit records
     const existingRecords = await db.select().from(compstyleTransit);
     const existingByOrderNumber = new Map<string, any>();
-    
+
     // Only track records that have a purchase order number
     for (const record of existingRecords) {
       if (record.purchaseOrderNumber) {
@@ -2418,9 +2544,9 @@ print(json.dumps(result))
     // Delete all records with these order numbers (all products in each order)
     let totalDeletedItems = 0;
     for (const orderNumber of orderNumbersToDelete) {
-      // Find all records with this order number
+      // Find all records to delete for this order
       const recordsToDelete = existingRecords.filter(r => r.purchaseOrderNumber === orderNumber);
-      
+
       // Delete physical document files for all records in this order
       for (const record of recordsToDelete) {
         if (record.documents && Array.isArray(record.documents)) {
@@ -2441,7 +2567,7 @@ print(json.dumps(result))
       // Delete ALL records with this order number in a single query
       const deletedCount = await db.delete(compstyleTransit)
         .where(eq(compstyleTransit.purchaseOrderNumber, orderNumber));
-      
+
       totalDeletedItems += recordsToDelete.length;
       console.log(`Deleted ${recordsToDelete.length} items from order ${orderNumber}`);
     }
@@ -2783,7 +2909,7 @@ print(json.dumps(result))
   app.get("/api/compstyle/product-search", async (req, res) => {
     try {
       const { query } = req.query;
-      
+
       if (!query || typeof query !== 'string') {
         return res.status(400).json({ error: "Search query is required" });
       }
@@ -2796,16 +2922,16 @@ print(json.dumps(result))
       const totalStock = await storage.getCompstyleTotalStock();
       const totalSales = await storage.getCompstyleTotalSales();
       const transitData = await storage.getCompstyleTransit();
-      
+
       // Build a set of unique product names that actually exist in CompStyle
       const compstyleProducts = new Set<string>();
-      
+
       totalStock.forEach(item => compstyleProducts.add(item.productName));
       totalSales.forEach(item => compstyleProducts.add(item.productName));
       transitData.forEach(item => compstyleProducts.add(item.productName));
-      
+
       console.log(`Product Search: Searching for "${searchQuery}" in ${compstyleProducts.size} total products`);
-      
+
       // Debug: Check if the specific product exists in any source table
       const debugProductName = "Модуль памяти DIMM 32GB DDR4 PATRIOT PSD432G3200K Kit (2x16GB, 3200MHz, 1.2v)";
       if (searchQuery.includes("PATRIOT PSD432G3200K")) {
@@ -2813,38 +2939,38 @@ print(json.dumps(result))
         console.log(`Total Stock contains: ${totalStock.some(p => p.productName.includes("PATRIOT PSD432G3200K"))}`);
         console.log(`Total Sales contains: ${totalSales.some(p => p.productName.includes("PATRIOT PSD432G3200K"))}`);
         console.log(`Transit contains: ${transitData.some(p => p.productName.includes("PATRIOT PSD432G3200K"))}`);
-        
+
         // Check exact match
         const exactInStock = totalStock.find(p => p.productName === debugProductName);
         const exactInSales = totalSales.find(p => p.productName === debugProductName);
         const exactInTransit = transitData.find(p => p.productName === debugProductName);
-        
+
         console.log(`Exact match in Total Stock: ${exactInStock ? 'YES' : 'NO'}`);
         console.log(`Exact match in Total Sales: ${exactInSales ? 'YES' : 'NO'}`);
         console.log(`Exact match in Transit: ${exactInTransit ? 'YES' : 'NO'}`);
-        
+
         if (exactInStock) console.log(`Stock product name: "${exactInStock.productName}"`);
         if (exactInSales) console.log(`Sales product name: "${exactInSales.productName}"`);
         if (exactInTransit) console.log(`Transit product name: "${exactInTransit.productName}"`);
-        
+
         console.log(`=== END DEBUG ===\n`);
       }
-      
+
       // Filter to only search CompStyle products that match the query
       // Use case-insensitive search and also try trimming whitespace
       const matchingProducts = Array.from(compstyleProducts).filter(productName => {
         const productNameLower = productName.toLowerCase().trim();
         const queryLower = searchQueryLower.trim();
-        
+
         // Try exact match first (case-insensitive)
         if (productNameLower === queryLower) {
           return true;
         }
-        
+
         // Then try partial match
         return productNameLower.includes(queryLower);
       });
-      
+
       console.log(`Product Search: Found ${matchingProducts.length} matching products`);
 
       // Get additional data for matching products
@@ -2852,7 +2978,7 @@ print(json.dumps(result))
       const kievyanStock = await storage.getCompstyleKievyanStock();
       const sevanStock = await storage.getCompstyleSevanStock();
       const orderRecommendations = await storage.getOrderRecommendationsEngine();
-      
+
       // Get all purchase data to find last purchase price and supplier
       const purchaseOrders = await storage.getCompstylePurchaseOrders();
       const purchaseItems = await storage.getCompstylePurchaseItems();
@@ -2892,7 +3018,7 @@ print(json.dumps(result))
         if (productPurchaseItems.length > 0) {
           const latestPurchaseItem = productPurchaseItems[0];
           lastPrice = latestPurchaseItem.priceUsd ? parseFloat(latestPurchaseItem.priceUsd) : null;
-          
+
           const latestPurchaseOrder = purchaseOrders.find((o: any) => o.id === latestPurchaseItem.purchaseOrderId);
           lastSupplier = latestPurchaseOrder?.supplier || null;
         }
@@ -2917,7 +3043,7 @@ print(json.dumps(result))
       }
 
       console.log(`Product Search: Returning ${results.length} complete product records`);
-      
+
       res.json({ results, totalCount: results.length });
     } catch (error) {
       console.error("CompStyle product search error:", error);

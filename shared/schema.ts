@@ -263,27 +263,11 @@ export type InsertSearchIndex = z.infer<typeof insertSearchIndexSchema>;
 export type Document = typeof documents.$inferSelect;
 export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 
-// User table (keeping existing database structure)
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey(),
-  email: varchar("email").notNull().unique(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
-  profileImageUrl: varchar("profile_image_url"),
-  isAdmin: boolean("is_admin").default(false),
-  isApproved: boolean("is_approved").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at"),
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
 });
-
-export const insertUserSchema = createInsertSchema(users).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
 
 // CompStyle Business Intelligence Tables (Separate from main supplier system)
 export const compstyleLocations = pgTable("compstyle_locations", {
