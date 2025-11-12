@@ -194,7 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // });
 
   // Supplier routes
-  app.get("/api/suppliers", requireAuth, async (req, res) => {
+  app.get("/api/suppliers", async (req, res) => {
     try {
       const { query, country, category, brand, minReputation, workingStyle } = req.query;
 
