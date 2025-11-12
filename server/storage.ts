@@ -9,7 +9,7 @@ import {
   inquiries,
   searchIndex,
   documents,
-  users, // This import is now correctly placed
+  users,
   compstyleLocations,
   compstyleTotalStock,
   compstyleKievyanStock,
@@ -441,11 +441,6 @@ export class DatabaseStorage implements IStorage {
     return user || undefined;
   }
 
-  async getUserById(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
-  }
-
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user || undefined;
@@ -454,26 +449,6 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
-  }
-
-  async approveUser(id: string): Promise<User | undefined> {
-    const [user] = await db.update(users)
-      .set({ isApproved: true })
-      .where(eq(users.id, id))
-      .returning();
-    return user || undefined;
-  }
-
-  async makeUserAdmin(id: string): Promise<User | undefined> {
-    const [user] = await db.update(users)
-      .set({ isAdmin: true })
-      .where(eq(users.id, id))
-      .returning();
-    return user || undefined;
-  }
-
-  async getAllUsers(): Promise<User[]> {
-    return await db.select().from(users).orderBy(users.email);
   }
 
   // Supplier methods
@@ -1133,12 +1108,12 @@ export class DatabaseStorage implements IStorage {
 
       // Get 30-day sales volume based on last recorded transaction date
       // First, find the latest order date
-      const latestOrderDateData = await db.select({
+      const latestOrderData = await db.select({
         latestDate: sql<Date>`MAX(${compstyleSalesOrders.orderDate})`
       })
       .from(compstyleSalesOrders);
 
-      const latestOrderDate = latestOrderDateData[0]?.latestDate;
+      const latestOrderDate = latestOrderData[0]?.latestDate;
 
       let salesVolume30Days = 0;
 
@@ -1162,25 +1137,23 @@ export class DatabaseStorage implements IStorage {
       // 1. Sales Volume Score (40% weight) - compare current 30d sales to historical average (last 6 months)
       // Calculate sales for each of the 6 historical 30-day periods
       const historicalPeriods = [];
-      if (latestOrderDate) {
-        for (let i = 1; i <= 6; i++) {
-          const periodEnd = new Date(latestOrderDate);
-          periodEnd.setDate(periodEnd.getDate() - (30 * (i - 1))); // End date of the period
+      for (let i = 1; i <= 6; i++) {
+        const periodEnd = new Date(latestOrderDate);
+        periodEnd.setDate(periodEnd.getDate() - (30 * i));
 
-          const periodStart = new Date(periodEnd);
-          periodStart.setDate(periodStart.getDate() - 30); // Start date of the period
+        const periodStart = new Date(periodEnd);
+        periodStart.setDate(periodStart.getDate() - 30);
 
-          const periodSalesData = await db.select({
-            totalSales: sql<string>`COALESCE(SUM(CAST(${compstyleSalesItems.sumUsd} AS DECIMAL)), 0)`
-          })
-          .from(compstyleSalesItems)
-          .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
-          .where(sql`${compstyleSalesOrders.orderDate} >= ${periodStart} AND ${compstyleSalesOrders.orderDate} <= ${periodEnd}`);
+        const periodSalesData = await db.select({
+          totalSales: sql<string>`COALESCE(SUM(CAST(${compstyleSalesItems.sumUsd} AS DECIMAL)), 0)`
+        })
+        .from(compstyleSalesItems)
+        .innerJoin(compstyleSalesOrders, eq(compstyleSalesItems.salesOrderId, compstyleSalesOrders.id))
+        .where(sql`${compstyleSalesOrders.orderDate} >= ${periodStart} AND ${compstyleSalesOrders.orderDate} <= ${periodEnd}`);
 
-          const periodSales = parseFloat(periodSalesData[0]?.totalSales || '0');
-          if (periodSales > 0) {
-            historicalPeriods.push(periodSales);
-          }
+        const periodSales = parseFloat(periodSalesData[0]?.totalSales || '0');
+        if (periodSales > 0) {
+          historicalPeriods.push(periodSales);
         }
       }
 
@@ -1192,31 +1165,28 @@ export class DatabaseStorage implements IStorage {
       // Sales Volume Score: min(100, (Current / Historical Average) × 100)
       const salesVolumeScore = historicalAverage > 0
         ? Math.min(100, (salesVolume30Days / historicalAverage) * 100)
-        : 100; // If no history, assume 100% of current sales
+        : 100;
 
       // 2. Profitability Score (30% weight) - based on overall profit margin
       // Get profitability data to calculate average margin
       const profitabilityData = await this.getProfitabilityHeatMap();
-      let totalRevenueForProfitability = 0;
-      let totalCostForProfitability = 0;
+      let totalRevenue = 0;
+      let totalCost = 0;
 
       for (const item of profitabilityData) {
-        // Use weighted average sale price and cost for calculations
         const revenue = item.retailPriceUsd * item.qtySold;
         const cost = item.cost * item.qtySold;
-        totalRevenueForProfitability += revenue;
-        totalCostForProfitability += cost;
+        totalRevenue += revenue;
+        totalCost += cost;
       }
 
-      const averageMargin = totalCostForProfitability > 0
-        ? ((totalRevenueForProfitability - totalCostForProfitability) / totalCostForProfitability) * 100
+      const averageMargin = totalRevenue > 0
+        ? ((totalRevenue - totalCost) / totalCost) * 100
         : 0;
 
       // Target margin: 17.5%
       const targetMargin = 17.5;
-      const profitabilityScore = targetMargin > 0
-        ? Math.min(100, (averageMargin / targetMargin) * 100)
-        : 100; // If target margin is 0, assume 100% score
+      const profitabilityScore = Math.min(100, (averageMargin / targetMargin) * 100);
 
       // 3. Stock Health Score (15% weight) - already calculated above
       const stockHealthScore = stockHealth;
@@ -1233,16 +1203,12 @@ export class DatabaseStorage implements IStorage {
         const ratio = optimalInventory / totalInventory;
 
         if (totalInventory > optimalInventory) {
-          // Overstocked: penalize excess inventory. Score decreases as ratio increases.
-          inventoryHealthScore = Math.max(0, 100 / ratio);
-        } else {
-          // Understocked: penalize insufficient inventory. Score decreases as ratio decreases.
+          // Overstocked: penalize excess inventory
           inventoryHealthScore = Math.max(0, ratio * 100);
+        } else {
+          // Understocked: penalize insufficient inventory
+          inventoryHealthScore = Math.max(0, (totalInventory / optimalInventory) * 100);
         }
-      } else if (totalInventory === 0) {
-        inventoryHealthScore = 100; // No inventory, no problem if optimal is 0
-      } else {
-        inventoryHealthScore = 0; // Optimal is 0, but we have inventory - bad
       }
 
       // Calculate weighted Business Health Index (updated weights)
@@ -1260,7 +1226,7 @@ export class DatabaseStorage implements IStorage {
         // Component scores for detailed insight
         salesVolumeScore: Math.round(salesVolumeScore * 10) / 10,
         profitabilityScore: Math.round(profitabilityScore * 10) / 10,
-        stockHealthScore: Math.round(stockHealthScore * 10) / 10,
+        stockHealthScore: Math.round(stockHealth * 10) / 10,
         inventoryHealthScore: Math.round(inventoryHealthScore * 10) / 10
       });
 
@@ -1272,7 +1238,7 @@ export class DatabaseStorage implements IStorage {
         // Component scores for detailed insight
         salesVolumeScore: Math.round(salesVolumeScore * 10) / 10,
         profitabilityScore: Math.round(profitabilityScore * 10) / 10,
-        stockHealthScore: Math.round(stockHealthScore * 10) / 10,
+        stockHealthScore: Math.round(stockHealth * 10) / 10,
         inventoryHealthScore: Math.round(inventoryHealthScore * 10) / 10
       };
     } catch (error) {
@@ -1655,7 +1621,7 @@ export class DatabaseStorage implements IStorage {
       const totalStock = await db.select().from(compstyleTotalStock);
       const salesVelocity = await this.getCompstyleSalesVelocity();
 
-      // Aggregate sales by product name (combine multiple periods)
+      // Aggregate sales data by product name (combine multiple periods)
       const salesByProduct = new Map<string, {
         totalQtySold: number;
         totalRevenue: number;
@@ -1700,7 +1666,7 @@ export class DatabaseStorage implements IStorage {
           const currentStock = stockMap.get(productName) || 0;
 
           // Skip if no pricing data
-          if (isNaN(avgSalePriceUsd) && isNaN(avgCostPriceUsd)) return null;
+          if (avgSalePriceUsd === 0 && avgCostPriceUsd === 0) return null;
 
           const profitPerUnit = avgSalePriceUsd - avgCostPriceUsd;
           const profitMargin = avgCostPriceUsd > 0 ? ((avgSalePriceUsd - avgCostPriceUsd) / avgCostPriceUsd) * 100 : 0;
@@ -2761,19 +2727,19 @@ export class DatabaseStorage implements IStorage {
 
         const stock = productInfo?.stock || 0;
         const transit = productInfo?.transit || 0;
-
+        
         // Get current cost with fallback logic:
         // 1. Try productInfo.cost (from Total Stock)
         // 2. Try productInfo.latestCost (from Total Sales)
         // 3. Try profit.cost (from Total Sales - most recent cost_price_usd)
         // 4. Default to 0
         let currentCost = productInfo?.cost || productInfo?.latestCost || 0;
-
+        
         // If still no cost, try to get it from Total Sales costPriceUsd
         if (currentCost === 0 && profit?.cost) {
           currentCost = profit.cost;
         }
-
+        
         const lastSupplier = lastPurchase?.supplier || 'Unknown';
         const lastPrice = lastPurchase?.price || 0;
 
