@@ -33,7 +33,10 @@ import fs from "fs";
 import XLSX from "xlsx";
 import { spawn } from "child_process";
 import archiver from "archiver";
+import bcrypt from "bcrypt";
+import cookieParser from "cookie-parser";
 import { db } from "./db";
+import { users } from "@shared/schema";
 import { 
   compstyleTotalStock,
   compstyleKievyanStock, 
@@ -67,8 +70,130 @@ const storage_config = multer.diskStorage({
 const upload = multer({ storage: storage_config });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Add cookie parser middleware
+  app.use(cookieParser());
+
+  // Authentication middleware
+  const requireAuth = async (req: any, res: any, next: any) => {
+    const sessionId = req.cookies.sessionId;
+    if (!sessionId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    try {
+      const [user] = await db.select().from(users).where(eq(users.id, sessionId));
+      if (!user) {
+        return res.status(401).json({ error: "Invalid session" });
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      res.status(500).json({ error: "Authentication error" });
+    }
+  };
+
+  // Register endpoint
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const { email, password, firstName, lastName } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+      }
+
+      // Check if user already exists
+      const [existingUser] = await db.select().from(users).where(eq(users.email, email));
+      if (existingUser) {
+        return res.status(400).json({ error: "User already exists" });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const userId = `user_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+      // Create user
+      const [newUser] = await db.insert(users).values({
+        id: userId,
+        email,
+        password: hashedPassword,
+        firstName: firstName || null,
+        lastName: lastName || null,
+        isApproved: true, // Auto-approve for now
+      }).returning();
+
+      // Set session cookie
+      res.cookie('sessionId', newUser.id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      res.json({
+        id: newUser.id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ error: "Registration failed" });
+    }
+  });
+
+  // Login endpoint
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+      }
+
+      // Find user
+      const [user] = await db.select().from(users).where(eq(users.email, email));
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Verify password
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Set session cookie
+      res.cookie('sessionId', user.id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
+      res.json({
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
+  // Logout endpoint
+  app.post("/api/auth/logout", (req, res) => {
+    res.clearCookie('sessionId');
+    res.json({ message: "Logged out successfully" });
+  });
+
+  // Get current user endpoint
+  app.get("/api/auth/me", requireAuth, (req: any, res) => {
+    const { password, ...userWithoutPassword } = req.user;
+    res.json(userWithoutPassword);
+  });
+
   // Supplier routes
-  app.get("/api/suppliers", async (req, res) => {
+  app.get("/api/suppliers", requireAuth, async (req, res) => {
     try {
       const { query, country, category, brand, minReputation, workingStyle } = req.query;
 

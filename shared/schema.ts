@@ -267,6 +267,7 @@ export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 export const users = pgTable("users", {
   id: varchar("id").primaryKey(),
   email: varchar("email").notNull().unique(),
+  password: varchar("password").notNull(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),

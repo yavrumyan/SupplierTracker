@@ -5,6 +5,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout";
 import { CategoriesBrandsProvider } from "@/lib/categories-brands-context";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
+import { Redirect } from "wouter";
+import { Skeleton } from "@/components/ui/skeleton";
+import Login from "@/pages/login";
 import Home from "@/pages/home";
 import SupplierDetail from "@/pages/supplier-detail";
 import AddSupplier from "@/pages/add-supplier";
@@ -50,17 +54,80 @@ import ChipProfitLossReport from "@/pages/chip/reports/profit-loss";
 import ChipCashFlowReport from "@/pages/chip/reports/cash-flow";
 import NotFound from "@/pages/not-found";
 
+function ProtectedRoute({ component: Component }: { component: any }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <Skeleton className="h-10 w-64 mb-8" />
+          <Skeleton className="h-96" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Redirect to="/login" />;
+  }
+
+  return <Component />;
+}
+
 function Router() {
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/search" component={SearchPage} />
-        <Route path="/suppliers/:id" component={SupplierDetail} />
-        <Route path="/suppliers" component={AllSuppliers} />
-        <Route path="/add-supplier" component={AddSupplier} />
-        <Route path="/import" component={ImportData} />
-        <Route path="/compstyle" component={CompStyleDashboard} />
+    <Switch>
+      <Route path="/login" component={Login} />
+      <Route path="/">
+        {() => (
+          <Layout>
+            <ProtectedRoute component={Home} />
+          </Layout>
+        )}
+      </Route>
+        <Route path="/search">
+          {() => (
+            <Layout>
+              <ProtectedRoute component={SearchPage} />
+            </Layout>
+          )}
+        </Route>
+        <Route path="/suppliers/:id">
+          {() => (
+            <Layout>
+              <ProtectedRoute component={SupplierDetail} />
+            </Layout>
+          )}
+        </Route>
+        <Route path="/suppliers">
+          {() => (
+            <Layout>
+              <ProtectedRoute component={AllSuppliers} />
+            </Layout>
+          )}
+        </Route>
+        <Route path="/add-supplier">
+          {() => (
+            <Layout>
+              <ProtectedRoute component={AddSupplier} />
+            </Layout>
+          )}
+        </Route>
+        <Route path="/import">
+          {() => (
+            <Layout>
+              <ProtectedRoute component={ImportData} />
+            </Layout>
+          )}
+        </Route>
+        <Route path="/compstyle">
+          {() => (
+            <Layout>
+              <ProtectedRoute component={CompStyleDashboard} />
+            </Layout>
+          )}
+        </Route>
         <Route path="/compstyle/upload" component={CompStyleUpload} />
         <Route path="/compstyle/data-overview" component={CompStyleDataOverview} />
         <Route path="/compstyle/actual-product-prices" component={ActualProductPricesPage} />
@@ -109,12 +176,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <CategoriesBrandsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </CategoriesBrandsProvider>
+      <AuthProvider>
+        <CategoriesBrandsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </CategoriesBrandsProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
