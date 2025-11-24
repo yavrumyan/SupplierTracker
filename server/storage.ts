@@ -2555,6 +2555,7 @@ export class DatabaseStorage implements IStorage {
       const purchaseItems = await db.select().from(compstylePurchaseItems);
       const salesOrders = await db.select().from(compstyleSalesOrders);
       const salesItems = await db.select().from(compstyleSalesItems);
+      const transitItems = await db.select().from(compstyleTransit);
 
       // Find the latest sales order date
       let latestOrderDate: Date | null = null;
@@ -2648,6 +2649,19 @@ export class DatabaseStorage implements IStorage {
       // Find last supplier and last price for each product
       const lastPurchaseInfo = new Map<string, {supplier: string; price: number; date: Date}>();
 
+      // PRIORITY 1: Check transit data first (most recent purchases in transit)
+      for (const transitItem of transitItems) {
+        const price = parseFloat(transitItem.purchasePriceUsd || '0');
+        const date = transitItem.orderDate || new Date();
+        
+        lastPurchaseInfo.set(transitItem.productName, {
+          supplier: transitItem.supplier || 'Unknown',
+          price: price,
+          date: date
+        });
+      }
+
+      // PRIORITY 2: Check purchase history (only for products not in transit)
       // Create a map of purchase order IDs to their details
       const purchaseOrderMap = new Map<number, {supplier: string; orderDate: Date}>();
       for (const order of purchaseOrders) {
@@ -2669,7 +2683,9 @@ export class DatabaseStorage implements IStorage {
             const price = parseFloat(item.priceUsd || '0');
             const existing = lastPurchaseInfo.get(productName);
 
-            if (!existing || orderInfo.orderDate > existing.date) {
+            // Only update if product is not in transit (transit takes priority)
+            // OR if this purchase is more recent than the existing one
+            if (!existing || (orderInfo.orderDate > existing.date && !transitItems.some(t => t.productName === productName))) {
               lastPurchaseInfo.set(productName, {
                 supplier: orderInfo.supplier,
                 price: price,
