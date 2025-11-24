@@ -2702,17 +2702,19 @@ export class DatabaseStorage implements IStorage {
         }])
       );
 
-      // Generate recommendations for all products with sales history
+      // Generate recommendations for all products with sales history or transit inventory
       const allProductNames = new Set<string>();
 
-      // Add all products from product list that have sales history (stock/transit not required)
+      // Add all products from product list that have sales history or transit inventory
       for (const product of productList) {
         const sales = salesByPeriod.get(product.productName);
         const hasSales = sales && (
           sales.sold30d > 0 || sales.sold60d > 0 || sales.sold90d > 0 ||
           sales.sold120d > 0 || sales.sold150d > 0 || sales.sold180d > 0
         );
-        if (hasSales) {
+        // Include products with sales history OR transit inventory
+        const hasTransit = (product.transit || 0) > 0;
+        if (hasSales || hasTransit) {
           allProductNames.add(product.productName);
         }
       }
