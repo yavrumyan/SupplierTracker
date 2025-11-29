@@ -567,19 +567,25 @@ export default function SupplierDetail() {
                 {supplier.phone && (
                   <div className="flex items-center">
                     <Phone className="h-4 w-4 text-slate-400 mr-3" />
-                    <span className="text-slate-700">{supplier.phone}</span>
+                    <a href={`tel:${supplier.phone}`} className="text-slate-700 hover:text-primary transition-colors">
+                      {supplier.phone}
+                    </a>
                   </div>
                 )}
                 {supplier.email && (
                   <div className="flex items-center">
                     <Mail className="h-4 w-4 text-slate-400 mr-3" />
-                    <span className="text-slate-700">{supplier.email}</span>
+                    <a href={`mailto:${supplier.email}`} className="text-slate-700 hover:text-primary transition-colors">
+                      {supplier.email}
+                    </a>
                   </div>
                 )}
                 {supplier.whatsapp && (
                   <div className="flex items-center">
                     <MessageSquare className="h-4 w-4 text-green-500 mr-3" />
-                    <span className="text-slate-700">{supplier.whatsapp}</span>
+                    <a href={`https://wa.me/${supplier.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-slate-700 hover:text-primary transition-colors">
+                      {supplier.whatsapp}
+                    </a>
                   </div>
                 )}
               </div>
