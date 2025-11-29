@@ -256,11 +256,27 @@ export default function AllSuppliers() {
                 )}
 
                 {/* Contact Methods */}
-                <div className="flex items-center space-x-3 text-slate-400">
-                  {supplier.website && <Globe className="h-4 w-4" />}
-                  {supplier.email && <Mail className="h-4 w-4" />}
-                  {supplier.phone && <Phone className="h-4 w-4" />}
-                  {supplier.whatsapp && <MessageSquare className="h-4 w-4" />}
+                <div className="flex items-center space-x-3">
+                  {supplier.website && (
+                    <a href={supplier.website} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors">
+                      <Globe className="h-4 w-4" />
+                    </a>
+                  )}
+                  {supplier.email && (
+                    <a href={`mailto:${supplier.email}`} className="text-slate-400 hover:text-primary transition-colors">
+                      <Mail className="h-4 w-4" />
+                    </a>
+                  )}
+                  {supplier.phone && (
+                    <a href={`tel:${supplier.phone}`} className="text-slate-400 hover:text-primary transition-colors">
+                      <Phone className="h-4 w-4" />
+                    </a>
+                  )}
+                  {supplier.whatsapp && (
+                    <a href={`https://wa.me/${supplier.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors">
+                      <MessageSquare className="h-4 w-4" />
+                    </a>
+                  )}
                 </div>
 
                 {/* Working Style */}
