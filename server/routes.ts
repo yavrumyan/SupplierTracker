@@ -530,7 +530,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Send inquiries via appropriate channels
       try {
-        const { sendInquiry } = await import("../services/inquiry-sender.ts");
+        const { sendInquiry } = await import("./services/inquiry-sender.ts");
         await sendInquiry(
           suppliers,
           inquiryData.message,
