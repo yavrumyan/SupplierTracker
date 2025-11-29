@@ -518,10 +518,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/inquiries", async (req, res) => {
     try {
       const inquiryData = insertInquirySchema.parse(req.body);
-      const inquiry = await storage.createInquiry(inquiryData);
+      
+      // Get supplier details for each supplier ID
+      const suppliers: Supplier[] = [];
+      for (const supplierId of inquiryData.supplierIds) {
+        const supplier = await storage.getSupplier(supplierId);
+        if (supplier) {
+          suppliers.push(supplier);
+        }
+      }
 
-      // TODO: Implement actual WhatsApp and email sending
-      // For now, just return the inquiry
+      // Send inquiries via appropriate channels
+      try {
+        const { sendInquiry } = await import("../services/inquiry-sender.ts");
+        await sendInquiry(
+          suppliers,
+          inquiryData.message,
+          inquiryData.sendViaWhatsApp ?? true,
+          inquiryData.sendViaEmail ?? true
+        );
+      } catch (sendError) {
+        console.error("Error sending inquiry:", sendError);
+        // Don't fail the request if sending fails - just log it
+      }
+
+      // Store the inquiry record
+      const inquiry = await storage.createInquiry(inquiryData);
       res.status(201).json(inquiry);
     } catch (error) {
       if (error instanceof z.ZodError) {

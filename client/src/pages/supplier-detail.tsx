@@ -372,9 +372,20 @@ export default function SupplierDetail() {
       return;
     }
 
+    if (!sendViaWhatsApp && !sendViaEmail) {
+      toast({
+        title: "No channel selected",
+        description: "Please select at least one communication channel.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     sendInquiryMutation.mutate({
       message: inquiryMessage,
       supplierIds: [supplierId],
+      sendViaWhatsApp,
+      sendViaEmail,
     });
   };
 
