@@ -85,6 +85,8 @@ export const inquiries = pgTable("inquiries", {
   id: serial("id").primaryKey(),
   message: text("message").notNull(),
   supplierIds: jsonb("supplier_ids").$type<number[]>().notNull(),
+  sendViaWhatsApp: boolean("send_via_whatsapp").default(true),
+  sendViaEmail: boolean("send_via_email").default(true),
   sentAt: timestamp("sent_at").defaultNow(),
   status: text("status").default("sent"), // sent, delivered, failed
 });
