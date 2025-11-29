@@ -55,6 +55,7 @@ export async function sendEmailInquiry(
     await client.send({
       to: supplier.email,
       from: fromEmail,
+      replyTo: "info@chip.am",
       subject: `Product Inquiry - Quote Request`,
       text: fullMessage,
       html: `<p>${fullMessage.replace(/\n/g, "<br>")}</p>`,
