@@ -528,21 +528,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Send inquiries via appropriate channels
-      try {
-        const { sendInquiry } = await import("./services/inquiry-sender.ts");
-        await sendInquiry(
-          suppliers,
-          inquiryData.message,
-          inquiryData.sendViaWhatsApp ?? true,
-          inquiryData.sendViaEmail ?? true
-        );
-      } catch (sendError) {
-        console.error("Error sending inquiry:", sendError);
-        // Don't fail the request if sending fails - just log it
-      }
+      // Send inquiries via appropriate channels (non-blocking)
+      (async () => {
+        try {
+          const { sendInquiry } = await import("./services/inquiry-sender.ts");
+          await sendInquiry(
+            suppliers,
+            inquiryData.message,
+            inquiryData.sendViaWhatsApp ?? true,
+            inquiryData.sendViaEmail ?? true
+          );
+        } catch (sendError) {
+          console.error("Error sending inquiry:", sendError);
+          // Log the error but don't crash - email/WhatsApp sending is not critical
+        }
+      })();
 
-      // Store the inquiry record
+      // Store the inquiry record and return immediately
       const inquiry = await storage.createInquiry(inquiryData);
       res.status(201).json(inquiry);
     } catch (error) {
