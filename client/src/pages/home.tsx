@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,8 @@ export default function Home() {
   const [filters, setFilters] = useState<SearchFiltersType>({});
   const [selectedSuppliers, setSelectedSuppliers] = useState<Set<number>>(new Set());
   const [inquiryMessage, setInquiryMessage] = useState("");
+  const [sendViaWhatsApp, setSendViaWhatsApp] = useState(true);
+  const [sendViaEmail, setSendViaEmail] = useState(true);
 
   const { data: suppliers = [], isLoading, refetch } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers", filters],
@@ -56,7 +58,55 @@ export default function Home() {
     setSelectedSuppliers(newSelection);
   };
 
-  const handleBulkInquiry = async () => {
+  const sendBulkInquiryMutation = useMutation({
+    mutationFn: async (data: { message: string; supplierIds: number[]; sendViaWhatsApp: boolean; sendViaEmail: boolean }) => {
+      const response = await apiRequest("POST", "/api/inquiries", data);
+      const jsonData = await response.json();
+      return jsonData;
+    },
+    onSuccess: (response: { inquiry: any; sendingResults: Array<{ supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }> }) => {
+      const results = response.sendingResults || [];
+      
+      results.forEach(result => {
+        if (result.whatsappLink) {
+          window.open(result.whatsappLink, '_blank');
+        }
+      });
+
+      let description = "";
+      results.forEach(result => {
+        if (result.email === "sent") {
+          description += `✓ Email sent to ${result.supplier}\n`;
+        }
+        if (result.whatsapp === "ready") {
+          description += `✓ WhatsApp link opened for ${result.supplier}\n`;
+        }
+        if (result.error) {
+          description += `✗ ${result.error}\n`;
+        }
+      });
+
+      if (!description) {
+        description = `Your inquiry has been sent to ${selectedSuppliers.size} supplier(s).`;
+      }
+
+      toast({
+        title: "Inquiry processed",
+        description: description.substring(0, 500),
+      });
+      setInquiryMessage("");
+      setSelectedSuppliers(new Set());
+    },
+    onError: () => {
+      toast({
+        title: "Failed to send inquiry",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleBulkInquiry = () => {
     if (selectedSuppliers.size === 0) {
       toast({
         title: "No suppliers selected",
@@ -75,26 +125,21 @@ export default function Home() {
       return;
     }
 
-    try {
-      await apiRequest("POST", "/api/inquiries", {
-        message: inquiryMessage,
-        supplierIds: Array.from(selectedSuppliers),
-      });
-
+    if (!sendViaWhatsApp && !sendViaEmail) {
       toast({
-        title: "Inquiry sent successfully",
-        description: `Inquiry sent to ${selectedSuppliers.size} suppliers.`,
-      });
-
-      setSelectedSuppliers(new Set());
-      setInquiryMessage("");
-    } catch (error) {
-      toast({
-        title: "Failed to send inquiry",
-        description: "Please try again later.",
+        title: "No channel selected",
+        description: "Please select at least one communication channel.",
         variant: "destructive",
       });
+      return;
     }
+
+    sendBulkInquiryMutation.mutate({
+      message: inquiryMessage,
+      supplierIds: Array.from(selectedSuppliers),
+      sendViaWhatsApp,
+      sendViaEmail,
+    });
   };
 
   return (
