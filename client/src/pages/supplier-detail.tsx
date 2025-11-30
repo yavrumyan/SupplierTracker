@@ -1197,10 +1197,7 @@ export default function SupplierDetail() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-slate-600">
-                    Message will be prefixed with: "Dear colleague, please quote us the following. Thanks in advance."
-                  </p>
+                <div className="flex justify-end">
                   <Button 
                     onClick={handleSendInquiry}
                     disabled={sendInquiryMutation.isPending || !inquiryMessage.trim()}
