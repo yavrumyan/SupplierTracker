@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
-import { COUNTRIES } from "@/lib/types";
 import type { SearchFilters } from "@/lib/types";
 import { useCategoriesBrands } from "@/lib/categories-brands-context";
 
@@ -13,9 +12,10 @@ interface SearchFiltersProps {
   filters: SearchFilters;
   onFiltersChange: (filters: SearchFilters) => void;
   onSearch: () => void;
+  availableCountries?: string[];
 }
 
-export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFiltersProps) {
+export function SearchFilters({ filters, onFiltersChange, onSearch, availableCountries = [] }: SearchFiltersProps) {
   const { categories, brands } = useCategoriesBrands();
   
   const handleFilterChange = (key: keyof SearchFilters, value: string | number | undefined) => {
@@ -57,11 +57,15 @@ export function SearchFilters({ filters, onFiltersChange, onSearch }: SearchFilt
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Countries</SelectItem>
-                {COUNTRIES.map((country) => (
-                  <SelectItem key={country} value={country}>
-                    {country}
-                  </SelectItem>
-                ))}
+                {availableCountries.length > 0 ? (
+                  availableCountries.map((country) => (
+                    <SelectItem key={country} value={country}>
+                      {country}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="_loading" disabled>Loading countries...</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>

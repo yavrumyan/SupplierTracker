@@ -191,6 +191,7 @@ export default function Home() {
         filters={filters}
         onFiltersChange={setFilters}
         onSearch={handleSearch}
+        availableCountries={availableCountries}
       />
       {/* Search results */}
       <Card>
