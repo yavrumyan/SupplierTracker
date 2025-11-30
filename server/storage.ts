@@ -315,114 +315,23 @@ export interface IStorage {
     priority: 'critical' | 'high' | 'medium' | 'low';
   }>>;
 
-  // ==================== CHIP ERP METHODS ====================
+  // ==================== CHIP: Armenian Tax Invoice Methods ====================
 
-  // Currency methods
-  getChipCurrencyRates(): Promise<ChipCurrencyRate[]>;
-  updateChipCurrencyRate(currency: string, rateToAMD: string): Promise<ChipCurrencyRate>;
-  convertToAMD(amount: number, fromCurrency: string): Promise<number>;
-
-  // Product methods
-  getChipProducts(): Promise<ChipProduct[]>;
-  getChipProduct(id: number): Promise<ChipProduct | undefined>;
-  createChipProduct(product: InsertChipProduct): Promise<ChipProduct>;
-  updateChipProduct(id: number, product: Partial<InsertChipProduct>): Promise<ChipProduct>;
-  deleteChipProduct(id: number): Promise<void>;
-  updateChipProductStock(id: number, stockChange: number, newAverageCost?: string): Promise<ChipProduct>;
-
-  // Customer methods
-  getChipCustomers(): Promise<ChipCustomer[]>;
-  getChipCustomer(id: number): Promise<ChipCustomer | undefined>;
-  createChipCustomer(customer: InsertChipCustomer): Promise<ChipCustomer>;
-  updateChipCustomer(id: number, customer: Partial<InsertChipCustomer>): Promise<ChipCustomer>;
-  deleteChipCustomer(id: number): Promise<void>;
-
-  // Supplier methods
-  getChipSuppliers(): Promise<ChipSupplier[]>;
-  getChipSupplier(id: number): Promise<ChipSupplier | undefined>;
-  createChipSupplier(supplier: InsertChipSupplier): Promise<ChipSupplier>;
-  updateChipSupplier(id: number, supplier: Partial<InsertChipSupplier>): Promise<ChipSupplier>;
-  deleteChipSupplier(id: number): Promise<void>;
-
-  // Purchase methods
-  getChipPurchases(): Promise<ChipPurchase[]>;
-  getChipPurchase(id: number): Promise<ChipPurchase | undefined>;
-  getChipPurchaseWithItems(id: number): Promise<ChipPurchase & { items: ChipPurchaseItem[], supplier?: ChipSupplier }>;
-  createChipPurchase(purchase: InsertChipPurchase, items: InsertChipPurchaseItem[]): Promise<ChipPurchase>;
-  updateChipPurchase(id: number, purchase: Partial<InsertChipPurchase>): Promise<ChipPurchase>;
-  deleteChipPurchase(id: number): Promise<void>;
-
-  // Sale methods
-  getChipSales(): Promise<ChipSale[]>;
-  getChipSale(id: number): Promise<ChipSale | undefined>;
-  getChipSaleWithItems(id: number): Promise<ChipSale & { items: ChipSalesItem[], customer?: ChipCustomer }>;
-  createChipSale(sale: InsertChipSale, items: InsertChipSaleItem[]): Promise<ChipSale>;
-  updateChipSale(id: number, sale: Partial<InsertChipSale>): Promise<ChipSale>;
-  deleteChipSale(id: number): Promise<void>;
-
-  // Invoice methods
-  getChipInvoices(): Promise<ChipInvoice[]>;
-  getChipInvoice(id: number): Promise<ChipInvoice | undefined>;
-  getChipInvoiceWithItems(id: number): Promise<ChipInvoice & { items: ChipInvoiceItem[], customer?: ChipCustomer }>;
-  createChipInvoice(invoice: InsertChipInvoice, items: InsertChipInvoiceItem[]): Promise<ChipInvoice>;
-  updateChipInvoice(id: number, invoice: Partial<InsertChipInvoice>): Promise<ChipInvoice>;
-  deleteChipInvoice(id: number): Promise<void>;
-
-  // Expense methods
-  getChipExpenses(): Promise<ChipExpense[]>;
-  getChipExpense(id: number): Promise<ChipExpense | undefined>;
-  createChipExpense(expense: InsertChipExpense): Promise<ChipExpense>;
-  updateChipExpense(id: number, expense: Partial<InsertChipExpense>): Promise<ChipExpense>;
-  deleteChipExpense(id: number): Promise<void>;
-
-  // Payment methods
-  getChipPayments(): Promise<ChipPayment[]>;
-  createChipPayment(payment: InsertChipPayment): Promise<ChipPayment>;
-
-  // Tax Invoice Methods - Purchases (Received)
+  // Purchase Invoice Methods (Ստացված - Received from suppliers)
   getChipPurchaseInvoices(): Promise<ChipPurchaseInvoice[]>;
   getChipPurchaseInvoice(id: number): Promise<ChipPurchaseInvoice | undefined>;
   getChipPurchaseInvoiceByNumber(invoiceNumber: string): Promise<ChipPurchaseInvoice | undefined>;
   createChipPurchaseInvoice(invoice: InsertChipPurchaseInvoice, items: InsertChipPurchaseInvoiceItem[]): Promise<ChipPurchaseInvoice>;
   importPurchaseInvoices(invoices: Array<{ invoice: InsertChipPurchaseInvoice; items: InsertChipPurchaseInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }>;
 
-  // Tax Invoice Methods - Sales (Issued)
+  // Sales Invoice Methods (Դուրս գրված - Issued to customers)
   getChipSalesInvoices(): Promise<ChipSalesInvoice[]>;
   getChipSalesInvoice(id: number): Promise<ChipSalesInvoice | undefined>;
   getChipSalesInvoiceByNumber(invoiceNumber: string): Promise<ChipSalesInvoice | undefined>;
   createChipSalesInvoice(invoice: InsertChipSalesInvoice, items: InsertChipSalesInvoiceItem[]): Promise<ChipSalesInvoice>;
   importSalesInvoices(invoices: Array<{ invoice: InsertChipSalesInvoice; items: InsertChipSalesInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }>;
-
-  // Dashboard & Analytics
-  getChipDashboardStats(): Promise<{
-    totalRevenue: number;
-    totalProfit: number;
-    totalExpenses: number;
-    netIncome: number;
-    inventoryValue: number;
-    accountsReceivable: number;
-    accountsPayable: number;
-    salesCount: number;
-    purchaseCount: number;
-  }>;
-
-  getChipProfitLoss(startDate: Date, endDate: Date): Promise<{
-    revenue: number;
-    costOfGoods: number;
-    grossProfit: number;
-    expenses: { category: string; amount: number }[];
-    totalExpenses: number;
-    netIncome: number;
-  }>;
-
-  getChipCashFlow(startDate: Date, endDate: Date): Promise<{
-    salesRevenue: number;
-    purchaseCosts: number;
-    expenses: number;
-    netCashFlow: number;
-    paymentsByMethod: { method: string; amount: number }[];
-  }>;
 }
+
 
 export class DatabaseStorage implements IStorage {
   // User methods
