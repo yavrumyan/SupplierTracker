@@ -185,14 +185,19 @@ export default function SupplierDetail() {
 
   const sendInquiryMutation = useMutation({
     mutationFn: async (data: { message: string; supplierIds: number[]; sendViaWhatsApp: boolean; sendViaEmail: boolean }) => {
-      return await apiRequest("POST", "/api/inquiries", data);
+      const response = await apiRequest("POST", "/api/inquiries", data);
+      const jsonData = await response.json();
+      return jsonData;
     },
     onSuccess: (response: { inquiry: any; sendingResults: Array<{ supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }> }) => {
       const results = response.sendingResults || [];
       
+      console.log("Frontend received results:", results);
+      
       // Check for WhatsApp links and open them
       results.forEach(result => {
         if (result.whatsappLink) {
+          console.log("Opening WhatsApp link:", result.whatsappLink);
           window.open(result.whatsappLink, '_blank');
         }
       });
