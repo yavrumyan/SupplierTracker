@@ -3644,6 +3644,98 @@ print(json.dumps(result))
     }
   });
 
+  // Tax Invoice Import Routes
+  app.post("/api/chip/import-invoices", upload.single("file"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const fileContent = fs.readFileSync(req.file.path, 'utf-8');
+      const lines = fileContent.split('\n').filter(l => l.trim());
+      
+      if (lines.length < 2) {
+        return res.status(400).json({ error: "Invalid CSV format" });
+      }
+
+      const documentType = lines[0].toLowerCase();
+      const isReceived = documentType.includes('ստացված');
+      const isIssued = documentType.includes('դուրս');
+
+      if (!isReceived && !isIssued) {
+        return res.status(400).json({ error: "Cannot determine invoice type. Expected Armenian text for Received or Issued invoices." });
+      }
+
+      const invoices: Array<{ invoice: any; items: any[] }> = [];
+      let currentInvoice: any = null;
+      let currentItems: any[] = [];
+
+      for (let i = 2; i < lines.length; i++) {
+        const cols = lines[i].split(',').map(c => c.trim());
+        if (cols.length < 10) continue;
+
+        const invoiceNumber = cols[1];
+        const subtotal = cols[9];
+        const vatAmount = cols[11];
+        const total = cols[8];
+        const issueDate = new Date(cols[5]);
+
+        if (!invoiceNumber || !subtotal) continue;
+
+        const invoice = {
+          invoiceSeries: invoiceNumber.replace(/[0-9]/g, ''),
+          invoiceNumber,
+          supplierName: isReceived ? cols[3] : 'CHIP Technologies',
+          customerName: isIssued ? cols[3] : 'Supplier',
+          status: 'pending',
+          issueDate,
+          supplyDate: issueDate,
+          subtotal,
+          vatAmount,
+          total
+        };
+
+        const item = {
+          description: cols[14] || 'Product',
+          quantity: parseInt(cols[5]) || 1,
+          unitPrice: cols[6] || subtotal,
+          lineTotal: subtotal,
+          vatAmount: vatAmount || '0'
+        };
+
+        if (currentInvoice && currentInvoice.invoiceNumber !== invoiceNumber) {
+          invoices.push({ invoice: currentInvoice, items: currentItems });
+          currentItems = [];
+        }
+
+        currentInvoice = invoice;
+        currentItems.push(item);
+      }
+
+      if (currentInvoice && currentItems.length > 0) {
+        invoices.push({ invoice: currentInvoice, items: currentItems });
+      }
+
+      let result;
+      if (isReceived) {
+        result = await storage.importPurchaseInvoices(invoices);
+      } else {
+        result = await storage.importSalesInvoices(invoices);
+      }
+
+      fs.unlinkSync(req.file.path);
+
+      res.json({
+        success: true,
+        type: isReceived ? 'purchase' : 'sales',
+        ...result
+      });
+    } catch (error) {
+      console.error("Error importing invoices:", error);
+      res.status(500).json({ error: "Failed to import invoices", details: String(error) });
+    }
+  });
+
   // Analytics Routes
   app.get("/api/chip/dashboard-stats", async (req, res) => {
     try {

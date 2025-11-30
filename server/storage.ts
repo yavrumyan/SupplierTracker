@@ -403,6 +403,20 @@ export interface IStorage {
   getChipPayments(): Promise<ChipPayment[]>;
   createChipPayment(payment: InsertChipPayment): Promise<ChipPayment>;
 
+  // Tax Invoice Methods - Purchases (Received)
+  getChipPurchaseInvoices(): Promise<ChipPurchaseInvoice[]>;
+  getChipPurchaseInvoice(id: number): Promise<ChipPurchaseInvoice | undefined>;
+  getChipPurchaseInvoiceByNumber(invoiceNumber: string): Promise<ChipPurchaseInvoice | undefined>;
+  createChipPurchaseInvoice(invoice: InsertChipPurchaseInvoice, items: InsertChipPurchaseInvoiceItem[]): Promise<ChipPurchaseInvoice>;
+  importPurchaseInvoices(invoices: Array<{ invoice: InsertChipPurchaseInvoice; items: InsertChipPurchaseInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }>;
+
+  // Tax Invoice Methods - Sales (Issued)
+  getChipSalesInvoices(): Promise<ChipSalesInvoice[]>;
+  getChipSalesInvoice(id: number): Promise<ChipSalesInvoice | undefined>;
+  getChipSalesInvoiceByNumber(invoiceNumber: string): Promise<ChipSalesInvoice | undefined>;
+  createChipSalesInvoice(invoice: InsertChipSalesInvoice, items: InsertChipSalesInvoiceItem[]): Promise<ChipSalesInvoice>;
+  importSalesInvoices(invoices: Array<{ invoice: InsertChipSalesInvoice; items: InsertChipSalesInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }>;
+
   // Dashboard & Analytics
   getChipDashboardStats(): Promise<{
     totalRevenue: number;
@@ -3290,6 +3304,92 @@ export class DatabaseStorage implements IStorage {
   async createChipPayment(payment: InsertChipPayment): Promise<ChipPayment> {
     const [newPayment] = await db.insert(chipPayments).values(payment).returning();
     return newPayment;
+  }
+
+  // Tax Purchase Invoices
+  async getChipPurchaseInvoices(): Promise<ChipPurchaseInvoice[]> {
+    return await db.select().from(chipPurchaseInvoices).orderBy(desc(chipPurchaseInvoices.issueDate));
+  }
+
+  async getChipPurchaseInvoice(id: number): Promise<ChipPurchaseInvoice | undefined> {
+    const [invoice] = await db.select().from(chipPurchaseInvoices).where(eq(chipPurchaseInvoices.id, id));
+    return invoice || undefined;
+  }
+
+  async getChipPurchaseInvoiceByNumber(invoiceNumber: string): Promise<ChipPurchaseInvoice | undefined> {
+    const [invoice] = await db.select().from(chipPurchaseInvoices).where(eq(chipPurchaseInvoices.invoiceNumber, invoiceNumber));
+    return invoice || undefined;
+  }
+
+  async createChipPurchaseInvoice(invoice: InsertChipPurchaseInvoice, items: InsertChipPurchaseInvoiceItem[]): Promise<ChipPurchaseInvoice> {
+    const [newInvoice] = await db.insert(chipPurchaseInvoices).values(invoice).returning();
+    if (items.length > 0) {
+      await db.insert(chipPurchaseInvoiceItems).values(items.map(item => ({ ...item, invoiceId: newInvoice.id })));
+    }
+    return newInvoice;
+  }
+
+  async importPurchaseInvoices(invoices: Array<{ invoice: InsertChipPurchaseInvoice; items: InsertChipPurchaseInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }> {
+    let imported = 0, skipped = 0;
+    const errors: string[] = [];
+    
+    for (const { invoice, items } of invoices) {
+      try {
+        const existing = await this.getChipPurchaseInvoiceByNumber(invoice.invoiceNumber);
+        if (existing) {
+          skipped++;
+          continue;
+        }
+        await this.createChipPurchaseInvoice(invoice, items);
+        imported++;
+      } catch (error) {
+        errors.push(`Failed to import invoice ${invoice.invoiceNumber}: ${error}`);
+      }
+    }
+    return { imported, skipped, errors };
+  }
+
+  // Tax Sales Invoices
+  async getChipSalesInvoices(): Promise<ChipSalesInvoice[]> {
+    return await db.select().from(chipSalesInvoices).orderBy(desc(chipSalesInvoices.issueDate));
+  }
+
+  async getChipSalesInvoice(id: number): Promise<ChipSalesInvoice | undefined> {
+    const [invoice] = await db.select().from(chipSalesInvoices).where(eq(chipSalesInvoices.id, id));
+    return invoice || undefined;
+  }
+
+  async getChipSalesInvoiceByNumber(invoiceNumber: string): Promise<ChipSalesInvoice | undefined> {
+    const [invoice] = await db.select().from(chipSalesInvoices).where(eq(chipSalesInvoices.invoiceNumber, invoiceNumber));
+    return invoice || undefined;
+  }
+
+  async createChipSalesInvoice(invoice: InsertChipSalesInvoice, items: InsertChipSalesInvoiceItem[]): Promise<ChipSalesInvoice> {
+    const [newInvoice] = await db.insert(chipSalesInvoices).values(invoice).returning();
+    if (items.length > 0) {
+      await db.insert(chipSalesInvoiceItems).values(items.map(item => ({ ...item, invoiceId: newInvoice.id })));
+    }
+    return newInvoice;
+  }
+
+  async importSalesInvoices(invoices: Array<{ invoice: InsertChipSalesInvoice; items: InsertChipSalesInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }> {
+    let imported = 0, skipped = 0;
+    const errors: string[] = [];
+    
+    for (const { invoice, items } of invoices) {
+      try {
+        const existing = await this.getChipSalesInvoiceByNumber(invoice.invoiceNumber);
+        if (existing) {
+          skipped++;
+          continue;
+        }
+        await this.createChipSalesInvoice(invoice, items);
+        imported++;
+      } catch (error) {
+        errors.push(`Failed to import invoice ${invoice.invoiceNumber}: ${error}`);
+      }
+    }
+    return { imported, skipped, errors };
   }
 
   // Dashboard & Analytics
