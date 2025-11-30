@@ -505,184 +505,14 @@ export type InsertCompstyleTotalProcurement = z.infer<typeof insertCompstyleTota
 export type CompstyleProductList = typeof compstyleProductList.$inferSelect;
 export type InsertCompstyleProductList = z.infer<typeof insertCompstyleProductListSchema>;
 
-// ==================== CHIP ERP SCHEMA ====================
-
-// Currency exchange rates
-export const chipCurrencyRates = pgTable("chip_currency_rates", {
-  id: serial("id").primaryKey(),
-  currency: text("currency").notNull(), // USD, RUB, EUR
-  rateToAMD: decimal("rate_to_amd", { precision: 10, scale: 4 }).notNull(),
-  lastUpdated: timestamp("last_updated").defaultNow(),
-});
-
-// Products
-export const chipProducts = pgTable("chip_products", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  sku: text("sku"),
-  description: text("description"),
-  category: text("category"),
-  unit: text("unit"), // Unit of measurement (pcs, box, kg, etc.)
-  lowStockAlert: integer("low_stock_alert").default(0), // Alert threshold for low stock
-  supplierReference: text("supplier_reference"), // Optional supplier reference
-  notes: text("notes"), // Optional notes
-  serialNumberTracking: boolean("serial_number_tracking").default(false),
-  currentStock: integer("current_stock").default(0),
-  averageCost: decimal("average_cost", { precision: 12, scale: 2 }).default("0"), // Weighted average in AMD
-  sellingPrice: decimal("selling_price", { precision: 12, scale: 2 }),
-  currency: text("currency").default("AMD"), // AMD, USD, RUB, EUR
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Customers
-export const chipCustomers = pgTable("chip_customers", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  company: text("company"),
-  email: text("email"),
-  phone: text("phone"),
-  address: text("address"),
-  taxId: text("tax_id"),
-  paymentTerms: integer("payment_terms").default(0), // Days
-  creditLimit: decimal("credit_limit", { precision: 12, scale: 2 }).default("0"), // Credit limit in AMD
-  balance: decimal("balance", { precision: 12, scale: 2 }).default("0"), // Outstanding balance in AMD
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Suppliers (CHIP specific, separate from SupHub)
-export const chipSuppliers = pgTable("chip_suppliers", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  company: text("company"),
-  email: text("email"),
-  phone: text("phone"),
-  address: text("address"),
-  taxId: text("tax_id"),
-  paymentTerms: integer("payment_terms").default(0), // Days
-  balance: decimal("balance", { precision: 12, scale: 2 }).default("0"), // Outstanding balance in AMD
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Purchases from suppliers
-export const chipPurchases = pgTable("chip_purchases", {
-  id: serial("id").primaryKey(),
-  purchaseNumber: text("purchase_number").notNull().unique(),
-  supplierId: integer("supplier_id").references(() => chipSuppliers.id),
-  purchaseDate: timestamp("purchase_date").notNull(),
-  totalAmount: decimal("total_amount", { precision: 12, scale: 2 }).notNull(),
-  currency: text("currency").default("AMD"),
-  totalAmountAMD: decimal("total_amount_amd", { precision: 12, scale: 2 }).notNull(), // Converted to AMD
-  paymentStatus: text("payment_status").default("unpaid"), // unpaid, partial, paid
-  paidAmount: decimal("paid_amount", { precision: 12, scale: 2 }).default("0"),
-  paymentMethod: text("payment_method"), // cash, card, bank_transfer
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Purchase line items
-export const chipPurchaseItems = pgTable("chip_purchase_items", {
-  id: serial("id").primaryKey(),
-  purchaseId: integer("purchase_id").references(() => chipPurchases.id).notNull(),
-  productId: integer("product_id").references(() => chipProducts.id).notNull(),
-  quantity: integer("quantity").notNull(),
-  unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
-  unitPriceAMD: decimal("unit_price_amd", { precision: 12, scale: 2 }).notNull(), // Converted to AMD
-  serialNumbers: jsonb("serial_numbers").$type<string[]>().default([]),
-  totalPrice: decimal("total_price", { precision: 12, scale: 2 }).notNull(),
-});
-
-// Sales to customers
-export const chipSales = pgTable("chip_sales", {
-  id: serial("id").primaryKey(),
-  saleNumber: text("sale_number").notNull().unique(),
-  customerId: integer("customer_id").references(() => chipCustomers.id),
-  saleDate: timestamp("sale_date").notNull(),
-  totalAmount: decimal("total_amount", { precision: 12, scale: 2 }).notNull(),
-  currency: text("currency").default("AMD"),
-  totalAmountAMD: decimal("total_amount_amd", { precision: 12, scale: 2 }).notNull(),
-  vatAmount: decimal("vat_amount", { precision: 12, scale: 2 }).default("0"), // 20% Armenian VAT
-  totalWithVat: decimal("total_with_vat", { precision: 12, scale: 2 }).notNull(),
-  costOfGoods: decimal("cost_of_goods", { precision: 12, scale: 2 }).notNull(), // Total cost in AMD
-  profit: decimal("profit", { precision: 12, scale: 2 }).notNull(), // Profit in AMD
-  paymentStatus: text("payment_status").default("unpaid"), // unpaid, partial, paid
-  paidAmount: decimal("paid_amount", { precision: 12, scale: 2 }).default("0"),
-  paymentMethod: text("payment_method"), // cash, card, bank_transfer
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Sales line items
-export const chipSalesItems = pgTable("chip_sales_items", {
-  id: serial("id").primaryKey(),
-  saleId: integer("sale_id").references(() => chipSales.id).notNull(),
-  productId: integer("product_id").references(() => chipProducts.id).notNull(),
-  quantity: integer("quantity").notNull(),
-  unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
-  unitPriceAMD: decimal("unit_price_amd", { precision: 12, scale: 2 }).notNull(),
-  unitCost: decimal("unit_cost", { precision: 12, scale: 2 }).notNull(), // Average cost at time of sale
-  serialNumbers: jsonb("serial_numbers").$type<string[]>().default([]),
-  totalPrice: decimal("total_price", { precision: 12, scale: 2 }).notNull(),
-  totalCost: decimal("total_cost", { precision: 12, scale: 2 }).notNull(),
-  profit: decimal("profit", { precision: 12, scale: 2 }).notNull(),
-});
-
-// Invoices
-export const chipInvoices = pgTable("chip_invoices", {
-  id: serial("id").primaryKey(),
-  invoiceNumber: text("invoice_number").notNull().unique(),
-  customerId: integer("customer_id").references(() => chipCustomers.id).notNull(),
-  invoiceDate: timestamp("invoice_date").notNull(),
-  dueDate: timestamp("due_date"),
-  subtotal: decimal("subtotal", { precision: 12, scale: 2 }).notNull(),
-  vatAmount: decimal("vat_amount", { precision: 12, scale: 2 }).notNull(), // 20%
-  total: decimal("total", { precision: 12, scale: 2 }).notNull(),
-  currency: text("currency").default("AMD"),
-  status: text("status").default("draft"), // draft, sent, paid, overdue, cancelled
-  paidAmount: decimal("paid_amount", { precision: 12, scale: 2 }).default("0"),
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Invoice line items
-export const chipInvoiceItems = pgTable("chip_invoice_items", {
-  id: serial("id").primaryKey(),
-  invoiceId: integer("invoice_id").references(() => chipInvoices.id).notNull(),
-  description: text("description").notNull(),
-  quantity: integer("quantity").notNull(),
-  unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
-  total: decimal("total", { precision: 12, scale: 2 }).notNull(),
-});
-
-// Expenses
-export const chipExpenses = pgTable("chip_expenses", {
-  id: serial("id").primaryKey(),
-  date: timestamp("date").notNull(),
-  category: text("category").notNull(), // rent, utilities, salaries, supplies, marketing, other
-  description: text("description").notNull(),
-  amount: decimal("amount", { precision: 12, scale: 2 }).notNull(),
-  currency: text("currency").default("AMD"),
-  amountAMD: decimal("amount_amd", { precision: 12, scale: 2 }).notNull(),
-  paymentMethod: text("payment_method"), // cash, card, bank_transfer
-  receiptPath: text("receipt_path"),
-  isPersonal: boolean("is_personal").default(false), // true for personal expenses
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+// ==================== CHIP: Armenian Tax Invoice Import ====================
 
 // Tax Purchase Invoices (Received documents from suppliers)
 export const chipPurchaseInvoices = pgTable("chip_purchase_invoices", {
   id: serial("id").primaryKey(),
   invoiceSeries: text("invoice_series").notNull(),
   invoiceNumber: text("invoice_number").notNull().unique(),
-  supplierId: integer("supplier_id").references(() => chipSuppliers.id),
+  supplierId: integer("supplier_id"),
   supplierName: text("supplier_name").notNull(),
   supplierTaxId: text("supplier_tax_id"),
   status: text("status").default("pending"),
@@ -702,13 +532,13 @@ export const chipPurchaseInvoices = pgTable("chip_purchase_invoices", {
 export const chipPurchaseInvoiceItems = pgTable("chip_purchase_invoice_items", {
   id: serial("id").primaryKey(),
   invoiceId: integer("invoice_id").references(() => chipPurchaseInvoices.id).notNull(),
-  productId: integer("product_id").references(() => chipProducts.id),
   sku: text("sku"),
   description: text("description").notNull(),
   quantity: integer("quantity").notNull(),
   unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
   lineTotal: decimal("line_total", { precision: 12, scale: 2 }).notNull(),
   vatAmount: decimal("vat_amount", { precision: 12, scale: 2 }).notNull(),
+  hsCode: text("hs_code"),
 });
 
 // Tax Sales Invoices (Issued documents to customers)
@@ -716,7 +546,7 @@ export const chipSalesInvoices = pgTable("chip_sales_invoices", {
   id: serial("id").primaryKey(),
   invoiceSeries: text("invoice_series").notNull(),
   invoiceNumber: text("invoice_number").notNull().unique(),
-  customerId: integer("customer_id").references(() => chipCustomers.id),
+  customerId: integer("customer_id"),
   customerName: text("customer_name").notNull(),
   customerTaxId: text("customer_tax_id"),
   status: text("status").default("pending"),
@@ -736,142 +566,13 @@ export const chipSalesInvoices = pgTable("chip_sales_invoices", {
 export const chipSalesInvoiceItems = pgTable("chip_sales_invoice_items", {
   id: serial("id").primaryKey(),
   invoiceId: integer("invoice_id").references(() => chipSalesInvoices.id).notNull(),
-  productId: integer("product_id").references(() => chipProducts.id),
   sku: text("sku"),
   description: text("description").notNull(),
   quantity: integer("quantity").notNull(),
   unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
   lineTotal: decimal("line_total", { precision: 12, scale: 2 }).notNull(),
   vatAmount: decimal("vat_amount", { precision: 12, scale: 2 }).notNull(),
-});
-
-// Payments (tracks partial payments for sales and purchases)
-export const chipPayments = pgTable("chip_payments", {
-  id: serial("id").primaryKey(),
-  paymentDate: timestamp("payment_date").notNull(),
-  amount: decimal("amount", { precision: 12, scale: 2 }).notNull(),
-  currency: text("currency").default("AMD"),
-  amountAMD: decimal("amount_amd", { precision: 12, scale: 2 }).notNull(),
-  paymentMethod: text("payment_method").notNull(),
-  referenceType: text("reference_type").notNull(),
-  referenceId: integer("reference_id").notNull(),
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-// CHIP Insert Schemas with number coercion for form inputs
-export const insertChipCurrencyRateSchema = createInsertSchema(chipCurrencyRates).omit({
-  id: true,
-  lastUpdated: true,
-}).extend({
-  rateToAMD: z.coerce.number().positive(),
-});
-
-export const insertChipProductSchema = createInsertSchema(chipProducts).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  currentStock: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().nonnegative().optional()),
-  averageCost: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-  sellingPrice: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-  lowStockAlert: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().nonnegative().optional()),
-});
-
-export const insertChipCustomerSchema = createInsertSchema(chipCustomers).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  creditLimit: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-  currentBalance: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-});
-
-export const insertChipSupplierSchema = createInsertSchema(chipSuppliers).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  currentBalance: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-});
-
-export const insertChipPurchaseSchema = createInsertSchema(chipPurchases).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  supplierId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
-  totalAmount: z.preprocess(v => String(Number(v)), z.string()),
-  totalAmountAMD: z.preprocess(v => String(Number(v)), z.string()),
-});
-
-export const insertChipPurchaseItemSchema = createInsertSchema(chipPurchaseItems).omit({
-  id: true,
-}).extend({
-  purchaseId: z.coerce.number().int(),
-  productId: z.coerce.number().int(),
-  quantity: z.coerce.number().int().min(1),
-  unitPrice: z.preprocess(v => String(Number(v)), z.string()),
-  unitPriceAMD: z.preprocess(v => String(Number(v)), z.string()),
-  totalPrice: z.preprocess(v => String(Number(v)), z.string()),
-});
-
-export const insertChipSaleSchema = createInsertSchema(chipSales).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  customerId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
-  totalAmount: z.preprocess(v => String(Number(v)), z.string()),
-  totalAmountAMD: z.preprocess(v => String(Number(v)), z.string()),
-  costOfGoods: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-  profit: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-});
-
-export const insertChipSaleItemSchema = createInsertSchema(chipSalesItems).omit({
-  id: true,
-}).extend({
-  saleId: z.coerce.number().int(),
-  productId: z.coerce.number().int(),
-  quantity: z.coerce.number().int().min(1),
-  unitPrice: z.preprocess(v => String(Number(v)), z.string()),
-  unitPriceAMD: z.preprocess(v => String(Number(v)), z.string()),
-  unitCost: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-  totalPrice: z.preprocess(v => String(Number(v)), z.string()),
-  totalCost: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-  profit: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : String(Number(v)), z.string().optional()),
-});
-
-export const insertChipInvoiceSchema = createInsertSchema(chipInvoices).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  customerId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
-  subtotal: z.preprocess(v => String(Number(v)), z.string()),
-  subtotalAMD: z.preprocess(v => String(Number(v)), z.string()),
-  vatAmount: z.preprocess(v => String(Number(v)), z.string()),
-  vatAmountAMD: z.preprocess(v => String(Number(v)), z.string()),
-  totalAmount: z.preprocess(v => String(Number(v)), z.string()),
-  totalAmountAMD: z.preprocess(v => String(Number(v)), z.string()),
-});
-
-export const insertChipInvoiceItemSchema = createInsertSchema(chipInvoiceItems).omit({
-  id: true,
-}).extend({
-  invoiceId: z.coerce.number().int(),
-  productId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
-  quantity: z.coerce.number().int().min(1),
-  unitPrice: z.preprocess(v => String(Number(v)), z.string()),
-  totalPrice: z.preprocess(v => String(Number(v)), z.string()),
-});
-
-export const insertChipExpenseSchema = createInsertSchema(chipExpenses).omit({
-  id: true,
-  createdAt: true,
-}).extend({
-  amount: z.preprocess(v => String(Number(v)), z.string()),
-  amountAMD: z.preprocess(v => String(Number(v)), z.string()),
+  hsCode: text("hs_code"),
 });
 
 export const insertChipPurchaseInvoiceSchema = createInsertSchema(chipPurchaseInvoices).omit({
@@ -879,7 +580,6 @@ export const insertChipPurchaseInvoiceSchema = createInsertSchema(chipPurchaseIn
   createdAt: true,
   updatedAt: true,
 }).extend({
-  supplierId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
   subtotal: z.preprocess(v => String(Number(v)), z.string()),
   vatAmount: z.preprocess(v => String(Number(v)), z.string()),
   total: z.preprocess(v => String(Number(v)), z.string()),
@@ -889,7 +589,6 @@ export const insertChipPurchaseInvoiceItemSchema = createInsertSchema(chipPurcha
   id: true,
 }).extend({
   invoiceId: z.coerce.number().int(),
-  productId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
   quantity: z.coerce.number().int().min(1),
   unitPrice: z.preprocess(v => String(Number(v)), z.string()),
   lineTotal: z.preprocess(v => String(Number(v)), z.string()),
@@ -901,7 +600,6 @@ export const insertChipSalesInvoiceSchema = createInsertSchema(chipSalesInvoices
   createdAt: true,
   updatedAt: true,
 }).extend({
-  customerId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
   subtotal: z.preprocess(v => String(Number(v)), z.string()),
   vatAmount: z.preprocess(v => String(Number(v)), z.string()),
   total: z.preprocess(v => String(Number(v)), z.string()),
@@ -911,45 +609,13 @@ export const insertChipSalesInvoiceItemSchema = createInsertSchema(chipSalesInvo
   id: true,
 }).extend({
   invoiceId: z.coerce.number().int(),
-  productId: z.preprocess(v => v === "" || v === null || v === undefined ? undefined : v, z.coerce.number().int().optional()),
   quantity: z.coerce.number().int().min(1),
   unitPrice: z.preprocess(v => String(Number(v)), z.string()),
   lineTotal: z.preprocess(v => String(Number(v)), z.string()),
   vatAmount: z.preprocess(v => String(Number(v)), z.string()),
 });
 
-export const insertChipPaymentSchema = createInsertSchema(chipPayments).omit({
-  id: true,
-  createdAt: true,
-}).extend({
-  amount: z.preprocess(v => String(Number(v)), z.string()),
-  amountAMD: z.preprocess(v => String(Number(v)), z.string()),
-  referenceId: z.coerce.number().int(),
-});
-
-// CHIP Types
-export type ChipCurrencyRate = typeof chipCurrencyRates.$inferSelect;
-export type InsertChipCurrencyRate = z.infer<typeof insertChipCurrencyRateSchema>;
-export type ChipProduct = typeof chipProducts.$inferSelect;
-export type InsertChipProduct = z.infer<typeof insertChipProductSchema>;
-export type ChipCustomer = typeof chipCustomers.$inferSelect;
-export type InsertChipCustomer = z.infer<typeof insertChipCustomerSchema>;
-export type ChipSupplier = typeof chipSuppliers.$inferSelect;
-export type InsertChipSupplier = z.infer<typeof insertChipSupplierSchema>;
-export type ChipPurchase = typeof chipPurchases.$inferSelect;
-export type InsertChipPurchase = z.infer<typeof insertChipPurchaseSchema>;
-export type ChipPurchaseItem = typeof chipPurchaseItems.$inferSelect;
-export type InsertChipPurchaseItem = z.infer<typeof insertChipPurchaseItemSchema>;
-export type ChipSale = typeof chipSales.$inferSelect;
-export type InsertChipSale = z.infer<typeof insertChipSaleSchema>;
-export type ChipSalesItem = typeof chipSalesItems.$inferSelect;
-export type InsertChipSaleItem = z.infer<typeof insertChipSaleItemSchema>;
-export type ChipInvoice = typeof chipInvoices.$inferSelect;
-export type InsertChipInvoice = z.infer<typeof insertChipInvoiceSchema>;
-export type ChipInvoiceItem = typeof chipInvoiceItems.$inferSelect;
-export type InsertChipInvoiceItem = z.infer<typeof insertChipInvoiceItemSchema>;
-export type ChipExpense = typeof chipExpenses.$inferSelect;
-export type InsertChipExpense = z.infer<typeof insertChipExpenseSchema>;
+// CHIP Invoice Types (only keeping invoice-related tables)
 export type ChipPurchaseInvoice = typeof chipPurchaseInvoices.$inferSelect;
 export type InsertChipPurchaseInvoice = z.infer<typeof insertChipPurchaseInvoiceSchema>;
 export type ChipPurchaseInvoiceItem = typeof chipPurchaseInvoiceItems.$inferSelect;
@@ -958,5 +624,3 @@ export type ChipSalesInvoice = typeof chipSalesInvoices.$inferSelect;
 export type InsertChipSalesInvoice = z.infer<typeof insertChipSalesInvoiceSchema>;
 export type ChipSalesInvoiceItem = typeof chipSalesInvoiceItems.$inferSelect;
 export type InsertChipSalesInvoiceItem = z.infer<typeof insertChipSalesInvoiceItemSchema>;
-export type ChipPayment = typeof chipPayments.$inferSelect;
-export type InsertChipPayment = z.infer<typeof insertChipPaymentSchema>;
