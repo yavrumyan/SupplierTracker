@@ -79,6 +79,10 @@ import {
   chipInvoiceItems,
   chipExpenses,
   chipPayments,
+  chipPurchaseInvoices,
+  chipPurchaseInvoiceItems,
+  chipSalesInvoices,
+  chipSalesInvoiceItems,
   type ChipCurrencyRate,
   type InsertChipCurrencyRate,
   type ChipProduct,
@@ -102,7 +106,15 @@ import {
   type ChipExpense,
   type InsertChipExpense,
   type ChipPayment,
-  type InsertChipPayment
+  type InsertChipPayment,
+  type ChipPurchaseInvoice,
+  type InsertChipPurchaseInvoice,
+  type ChipPurchaseInvoiceItem,
+  type InsertChipPurchaseInvoiceItem,
+  type ChipSalesInvoice,
+  type InsertChipSalesInvoice,
+  type ChipSalesInvoiceItem,
+  type InsertChipSalesInvoiceItem
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
