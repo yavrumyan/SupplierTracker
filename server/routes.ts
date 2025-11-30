@@ -539,6 +539,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           inquiryData.sendViaWhatsApp ?? true,
           inquiryData.sendViaEmail ?? true
         );
+        console.log("📊 Final sending results to return:", JSON.stringify(sendingResults));
       } catch (sendError) {
         console.error("Error sending inquiry:", sendError);
       }
@@ -547,7 +548,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const inquiry = await storage.createInquiry(inquiryData);
       
       // Return with sending results
-      res.status(201).json({ inquiry, sendingResults });
+      const responseData = { inquiry, sendingResults };
+      console.log("📤 API Response being sent:", JSON.stringify(responseData));
+      res.status(201).json(responseData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid inquiry data", details: error.errors });
