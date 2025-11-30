@@ -3652,88 +3652,116 @@ print(json.dumps(result))
       }
 
       const fileContent = fs.readFileSync(req.file.path, 'utf-8');
-      const lines = fileContent.split('\n').filter(l => l.trim());
+      const lines = fileContent.split('\n').map(l => l.trim()).filter(l => l);
       
-      if (lines.length < 2) {
-        return res.status(400).json({ error: "Invalid CSV format" });
+      if (lines.length < 4) {
+        return res.status(400).json({ error: "Invalid CSV format - need at least 4 rows" });
       }
 
+      // Row 1 (index 0) = document type indicator
       const documentType = lines[0].toLowerCase();
       const isReceived = documentType.includes('ստացված');
       const isIssued = documentType.includes('դուրս');
 
       if (!isReceived && !isIssued) {
-        return res.status(400).json({ error: "Cannot determine invoice type. Expected Armenian text for Received or Issued invoices." });
+        return res.status(400).json({ error: "Cannot determine invoice type. Expected Armenian text for Received (ստացված) or Issued (Դուրս գրված) invoices." });
       }
 
       const invoices: Array<{ invoice: any; items: any[] }> = [];
       const errors: string[] = [];
-      let currentInvoice: any = null;
-      let currentItems: any[] = [];
+      const invoiceMap = new Map<string, { invoice: any; items: any[] }>();
 
-      for (let i = 2; i < lines.length; i++) {
+      // Data starts from row 4 (index 3)
+      for (let i = 3; i < lines.length; i++) {
         try {
           const cols = lines[i].split(',').map(c => c.trim());
-          if (cols.length < 8 || !cols[0] || !cols[1]) continue;
-
-          // Parse invoice number (column 1)
-          const invoiceNumber = cols[1];
-          if (!invoiceNumber) continue;
-
-          // Parse amounts - be flexible with parsing
-          const subtotal = parseFloat(cols[6]) || 0;
-          const vatAmount = parseFloat(cols[7]) || 0;
-          const total = parseFloat(cols[8]) || (subtotal + vatAmount);
           
-          // Parse date (column 5) - try multiple formats
-          let issueDate = new Date();
-          if (cols[5]) {
-            const parsed = new Date(cols[5]);
-            if (!isNaN(parsed.getTime())) {
-              issueDate = parsed;
-            }
+          // Check minimum columns
+          if (cols.length < 35) {
+            errors.push(`Row ${i + 1}: Not enough columns (${cols.length})`);
+            continue;
           }
 
-          if (invoiceNumber && subtotal > 0) {
+          let invoiceNumber = '';
+          let issuerName = '';
+          let issueDate = new Date();
+          let totalAmount = 0;
+          let productName = '';
+          let quantity = 0;
+          let unitPrice = 0;
+          let subtotal = 0;
+          let vatPercent = 20;
+          let vatAmount = 0;
+          let hsCode = '';
+          let unit = '';
+
+          if (isReceived) {
+            // PURCHASE INVOICE (Ստացված)
+            invoiceNumber = cols[1] || '';
+            issuerName = cols[3] || 'Unknown';
+            issueDate = parseDate(cols[5]);
+            totalAmount = parseFloat(cols[8]) || 0;
+            hsCode = cols[32] || '';
+            productName = cols[33] || 'Product';
+            unit = cols[35] || 'units';
+            quantity = parseFloat(cols[37]) || 1;
+            unitPrice = parseFloat(cols[38]) || 0;
+            subtotal = parseFloat(cols[40]) || 0;
+            vatPercent = parseFloat(cols[44]) || 20;
+            vatAmount = parseFloat(cols[45]) || 0;
+          } else {
+            // SALES INVOICE (Դուրս գրված)
+            invoiceNumber = cols[1] || '';
+            issuerName = cols[4] || 'Unknown';
+            issueDate = parseDate(cols[6]);
+            totalAmount = parseFloat(cols[9]) || 0;
+            hsCode = cols[34] || '';
+            productName = cols[35] || 'Product';
+            unit = cols[37] || 'units';
+            quantity = parseFloat(cols[39]) || 1;
+            unitPrice = parseFloat(cols[40]) || 0;
+            subtotal = parseFloat(cols[42]) || 0;
+            vatPercent = parseFloat(cols[46]) || 20;
+            vatAmount = parseFloat(cols[47]) || 0;
+          }
+
+          if (!invoiceNumber || subtotal <= 0) {
+            continue;
+          }
+
+          const invoiceKey = invoiceNumber;
+
+          if (!invoiceMap.has(invoiceKey)) {
             const invoice = {
               invoiceSeries: invoiceNumber.replace(/[0-9]/g, '') || 'DEFAULT',
               invoiceNumber,
-              supplierName: isReceived ? (cols[3] || 'Unknown Supplier') : 'CHIP Technologies',
-              customerName: isIssued ? (cols[3] || 'Unknown Customer') : 'Supplier',
+              supplierName: isReceived ? issuerName : 'CHIP Technologies',
+              customerName: isIssued ? issuerName : 'Supplier',
               status: 'pending',
               issueDate,
               supplyDate: issueDate,
               subtotal: subtotal.toString(),
               vatAmount: vatAmount.toString(),
-              total: total.toString()
+              total: (subtotal + vatAmount).toString()
             };
-
-            const item = {
-              description: cols[4] || 'Product',
-              quantity: parseInt(cols[9]) || 1,
-              unitPrice: subtotal.toString(),
-              lineTotal: subtotal.toString(),
-              vatAmount: vatAmount.toString()
-            };
-
-            if (currentInvoice && currentInvoice.invoiceNumber !== invoiceNumber) {
-              if (currentItems.length > 0) {
-                invoices.push({ invoice: currentInvoice, items: currentItems });
-              }
-              currentItems = [];
-            }
-
-            currentInvoice = invoice;
-            currentItems.push(item);
+            invoiceMap.set(invoiceKey, { invoice, items: [] });
           }
+
+          const item = {
+            description: productName,
+            quantity,
+            unitPrice: unitPrice.toString(),
+            lineTotal: subtotal.toString(),
+            vatAmount: vatAmount.toString()
+          };
+
+          invoiceMap.get(invoiceKey)!.items.push(item);
         } catch (lineError) {
           errors.push(`Row ${i + 1}: ${String(lineError)}`);
         }
       }
 
-      if (currentInvoice && currentItems.length > 0) {
-        invoices.push({ invoice: currentInvoice, items: currentItems });
-      }
+      invoiceMap.forEach(inv => invoices.push(inv));
 
       let result;
       if (invoices.length > 0) {
@@ -3759,6 +3787,27 @@ print(json.dumps(result))
       res.status(500).json({ error: "Failed to import invoices", details: String(error) });
     }
   });
+
+  // Helper function to parse dates in various formats
+  function parseDate(dateStr: string): Date {
+    if (!dateStr) return new Date();
+    
+    // Try ISO format first
+    let parsed = new Date(dateStr);
+    if (!isNaN(parsed.getTime())) return parsed;
+    
+    // Try DD/MM/YYYY format
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const [day, month, year] = parts.map(p => parseInt(p, 10));
+      if (day && month && year) {
+        parsed = new Date(year, month - 1, day);
+        if (!isNaN(parsed.getTime())) return parsed;
+      }
+    }
+    
+    return new Date();
+  }
 
   // Analytics Routes
   app.get("/api/chip/dashboard-stats", async (req, res) => {
