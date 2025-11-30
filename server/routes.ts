@@ -3761,15 +3761,19 @@ print(json.dumps(result))
             invoiceMap.set(invoiceKey, { invoice, items: [] });
           }
 
-          const item = {
-            description: productName,
-            quantity,
-            unitPrice: unitPrice.toString(),
-            lineTotal: subtotal.toString(),
-            vatAmount: vatAmount.toString()
-          };
-
-          invoiceMap.get(invoiceKey)!.items.push(item);
+          // Only add item if it has meaningful data
+          if (productName && (quantity > 0 || unitPrice > 0)) {
+            const item = {
+              description: productName,
+              quantity: Math.max(1, Math.round(quantity)),
+              unitPrice: unitPrice.toString(),
+              lineTotal: subtotal.toString(),
+              vatAmount: vatAmount.toString(),
+              hsCode: hsCode || undefined,
+              sku: undefined
+            };
+            invoiceMap.get(invoiceKey)!.items.push(item);
+          }
         } catch (lineError) {
           errors.push(`Row ${i + 1}: ${String(lineError)}`);
         }
