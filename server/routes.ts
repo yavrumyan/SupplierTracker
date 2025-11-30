@@ -3086,6 +3086,7 @@ print(json.dumps(result))
       // Aggregate stock by product name (Armenian)
       const purchaseData = await db.select({
         productName: chipPurchaseInvoiceItems.productName,
+        unit: chipPurchaseInvoiceItems.unit,
         totalQty: sql<number>`CAST(SUM(${chipPurchaseInvoiceItems.quantity}) AS INTEGER)`,
         avgUnitPrice: sql<string>`AVG(${chipPurchaseInvoiceItems.unitPrice})`,
         totalValue: sql<string>`SUM(${chipPurchaseInvoiceItems.lineTotal})`,
@@ -3093,10 +3094,11 @@ print(json.dumps(result))
       })
       .from(chipPurchaseInvoiceItems)
       .innerJoin(chipPurchaseInvoices, eq(chipPurchaseInvoiceItems.invoiceId, chipPurchaseInvoices.id))
-      .groupBy(chipPurchaseInvoiceItems.productName);
+      .groupBy(chipPurchaseInvoiceItems.productName, chipPurchaseInvoiceItems.unit);
 
       const salesData = await db.select({
         productName: chipSalesInvoiceItems.productName,
+        unit: chipSalesInvoiceItems.unit,
         totalQty: sql<number>`CAST(SUM(${chipSalesInvoiceItems.quantity}) AS INTEGER)`,
         avgUnitPrice: sql<string>`AVG(${chipSalesInvoiceItems.unitPrice})`,
         totalValue: sql<string>`SUM(${chipSalesInvoiceItems.lineTotal})`,
@@ -3104,7 +3106,7 @@ print(json.dumps(result))
       })
       .from(chipSalesInvoiceItems)
       .innerJoin(chipSalesInvoices, eq(chipSalesInvoiceItems.invoiceId, chipSalesInvoices.id))
-      .groupBy(chipSalesInvoiceItems.productName);
+      .groupBy(chipSalesInvoiceItems.productName, chipSalesInvoiceItems.unit);
 
       // Create a map for easy lookup
       const stockMap = new Map<string, any>();
@@ -3115,6 +3117,7 @@ print(json.dumps(result))
         if (!stockMap.has(key)) {
           stockMap.set(key, {
             productName: key,
+            unit: item.unit || 'units',
             purchaseQty: 0,
             salesQty: 0,
             purchaseValue: 0,
@@ -3137,6 +3140,7 @@ print(json.dumps(result))
         if (!stockMap.has(key)) {
           stockMap.set(key, {
             productName: key,
+            unit: item.unit || 'units',
             purchaseQty: 0,
             salesQty: 0,
             purchaseValue: 0,
@@ -3283,6 +3287,7 @@ print(json.dumps(result))
               productName: productName,
               description: productName,
               quantity: Math.max(1, Math.round(quantity)),
+              unit: unit || 'units',
               unitPrice: unitPrice.toString(),
               lineTotal: subtotal.toString(),
               vatAmount: vatAmount.toString(),
