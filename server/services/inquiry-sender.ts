@@ -48,9 +48,9 @@ export async function sendEmailInquiry(
   try {
     const { client, fromEmail } = await getUncachableSendGridClient();
     
-    const prefixMessage =
-      "Dear colleague, please quote us the following. Thanks in advance.\n\n";
-    const fullMessage = prefixMessage + message;
+    const beforeMessage = "Dear Partner,\n\nWe have a requirement for the following items:";
+    const afterMessage = "\nCondition: Must be New / Factory Sealed.\nShipping Terms: EXW\n\nLooking forward to your proposal.\n\nBest regards,\nGreg, COO\nCHIP Technologies\nArmenia";
+    const fullMessage = beforeMessage + "\n\n" + message + "\n" + afterMessage;
 
     await client.send({
       to: supplier.email,
@@ -78,9 +78,9 @@ export async function sendWhatsAppInquiry(
 
   try {
     // Use WhatsApp web link for now - user can click to open WhatsApp
-    const prefixMessage =
-      "Dear colleague, please quote us the following. Thanks in advance.\n\n";
-    const fullMessage = prefixMessage + message;
+    const beforeMessage = "Dear Partner,\n\nWe have a requirement for the following items:";
+    const afterMessage = "\nCondition: Must be New / Factory Sealed.\nShipping Terms: EXW\n\nLooking forward to your proposal.\n\nBest regards,\nGreg, COO\nCHIP Technologies\nArmenia";
+    const fullMessage = beforeMessage + "\n\n" + message + "\n" + afterMessage;
 
     // Format: https://wa.me/[country-code][phone-number]
     const phoneNumber = supplier.whatsapp.replace(/\D/g, "");
