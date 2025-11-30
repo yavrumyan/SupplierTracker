@@ -3081,7 +3081,7 @@ print(json.dumps(result))
 
   // ==================== CHIP: Armenian Tax Invoice Import ====================
 
-  app.post("/api/chip/import-invoice", upload.single('file'), async (req, res) => {
+  app.post("/api/chip/import-invoices", upload.single('file'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No file provided" });
