@@ -51,6 +51,7 @@ export async function sendEmailInquiry(
     const beforeMessage = "Dear Partner,\n\nWe have a requirement for the following items:";
     const afterMessage = "\nCondition: Must be New / Factory Sealed.\nShipping Terms: EXW\n\nLooking forward to your proposal.\n\nBest regards,\nGreg, COO\nCHIP Technologies\nArmenia";
     const fullMessage = beforeMessage + "\n\n" + message + "\n" + afterMessage;
+    const htmlMessage = beforeMessage.replace(/\n/g, "<br>") + "<br><br><b>" + message.replace(/\n/g, "<br>") + "</b><br>" + afterMessage.replace(/\n/g, "<br>");
 
     await client.send({
       to: supplier.email,
@@ -58,7 +59,7 @@ export async function sendEmailInquiry(
       replyTo: "info@chip.am",
       subject: `Product Inquiry - Quote Request`,
       text: fullMessage,
-      html: `<p>${fullMessage.replace(/\n/g, "<br>")}</p>`,
+      html: `<p>${htmlMessage}</p>`,
     });
 
     console.log(`Email sent successfully to ${supplier.email}`);
@@ -80,7 +81,7 @@ export async function sendWhatsAppInquiry(
     // Use WhatsApp web link for now - user can click to open WhatsApp
     const beforeMessage = "Dear Partner,\n\nWe have a requirement for the following items:";
     const afterMessage = "\nCondition: Must be New / Factory Sealed.\nShipping Terms: EXW\n\nLooking forward to your proposal.\n\nBest regards,\nGreg, COO\nCHIP Technologies\nArmenia";
-    const fullMessage = beforeMessage + "\n\n" + message + "\n" + afterMessage;
+    const fullMessage = beforeMessage + "\n\n*" + message + "*\n" + afterMessage;
 
     // Format: https://wa.me/[country-code][phone-number]
     const phoneNumber = supplier.whatsapp.replace(/\D/g, "");
