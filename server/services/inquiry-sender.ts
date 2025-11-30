@@ -71,7 +71,7 @@ export async function sendEmailInquiry(
 export async function sendWhatsAppInquiry(
   supplier: Supplier,
   message: string
-): Promise<void> {
+): Promise<string> {
   if (!supplier.whatsapp) {
     throw new Error("Supplier has no WhatsApp number");
   }
@@ -88,9 +88,8 @@ export async function sendWhatsAppInquiry(
 
     console.log(`WhatsApp message ready at: ${waLink}`);
     
-    // For now, return the link - in production, you'd integrate Twilio for automated sending
-    // Store or log the link for user reference
-    return Promise.resolve();
+    // Return the link so frontend can open it
+    return waLink;
   } catch (error) {
     console.error(`Failed to prepare WhatsApp message for ${supplier.whatsapp}:`, error);
     throw error;
@@ -102,8 +101,8 @@ export async function sendInquiry(
   message: string,
   sendViaWhatsApp: boolean,
   sendViaEmail: boolean
-): Promise<void> {
-  const results: { supplier: string; email?: string; whatsapp?: string; error?: string }[] = [];
+): Promise<{ supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }[]> {
+  const results: { supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }[] = [];
 
   for (const supplier of suppliers) {
     const result: (typeof results)[0] = { supplier: supplier.name };
@@ -120,8 +119,9 @@ export async function sendInquiry(
 
     if (sendViaWhatsApp && supplier.whatsapp) {
       try {
-        await sendWhatsAppInquiry(supplier, message);
+        const link = await sendWhatsAppInquiry(supplier, message);
         result.whatsapp = "ready";
+        result.whatsappLink = link;
       } catch (error) {
         console.error(`WhatsApp failed for ${supplier.name}:`, error);
         if (!result.error) {
@@ -134,4 +134,5 @@ export async function sendInquiry(
   }
 
   console.log("Inquiry sending results:", results);
+  return results;
 }

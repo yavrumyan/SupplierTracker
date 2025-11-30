@@ -528,11 +528,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Send inquiries via appropriate channels (non-blocking)
+      // Send inquiries and collect results
+      let sendingResults: { supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }[] = [];
+      
       (async () => {
         try {
           const { sendInquiry } = await import("./services/inquiry-sender.ts");
-          await sendInquiry(
+          sendingResults = await sendInquiry(
             suppliers,
             inquiryData.message,
             inquiryData.sendViaWhatsApp ?? true,
@@ -540,13 +542,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           );
         } catch (sendError) {
           console.error("Error sending inquiry:", sendError);
-          // Log the error but don't crash - email/WhatsApp sending is not critical
         }
       })();
 
-      // Store the inquiry record and return immediately
+      // Store the inquiry record and return immediately with sending results
       const inquiry = await storage.createInquiry(inquiryData);
-      res.status(201).json(inquiry);
+      
+      // Return after a small delay to allow async sending to complete
+      setTimeout(() => {
+        res.status(201).json({ inquiry, sendingResults });
+      }, 100);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid inquiry data", details: error.errors });
