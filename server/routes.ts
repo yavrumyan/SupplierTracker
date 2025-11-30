@@ -3081,6 +3081,52 @@ print(json.dumps(result))
 
   // ==================== CHIP: Armenian Tax Invoice Import ====================
 
+  app.get("/api/chip/imported-products", async (req, res) => {
+    try {
+      const purchaseItems = await db.select({
+        id: chipPurchaseInvoiceItems.id,
+        invoiceType: sql<'purchase'>`'purchase'`,
+        invoiceNumber: chipPurchaseInvoices.invoiceNumber,
+        description: chipPurchaseInvoiceItems.description,
+        quantity: chipPurchaseInvoiceItems.quantity,
+        unitPrice: chipPurchaseInvoiceItems.unitPrice,
+        lineTotal: chipPurchaseInvoiceItems.lineTotal,
+        vatAmount: chipPurchaseInvoiceItems.vatAmount,
+        hsCode: chipPurchaseInvoiceItems.hsCode,
+        issueDate: chipPurchaseInvoices.issueDate,
+      })
+      .from(chipPurchaseInvoiceItems)
+      .innerJoin(chipPurchaseInvoices, eq(chipPurchaseInvoiceItems.invoiceId, chipPurchaseInvoices.id))
+      .orderBy(desc(chipPurchaseInvoices.issueDate));
+
+      const salesItems = await db.select({
+        id: chipSalesInvoiceItems.id,
+        invoiceType: sql<'sales'>`'sales'`,
+        invoiceNumber: chipSalesInvoices.invoiceNumber,
+        description: chipSalesInvoiceItems.description,
+        quantity: chipSalesInvoiceItems.quantity,
+        unitPrice: chipSalesInvoiceItems.unitPrice,
+        lineTotal: chipSalesInvoiceItems.lineTotal,
+        vatAmount: chipSalesInvoiceItems.vatAmount,
+        hsCode: chipSalesInvoiceItems.hsCode,
+        issueDate: chipSalesInvoices.issueDate,
+      })
+      .from(chipSalesInvoiceItems)
+      .innerJoin(chipSalesInvoices, eq(chipSalesInvoiceItems.invoiceId, chipSalesInvoices.id))
+      .orderBy(desc(chipSalesInvoices.issueDate));
+
+      const allItems = [
+        ...purchaseItems,
+        ...salesItems,
+      ];
+
+      res.json(allItems);
+    } catch (error) {
+      console.error("Error fetching imported products:", error);
+      res.status(500).json({ error: "Failed to fetch imported products" });
+    }
+  });
+
   app.post("/api/chip/import-invoices", upload.single('file'), async (req, res) => {
     try {
       if (!req.file) {

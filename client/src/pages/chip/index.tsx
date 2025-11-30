@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileUp, CheckCircle, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FileUp, CheckCircle, AlertCircle, Package } from "lucide-react";
+import { Link } from "wouter";
 import { ChipInvoiceUpload } from "@/components/chip-invoice-upload";
 
 export default function ChipInvoiceImport() {
@@ -8,11 +10,19 @@ export default function ChipInvoiceImport() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-[#2AA448] rounded-lg flex items-center justify-center">
-              <FileUp className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#2AA448] rounded-lg flex items-center justify-center">
+                <FileUp className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-slate-900">CHIP - Armenian Tax Invoice Import</h1>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900">CHIP - Armenian Tax Invoice Import</h1>
+            <Link href="/chip/invoices">
+              <Button variant="outline" className="gap-2">
+                <Package className="w-4 h-4" />
+                View Imported Products
+              </Button>
+            </Link>
           </div>
           <p className="text-slate-600">Import purchase and sales invoices from Armenian tax authority CSV files</p>
         </div>
