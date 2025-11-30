@@ -3654,6 +3654,8 @@ print(json.dumps(result))
       const fileContent = fs.readFileSync(req.file.path, 'utf-8');
       const lines = fileContent.split('\n').map(l => l.trim()).filter(l => l);
       
+      console.log(`Invoice import: ${lines.length} lines, first line: "${lines[0]}"`);
+      
       if (lines.length < 4) {
         return res.status(400).json({ error: "Invalid CSV format - need at least 4 rows" });
       }
@@ -3663,6 +3665,8 @@ print(json.dumps(result))
       const isReceived = documentType.includes('ստացված');
       const isIssued = documentType.includes('դուրս');
 
+      console.log(`Document type check: isReceived=${isReceived}, isIssued=${isIssued}`);
+
       if (!isReceived && !isIssued) {
         return res.status(400).json({ error: "Cannot determine invoice type. Expected Armenian text for Received (ստացված) or Issued (Դուրս գրված) invoices." });
       }
@@ -3671,14 +3675,20 @@ print(json.dumps(result))
       const errors: string[] = [];
       const invoiceMap = new Map<string, { invoice: any; items: any[] }>();
 
+      console.log(`Parsing ${lines.length - 3} data rows...`);
+
       // Data starts from row 4 (index 3)
       for (let i = 3; i < lines.length; i++) {
         try {
           const cols = lines[i].split(',').map(c => c.trim());
           
+          if (i === 3) {
+            console.log(`Row 4 sample: ${cols.length} columns. First 10: [${cols.slice(0, 10).join('|')}]`);
+          }
+          
           // Check minimum columns
           if (cols.length < 35) {
-            errors.push(`Row ${i + 1}: Not enough columns (${cols.length})`);
+            errors.push(`Row ${i + 1}: Not enough columns (${cols.length} < 35)`);
             continue;
           }
 
@@ -3725,7 +3735,13 @@ print(json.dumps(result))
             vatAmount = parseFloat(cols[47]) || 0;
           }
 
-          if (!invoiceNumber || subtotal <= 0) {
+          if (!invoiceNumber) {
+            errors.push(`Row ${i + 1}: Missing invoice number (col B was empty)`);
+            continue;
+          }
+
+          if (subtotal <= 0) {
+            errors.push(`Row ${i + 1}: Invalid subtotal (${subtotal}). Invoice: ${invoiceNumber}`);
             continue;
           }
 
@@ -3745,6 +3761,7 @@ print(json.dumps(result))
               total: (subtotal + vatAmount).toString()
             };
             invoiceMap.set(invoiceKey, { invoice, items: [] });
+            console.log(`Invoice ${invoiceNumber}: subtotal=${subtotal}, vat=${vatAmount}`);
           }
 
           const item = {
@@ -3762,6 +3779,7 @@ print(json.dumps(result))
       }
 
       invoiceMap.forEach(inv => invoices.push(inv));
+      console.log(`Total invoices parsed: ${invoices.length}`);
 
       let result;
       if (invoices.length > 0) {
