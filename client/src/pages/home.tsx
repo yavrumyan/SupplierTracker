@@ -67,11 +67,24 @@ export default function Home() {
     onSuccess: (response: { inquiry: any; sendingResults: Array<{ supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }> }) => {
       const results = response.sendingResults || [];
       
-      results.forEach(result => {
-        if (result.whatsappLink) {
-          window.open(result.whatsappLink, '_blank');
+      // Open WhatsApp links sequentially with delay to ensure text pre-fill works for all
+      const whatsappLinks = results
+        .filter(r => r.whatsappLink)
+        .map(r => r.whatsappLink as string);
+      
+      const openWhatsAppLinksSequentially = async () => {
+        for (let i = 0; i < whatsappLinks.length; i++) {
+          window.open(whatsappLinks[i], '_blank');
+          // Wait 800ms between opening windows to allow browser to process each one
+          if (i < whatsappLinks.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 800));
+          }
         }
-      });
+      };
+      
+      if (whatsappLinks.length > 0) {
+        openWhatsAppLinksSequentially();
+      }
 
       let description = "";
       results.forEach(result => {
