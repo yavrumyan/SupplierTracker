@@ -54,7 +54,7 @@ export async function sendEmailInquiry(
 
     await client.send({
       to: supplier.email,
-      from: fromEmail,
+      from: `CHIP Technologies <${fromEmail}>`,
       replyTo: "info@chip.am",
       subject: `Product Inquiry - Quote Request`,
       text: fullMessage,
