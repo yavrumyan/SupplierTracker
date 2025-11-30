@@ -251,24 +251,10 @@ export default function ChipProducts() {
                 <TableRow className="bg-slate-50">
                   <TableHead
                     className="cursor-pointer hover:bg-slate-100"
-                    onClick={() => handleSort("sku")}
-                    data-testid="header-sku"
-                  >
-                    SKU {sortField === "sku" && (sortDirection === "asc" ? "↑" : "↓")}
-                  </TableHead>
-                  <TableHead
-                    className="cursor-pointer hover:bg-slate-100"
                     onClick={() => handleSort("name")}
                     data-testid="header-name"
                   >
                     Name {sortField === "name" && (sortDirection === "asc" ? "↑" : "↓")}
-                  </TableHead>
-                  <TableHead
-                    className="cursor-pointer hover:bg-slate-100"
-                    onClick={() => handleSort("category")}
-                    data-testid="header-category"
-                  >
-                    Category {sortField === "category" && (sortDirection === "asc" ? "↑" : "↓")}
                   </TableHead>
                   <TableHead
                     className="cursor-pointer hover:bg-slate-100 text-right"
@@ -276,16 +262,6 @@ export default function ChipProducts() {
                     data-testid="header-stock"
                   >
                     Current Stock {sortField === "currentStock" && (sortDirection === "asc" ? "↑" : "↓")}
-                  </TableHead>
-                  <TableHead
-                    className="cursor-pointer hover:bg-slate-100 text-right"
-                    onClick={() => handleSort("averageCost")}
-                    data-testid="header-cost"
-                  >
-                    Avg Cost {sortField === "averageCost" && (sortDirection === "asc" ? "↑" : "↓")}
-                  </TableHead>
-                  <TableHead className="text-right" data-testid="header-alert">
-                    Low Stock Alert
                   </TableHead>
                   <TableHead className="text-right" data-testid="header-actions">
                     Actions
@@ -305,9 +281,6 @@ export default function ChipProducts() {
                         onClick={() => setLocation(`/chip/products/${product.id}`)}
                         data-testid={`row-product-${product.id}`}
                       >
-                        <TableCell className="font-mono text-sm" data-testid={`cell-sku-${product.id}`}>
-                          {product.sku || "-"}
-                        </TableCell>
                         <TableCell className="font-medium" data-testid={`cell-name-${product.id}`}>
                           {product.name}
                           {isLowStock && (
@@ -316,17 +289,8 @@ export default function ChipProducts() {
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell data-testid={`cell-category-${product.id}`}>
-                          {product.category || "-"}
-                        </TableCell>
                         <TableCell className={`text-right ${isLowStock ? "text-red-600 font-semibold" : ""}`} data-testid={`cell-stock-${product.id}`}>
                           {product.currentStock}
-                        </TableCell>
-                        <TableCell className="text-right" data-testid={`cell-cost-${product.id}`}>
-                          {parseFloat(product.averageCost || "0").toLocaleString()} AMD
-                        </TableCell>
-                        <TableCell className="text-right" data-testid={`cell-alert-${product.id}`}>
-                          {product.lowStockAlert || "-"}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
@@ -354,7 +318,7 @@ export default function ChipProducts() {
                   })
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-slate-500">
+                    <TableCell colSpan={3} className="text-center py-8 text-slate-500">
                       {searchQuery || categoryFilter
                         ? "No products match your filters"
                         : "No products found. Add your first product to get started."}

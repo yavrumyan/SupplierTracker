@@ -57,15 +57,11 @@ export function SearchFilters({ filters, onFiltersChange, onSearch, availableCou
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Countries</SelectItem>
-                {availableCountries.length > 0 ? (
-                  availableCountries.map((country) => (
-                    <SelectItem key={country} value={country}>
-                      {country}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="_loading" disabled>Loading countries...</SelectItem>
-                )}
+                {availableCountries.map((country) => (
+                  <SelectItem key={country} value={country}>
+                    {country}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
