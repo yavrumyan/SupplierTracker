@@ -13,6 +13,7 @@ import {
   BarChart3
 } from "lucide-react";
 import { Link } from "wouter";
+import { ChipInvoiceUpload } from "@/components/chip-invoice-upload";
 
 interface DashboardStats {
   productsCount: number;
@@ -177,36 +178,40 @@ export default function ChipDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Package className="h-5 w-5 text-[#2AA448]" />
-                Inventory
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Link href="/chip/products">
-                <Button variant="outline" className="w-full justify-start" data-testid="link-products">
-                  <Package className="h-4 w-4 mr-2" />
-                  Manage Products
-                </Button>
-              </Link>
-              <Link href="/chip/purchases">
-                <Button variant="outline" className="w-full justify-start" data-testid="link-purchases">
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Purchase Orders
-                </Button>
-              </Link>
-              <Link href="/chip/sales">
-                <Button variant="outline" className="w-full justify-start" data-testid="link-sales">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Sales Orders
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="space-y-4 lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Package className="h-5 w-5 text-[#2AA448]" />
+                  Inventory
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Link href="/chip/products">
+                  <Button variant="outline" className="w-full justify-start" data-testid="link-products">
+                    <Package className="h-4 w-4 mr-2" />
+                    Manage Products
+                  </Button>
+                </Link>
+                <Link href="/chip/purchases">
+                  <Button variant="outline" className="w-full justify-start" data-testid="link-purchases">
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Purchase Orders
+                  </Button>
+                </Link>
+                <Link href="/chip/sales">
+                  <Button variant="outline" className="w-full justify-start" data-testid="link-sales">
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    Sales Orders
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+            <ChipInvoiceUpload />
+          </div>
 
-          <Card>
+          <div>
+            <Card>
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Users className="h-5 w-5 text-[#2AA448]" />
@@ -256,7 +261,8 @@ export default function ChipDashboard() {
                 </Button>
               </Link>
             </CardContent>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
