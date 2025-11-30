@@ -218,6 +218,27 @@ export default function Home() {
                   placeholder="Enter your inquiry details..."
                 />
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={sendViaWhatsApp}
+                      onCheckedChange={(checked) => setSendViaWhatsApp(checked === true)}
+                    />
+                    <span className="text-sm text-slate-700">Send via WhatsApp</span>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <Checkbox
+                      checked={sendViaEmail}
+                      onCheckedChange={(checked) => setSendViaEmail(checked === true)}
+                    />
+                    <span className="text-sm text-slate-700">Send via Email</span>
+                  </label>
+                </div>
+              </div>
               
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">
@@ -225,11 +246,11 @@ export default function Home() {
                 </span>
                 <Button 
                   onClick={handleBulkInquiry}
+                  disabled={selectedSuppliers.size === 0 || !inquiryMessage.trim() || sendBulkInquiryMutation.isPending}
                   className="bg-orange-500 hover:bg-orange-600"
-                  disabled={selectedSuppliers.size === 0 || !inquiryMessage.trim()}
                 >
                   <Send className="h-4 w-4 mr-2" />
-                  Send Inquiry
+                  {sendBulkInquiryMutation.isPending ? "Sending..." : "Send Inquiry"}
                 </Button>
               </div>
             </div>
