@@ -3667,49 +3667,68 @@ print(json.dumps(result))
       }
 
       const invoices: Array<{ invoice: any; items: any[] }> = [];
+      const errors: string[] = [];
       let currentInvoice: any = null;
       let currentItems: any[] = [];
 
       for (let i = 2; i < lines.length; i++) {
-        const cols = lines[i].split(',').map(c => c.trim());
-        if (cols.length < 10) continue;
+        try {
+          const cols = lines[i].split(',').map(c => c.trim());
+          if (cols.length < 8 || !cols[0] || !cols[1]) continue;
 
-        const invoiceNumber = cols[1];
-        const subtotal = cols[9];
-        const vatAmount = cols[11];
-        const total = cols[8];
-        const issueDate = new Date(cols[5]);
+          // Parse invoice number (column 1)
+          const invoiceNumber = cols[1];
+          if (!invoiceNumber) continue;
 
-        if (!invoiceNumber || !subtotal) continue;
+          // Parse amounts - be flexible with parsing
+          const subtotal = parseFloat(cols[6]) || 0;
+          const vatAmount = parseFloat(cols[7]) || 0;
+          const total = parseFloat(cols[8]) || (subtotal + vatAmount);
+          
+          // Parse date (column 5) - try multiple formats
+          let issueDate = new Date();
+          if (cols[5]) {
+            const parsed = new Date(cols[5]);
+            if (!isNaN(parsed.getTime())) {
+              issueDate = parsed;
+            }
+          }
 
-        const invoice = {
-          invoiceSeries: invoiceNumber.replace(/[0-9]/g, ''),
-          invoiceNumber,
-          supplierName: isReceived ? cols[3] : 'CHIP Technologies',
-          customerName: isIssued ? cols[3] : 'Supplier',
-          status: 'pending',
-          issueDate,
-          supplyDate: issueDate,
-          subtotal,
-          vatAmount,
-          total
-        };
+          if (invoiceNumber && subtotal > 0) {
+            const invoice = {
+              invoiceSeries: invoiceNumber.replace(/[0-9]/g, '') || 'DEFAULT',
+              invoiceNumber,
+              supplierName: isReceived ? (cols[3] || 'Unknown Supplier') : 'CHIP Technologies',
+              customerName: isIssued ? (cols[3] || 'Unknown Customer') : 'Supplier',
+              status: 'pending',
+              issueDate,
+              supplyDate: issueDate,
+              subtotal: subtotal.toString(),
+              vatAmount: vatAmount.toString(),
+              total: total.toString()
+            };
 
-        const item = {
-          description: cols[14] || 'Product',
-          quantity: parseInt(cols[5]) || 1,
-          unitPrice: cols[6] || subtotal,
-          lineTotal: subtotal,
-          vatAmount: vatAmount || '0'
-        };
+            const item = {
+              description: cols[4] || 'Product',
+              quantity: parseInt(cols[9]) || 1,
+              unitPrice: subtotal.toString(),
+              lineTotal: subtotal.toString(),
+              vatAmount: vatAmount.toString()
+            };
 
-        if (currentInvoice && currentInvoice.invoiceNumber !== invoiceNumber) {
-          invoices.push({ invoice: currentInvoice, items: currentItems });
-          currentItems = [];
+            if (currentInvoice && currentInvoice.invoiceNumber !== invoiceNumber) {
+              if (currentItems.length > 0) {
+                invoices.push({ invoice: currentInvoice, items: currentItems });
+              }
+              currentItems = [];
+            }
+
+            currentInvoice = invoice;
+            currentItems.push(item);
+          }
+        } catch (lineError) {
+          errors.push(`Row ${i + 1}: ${String(lineError)}`);
         }
-
-        currentInvoice = invoice;
-        currentItems.push(item);
       }
 
       if (currentInvoice && currentItems.length > 0) {
@@ -3717,10 +3736,15 @@ print(json.dumps(result))
       }
 
       let result;
-      if (isReceived) {
-        result = await storage.importPurchaseInvoices(invoices);
+      if (invoices.length > 0) {
+        if (isReceived) {
+          result = await storage.importPurchaseInvoices(invoices);
+        } else {
+          result = await storage.importSalesInvoices(invoices);
+        }
+        result.errors.push(...errors);
       } else {
-        result = await storage.importSalesInvoices(invoices);
+        result = { imported: 0, skipped: 0, errors: errors.length > 0 ? errors : ["No valid invoices found in file"] };
       }
 
       fs.unlinkSync(req.file.path);
