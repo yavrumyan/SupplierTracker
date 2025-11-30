@@ -24,7 +24,11 @@ import {
   insertChipSaleSchema,
   insertChipInvoiceSchema,
   insertChipExpenseSchema,
-  insertChipPaymentSchema
+  insertChipPaymentSchema,
+  insertChipPurchaseInvoiceSchema,
+  insertChipPurchaseInvoiceItemSchema,
+  insertChipSalesInvoiceSchema,
+  insertChipSalesInvoiceItemSchema
 } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
@@ -49,7 +53,11 @@ import {
   compstylePurchaseItems,
   compstyleTotalSales,
   compstyleTotalProcurement,
-  compstyleProductList
+  compstyleProductList,
+  chipPurchaseInvoices,
+  chipPurchaseInvoiceItems,
+  chipSalesInvoices,
+  chipSalesInvoiceItems
 } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
 
