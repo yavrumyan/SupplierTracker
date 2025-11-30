@@ -187,10 +187,10 @@ export default function ChipDashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Link href="/chip/products">
-                  <Button variant="outline" className="w-full justify-start" data-testid="link-products">
+                <Link href="/chip/stock">
+                  <Button variant="outline" className="w-full justify-start" data-testid="link-stock">
                     <Package className="h-4 w-4 mr-2" />
-                    Manage Products
+                    Stock
                   </Button>
                 </Link>
                 <Link href="/chip/purchases">
