@@ -3079,77 +3079,19 @@ print(json.dumps(result))
     }
   });
 
-  // ==================== CHIP ERP API ROUTES ====================
+  // ==================== CHIP: Armenian Tax Invoice Import ====================
 
-  // Currency Routes
-  app.get("/api/chip/currency-rates", async (req, res) => {
+  app.post("/api/chip/import-invoice", upload.single('file'), async (req, res) => {
     try {
-      const rates = await storage.getChipCurrencyRates();
-      res.json(rates);
-    } catch (error) {
-      console.error("Error fetching currency rates:", error);
-      res.status(500).json({ error: "Failed to fetch currency rates" });
-    }
-  });
-
-  app.patch("/api/chip/currency-rates/:currency", async (req, res) => {
-    try {
-      const currency = req.params.currency;
-      const { rate } = req.body;
-
-      if (!rate || isNaN(parseFloat(rate))) {
-        return res.status(400).json({ error: "Invalid rate value" });
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
       }
 
-      const updatedRate = await storage.updateChipCurrencyRate(currency, parseFloat(rate));
-      if (!updatedRate) {
-        return res.status(404).json({ error: "Currency not found" });
-      }
+      const fileContent = fs.readFileSync(req.file.path, 'utf-8');
+      const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line);
 
-      res.json(updatedRate);
-    } catch (error) {
-      console.error("Error updating currency rate:", error);
-      res.status(500).json({ error: "Failed to update currency rate" });
-    }
-  });
-
-  // Product Routes
-  app.get("/api/chip/products", async (req, res) => {
-    try {
-      const products = await storage.getChipProducts();
-      res.json(products);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      res.status(500).json({ error: "Failed to fetch products" });
-    }
-  });
-
-  app.get("/api/chip/products/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const product = await storage.getChipProduct(id);
-
-      if (!product) {
-        return res.status(404).json({ error: "Product not found" });
-      }
-
-      res.json(product);
-    } catch (error) {
-      console.error("Error fetching product:", error);
-      res.status(500).json({ error: "Failed to fetch product" });
-    }
-  });
-
-  app.post("/api/chip/products", async (req, res) => {
-    try {
-      const productData = insertChipProductSchema.parse(req.body);
-      const product = await storage.createChipProduct(productData);
-      res.status(201).json(product);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ error: "Invalid product data", details: error.errors });
-      }
-      console.error("Error creating product:", error);
+      if (lines.length < 4) {
+        return res.status(400).json({ error: "CSV file must have at least 4 rows" });
       }
 
       // Row 1 (index 0) = document type indicator
@@ -3312,55 +3254,6 @@ print(json.dumps(result))
     
     return new Date();
   }
-
-  // Analytics Routes
-  app.get("/api/chip/dashboard-stats", async (req, res) => {
-    try {
-      const stats = await storage.getChipDashboardStats();
-      res.json(stats);
-    } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
-      res.status(500).json({ error: "Failed to fetch dashboard stats" });
-    }
-  });
-
-  app.get("/api/chip/profit-loss", async (req, res) => {
-    try {
-      const { startDate, endDate } = req.query;
-
-      if (!startDate || !endDate) {
-        return res.status(400).json({ error: "startDate and endDate query parameters are required" });
-      }
-
-      const profitLoss = await storage.getChipProfitLoss(
-        startDate as string,
-        endDate as string
-      );
-      res.json(profitLoss);
-    } catch (error) {
-      console.error("Error fetching profit/loss:", error);
-      res.status(500).json({ error: "Failed to fetch profit/loss data" });
-    }
-  });
-
-  app.get("/api/chip/cash-flow", async (req, res) => {
-    try {
-      const { startDate, endDate } = req.query;
-
-      if (!startDate || !endDate) {
-        return res.status(400).json({ error: "startDate and endDate query parameters are required" });
-      }
-
-      const cashFlow = await storage.getChipCashFlow(
-        startDate as string,
-        endDate as string
-      );
-      res.json(cashFlow);
-    } catch (error) {
-      console.error("Error fetching cash flow:", error);
-      res.status(500).json({ error: "Failed to fetch cash flow data" });
-    }
-  });
 
   const httpServer = createServer(app);
   return httpServer;
