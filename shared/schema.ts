@@ -231,6 +231,9 @@ export const insertInquirySchema = createInsertSchema(inquiries).omit({
   id: true,
   sentAt: true,
   status: true,
+}).extend({
+  sendViaWhatsApp: z.boolean().optional(),
+  sendViaEmail: z.boolean().optional(),
 });
 
 export const insertSearchIndexSchema = createInsertSchema(searchIndex).omit({

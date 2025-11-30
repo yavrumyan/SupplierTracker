@@ -184,13 +184,40 @@ export default function SupplierDetail() {
   });
 
   const sendInquiryMutation = useMutation({
-    mutationFn: async (data: { message: string; supplierIds: number[] }) => {
+    mutationFn: async (data: { message: string; supplierIds: number[]; sendViaWhatsApp: boolean; sendViaEmail: boolean }) => {
       return await apiRequest("POST", "/api/inquiries", data);
     },
-    onSuccess: () => {
+    onSuccess: (response: { inquiry: any; sendingResults: Array<{ supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }> }) => {
+      const results = response.sendingResults || [];
+      
+      // Check for WhatsApp links and open them
+      results.forEach(result => {
+        if (result.whatsappLink) {
+          window.open(result.whatsappLink, '_blank');
+        }
+      });
+
+      // Build status message
+      let description = "";
+      results.forEach(result => {
+        if (result.email === "sent") {
+          description += `✓ Email sent to ${result.supplier}\n`;
+        }
+        if (result.whatsapp === "ready") {
+          description += `✓ WhatsApp link opened for ${result.supplier}\n`;
+        }
+        if (result.error) {
+          description += `✗ ${result.error}\n`;
+        }
+      });
+
+      if (!description) {
+        description = "Your inquiry has been sent to the supplier.";
+      }
+
       toast({
-        title: "Inquiry sent successfully",
-        description: "Your inquiry has been sent to the supplier.",
+        title: "Inquiry processed",
+        description: description.substring(0, 500),
       });
       setInquiryMessage("");
     },
