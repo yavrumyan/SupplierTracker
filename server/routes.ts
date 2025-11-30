@@ -51,7 +51,7 @@ import {
   chipSalesInvoices,
   chipSalesInvoiceItems
 } from "@shared/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql, desc } from "drizzle-orm";
 
 // Configure multer for file uploads
 const storage_config = multer.diskStorage({
@@ -3083,44 +3083,84 @@ print(json.dumps(result))
 
   app.get("/api/chip/imported-products", async (req, res) => {
     try {
-      const purchaseItems = await db.select({
-        id: chipPurchaseInvoiceItems.id,
-        invoiceType: sql<'purchase'>`'purchase'`,
-        invoiceNumber: chipPurchaseInvoices.invoiceNumber,
+      // Aggregate stock by product description
+      const purchaseData = await db.select({
         description: chipPurchaseInvoiceItems.description,
-        quantity: chipPurchaseInvoiceItems.quantity,
-        unitPrice: chipPurchaseInvoiceItems.unitPrice,
-        lineTotal: chipPurchaseInvoiceItems.lineTotal,
-        vatAmount: chipPurchaseInvoiceItems.vatAmount,
-        hsCode: chipPurchaseInvoiceItems.hsCode,
-        issueDate: chipPurchaseInvoices.issueDate,
+        totalQty: sql<number>`CAST(SUM(${chipPurchaseInvoiceItems.quantity}) AS INTEGER)`,
+        avgUnitPrice: sql<string>`AVG(${chipPurchaseInvoiceItems.unitPrice})`,
+        totalValue: sql<string>`SUM(${chipPurchaseInvoiceItems.lineTotal})`,
+        lastDate: sql<string>`MAX(${chipPurchaseInvoices.issueDate})`,
       })
       .from(chipPurchaseInvoiceItems)
       .innerJoin(chipPurchaseInvoices, eq(chipPurchaseInvoiceItems.invoiceId, chipPurchaseInvoices.id))
-      .orderBy(desc(chipPurchaseInvoices.issueDate));
+      .groupBy(chipPurchaseInvoiceItems.description);
 
-      const salesItems = await db.select({
-        id: chipSalesInvoiceItems.id,
-        invoiceType: sql<'sales'>`'sales'`,
-        invoiceNumber: chipSalesInvoices.invoiceNumber,
+      const salesData = await db.select({
         description: chipSalesInvoiceItems.description,
-        quantity: chipSalesInvoiceItems.quantity,
-        unitPrice: chipSalesInvoiceItems.unitPrice,
-        lineTotal: chipSalesInvoiceItems.lineTotal,
-        vatAmount: chipSalesInvoiceItems.vatAmount,
-        hsCode: chipSalesInvoiceItems.hsCode,
-        issueDate: chipSalesInvoices.issueDate,
+        totalQty: sql<number>`CAST(SUM(${chipSalesInvoiceItems.quantity}) AS INTEGER)`,
+        avgUnitPrice: sql<string>`AVG(${chipSalesInvoiceItems.unitPrice})`,
+        totalValue: sql<string>`SUM(${chipSalesInvoiceItems.lineTotal})`,
+        lastDate: sql<string>`MAX(${chipSalesInvoices.issueDate})`,
       })
       .from(chipSalesInvoiceItems)
       .innerJoin(chipSalesInvoices, eq(chipSalesInvoiceItems.invoiceId, chipSalesInvoices.id))
-      .orderBy(desc(chipSalesInvoices.issueDate));
+      .groupBy(chipSalesInvoiceItems.description);
 
-      const allItems = [
-        ...purchaseItems,
-        ...salesItems,
-      ];
+      // Create a map for easy lookup
+      const stockMap = new Map<string, any>();
 
-      res.json(allItems);
+      // Add purchase items
+      purchaseData.forEach(item => {
+        if (!stockMap.has(item.description)) {
+          stockMap.set(item.description, {
+            description: item.description,
+            purchaseQty: 0,
+            salesQty: 0,
+            purchaseValue: 0,
+            salesValue: 0,
+            purchasePrice: 0,
+            salesPrice: 0,
+            lastUpdate: null,
+          });
+        }
+        const entry = stockMap.get(item.description);
+        entry.purchaseQty = item.totalQty || 0;
+        entry.purchaseValue = parseFloat(item.totalValue || '0');
+        entry.purchasePrice = parseFloat(item.avgUnitPrice || '0');
+        entry.lastUpdate = item.lastDate;
+      });
+
+      // Add sales items
+      salesData.forEach(item => {
+        if (!stockMap.has(item.description)) {
+          stockMap.set(item.description, {
+            description: item.description,
+            purchaseQty: 0,
+            salesQty: 0,
+            purchaseValue: 0,
+            salesValue: 0,
+            purchasePrice: 0,
+            salesPrice: 0,
+            lastUpdate: null,
+          });
+        }
+        const entry = stockMap.get(item.description);
+        entry.salesQty = item.totalQty || 0;
+        entry.salesValue = parseFloat(item.totalValue || '0');
+        entry.salesPrice = parseFloat(item.avgUnitPrice || '0');
+        if (!entry.lastUpdate || new Date(item.lastDate || '') > new Date(entry.lastUpdate)) {
+          entry.lastUpdate = item.lastDate;
+        }
+      });
+
+      // Convert to array and add computed fields
+      const stockList = Array.from(stockMap.values()).map(item => ({
+        ...item,
+        currentStock: item.purchaseQty - item.salesQty,
+        netValue: item.purchaseValue - item.salesValue,
+      }));
+
+      res.json(stockList);
     } catch (error) {
       console.error("Error fetching imported products:", error);
       res.status(500).json({ error: "Failed to fetch imported products" });
