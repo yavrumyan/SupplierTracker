@@ -3,9 +3,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { SupplierForm } from "@/components/supplier-form";
-import { Building, Edit, Trash2, Star, Globe, Phone, Mail, MessageSquare } from "lucide-react";
+import { Building, Edit, Trash2, Star, Globe, Phone, Mail, MessageSquare, Send } from "lucide-react";
 import { Link } from "wouter";
 import type { Supplier, InsertSupplier } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +18,10 @@ export default function AllSuppliers() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null);
+  const [selectedSuppliers, setSelectedSuppliers] = useState<Set<number>>(new Set());
+  const [bulkInquiryMessage, setBulkInquiryMessage] = useState("");
+  const [bulkSendViaWhatsApp, setBulkSendViaWhatsApp] = useState(true);
+  const [bulkSendViaEmail, setBulkSendViaEmail] = useState(true);
 
   const { data: suppliers = [], isLoading } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers"],
@@ -69,6 +75,54 @@ export default function AllSuppliers() {
     },
   });
 
+  const sendBulkInquiryMutation = useMutation({
+    mutationFn: async (data: { message: string; supplierIds: number[]; sendViaWhatsApp: boolean; sendViaEmail: boolean }) => {
+      const response = await apiRequest("POST", "/api/inquiries", data);
+      const jsonData = await response.json();
+      return jsonData;
+    },
+    onSuccess: (response: { inquiry: any; sendingResults: Array<{ supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }> }) => {
+      const results = response.sendingResults || [];
+      
+      results.forEach(result => {
+        if (result.whatsappLink) {
+          window.open(result.whatsappLink, '_blank');
+        }
+      });
+
+      let description = "";
+      results.forEach(result => {
+        if (result.email === "sent") {
+          description += `✓ Email sent to ${result.supplier}\n`;
+        }
+        if (result.whatsapp === "ready") {
+          description += `✓ WhatsApp link opened for ${result.supplier}\n`;
+        }
+        if (result.error) {
+          description += `✗ ${result.error}\n`;
+        }
+      });
+
+      if (!description) {
+        description = `Your inquiry has been sent to ${selectedSuppliers.size} supplier(s).`;
+      }
+
+      toast({
+        title: "Inquiry processed",
+        description: description.substring(0, 500),
+      });
+      setBulkInquiryMessage("");
+      setSelectedSuppliers(new Set());
+    },
+    onError: () => {
+      toast({
+        title: "Failed to send inquiry",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleEdit = (supplier: Supplier) => {
     setEditingSupplier(supplier);
   };
@@ -81,6 +135,52 @@ export default function AllSuppliers() {
     if (editingSupplier) {
       updateSupplierMutation.mutate({ id: editingSupplier.id, data });
     }
+  };
+
+  const handleSupplierCheck = (supplierId: number, checked: boolean) => {
+    const newSelected = new Set(selectedSuppliers);
+    if (checked) {
+      newSelected.add(supplierId);
+    } else {
+      newSelected.delete(supplierId);
+    }
+    setSelectedSuppliers(newSelected);
+  };
+
+  const handleBulkSendInquiry = () => {
+    if (!bulkInquiryMessage.trim()) {
+      toast({
+        title: "No message provided",
+        description: "Please enter an inquiry message.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (selectedSuppliers.size === 0) {
+      toast({
+        title: "No suppliers selected",
+        description: "Please select at least one supplier.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!bulkSendViaWhatsApp && !bulkSendViaEmail) {
+      toast({
+        title: "No channel selected",
+        description: "Please select at least one communication channel.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    sendBulkInquiryMutation.mutate({
+      message: bulkInquiryMessage,
+      supplierIds: Array.from(selectedSuppliers),
+      sendViaWhatsApp: bulkSendViaWhatsApp,
+      sendViaEmail: bulkSendViaEmail,
+    });
   };
 
   // If editing, show the supplier form
