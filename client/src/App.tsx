@@ -26,30 +26,6 @@ import CompStyleAnalyticsPhase2 from "@/pages/compstyle/analytics-phase2";
 import CompStyleTransitTracking from "@/pages/compstyle/transit-tracking";
 import ProductSearch from "@/pages/compstyle/product-search";
 import ChipDashboard from "@/pages/chip/index";
-import ChipStock from "@/pages/chip/stock";
-import ChipProducts from "@/pages/chip/products";
-import ChipProductForm from "@/pages/chip/product-form";
-import ChipProductDetail from "@/pages/chip/product-detail";
-import ChipCustomers from "@/pages/chip/customers";
-import ChipCustomerForm from "@/pages/chip/customer-form";
-import ChipCustomerDetail from "@/pages/chip/customer-detail";
-import ChipSuppliers from "@/pages/chip/suppliers";
-import ChipSupplierForm from "@/pages/chip/supplier-form";
-import ChipSupplierDetail from "@/pages/chip/supplier-detail";
-import ChipPurchases from "@/pages/chip/purchases";
-import ChipPurchaseForm from "@/pages/chip/purchase-form";
-import ChipPurchaseDetail from "@/pages/chip/purchase-detail";
-import ChipSales from "@/pages/chip/sales";
-import ChipSaleForm from "@/pages/chip/sale-form";
-import ChipSaleDetail from "@/pages/chip/sale-detail";
-import ChipInvoices from "@/pages/chip/invoices";
-import ChipInvoiceForm from "@/pages/chip/invoice-form";
-import ChipInvoiceDetail from "@/pages/chip/invoice-detail";
-import ChipExpenses from "@/pages/chip/expenses";
-import ChipExpenseForm from "@/pages/chip/expense-form";
-import ChipFinanceReport from "@/pages/chip/reports/finance";
-import ChipProfitLossReport from "@/pages/chip/reports/profit-loss";
-import ChipCashFlowReport from "@/pages/chip/reports/cash-flow";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -75,33 +51,6 @@ function Router() {
         <Route path="/compstyle/profitability" component={CompStyleProfitability} />
         <Route path="/compstyle/order-recommendations" component={CompStyleOrderRecommendations} />
         <Route path="/chip" component={ChipDashboard} />
-        <Route path="/chip/stock" component={ChipStock} />
-        <Route path="/chip/products/new" component={ChipProductForm} />
-        <Route path="/chip/products/:id/edit" component={ChipProductForm} />
-        <Route path="/chip/products/:id" component={ChipProductDetail} />
-        <Route path="/chip/products" component={ChipProducts} />
-        <Route path="/chip/customers/new" component={ChipCustomerForm} />
-        <Route path="/chip/customers/:id/edit" component={ChipCustomerForm} />
-        <Route path="/chip/customers/:id" component={ChipCustomerDetail} />
-        <Route path="/chip/customers" component={ChipCustomers} />
-        <Route path="/chip/suppliers/new" component={ChipSupplierForm} />
-        <Route path="/chip/suppliers/:id/edit" component={ChipSupplierForm} />
-        <Route path="/chip/suppliers/:id" component={ChipSupplierDetail} />
-        <Route path="/chip/suppliers" component={ChipSuppliers} />
-        <Route path="/chip/purchases/new" component={ChipPurchaseForm} />
-        <Route path="/chip/purchases/:id" component={ChipPurchaseDetail} />
-        <Route path="/chip/purchases" component={ChipPurchases} />
-        <Route path="/chip/sales/new" component={ChipSaleForm} />
-        <Route path="/chip/sales/:id" component={ChipSaleDetail} />
-        <Route path="/chip/sales" component={ChipSales} />
-        <Route path="/chip/invoices/new" component={ChipInvoiceForm} />
-        <Route path="/chip/invoices/:id" component={ChipInvoiceDetail} />
-        <Route path="/chip/invoices" component={ChipInvoices} />
-        <Route path="/chip/expenses/new" component={ChipExpenseForm} />
-        <Route path="/chip/expenses" component={ChipExpenses} />
-        <Route path="/chip/reports/finance" component={ChipFinanceReport} />
-        <Route path="/chip/reports/profit-loss" component={ChipProfitLossReport} />
-        <Route path="/chip/reports/cash-flow" component={ChipCashFlowReport} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>
