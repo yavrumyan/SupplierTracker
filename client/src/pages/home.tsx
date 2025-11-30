@@ -20,6 +20,23 @@ export default function Home() {
   const [sendViaWhatsApp, setSendViaWhatsApp] = useState(true);
   const [sendViaEmail, setSendViaEmail] = useState(true);
 
+  // Fetch all suppliers to get available countries
+  const { data: allSuppliers = [] } = useQuery<Supplier[]>({
+    queryKey: ["/api/suppliers/all"],
+    queryFn: async () => {
+      const res = await fetch("/api/suppliers", { credentials: "include" });
+      if (!res.ok) {
+        throw new Error('Failed to fetch suppliers');
+      }
+      return await res.json();
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+  const availableCountries = Array.from(
+    new Set(allSuppliers.map(s => s.country).filter(Boolean))
+  ).sort();
+
   const { data: suppliers = [], isLoading, refetch } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers", filters],
     queryFn: async () => {
