@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 
 interface StockItem {
-  description: string;
+  productName: string;
   purchaseQty: number;
   salesQty: number;
   currentStock: number;
@@ -120,7 +120,7 @@ export default function ChipInvoicesList() {
                 <Table>
                   <TableHeader>
                     <TableRow className="border-b border-slate-200 bg-slate-50">
-                      <TableHead className="font-semibold">Product Description</TableHead>
+                      <TableHead className="font-semibold">Product Name (Armenian)</TableHead>
                       <TableHead className="text-right font-semibold">Purchase Qty</TableHead>
                       <TableHead className="text-right font-semibold">Sales Qty</TableHead>
                       <TableHead className="text-right font-semibold">Current Stock</TableHead>
@@ -135,7 +135,7 @@ export default function ChipInvoicesList() {
                   <TableBody>
                     {stocks.map((stock, idx) => (
                       <TableRow key={idx} className="border-b border-slate-100 hover:bg-slate-50">
-                        <TableCell className="font-medium text-slate-900 max-w-xs">{stock.description}</TableCell>
+                        <TableCell className="font-medium text-slate-900 max-w-xs">{stock.productName}</TableCell>
                         <TableCell className="text-right">
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
                             {stock.purchaseQty.toLocaleString()}

@@ -3083,9 +3083,9 @@ print(json.dumps(result))
 
   app.get("/api/chip/imported-products", async (req, res) => {
     try {
-      // Aggregate stock by product description
+      // Aggregate stock by product name (Armenian)
       const purchaseData = await db.select({
-        description: chipPurchaseInvoiceItems.description,
+        productName: chipPurchaseInvoiceItems.productName,
         totalQty: sql<number>`CAST(SUM(${chipPurchaseInvoiceItems.quantity}) AS INTEGER)`,
         avgUnitPrice: sql<string>`AVG(${chipPurchaseInvoiceItems.unitPrice})`,
         totalValue: sql<string>`SUM(${chipPurchaseInvoiceItems.lineTotal})`,
@@ -3093,10 +3093,10 @@ print(json.dumps(result))
       })
       .from(chipPurchaseInvoiceItems)
       .innerJoin(chipPurchaseInvoices, eq(chipPurchaseInvoiceItems.invoiceId, chipPurchaseInvoices.id))
-      .groupBy(chipPurchaseInvoiceItems.description);
+      .groupBy(chipPurchaseInvoiceItems.productName);
 
       const salesData = await db.select({
-        description: chipSalesInvoiceItems.description,
+        productName: chipSalesInvoiceItems.productName,
         totalQty: sql<number>`CAST(SUM(${chipSalesInvoiceItems.quantity}) AS INTEGER)`,
         avgUnitPrice: sql<string>`AVG(${chipSalesInvoiceItems.unitPrice})`,
         totalValue: sql<string>`SUM(${chipSalesInvoiceItems.lineTotal})`,
@@ -3104,16 +3104,17 @@ print(json.dumps(result))
       })
       .from(chipSalesInvoiceItems)
       .innerJoin(chipSalesInvoices, eq(chipSalesInvoiceItems.invoiceId, chipSalesInvoices.id))
-      .groupBy(chipSalesInvoiceItems.description);
+      .groupBy(chipSalesInvoiceItems.productName);
 
       // Create a map for easy lookup
       const stockMap = new Map<string, any>();
 
       // Add purchase items
       purchaseData.forEach(item => {
-        if (!stockMap.has(item.description)) {
-          stockMap.set(item.description, {
-            description: item.description,
+        const key = item.productName || 'Unknown';
+        if (!stockMap.has(key)) {
+          stockMap.set(key, {
+            productName: key,
             purchaseQty: 0,
             salesQty: 0,
             purchaseValue: 0,
@@ -3123,7 +3124,7 @@ print(json.dumps(result))
             lastUpdate: null,
           });
         }
-        const entry = stockMap.get(item.description);
+        const entry = stockMap.get(key);
         entry.purchaseQty = item.totalQty || 0;
         entry.purchaseValue = parseFloat(item.totalValue || '0');
         entry.purchasePrice = parseFloat(item.avgUnitPrice || '0');
@@ -3132,9 +3133,10 @@ print(json.dumps(result))
 
       // Add sales items
       salesData.forEach(item => {
-        if (!stockMap.has(item.description)) {
-          stockMap.set(item.description, {
-            description: item.description,
+        const key = item.productName || 'Unknown';
+        if (!stockMap.has(key)) {
+          stockMap.set(key, {
+            productName: key,
             purchaseQty: 0,
             salesQty: 0,
             purchaseValue: 0,
@@ -3144,7 +3146,7 @@ print(json.dumps(result))
             lastUpdate: null,
           });
         }
-        const entry = stockMap.get(item.description);
+        const entry = stockMap.get(key);
         entry.salesQty = item.totalQty || 0;
         entry.salesValue = parseFloat(item.totalValue || '0');
         entry.salesPrice = parseFloat(item.avgUnitPrice || '0');
@@ -3278,6 +3280,7 @@ print(json.dumps(result))
           // Only add item if it has meaningful data
           if (productName && (quantity > 0 || unitPrice > 0)) {
             const item = {
+              productName: productName,
               description: productName,
               quantity: Math.max(1, Math.round(quantity)),
               unitPrice: unitPrice.toString(),
