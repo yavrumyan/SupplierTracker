@@ -520,7 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const inquiryData = insertInquirySchema.parse(req.body);
       
       // Get supplier details for each supplier ID
-      const suppliers: Supplier[] = [];
+      const suppliers: any[] = [];
       for (const supplierId of inquiryData.supplierIds) {
         const supplier = await storage.getSupplier(supplierId);
         if (supplier) {
@@ -528,30 +528,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Send inquiries and collect results
+      // Send inquiries and collect results (awaited)
       let sendingResults: { supplier: string; email?: string; whatsapp?: string; whatsappLink?: string; error?: string }[] = [];
       
-      (async () => {
-        try {
-          const { sendInquiry } = await import("./services/inquiry-sender.ts");
-          sendingResults = await sendInquiry(
-            suppliers,
-            inquiryData.message,
-            inquiryData.sendViaWhatsApp ?? true,
-            inquiryData.sendViaEmail ?? true
-          );
-        } catch (sendError) {
-          console.error("Error sending inquiry:", sendError);
-        }
-      })();
+      try {
+        const { sendInquiry } = await import("./services/inquiry-sender.ts");
+        sendingResults = await sendInquiry(
+          suppliers,
+          inquiryData.message,
+          inquiryData.sendViaWhatsApp ?? true,
+          inquiryData.sendViaEmail ?? true
+        );
+      } catch (sendError) {
+        console.error("Error sending inquiry:", sendError);
+      }
 
-      // Store the inquiry record and return immediately with sending results
+      // Store the inquiry record
       const inquiry = await storage.createInquiry(inquiryData);
       
-      // Return after a small delay to allow async sending to complete
-      setTimeout(() => {
-        res.status(201).json({ inquiry, sendingResults });
-      }, 100);
+      // Return with sending results
+      res.status(201).json({ inquiry, sendingResults });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: "Invalid inquiry data", details: error.errors });
