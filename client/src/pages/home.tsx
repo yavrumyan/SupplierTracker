@@ -75,9 +75,9 @@ export default function Home() {
       const openWhatsAppLinksSequentially = async () => {
         for (let i = 0; i < whatsappLinks.length; i++) {
           window.open(whatsappLinks[i], '_blank');
-          // Wait 800ms between opening windows to allow browser to process each one
+          // Wait 1600ms between opening windows to allow browser to process each one
           if (i < whatsappLinks.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 800));
+            await new Promise(resolve => setTimeout(resolve, 1600));
           }
         }
       };
