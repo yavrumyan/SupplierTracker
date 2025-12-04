@@ -2673,15 +2673,23 @@ print(json.dumps(result))
             periodEnd,
           };
 
-          const orderInDb = await storage.createCompstyleSalesOrder(orderData);
-          for (const item of orderLineItems) {
-            await storage.createCompstyleSalesItem({
-              ...item,
-              salesOrderId: orderInDb.id
-            });
+          try {
+            const orderInDb = await storage.createCompstyleSalesOrder(orderData);
+            for (const item of orderLineItems) {
+              await storage.createCompstyleSalesItem({
+                ...item,
+                salesOrderId: orderInDb.id
+              });
+            }
+            count++;
+            console.log(`✓ Saved sales order ${salesOrderNumber} with ${orderLineItems.length} items`);
+          } catch (err: any) {
+            if (err.code === '23505') { // Unique constraint violation
+              console.log(`Skipping existing sales order: ${salesOrderNumber}`);
+            } else {
+              throw err;
+            }
           }
-          count++;
-          console.log(`✓ Saved sales order ${salesOrderNumber} with ${orderLineItems.length} items`);
         }
 
         // Skip to the row we processed last
@@ -2761,15 +2769,23 @@ print(json.dumps(result))
             periodEnd,
           };
 
-          const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
-          for (const item of orderLineItems) {
-            await storage.createCompstylePurchaseItem({
-              ...item,
-              purchaseOrderId: orderInDb.id
-            });
+          try {
+            const orderInDb = await storage.createCompstylePurchaseOrder(orderData);
+            for (const item of orderLineItems) {
+              await storage.createCompstylePurchaseItem({
+                ...item,
+                purchaseOrderId: orderInDb.id
+              });
+            }
+            count++;
+            console.log(`✓ Saved purchase order ${purchaseOrderNumber} with ${orderLineItems.length} items`);
+          } catch (err: any) {
+            if (err.code === '23505') { // Unique constraint violation
+              console.log(`Skipping existing purchase order: ${purchaseOrderNumber}`);
+            } else {
+              throw err;
+            }
           }
-          count++;
-          console.log(`✓ Saved purchase order ${purchaseOrderNumber} with ${orderLineItems.length} items`);
         }
 
         // Skip to the row we processed last
