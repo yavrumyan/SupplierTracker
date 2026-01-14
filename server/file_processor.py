@@ -10,6 +10,25 @@ import json
 import tempfile
 from typing import Dict, Any, Optional, Tuple
 import traceback
+from datetime import datetime, date
+
+
+def convert_datetime_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert all datetime columns to string to avoid JSON serialization issues.
+    """
+    for col in df.columns:
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            df[col] = df[col].astype(str)
+        elif df[col].dtype == 'object':
+            # Check if column contains datetime objects
+            try:
+                sample = df[col].dropna().head(5)
+                if len(sample) > 0 and isinstance(sample.iloc[0], (datetime, date)):
+                    df[col] = df[col].astype(str)
+            except:
+                pass
+    return df
 
 def read_price_list_file(file_path: str) -> pd.DataFrame:
     """
@@ -62,13 +81,14 @@ def read_price_list_file(file_path: str) -> pd.DataFrame:
     except Exception as e:
         raise Exception(f"Error reading file: {str(e)}")
 
-def apply_conversion_logic(df: pd.DataFrame, logic_content: str) -> Tuple[pd.DataFrame, str]:
+def apply_conversion_logic(df: pd.DataFrame, logic_content: str, file_path: str = None) -> Tuple[pd.DataFrame, str]:
     """
     Apply conversion logic to the DataFrame.
     
     Args:
         df: Input DataFrame
         logic_content: Python code string containing conversion logic
+        file_path: Original file path (for standardize function pattern)
         
     Returns:
         Tuple of (converted_df, output_filename)
@@ -77,9 +97,12 @@ def apply_conversion_logic(df: pd.DataFrame, logic_content: str) -> Tuple[pd.Dat
         Exception: If conversion logic fails
     """
     try:
+        import re
+        
         # Create a safe execution environment
         safe_globals = {
             'pd': pd,
+            're': re,
             'df': df.copy(),
             'output_filename': 'converted_price_list.csv'
         }
@@ -87,15 +110,43 @@ def apply_conversion_logic(df: pd.DataFrame, logic_content: str) -> Tuple[pd.Dat
         # Execute the conversion logic
         exec(logic_content, safe_globals)
         
-        # Get the processed DataFrame
-        if 'converted_df' in safe_globals:
+        # Check for different function patterns and apply them
+        converted_df = None
+        
+        # Pattern 1: standardize(input_path, output_path) function
+        if 'standardize' in safe_globals and callable(safe_globals['standardize']) and file_path:
+            # Create a temporary output file
+            temp_output = tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False)
+            temp_output_path = temp_output.name
+            temp_output.close()
+            
+            try:
+                # Call the standardize function
+                safe_globals['standardize'](file_path, temp_output_path)
+                
+                # Read the output CSV
+                converted_df = pd.read_csv(temp_output_path, encoding='utf-8-sig')
+            finally:
+                # Clean up temp file
+                if os.path.exists(temp_output_path):
+                    os.unlink(temp_output_path)
+        
+        # Pattern 2: converted_df variable defined
+        elif 'converted_df' in safe_globals:
             converted_df = safe_globals['converted_df']
-        elif 'convert_cs' in safe_globals:
-            # Handle legacy format with convert_cs function
+        
+        # Pattern 3: convert_cs function (legacy)
+        elif 'convert_cs' in safe_globals and callable(safe_globals['convert_cs']):
             convert_func = safe_globals['convert_cs']
             converted_df = convert_func(df.copy())
+        
+        # Pattern 4: convert_dg function for DG supplier
+        elif 'convert_dg' in safe_globals and callable(safe_globals['convert_dg']):
+            convert_func = safe_globals['convert_dg']
+            converted_df = convert_func(df.copy(), 'General')
+        
+        # Pattern 5: df was modified in place
         else:
-            # If no converted_df is defined, assume df was modified in place
             converted_df = safe_globals['df']
         
         # Get the output filename
@@ -107,6 +158,9 @@ def apply_conversion_logic(df: pd.DataFrame, logic_content: str) -> Tuple[pd.Dat
             
         if converted_df.empty:
             raise Exception("Conversion resulted in empty DataFrame")
+        
+        # Convert datetime columns to strings to avoid JSON serialization issues
+        converted_df = convert_datetime_columns(converted_df)
             
         return converted_df, output_filename
         
@@ -128,8 +182,8 @@ def process_price_list(file_path: str, logic_content: str) -> Dict[str, Any]:
         # Read the price list file
         df = read_price_list_file(file_path)
         
-        # Apply conversion logic
-        converted_df, output_filename = apply_conversion_logic(df, logic_content)
+        # Apply conversion logic (pass file_path for standardize function pattern)
+        converted_df, output_filename = apply_conversion_logic(df, logic_content, file_path)
         
         # Generate preview HTML
         preview_html = converted_df.head(10).to_html(classes='table table-striped', table_id='price-list-preview')
