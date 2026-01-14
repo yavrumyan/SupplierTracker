@@ -121,8 +121,17 @@ def apply_conversion_logic(df: pd.DataFrame, logic_content: str, file_path: str 
             temp_output.close()
             
             try:
-                # Call the standardize function
-                safe_globals['standardize'](file_path, temp_output_path)
+                # Suppress print statements by redirecting stdout to stderr
+                import io
+                old_stdout = sys.stdout
+                sys.stdout = io.StringIO()
+                
+                try:
+                    # Call the standardize function
+                    safe_globals['standardize'](file_path, temp_output_path)
+                finally:
+                    # Restore stdout
+                    sys.stdout = old_stdout
                 
                 # Read the output CSV
                 converted_df = pd.read_csv(temp_output_path, encoding='utf-8-sig')
