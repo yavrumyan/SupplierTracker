@@ -1,0 +1,31 @@
+﻿Supplier,Category,Brand,Model,Name,Price,Currency,Stock,MOQ,Notes
+BI-LINE,General,,BV650I-GR,"APC EASY UPS BV 650VA/375Watt, AVR, Schuko Outlet, 230V, warranty - 2 years",20900,AMD,1,NO,Rezerv
+BI-LINE,General,,BV800I-GR,"APC EASY UPS BV 800VA/450Watt, AVR, Schuko Outlet, 230V, warranty - 2 years",25900,AMD,1,NO,In Stock
+BI-LINE,General,,BV1000I-GR,"APC EASY UPS BV 1000VA/600Watt, AVR, Schuko Outlet, 230V, warranty - 2 years",30750,AMD,1,NO,In Stock
+BI-LINE,General,,BE850G2-GR,"APC Back-UPS 850VA, 230V, USB Type-C and A charging ports; warranty - 2 year",62000,AMD,1,NO,In Stock
+BI-LINE,General,,BX750MI-GR,"APC Back-UPS 750VA/410Watt, 230V, AVR, Schuko Outlet, 230V, warranty - 2 years,",49500,AMD,1,NO,In Stock
+BI-LINE,General,,BX1200MI-GR,"APC Back-UPS 1200VA/650Watt, 230V, AVR; 4 x CEE 7/7 Schuko outlets; warranty - 2 years",76000,AMD,1,NO,In Stock
+BI-LINE,General,,BX1600MI-GR,"APC Back-UPS 1600VA/900Watt, 230V, AVR, Schuko Sockets; warranty - 2 years",90000,AMD,1,NO,In Stock
+BI-LINE,General,,BX2200MI-GR,"APC Back-UPS 2200VA/1.2kWatt, 230V, AVR, Schuko Sockets; warranty - 2 years",114600,AMD,1,NO,In Stock
+BI-LINE,General,,SMT1000IC,"APC Smart-UPS 1000VA / 700 Watts, LCD 230V, SmartConnect Port + SmartSlot, USB, warranty - 3 years (excluding battery) and 2 year for battery",250000,AMD,1,NO,In Stock
+BI-LINE,General,,SMC1500I-2UC,"APC Smart-UPS C  1500VA/ 900Watts LCD RM 2U, 230V; SmartConnect port, USB; warranty - 2 year",339000,AMD,1,NO,In Stock
+BI-LINE,General,,SMT2200RMI2UNC,"APC Smart-UPS 2200VA /1980 Watts, LCD 230V, Rackmount 2U; Network Management Card; SmartConnect Port, USB; warranty - 3 years (excluding battery) and 2 year for battery",915000,AMD,1,NO,Rezerv
+BI-LINE,General,,SRV2KI-E,"APC Easy UPS On-Line SRV 2000VA/1800Watt  230V, warranty - 2 years",299400,AMD,1,NO,In Stock
+BI-LINE,General,,SRT1500XLI,"APC Smart-UPS SRT (OnLine) 1500VA/1.5kWatts 230V, warranty - 3 years (excluding battery) and 2 year for battery",580500,AMD,1,NO,In Stock
+BI-LINE,General,,SRT2200XLI,"APC Smart-UPS SRT (OnLine) 2200VA/ 1980Watt  230V, RJ-45 Serial, Smart-Slot, USB, warranty - 3 years (excluding battery) and 2 year for battery",782000,AMD,1,NO,In Stock
+BI-LINE,General,,SRT3000XLI,APC UPS Smart OnLine RT 3000 VA / 2700 Watts 230V; warranty - 3 years (excluding battery) and 2 year for battery,1290000,AMD,1,NO,In Stock
+BI-LINE,General,,SRT5KXLI,"APC UPS Smart SRT (On Line) 5000VA / 4500 Watts 230V, Network Management Card; warranty - 3 years (excluding battery) and 2 year for battery",2052000,AMD,1,NO,In Stock
+BI-LINE,General,,SRT6KXLI,"APC UPS Smart SRT (On Line) 6000VA / 6000 Watts 230V, Network Management Card; warranty - 3 years (excluding battery) and 2 year for battery",2400000,AMD,1,NO,In Stock
+BI-LINE,General,,AP9640,APC UPS Network Management Card 3,178000,AMD,1,NO,In Stock
+BI-LINE,General,,,Rack options,0,AMD,1,NO,
+BI-LINE,General,,SRTRK2,"APC Smart-UPS SRT 19"" Rail Kit for Smart-UPS SRT 5/6/8/10kVA",101350,AMD,1,NO,In Stock
+BI-LINE,General,,SRTRK4,"APC Smart-UPS SRT 19"" Rail Kit for SRT 1/1.5/2.2/3kVA",87200,AMD,1,NO,In Stock
+BI-LINE,General,,,Power Cord for UPS,0,AMD,1,NO,
+BI-LINE,General,,,"APC Power Cord 16Am, C13 to C14",12900,AMD,1,NO,In Stock
+BI-LINE,General,,,"HP-SPS Power cord 16Am, C19-C20, 2.5M",20000,AMD,1,NO,In Stock
+BI-LINE,General,,,Replacement Battery for APC UPS,0,AMD,1,NO,
+BI-LINE,General,,HR1221W,WBR Battery F2 12V/5AH,10200,AMD,1,NO,In Stock
+BI-LINE,General,,HR1234W F2,WBR Battery F2 12V/9AH,13250,AMD,1,NO,In Stock
+BI-LINE,General,,GP12120F2,WBR F2 Battery 12V/12AH,20000,AMD,1,NO,In Stock
+BI-LINE,General,,GP12170,WBR Battery 12V/15-17AH,26750,AMD,1,NO,In Stock
+BI-LINE,General,,,цены включают 20% НДС,0,AMD,1,NO,

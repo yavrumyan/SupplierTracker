@@ -50,7 +50,20 @@ def read_price_list_file(file_path: str) -> pd.DataFrame:
         if ext in ['.xlsx', '.xls']:
             # Read Excel file with proper encoding support
             try:
-                df = pd.read_excel(file_path, engine='openpyxl' if ext == '.xlsx' else None)
+                # First try reading with default settings
+                xls = pd.ExcelFile(file_path, engine='openpyxl' if ext == '.xlsx' else None)
+                
+                # Try to find a non-empty sheet
+                df = None
+                for sheet_name in xls.sheet_names:
+                    temp_df = pd.read_excel(xls, sheet_name=sheet_name)
+                    if not temp_df.empty and len(temp_df.columns) > 0:
+                        df = temp_df
+                        break
+                
+                # If all sheets are empty or no sheet was found, fall back to the first sheet
+                if df is None:
+                    df = pd.read_excel(file_path, engine='openpyxl' if ext == '.xlsx' else None)
             except Exception as e:
                 raise Exception(f"Error reading Excel file: {str(e)}")
         elif ext == '.csv':
