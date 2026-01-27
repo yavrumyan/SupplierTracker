@@ -26,6 +26,7 @@ ARMIT,PRINTERS,,CE711A,HP CLJ CP5225n Printer: EUR-Multilingual A3,565000,AMD,1,
 ARMIT,PRINTERS,,CE712A,HP Color LaserJet CP5225dn Printer A3,653200,AMD,1,NO,NEW
 ARMIT,PRINTERS,,4ZB97A,HP Color Laser MFP 179fnw Printer:EUR A4,139700,AMD,1,NO,
 ARMIT,PRINTERS,,499M8A,HP Color LaserJet Pro MFP 3303fdw Prntr A4,222700,AMD,1,NO,NEW
+ARMIT,PRINTERS,,5HH65A,HP Color LJ Pro MFP 4303dw Prntr:EUR A4,227000,AMD,1,NO,
 ARMIT,PRINTERS,,3QA55A,HP Color LaserJet Ent MFP M480f Prntr:EU A4,349000,AMD,1,NO,NEW
 ARMIT,PRINTERS,,5HB07D,HP DesignJet T230 24-in Printer A1,239000,AMD,1,NO,NEW
 ARMIT,PRINTERS,,5HB08D,HP DesignJet T650 24-in Printer A1,373000,AMD,1,NO,NEW
@@ -52,13 +53,10 @@ ARMIT,COMMERCIAL LAPTOPS,,CJ9K7ET,"HP EliteBook 6 G1i 14"" UMA Ultra 7 255U 6 14
 ARMIT,COMMERCIAL LAPTOPS,,B68ZQET,"HP EliteBook X Flip G1i 14"" UMA Ultra 5 226V+16GB Atmospheric Blue X Flip G1i / 14.0 WUXGA W+LBL UWVA 400 WLAN wAI ISP Touch bnt Panel / 512GB PCIe NVMe Value / W11p64NextGenStandard / 1yw / kbdPM ABacklit CP Backlit SR / Intel BE201 Wi-Fi 7 +BT 5.4 non-vPro / Atmospheric Blue Alum",707800,AMD,1,NO,NEW
 ARMIT,COMMERCIAL LAPTOPS,,AD3R8ET,"HP EliteBook 8 G1i 13.3"" UMA Ultra 5 225U 16GB 8 13 inch G1i / 13.3 WUXGA UWVA 300 5MP IR ISP+ 60Hz bnt Panel / 512GB PCIe NVMe Value / W11p64 / 1yw | HP3yearOffsiteCareNotebookBundledSupport / Dual AryMic 5MP USB2 IR AI WFOVCamera / Clickpad Backlit Premium kbd / Intel AX211 W",502800,AMD,1,NO,NEW
 ARMIT,COMMERCIAL LAPTOPS,,A37M6ET,"HP EliteBook 8 G1i 13.3"" UMA Ultra 7 255U 32GB 8 13 inch G1i / 13.3 WUXGA UWVA 300 5MP IR ISP+ 60Hz bnt Panel / 1TB PCIe NVMe Value / W11p64 / 1yw / Dual AryMic 5MP USB2 IR AI WFOVCamera / Clickpad Backlit Premium kbd / Intel BE201 Wi-Fi 7 +BT 5.4 non-vPro / No SmartCard Reader",684800,AMD,1,NO,NEW
-ARMIT,CONSUMER LAPTOPS,,D05WSEA,HP Laptop (PD) Clamshell | Sebastian 24C1 | Core 3-100U (Copilot) | 8GB DDR4 1DM 3200 | 512GB PCIe value | Intel Graphics | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF+) - 720p TNR PVCY ST | WARR 1/1/0 EURO,184800,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,BG7K0EA,HP Laptop Clamshell | Vlad 24C1 | Core 3-100U | 16GB DDR4 2DM 3200 | 512GB PCIe value | Intel Graphics | 17.3 FHD (1920x1080) AG IPS 300 nits Narrow Border flat | OST FreeDOS 3.0 | Jet Black - 720p TNR PVCY ST | WARR 1/1/0 EURO | Warranty EXT 1+1 RTD Low,189000,AMD,1,NO,
-ARMIT,CONSUMER LAPTOPS,,BG7H4EA,HP Laptop AI PC Clamshell | Sebastian 25C1 | Ultra 5-225U (12C) 12 NPU TOPs | 16GB DDR5 2DM 5600 | 512GB PCIe value | Intel Graphics | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF+) - 720p TNR PVCY ST | WARR 1/1/0 EURO,272600,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,BK2X0EA,HP Laptop Clamshell | Sebastian 25C1 | Ultra 5-225U (12C) 12 NPU TOPs | 16GB DDR5 2DM 5600 | 1TB PCIe value | Intel Graphics | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF+) - 1080p TNR PVCY ST | WARR 1/1/0 EURO | Warranty EXT 1+1 RTD Low,296500,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,A19WDEA,HP Laptop Clamshell | Sebastian 24C1 | Core 7-150U | 16GB DDR4 2DM 3200 | 512GB PCIe value | Intel Graphics | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF+) - 720p TNR PVCY ST | WARR 1/1/0 EURO,264000,AMD,1,NO,Special Price
 ARMIT,CONSUMER LAPTOPS,,BL1K3EA,HP Laptop Clamshell | Sebastian 23C1 | Core i7-1355U | 16GB DDR4 2DM 3200 | 512GB PCIe value | Intel Iris Xe | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF++) - FPR - 1080p TNR PVCY ST | WARR 1/1/0 EURO | Warranty EXT 1+1 RTD Low,279000,AMD,1,NO,
-ARMIT,CONSUMER LAPTOPS,,BG7H5EA,HP Laptop Clamshell | Sebastian 25C1 | Ultra 7-255U (12C) 12 NPU TOPs | 16GB DDR5 2DM 5600 | 512GB PCIe value | Intel Graphics | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF+) - 720p TNR PVCY ST | WARR 1/1/0 EURO,321500,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,BK2X2EA,HP Laptop Clamshell | Sebastian 25C1 | Ultra 7-255U (12C) 12 NPU TOPs | 16GB DDR5 2DM 5600 | 1TB PCIe value | Intel Graphics | 15.6 FHD (1920x1080) AG IPS 300 nits Narrow border flat | OST FreeDOS 3.0 | Natural Silver (FF+) - 720p TNR PVCY ST | WARR 1/1/0 EURO | Warranty EXT 1+1 RTD Low,345000,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,BK9Z4EA,HP OmniBook 5 Clamshell | CanopyR 25C1 | Core i5-1334U (2C+8C) | 16GB LPDDR5X 4800 on-board | 1TB PCIe Gen4 Value | Intel Iris Xe | 16.0 2K (1920x1200) Antiglare IPS 300 nits | OST FreeDOS 3.0 | Sky Blue - 1080p IR TNR PVCY ST | WARR 1/1/0 EURO | Warranty EXT 1+1 RTD Medium,266000,AMD,1,NO,
 ARMIT,CONSUMER LAPTOPS,,B2CV3EA,HP Pavilion Clamshell | Canopy 24C1 | Ultra 5-125U | 16GB 7467 LPDDR5X on-board | 512GB PCIe Gen4 Value | Intel Graphics | 16.0 WUXGA (1920x1200) Antiglare IPS 300 nits Narrow Border flat | OST FreeDOS 3.0 | Natural Silver - 1080p TNR PVCY ST | WARR 1/1/0 EURO,271600,AMD,1,NO,
@@ -73,27 +71,19 @@ ARMIT,CONSUMER LAPTOPS,,BZ1H7EA,HP OmniBook 5 Flip x360 | Salute 25C1 | Core 7-1
 ARMIT,CONSUMER LAPTOPS,,BZ2X2EA,HP OmniBook X Flip x360 | Cadet 25C1 | Ultra 5-226V (8C) 40 NPU TOPs | 16GB LPDDR5X 8533 on-board | 512GB PCIe Gen4 Value | Intel Arc 130V GPU | Touch/14.0 2K (1920x1200) IPS 400 nits | OST W11H6 NG STD | Glacier Silver AI logo - 5MP IR PVCY ST | WARR 1/1/0 EURO,409000,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,BZ2X4EA,VICTUS Clamshell | Roku 25C1 | Core 5 - 210H (8C) | 16GB DDR5 1DM 5600 | 512GB PCIe Gen4 Value | NVIDIA GeForce RTX 5050 8GB VRAM | 15.6 FHD (1920x1080) AG IPS 144Hz 300 nits | OST FreeDOS 3.0 | Mica Silver - 720p TNR | WARR 1/1/0 EURO,441000,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,BZ2X3EA,VICTUS Clamshell | Roku 25C1 | Core 5 - 210H (8C) | 16GB DDR5 1DM 5600 | 512GB PCIe Gen4 Value | NVIDIA GeForce RTX 5050 8GB VRAM | 15.6 FHD (1920x1080) AG IPS 144Hz 300 nits | OST FreeDOS 3.0 | Performance Blue - 720p TNR | WARR 1/1/0 EURO,441600,AMD,1,NO,NEW
-ARMIT,CONSUMER LAPTOPS,,C0EF3EA,OMEN Clamshell | Hanna 25C1 | Core 5 - 210H (8C) | 16GB DDR5 1DM 5200 | 512GB PCIe Gen4 Value | NVIDIA GeForce RTX 5050 8GB VRAM | 16.0 2K (1920x1200) Antiglare IPS 144Hz 300 nits | OST FreeDOS 3.0 | Shadow Black - 1080p IR TNR PVCY ST | WARR 1/1/0 EURO,451000,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,C5HZ1EA,OMEN Clamshell | Dojo 25C1 | Ultra 7 - 255HX (20C) 13 NPU TOPs | 64GB DDR5 2DM 6400 | 1TB PCIe Gen4 Value | NVIDIA GeForce RTX 5070 Ti 12GB VRAM | 16.0 2.5K (2560x1600) Antiglare Low Blue Light IPS VRR 240Hz 500 nits | OST FreeDOS 3.0 | Shadow Black ALU - Num Pad | WARR 1/1/0 EURO | Warranty EXT 1+1 RTD High,1079900,AMD,1,NO,NEW
 ARMIT,CONSUMER LAPTOPS,,PN,CPU,0,AMD,1,NO,
 ARMIT,CONSUMER LAPTOPS,,9S7-13P312-260,Raptor Lake i7-1360P,499000,AMD,1,NO,
 ARMIT,PC | AIO,,B6GC7ES,HP Pro Mini 260 G9 Mini -R i3-1315U / 8GB DDR4 / 256GB M.2 SSD Value / DOS / 1yw / No kbd / MISCNo mouse / No Flex Port 2 / DM No SATA HDD Bracket G6,154000,AMD,1,NO,
 ARMIT,PC | AIO,,C84E6EA,HP OmniDesk Tower | TaoyuanI 1C25 | INTEL i3-14100 (RAPTOR LAKE-S REFRESH) 4.70GHz 4 CORES | RAM 16GB (1x16GB) DDR5 4800 | SSD 512G 2280 PCIe NVMe Value | UMA | FreeDos 3.0 | Meteor Silver | WARR 1/1/0 Low,229000,AMD,1,NO,Special Price
 ARMIT,PC | AIO,,837V5EA,HP Desktop PC Tower | WatsonI 1C23 | INTEL i5-13400 (RAPTOR LAKE) 2.50GHz 10 CORES | RAM 8GB (1x8GB) DDR4 3200 NECC | SSD 512GB 2280 PCIe NVMe Val M.2 | UMA | No ODD | FreeDos 3.0 | Dark Black | WARR 1/1/0 Low,216384,AMD,1,NO,Special Price
-ARMIT,PC | AIO,,B6HT2ES,Mini400G9P-BaseUnitIDS / i5-14500T4802B14cores / 16GB DDR5 / 256GB M.2 SSD Value / DOS / 1yw / 125 BLKkbd / 125mouse / No Country of Origin Restriction | Intel vPro Essentials / Realtek Wi-Fi 6 WLAN / VGA Port v2 | 2x Type-A USB 2 / DM No SATA HDD Bracket,234900,AMD,1,NO,Special Price
 ARMIT,PC | AIO,,B70XSAT,2G1iETWR-BaseUnitIDS / i5-147020MB10cores / 16GB (1x16GB) DDR5 4800 CR UDIMM Memory / 512GB SSD / DOS / No ODD / 1yw / No Discrete Graphics / 125 v2 Blackkbd / 125mouse / No Country of Origin Restriction / No WLAN / Adjusted Allowance (DDR5 4800 16G) | A,245000,AMD,1,NO,
-ARMIT,PC | AIO,,BY7B2ET,4G1iMini-BaseUnitIDS / Ultra52T49020MB10cores / 16GB (1x16GB) DDR5 5600 SODIMM Memory / 512GB M.2 SSD Value / DOS / 1yw / HP 3 year Onsite Desktop Bundled Support / 125 v2 Blackkbd / 125mouse / No Country of Origin Restriction / DM 5600 Absorber / Intel A,275300,AMD,1,NO,Special Price
 ARMIT,PC | AIO,,B6GE2ES,440G9P24AiOBU-NTIDS / 440 23.8 G9 NT FY24 IDS / i3-14100T44012Mcores / 8GB DDR5 / 512GB M.2 SSD Value / DOS / No ODD / 1yw / 125 BLKkbd / 125mouse / ProOne 440 G9 Adjustable Stand / No MCR / No Country of Origin Restriction | USB Tag SN+MAC1+UUID+PKID,269000,AMD,1,NO,Special Price
 ARMIT,PC | AIO,,9M9L2AT,440 G9 AiO 24 -R / 440 23.8 G9 NT FY23 IDS / i5-13500T / 8GB DDR4 / 512GB M.2 SSD Value / DOS / DVD-Writer / 1yw / 125 BLKkbd / 125mouse / ProOne 440 G9 Adjustable Stand / No MCR / Intel vPro Essentials / Adjusted Allowance (8G) | Adjusted Allowance (13,302660,AMD,1,NO,
 ARMIT,PC | AIO,,B6HE3ES,440G9P24AiOBU-NTIDS / 440 23.8 G9 NT FY24 IDS / i5-145005002B14cores / 16GB DDR5 / 512GB M.2 SSD Value / DOS / No ODD / 1yw / HP 3 year Next Business Day Onsite Desktop Only Hardware SupportWarranty Extension / No kbd / MISCNo mouse / ProOne 440 G9 Adju,329000,AMD,1,NO,Special Price
 ARMIT,PC | AIO,,937Y1EA,HP ProOne 440 G9 440G9P24AiOBU-NTIDS / 440 23.8 G9 NT FY24 IDS / i5-14500T4802B14cores / 16GB DDR5 / 512GB M.2 SSD Value / DOS / No ODD / 1yw / HP 3 year Next Business Day Onsite Desktop Only Hardware SupportWarranty Extension / 125 BLKkbd / 125mouse / ProOne 440 G9 Adj,321000,AMD,1,NO,
-ARMIT,PC | AIO,,B6YR3ET,440G9P24AiOBU-NTIDS / 440 23.8 G9 NT FY24 IDS / i5-14500T4802B14cores / 8GB DDR5 / 512GB M.2 SSD Value / DOS / No ODD / 1yw / 125 BLKkbd / 125mouse / ProOne 440 G9 Adjustable Stand / No MCR / No Country of Origin Restriction | Intel vPro Essentials / R,296000,AMD,1,NO,
-ARMIT,PC | AIO,,C84FHEA,HP 24 inch All-in-One All-in-One | Maokong24I 1C23 | INTEL i7-1355U (RAPTOR LAKE-U) | RAM 16GB (2x8GB) DDR4 3200 SODIMM | SSD 1T 2280 PCIe NVMe Value | UMA | Non-Touch/23.8 FHD Antiglare IPS | FreeDos 3.0 | Shell White - HD Camera - Entry | WARR 1/1/0 Medium,369000,AMD,1,NO,NEW
 ARMIT,PC | AIO,,A55LWET,HP ProOne 440 G9 AIO 24 BU-NTIDS / 440 23.8 G9 NT FY24 IDS / i7-14700T50033MB20cores / 16GB DDR5 / 512GB M.2 SSD Value / DOS / No ODD / 1yw / 125 BLKkbd / 125mouse / ProOne 440 G9 Adjustable Stand / No MCR / No Country of Origin Restriction | Intel vPro Essentials,349000,AMD,1,NO,
-ARMIT,PC | AIO,,7Y0B7EA,HP 24 inch All-in-One All-in-One | Maokong24I 1C23 | INTEL i7-1355U (RAPTOR LAKE-U) | RAM 16GB (2x8GB) DDR4 3200 SODIMM | SSD 512G 2280 PCIe NVMe Value | UMA | Non-Touch/23.8 FHD Antiglare IPS | FreeDos 3.0 | Jet Black - HD Camera - Premium | WARR 1/1/0 Medium,283000,AMD,1,NO,
-ARMIT,PC | AIO,,C84E2EA,HP 24 inch All-in-One AI PC All-in-One | Maokong24I 1C25 | INTEL Core Ultra5 225U (ARROW LAKE) 4.80GHz 12 CORES 12 TOPS | RAM 16GB (1x16GB) DDR5 5600 | SSD 512G 2280 PCIe NVMe Value | UMA | Non-Touch/23.8 FHD Antiglare IPS | FreeDos 3.0 | Jet Black - FHD IR Camera - Premium | WARR 1/1/0 Medium,325000,AMD,1,NO,NEW
-ARMIT,PC | AIO,,C84E5EA,HP 27 inch All-in-One AI PC All-in-One | Maokong27I 1C25 | INTEL Core Ultra5 225U (ARROW LAKE) 4.80GHz 12 CORES 12 TOPS | RAM 16GB (2x8GB) DDR5 5600 | SSD 512G 2280 PCIe NVMe Value | UMA | Non-Touch/27 FHD Antiglare IPS | FreeDos 3.0 | Jet Black - FHD IR Camera - Premium | WARR 1/1/0 Medium,339000,AMD,1,NO,
-ARMIT,PC | AIO,,A16KREA,HP 24 inch All-in-One All-in-One | Maokong24I 1C24 | INTEL ULTRA5-125U (METEOR LAKE-U) | RAM 16GB (1x16GB) DDR5 5600 | SSD 512G 2280 PCIe NVMe Value | UMA | Non-Touch/23.8 FHD Antiglare IPS | FreeDos 3.0 | Shell White - FHD IR Camera - Premium | WARR 1/1/0 Medium | Warranty EXT 1+1 RTD Medium,296000,AMD,1,NO,
+ARMIT,PC | AIO,,A16KREA,HP 24 inch All-in-One All-in-One | Maokong24I 1C24 | INTEL ULTRA5-125U (METEOR LAKE-U) | RAM 16GB (1x16GB) DDR5 5600 | SSD 512G 2280 PCIe NVMe Value | UMA | Non-Touch/23.8 FHD Antiglare IPS | FreeDos 3.0 | Shell White - FHD IR Camera - Premium | WARR 1/1/0 Medium | Warranty EXT 1+1 RTD Medium,0,AMD,1,NO,
 ARMIT,MONITORS,,94C17AA,"HP S5 524sf FHD MNTR 24"" IPS HDMI FHD (1920 x 1080) 300 nits 16:9 100 Hz",54000,AMD,1,NO,HOT Price
 ARMIT,MONITORS,,94C17E9,"HP S5 524sf FHD MNTR (2Y Warrranty) 24"" IPS HDMI FHD (1920 x 1080) 300 nits 16:9 100 Hz",62900,AMD,1,NO,NEW
 ARMIT,MONITORS,,94F46AA,"HP S5 527sw FHD WHT MNTR 27"" IPS HDMI FHD (1920 x 1080) 300 nits 16:9 100 Hz",73100,AMD,1,NO,
@@ -103,7 +93,6 @@ ARMIT,MONITORS,,94C50AA,"HP S5 527sh FHD HA MNTR 27"" IPS HDMI FHD (1920 x 1080)
 ARMIT,MONITORS,,9U5C1AA,"HP Series 3 Pro 23.8 inch FHD Monitor - 324pv 24"" VA HDMI; VGA FHD (1920 x 1080) 250 nits 16:9 75 Hz",49000,AMD,1,NO,HOT Price
 ARMIT,MONITORS,,64W41AA,"HP P27h G5 FHD Monitor 27"" IPS HDMI; VGA; DisplayPort FHD (1920 x 1080) 250 nits 16:09:00 75 Hz",64900,AMD,1,NO,69900
 ARMIT,MONITORS,,40Z32AA,"HP E24m G4 USB-C Conf FHD Monitor 24"" IPS HDMI; USB-C; USB hub; DisplayPort FHD 1920 x 1080 250 nits 16:09:00 75 Hz",123000,AMD,1,NO,NEW
-ARMIT,MONITORS,,6N4C4AA,"HP E27k G5 4K USB-C MNTR 27"" IPS USB-C with 65W Power Delivery, RJ 45, Remote manageability, Daisy Chain, SPO Ambient Light Sensor Speakers, Better HDMI and DP connection Gen 4K UHD (3840 x 2160) 350 Nits 16:09:00 60 Hz",159500,AMD,1,NO,NEW
 ARMIT,MONITORS,,VA2432-MHD-3,"24"" 16:9 (23.8"") 1920 x 1080 SuperClear® IPS monitor, VGA, HDMI, DisplayPort and speakers, 1ms 100Hz 24"" IPS VGA, HDMI, DisplayPort and speakers FHD (1920x1080) 100Hz",45100,AMD,1,NO,NEW
 ARMIT,MONITORS,,VA2732-H-2,"27"" 16:9 (27"") 1920 x 1080 SuperClear® IPS monitor, VGA and HDMI, 1ms 100Hz 27"" IPS VGA / HDMI FHD (1920x1080) 100Hz",55500,AMD,1,NO,NEW
 ARMIT,MONITORS,,VA2708-2K-HD-2,"27"" 16:9 (27"") 2560 x 1440 SuperClear® IPS Monitor 100Hz with 2 HDMI, DisplayPort, 75Hz 27"" IPS 2 HDMI, DisplayPort QHD (2560x1440) 75Hz",74900,AMD,1,NO,NEW
@@ -113,11 +102,11 @@ ARMIT,MONITORS,,VA240-H-2,"24"" 16:9 (23.8"") 1920 x 1080 SuperClear® IPS monit
 ARMIT,MONITORS,,VA2432-H-2,"24"" 16:9 (23.8"") 1920 x 1080 SuperClear® IPS monitor, VGA and HDMI, 1ms 100Hz 24"" IPS VGA / HDMI FHD (1920x1080) 100Hz",0,AMD,1,NO,
 ARMIT,MONITORS,,VA2408-HDJ,"24"" 16:9 (23.8"") 1920 x 1080 SuperClear® IPS monitor, VGA, HDMI, DP, height adjustable stand, 100Hz 24"" IPS VGA, HDMI, DP, height adjustable stand FHD (1920x1080) 100Hz",0,AMD,1,NO,
 ARMIT,MONITORS,,VA2708-HDJ,"27"" 16:9 (27"") 1920 x 1080 SuperClear® IPS monitor, VGA, HDMI, DP, height adjustable stand, 100Hz 27"" IPS VGA, HDMI, DP, height adjustable stand FHD (1920x1080) 100Hz",0,AMD,1,NO,
-ARMIT,FSP UPS,,PPF9001412,"FSP Champ CH-1101RS Online T/R 1000 900 Smart RS-232 / USB 2 year, for battery 1 year",129900,AMD,1,NO,NEW
-ARMIT,FSP UPS,,PPF27A1105,"FSP Champ CH-1103RS Online R/T 3000 2700 Smart RS-232 / USB 2 year, for battery 1 year",250000,AMD,1,NO,
-ARMIT,FSP UPS,,PPF54A0804,"FSP Champ CH-1106TS Online 6000VA/5400W Tower STD ,CE with 16 pcs 9A CSB battery, MBS, EPO, Bat Connector T 6000 5400 Smart RS-232 / USB 2 year, for battery 1 year",577000,AMD,1,NO,NEW
-ARMIT,FSP UPS,,PPF54A1300,"CHAMP 6 - 10 KVA FSP Champ CH-1106RL Long run, 192V/9AH, Terminal, USB/RS232, INTSLOT, Ext Bat connector. 2U UPS + MPF0011800GP BB-192/09R battery Bank (MPF0011800GP) 192V/9AH Rack Battery Bank(16PCS) for Champ 6-10k Rack R 6000 5400 Smart RS-232 / USB 2 year, for battery 1 year",705000,AMD,1,NO,NEW
-ARMIT,FSP UPS,,PPF90A0802,"FSP Champ CH-1110TS Online 10000VA/9000W Tower STD ,CE with 16 pcs 9A CSB battery, MBS, EPO, Bat Connector T 10000 9000 Smart RS-232 / USB 2 year, for battery 1 year",679000,AMD,1,NO,NEW
+ARMIT,FSP UPS,,PPF9001412,"FSP Champ CH-1101RS Online T/R 1000 900 Smart RS-232 / USB 2 year, for battery 1 year",129900,AMD,1,NO,
+ARMIT,FSP UPS,,PPF27A1105,"FSP Champ CH-1103RS Online R/T 3000 2700 Smart RS-232 / USB 2 year, for battery 1 year",280000,AMD,1,NO,
+ARMIT,FSP UPS,,PPF54A0804,"FSP Champ CH-1106TS Online 6000VA/5400W Tower STD ,CE with 16 pcs 9A CSB battery, MBS, EPO, Bat Connector T 6000 5400 Smart RS-232 / USB 2 year, for battery 1 year",577000,AMD,1,NO,
+ARMIT,FSP UPS,,PPF54A1300,"CHAMP 6 - 10 KVA FSP Champ CH-1106RL Long run, 192V/9AH, Terminal, USB/RS232, INTSLOT, Ext Bat connector. 2U UPS + MPF0011800GP BB-192/09R battery Bank (MPF0011800GP) 192V/9AH Rack Battery Bank(16PCS) for Champ 6-10k Rack R 6000 5400 Smart RS-232 / USB 2 year, for battery 1 year",705000,AMD,1,NO,
+ARMIT,FSP UPS,,PPF90A0802,"FSP Champ CH-1110TS Online 10000VA/9000W Tower STD ,CE with 16 pcs 9A CSB battery, MBS, EPO, Bat Connector T 10000 9000 Smart RS-232 / USB 2 year, for battery 1 year",679000,AMD,1,NO,
 ARMIT,FSP UPS,,PPF90A1200,"FSP Champ CH-1110RL 10000VA / 9000W Long run, 192V/9AH, Terminal, USB/RS232, INTSLOT, Ext Bat connector. 2U + MPF0011800GP BB-192/09R battery Bank (MPF0011800GP) 192V/9AH Rack Battery Bank(16PCS) for Champ 6-10k Rack R 10000 9000 Smart RS-232 / USB 2 year, for battery 1 year",849000,AMD,1,NO,
 ARMIT,FSP UPS,,PPF10L0500,PDU-6/10K Power distribution unit for 6-10kVA Rack 2 year,56000,AMD,1,NO,
 ARMIT,FSP UPS,,MPF0000600GP,"RMS-001 Rack Mounting Material(Slider),1 – 3 kVA Rack UPS 700mm",21900,AMD,1,NO,
@@ -135,7 +124,7 @@ ARMIT,SYNOLOGY,,RS1221+,"8 4 NAS Plus | CPU Model AMD Ryzen V1500B,CPU Quantity 
 ARMIT,SYNOLOGY,,RS1221RP+,"8 4 Synology RackStation RS1221RP+ NAS Server with Ryzen 2.2GHz CPU, 32GB Memory, 144TB HDD Storage, ... Package Dimensions, ‎19 x 16.1 x 3.5 inches.",839000,AMD,1,NO,
 ARMIT,SYNOLOGY,,RS2423+,12 8 CPU Model AMD Ryzen V1780B CPU Quantity 1 CPU Architecture 64-bit CPU Frequency 4-core 3.35 (base) / 3.6 (turbo) GHz Hardware Encryption Engine (AES-NI) Memory System Memory 8 GB DDR4 ECC UDIMM Memory Module Pre-installed 8 GB (8 GB x 1) Total Memory Slots 2 Maximum Memory Capacity 32 GB (16 GB x 2),0,AMD,1,NO,
 ARMIT,SYNOLOGY,,RS3621xs+,"12 8 Synology RackStation RS3621xs+ NAS Intel Xeon D-1541 8-core 2.1 GHz (turbo to 2.7 GHz), 8GB RAM",0,AMD,1,NO,
-ARMIT,SYNOLOGY,,RKS-02,X X Комплект направляющих 1U/2U/3U RKS-02 SYNOLOGY,65000,AMD,1,NO,
+ARMIT,SYNOLOGY,,RKS-02,X X Комплект направляющих 1U/2U/3U RKS-02 SYNOLOGY,75000,AMD,1,NO,
 ARMIT,SYNOLOGY,,HAT3300-4T,"4 3.5"" HDD HAT3300-4T 3.5"" SATA III SYNOLOGY V1.0",63000,AMD,1,NO,
 ARMIT,SYNOLOGY,,HAS5300-8T,"8 3.5"" HDD 3.5"" SAS-3 8TB HAS5300-8T MG06SCA800E (DSM)",130000,AMD,1,NO,
 ARMIT,SYNOLOGY,,HAT3320-8T,"8 3.5"" 8TB Synology Plus Series 3.5"" SATA HDD HAT3320-8T",115000,AMD,1,NO,
@@ -145,8 +134,6 @@ ARMIT,SYNOLOGY,,HAT5300-16T,"16 3.5"" Synology HAT5300-16T 16 TB Hard Drive - 3.
 ARMIT,SYNOLOGY,,HAS5300-16T,"16 3.5"" Synology 16TB HAS5300 SAS-3 3.5"" Internal Enterprise",287000,AMD,1,NO,
 ARMIT,SYNOLOGY,,SNV3410-400G,400 M.2 SSD SNV3410-400G M.2 2280 NVMe SYNOLOGY V1.0,109000,AMD,1,NO,
 ARMIT,ACCESSORIES,HyperX,4Z7X1AA,HyperX Wrist Rest - Keyboard - TKL Keyboard Accessories,5700,AMD,1,NO,9900
-ARMIT,ACCESSORIES,HP,2V9E6AA,HP 330 Wls Mse and KB Combo EURO ABB,9300,AMD,1,NO,
-ARMIT,ACCESSORIES,HP,18H24AA,HP 230 WL Mouse+KB Combo ACB,11900,AMD,1,NO,
 ARMIT,ACCESSORIES,HyperX,4P4F5AA,HyperX Alloy Core RGB HX-KB5ME2-US ABA,14300,AMD,1,NO,19900
 ARMIT,ACCESSORIES,HyperX,639N3AA,HX AYO PBT HXR GKBD ABA,33460,AMD,1,NO,46900
 ARMIT,ACCESSORIES,HyperX,7G7A4AA,HyperX Alloy Rise 75 ACB,54600,AMD,1,NO,73900
@@ -169,7 +156,6 @@ ARMIT,ACCESSORIES,HP,2PC54AA,HP USB-C to HDMI 2.0 Adapter EURO,9500,AMD,1,NO,
 ARMIT,ACCESSORIES,HyperX,51P68AA,HyperX ChargePlay Duo PS5 Cntlr Chrg Stn Console Accessories,11700,AMD,1,NO,14900
 ARMIT,ACCESSORIES,DICOTA,D31730,USB-C Portable Docking 4-in-1 with HDMI,15300,AMD,1,NO,
 ARMIT,ACCESSORIES,HP,5TW13AA,HP USB-C/A Universal Dock G2,85500,AMD,1,NO,
-ARMIT,ACCESSORIES,HP,5TW10AA,HP USB-C Dock G5 EURO,63300,AMD,1,NO,
 ARMIT,ACCESSORIES,DICOTA,D31771,Skin URBAN 16 anthracite,5800,AMD,1,NO,
 ARMIT,ACCESSORIES,DICOTA,D31770,Skin URBAN 16 grey,5800,AMD,1,NO,
 ARMIT,ACCESSORIES,HP,3E5F8AA/3E5F8AA,HP Rnw Business 15.6 Laptop Bag,10000,AMD,1,NO,
