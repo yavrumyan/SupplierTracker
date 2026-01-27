@@ -570,8 +570,18 @@ export class DatabaseStorage implements IStorage {
 
   async createSearchIndexEntries(entries: InsertSearchIndex[]): Promise<SearchIndex[]> {
     if (entries.length === 0) return [];
-    const newEntries = await db.insert(searchIndex).values(entries).returning();
-    return newEntries;
+    
+    // Batch inserts in chunks of 1000 to avoid stack overflow with large datasets
+    const BATCH_SIZE = 1000;
+    const allNewEntries: SearchIndex[] = [];
+    
+    for (let i = 0; i < entries.length; i += BATCH_SIZE) {
+      const batch = entries.slice(i, i + BATCH_SIZE);
+      const newEntries = await db.insert(searchIndex).values(batch).returning();
+      allNewEntries.push(...newEntries);
+    }
+    
+    return allNewEntries;
   }
 
   async deleteSearchIndexBySource(sourceType: string, sourceId: number): Promise<void> {
