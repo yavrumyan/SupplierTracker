@@ -200,6 +200,7 @@ export function SearchResults({
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
+                  <TableHead className="font-semibold w-[80px]">Date</TableHead>
                   <TableHead className="font-semibold">Source</TableHead>
                   <TableHead className="font-semibold">Supplier</TableHead>
                   <TableHead className="font-semibold">Category</TableHead>
@@ -217,6 +218,20 @@ export function SearchResults({
                 {displayMode === 'list' ? (
                   results.map((result) => (
                     <TableRow key={result.id} className="hover:bg-gray-50">
+                      <TableCell className="text-[10px] leading-tight text-slate-500 font-medium">
+                        {(() => {
+                          const d = new Date(result.updatedAt);
+                          const day = String(d.getDate()).padStart(2, '0');
+                          const month = String(d.getMonth() + 1).padStart(2, '0');
+                          const year = d.getFullYear();
+                          return (
+                            <div className="flex flex-col">
+                              <span>{day}/{month}</span>
+                              <span>{year}</span>
+                            </div>
+                          );
+                        })()}
+                      </TableCell>
                       <TableCell>
                         <Badge className={getSourceColor(result.sourceType)}>
                           <span className="flex items-center gap-1">
@@ -255,7 +270,7 @@ export function SearchResults({
                     const supplierId = supplierResults[0]?.supplierId;
                     return (
                       <TableRow key={supplierName} className="bg-blue-50">
-                        <TableCell colSpan={11} className="font-semibold py-3">
+                        <TableCell colSpan={12} className="font-semibold py-3">
                           <div className="flex items-center gap-2">
                             <Building2 className="h-5 w-5 text-blue-600" />
                             <Link href={`/suppliers/${supplierId}`}>
