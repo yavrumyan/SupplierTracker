@@ -204,7 +204,7 @@ export function SearchResults({
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold w-[72px]">Date</TableHead>
+                  <TableHead className="font-semibold w-[66px]">Date</TableHead>
                   <TableHead className="font-semibold">Source</TableHead>
                   <TableHead className="font-semibold">Supplier</TableHead>
                   <TableHead className="font-semibold">Category</TableHead>
@@ -222,7 +222,7 @@ export function SearchResults({
                 {displayMode === 'list' ? (
                   results.map((result) => (
                     <TableRow key={result.id} className="hover:bg-gray-50">
-                      <TableCell className="text-sm leading-tight text-slate-900 font-bold">
+                      <TableCell className="text-[12px] leading-tight text-slate-900 font-bold">
                         {(() => {
                           const d = new Date(result.updatedAt);
                           const day = String(d.getDate()).padStart(2, '0');
