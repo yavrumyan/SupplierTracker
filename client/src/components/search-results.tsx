@@ -63,7 +63,9 @@ export function SearchResults({
     if (onExportAll && totalCount > results.length) {
       setIsExporting(true);
       try {
+        console.log("Requesting all results for export...");
         dataToExport = await onExportAll();
+        console.log("Received data for export:", dataToExport.length);
       } catch (err) {
         console.error("Export failed", err);
         // Fallback to current results if export all fails
@@ -73,7 +75,10 @@ export function SearchResults({
       }
     }
 
-    if (!dataToExport || dataToExport.length === 0) return;
+    if (!dataToExport || dataToExport.length === 0) {
+      console.warn("No data to export");
+      return;
+    }
     
     const headers = ['Source', 'Supplier', 'Category', 'Brand', 'Model', 'Name', 'Price', 'Currency', 'Stock', 'MOQ', 'Notes'];
     const csvData = [headers];

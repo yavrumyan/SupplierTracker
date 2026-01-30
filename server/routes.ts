@@ -617,10 +617,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Apply pagination
       const pageNum = parseInt(page as string) || 1;
-      const limitNum = parseInt(limit as string) || 50;
+      const limitNum = parseInt(limit as string);
       
-      // If limit is -1 or 0, return all results (used for export)
-      if (limitNum <= 0) {
+      console.log(`Search params: page=${pageNum}, limit=${limitNum}, results_total=${searchResults.length}`);
+
+      // If limit is 0, return all results (used for export)
+      if (limit === '0') {
+        console.log("Returning all results for export");
         return res.json({
           results: searchResults,
           groupedResults,
@@ -631,8 +634,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const startIndex = (pageNum - 1) * limitNum;
-      const endIndex = startIndex + limitNum;
+      const effectiveLimit = limitNum || 50;
+      const startIndex = (pageNum - 1) * effectiveLimit;
+      const endIndex = startIndex + effectiveLimit;
       const paginatedResults = searchResults.slice(startIndex, endIndex);
 
       res.json({
@@ -640,8 +644,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         groupedResults,
         totalCount: searchResults.length,
         page: pageNum,
-        limit: limitNum,
-        totalPages: Math.ceil(searchResults.length / limitNum)
+        limit: effectiveLimit,
+        totalPages: Math.ceil(searchResults.length / effectiveLimit)
       });
     } catch (error) {
       console.error("Error searching products:", error);
