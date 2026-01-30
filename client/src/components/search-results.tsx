@@ -80,11 +80,15 @@ export function SearchResults({
       return;
     }
     
-    const headers = ['Source', 'Supplier', 'Category', 'Brand', 'Model', 'Name', 'Price', 'Currency', 'Stock', 'MOQ', 'Notes'];
+    const headers = ['Date', 'Source', 'Supplier', 'Category', 'Brand', 'Model', 'Name', 'Price', 'Currency', 'Stock', 'MOQ', 'Notes'];
     const csvData = [headers];
     
     dataToExport.forEach(result => {
+      const d = new Date(result.updatedAt);
+      const dateStr = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+      
       csvData.push([
+        dateStr,
         result.sourceType === 'price_list' ? 'Price List' : 'Offer',
         result.supplier || '',
         result.category || '',
@@ -200,7 +204,7 @@ export function SearchResults({
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold w-[80px]">Date</TableHead>
+                  <TableHead className="font-semibold w-[72px]">Date</TableHead>
                   <TableHead className="font-semibold">Source</TableHead>
                   <TableHead className="font-semibold">Supplier</TableHead>
                   <TableHead className="font-semibold">Category</TableHead>
@@ -218,7 +222,7 @@ export function SearchResults({
                 {displayMode === 'list' ? (
                   results.map((result) => (
                     <TableRow key={result.id} className="hover:bg-gray-50">
-                      <TableCell className="text-[10px] leading-tight text-slate-500 font-medium">
+                      <TableCell className="text-sm leading-tight text-slate-900 font-bold">
                         {(() => {
                           const d = new Date(result.updatedAt);
                           const day = String(d.getDate()).padStart(2, '0');
