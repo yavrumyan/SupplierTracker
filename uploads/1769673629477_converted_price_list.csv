@@ -1,0 +1,840 @@
+﻿Supplier,Category,Brand,Model,Name,Price,Currency,Stock,MOQ,Notes
+X-ART,QSAN,,XN2204-4C,"93-N220411E-00 Rackmount 1U4 Intel® Xeon® 2.0GHz Quad-Core Processor 8GB DDR4 ECC (Max. 256GB) 4 4 x U.2 Single-port NVMe SSD 1.92TB x 4 7.68TB Installed 1x PCI-e Gen4x8 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 1U4 bay, Intel Xeon 4-Core CPU, 8GB DDR4 RAM, 4x10GbE SFP+ iSCSI with optical transceivers x 2, 4x2.5G iSCSI, redundant power supply, RAIL kit, bundle 1.92TB NVMe SSD x 4,",2482000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2204-4C,"93-N220412E-00 Rackmount 1U4 Intel® Xeon® 2.0GHz Quad-Core Processor 8GB DDR4 ECC (Max. 256GB) 4 U.2 Single-port NVMe SSD 3.84TB x 4 15.36TB Installed 1x PCI-e Gen4x8 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 1U4 bay, Intel Xeon 4-Core CPU, 8GB DDR4 RAM, 4x10GbE SFP+ iSCSI with optical transceivers x 2, 4x2.5G iSCSI, redundant power supply, RAIL kit, bundle 3.84T NVMe SSD x 4,",3352000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2204-4C,"93-N220413E-00 Rackmount 1U4 Intel® Xeon® 2.0GHz Quad-Core Processor 8GB DDR4 ECC (Max. 256GB) 4 U.2 Single-port NVMe SSD 7.68TB x 4 30.72TB Installed 1x PCI-e Gen4x8 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 1U4 bay, Intel Xeon 4-Core CPU, 8GB DDR4 RAM, 4x10GbE SFP+ iSCSI with optical transceivers x 2, 4x2.5G iSCSI, redundant power supply, RAIL kit, bundle 7.68TB NVMe SSD x 4",5126000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2216-8C,"93-N221620E-00 Rackmount 2U12 Intel® Xeon® 8-Core 8GB DDR4 ECC (Max. 256GB) 12+4 3.5"" SATA HDD or 2.5"" SATA SSD (Max. 12) PCIe NVMe U.2 SSD (Max. 4) 1x PCI-e Gen4x8 1x PCI-e Gen4x4 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 2U12 + 4 bay, Intel Xeon 8-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 10GbE SFP+ & 4 x 2.5GbE, redundant power supply, rail kit, optical transceivers x 2",4355000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN2212-8C,"93-N221220E-00 Rackmount 2U12 Intel® Xeon® 8-Core 8GB DDR4 ECC (Max. 256GB) 12 3.5"" SATA HDD 2.5"" SATA SSD 1x PCI-e Gen4x8 1x PCI-e Gen4x4 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 2U12 bay, Intel Xeon 8-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 10GbE SFP+ & 4 x 2.5GbE, redundant power supply, rail kit, optical transceivers x 2",3760000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN2216-4C,"93-N221610E-00 Rackmount 2U12 Intel® Xeon® 2.0GHz Quad-Core Processor 8GB DDR4 ECC (Max. 256GB) 12+4 3.5"" SATA HDD or 2.5"" SATA SSD (Max. 12) PCIe NVMe U.2 SSD (Max. 4) 1x PCI-e Gen4x8 1x PCI-e Gen4x4 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 2U12 + 4 bay, Intel Xeon 4-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 10GbE SFP+ & 4 x 2.5GbE, redundant power supply, rail kit, optical transceivers x 2",2570000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2212-4C,"93-N221210E-00 Rackmount 2U12 Intel® Xeon® 2.0GHz Quad-Core Processor 8GB DDR4 ECC (Max. 256GB) 12 3.5"" SATA HDD 2.5"" SATA SSD 1x PCI-e Gen4x8 1x PCI-e Gen4x4 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 2U12 bay, Intel Xeon 4-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 10GbE SFP+ & 4 x 2.5GbE, redundant power supply, rail kit, optical transceivers x 2",2780000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2204-4C,"93-N220410E-00 Rackmount 1U4 Intel® Xeon® 2.0GHz Quad-Core Processor 8GB DDR4 ECC (Max. 256GB) 4 3.5"" SATA HDD or 2.5"" SATA SSD 1x PCI-e Gen4x8 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 1U4 bay, Intel Xeon 4-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 10GbE SFP+ & 4 x 2.5GbE, redundant power supply, rail kit",1260000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2216-2C,"93-N221600E-00 Rackmount 2U12 Intel® Xeon® 1.6GHz Dual-Core Processor 8GB DDR4 ECC (Max. 256GB) 12+4 3.5"" SATA HDD or 2.5"" SATA SSD (Max. 12) PCIe NVMe U.2 SSD (Max. 4) 1x PCI-e Gen4x8 1x PCI-e Gen4x4 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 2U12+4 bay, Intel Xeon 2-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 2.5GbE, redundant power supply, rail kit",1940000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2212-2C,"93-N221200E-00 Rackmount 2U12 Intel® Xeon® 1.6GHz Dual-Core Processor 8GB DDR4 ECC (Max. 256GB) 12 3.5"" SATA HDD 2.5"" SATA SSD 1x PCI-e Gen4x8 1x PCI-e Gen4x4 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 2U12 bay, Intel Xeon 2-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 2.5GbE, redundant power supply, rail kit",1550000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2204-2C,"93-N220400E-00 Rackmount 1U4 Intel® Xeon® 1.6GHz Dual-Core Processor 8GB DDR4 ECC (Max. 256GB) 4 3.5"" SATA HDD or 2.5"" SATA SSD 1x PCI-e Gen4x8 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 1U4 bay, Intel Xeon 2-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 2.5GbE, redundant power supply, rail kit",952000,AMD,1,NO,3 Year
+X-ART,QSAN,,XN2204-2C,"93-N2204S0E-00 Rackmount 1U4 Intel® Xeon® 1.6GHz Dual-Core Processor 8GB DDR4 ECC (Max. 256GB) 4 3.5"" SATA HDD or 2.5"" SATA SSD 1x PCI-e Gen4x8 1x M.2 Gen4x4 1x M.2 Gen3x2 Rackmount 1U4 bay, Intel Xeon 2-Core CPU, 8GB DDR4 RAM, 2 x M.2 slots, 4 x 2.5GbE, single power supply, rail kit",775000,AMD,1,NO,3 Year
+X-ART,QSAN,,Model,QSAN PN Chassis CPU/Controller System Memory Bay Count (Nomber of HDD) Drive Type Host Ports SAS Exp. Port Description,0,AMD,1,NO,Warranty
+X-ART,QSAN,,XN8112D,"90-N8112D02-EU Rackmount 2U Intel Xeon 4-Core Dual-active controller 32GB DDR4 ECC (Max. 512GB) 12 3.5""/2.5"" 12Gb SAS/NL SAS 2.5"" SAS SSD 8 x 10GbE SFP+ 4 XN8112D – enterprise-class 2U dual-controller NAS with support for 12× 2.5""/3.5"" SATA/SAS drives, fully redundant modular design, JBOD scalability, and dual PCIe slots for 10/25GbE or NVMe SSD cache. Ideal for high availability, data protection, and virtualization workloads.",7765000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN8112S,"90-N8112S02-EU Rackmount 2U Intel Xeon 4-Core Single Ctrl 16GB DDR4 ECC (Max. 256GB) 12 3.5""/2.5"" 12Gb SAS/NL SAS SATA 2.5"" SAS/SATA SSD 4 x 10GbE SFP+ 2 XN8112S – enterprise-grade 2U single-controller NAS with support for 12× 2.5""/3.5"" SATA/SAS drives, modular design, scalable via JBOD expansion, and PCIe slots for 10/25GbE or NVMe SSD cache. Ideal for business-critical storage, backup, and virtualization.",5240000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN8126D,"90-N8126D02-EU Rackmount 2U Intel Xeon 4-Core Dual-active controller 32GB DDR4 ECC (Max. 512GB) 26 2.5"" 12Gb SAS/NL SAS SAS SSD 8 x 10GbE SFP+ 4 XN8126D – enterprise-class 4U dual-controller NAS with support for 26× 2.5""/3.5"" SATA/SAS drives, fully redundant modular architecture, JBOD scalability, and dual PCIe slots for 10/25GbE or NVMe SSD cache. Designed for high availability, virtualization, and large-scale storage environments.",8108000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN8126S,"90-N8126S02-EU Rackmount 2U Intel Xeon 4-Core Single Ctrl 16GB DDR4 ECC (Max. 256GB) 26 2.5"" 12Gb SAS/NL SAS SATA SAS/SATA SSD 4 x 10GbE SFP+ 2 XN8126S – enterprise-grade 4U single-controller NAS with support for 26× 2.5""/3.5"" SATA/SAS drives, modular design, scalable via JBOD expansion, and PCIe slots for 10/25GbE or NVMe SSD cache. Ideal for large-capacity storage, backup, and virtualization in business environments.",5855000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN5126S,"90-N5126S02-EU Rackmount 2U Intel Xeon 4-Core Single Ctrl 8GB DDR4 ECC (Max. 256GB) 26 2.5"" 12Gb SAS/NL SAS SATA SAS/SATA SSD 4 x 10GbE SFP+ 2 XN5126S – enterprise-grade 4U single-controller NAS featuring support for 26 × 2.5""/3.5"" SATA/SAS drives, modular design with JBOD scalability, and PCIe expansion slots for 10/25 GbE networking or NVMe SSD caching. Ideal for high-capacity business storage, data protection, backup, and virtualization workloads.",4608000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN5126D,"90-N5126D02-EU Rackmount 2U Intel Xeon 4-Core Dual-active controller 16GB DDR4 ECC (Max. 512GB) 26 2.5"" 12Gb SAS/NL SAS SAS SSD 8 x 10GbE SFP+ 4 XN5126D – enterprise-class 4U dual-controller NAS featuring support for 26 × 2.5″/3.5″ SATA/SAS drives, fully redundant and modular design, scalable via JBOD expansion, and dual PCIe slots for 10/25 GbE networking or NVMe SSD cache. Engineered for high availability, large-scale storage, virtualization, and mission-critical business environments.",6630000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN5116S,"90-N5116S02-EU Rackmount 3U Intel Xeon 4-Core Single Ctrl 8GB DDR4 ECC (Max. 256GB) 16 3.5""/2.5"" 12Gb SAS/NL SAS SATA 2.5"" SAS/SATA SSD 4 x 10GbE SFP+ 2 XN5116S – enterprise-grade 3U single‑controller NAS featuring support for 16× 2.5″/3.5″ SATA/SAS drives, modular design, JBOD scalability, and PCIe slots for 10 / 25 GbE networking or NVMe SSD caching. Ideal for business-critical environments requiring virtualization, data protection, backup, and efficient storage.",4462000,AMD,1,NO,5 Year
+X-ART,QSAN,,XN5124D,"90-N5124D02-EU Rackmount 4U Intel Xeon 4-Core Dual-active controller 16GB DDR4 ECC (Max. 512GB) 24 3.5""/2.5"" 12Gb SAS/NL SAS 2.5"" SAS SSD 8 x 10GbE SFP+ 4 XN5124D – enterprise-class 2U dual‑controller NAS featuring 24× 2.5″/3.5″ SATA/SAS drives, fully redundant modular architecture, and JBOD expansion support. Equipped with dual PCIe slots for high‑speed 10 / 25 GbE networking or NVMe SSD caching. Engineered for high availability, virtualization, backup, and mission‑critical enterprise storage environments.",7498000,AMD,1,NO,5 Year
+X-ART,Ugreen NAS,,DXP6800Pro,25899 6 i5 1235U 10C\12T 4.40 GHz Maximum 8G up to 64G DDR8 Support SATA 24T*6 +M.2 8T*2 JBOD/BASIC/ RAID0/1/5/6/10 10GbE*2 2*TBT4 2*USB 2.0 2*USB 3.2Gen2 HDMI 2.1 8K SD 4.0 OS:UGOS Pro SSD 128GB PCIe X4*1 Size:29*26*20cm Weight:6.4kg 0℃-40℃,486800,AMD,1,NO,584000
+X-ART,Ugreen NAS,,DXP8800Plus,35127 8 i5 1235U 10C\12T 4.40 GHz Maximum 8G up to 64G DDR5 Support SATA 24T*8 +M.2 8T*2 JBOD/BASIC/ RAID0/1/5/6/10 10GbE*2 2*TBT4 2*USB 2.0 2*USB 3.2Gen2 HDMI 2.1 8K SD 4.0 OS:UGOS Pro SSD 128GB PCIe X4*1 Size:36*26*20cm Weight:7.4kg 0℃-40℃,514800,AMD,1,NO,618000
+X-ART,Ugreen NAS,,DXP480T Plus,25892 4 i5 1235U 10C\12T 4.40 GHz Maximum 8G up to 64G DDR5 Support M.2 8T*4 JBOD/BASIC/ RAID0/1/5/6/10 10GbE*1 2*TBT4 1*USB 3.2Gen2 HDMI 2.1 8K OS:UGOS Pro SSD 128GB Built-in WIFI6 Size:18*14*5.2cm Weight:0.9kg 0℃-40℃,382500,AMD,1,NO,459000
+X-ART,Ugreen,,20277,HUB USB 2.0A to 4xUSB 2.0A 1m (Black),1800,AMD,1,NO,2500
+X-ART,Ugreen,,10916,Пусть бу,4000,AMD,1,NO,5500
+X-ART,Ugreen,,70336,HUB USB-C to 4xUSB-A 3.0 with Power Supply,4100,AMD,1,NO,5500
+X-ART,Ugreen,,50985,"HUB USB 3.0 to 4xUSB 3.0 (Gray), Support 10TB hard drive Speed up to 5Gbps",4100,AMD,1,NO,5500
+X-ART,Ugreen,,90307,"HUB USB-A 3.0 Port 7xUSB-A 3.0 HUB with Cable, Speed up to 5Gbps, 1.2 fast charging protocol (No.4 to No.7), Aluminum case",13500,AMD,1,NO,18000
+X-ART,Ugreen,,40744,"Converter HDMI to VGA + HDMI + 3.5mm Audio Port (HDMI 4K30Hz, VGA FullHD)",5000,AMD,1,NO,7000
+X-ART,Ugreen,,45320,HUB 5-in-1 USB C to RJ45+ 2*USB-C 3.2+2*USB-A 3.2 With USB-C power port Aluminum Case 10Gbps,6500,AMD,1,NO,9000
+X-ART,Ugreen,,15495,Revodok 105 5-in-1 USB-C To HDMI+1xUSB3.0 A+2xUSB2.0 A+PD 4K@30Hz 100W,7000,AMD,1,NO,9500
+X-ART,Ugreen,,15596,Revodok 5-in-1 USB-C To HDMI+3*USB 3.0 A+PD Power Converter 4K@30Hz 100W,7000,AMD,1,NO,9500
+X-ART,Ugreen,,35999,6-in-1 USB-C to HDMI+2*USB-A 3.2+2*USB 3.2 C+PD 100W 4K60Hz,7000,AMD,1,NO,10000
+X-ART,Ugreen,,15597,"USB-C Multifunction Adapter USB-C To HDMI + 3xUSB 3.0 A+PD ( up to 5Gbps, 4K60Hz, 100W) Aluminum Case",8800,AMD,1,NO,12000
+X-ART,Ugreen,,35998,"Uno 6-in-1 USB-C Hub with 2*USB-C+2*USB-A+HDMI+PD (10Gbps, 4K60Hz, 100W)",9000,AMD,1,NO,12500
+X-ART,Ugreen,,45000,6-in-1 USB-C to HDMI+2*USB-A 3.2+1*USB 3.2 C+RJ45+ 100W PD 4K60Hz,9500,AMD,1,NO,13000
+X-ART,Ugreen,,45155,Uno 7-in-1 USB-C to HDMI(4Kx60Hz)+2xUSB-A3.0+USB-C3.0+USB-A2.0+Gigabit RJ45+PD(100W),10000,AMD,1,NO,14500
+X-ART,Ugreen,,45520,"11-in-1 USB-C to 2xUSB-C 3.2+USB-A 3.2+USB-A 3.0+HDMI+VGA+RJ45 Gigabit+SD/TF+AUX3.5mm+PD Converter (100W, 10Gbps, 4K60Hz, 104MB/s)",14000,AMD,1,NO,19000
+X-ART,Ugreen,,15601,"10-in-1 USB-C To 3*USB 3.0 A+HDMI+VGA+RJ45 +SD/TF+AUX3.5mm+PD Converter 4K@30Hz, 1000Mbps, 100W",14500,AMD,1,NO,20000
+X-ART,Ugreen,,35625,"8-in-1 USB-C to 2*USB-A 3.2+2*USB-C 3.2+2*HDMI+DP+PD (100W, 4K60Hz, 10Gbps)",17000,AMD,1,NO,23000
+X-ART,Ugreen,,45380,10-in-1 USB-C to 2xHDMI(4K60Hz)+2xUSB-C3.2+USB-A3.2+USB-A3.0+GigabitRJ45+SD/TF+PD(100W),19000,AMD,1,NO,25000
+X-ART,Ugreen,,15534,10-in-1 USB-C to 1*USB3.0+2*USB2.0+USB-C3.0+2*HDMI+RJ45 Gigabit+SD&TF +PD port Converter 8K@30Hz &2*HDMI with PD 100W Aluminum Case,22000,AMD,1,NO,30000
+X-ART,Ugreen,,15978,13-in-1 USB-C to 2xHDMI(4K60Hz)+DP+2xUSB-A3.2+USB-C3.2+2xUSB-A3.0+SD/TF+GigabitRJ45+3.5mm+PD(100W),31000,AMD,1,NO,42000
+X-ART,Ugreen,,80856,"Apple Converter Dual USB-C To HDMI+2xUSB 3.0 + TF/SD + USB-C Female(Thunderbolt 3) for MacBook Pro 2016/2017/2018/2019 MacBook Air 2018 /2019, (4K*2K30Hz, PD3.0(100W), USB-C speed up to 40Gbps (8K video&audio))",7600,AMD,1,NO,11000
+X-ART,Ugreen,,25053,"Revodok Max 208 Thunderbolt 4 Dock 8-in-1 40Gbps Thunderbolt 4 Hub 3 x Thunderbolt 4 Dual 4K@60Hz or Single 8K Display, 85W Charging, Gigabit Ethernet, 3 x USB A 3.2",85000,AMD,1,NO,110000
+X-ART,Ugreen,,90325,"12-in-1 USB C Triple Display Docking Station. 3x USB-A 3.2, 1x Type-C 3.1 10Gb, 1x Type-C PD port (100W), 1x DP, 2x HDMI (support 8K), 1x RJ45, 1x 3.5mm Audio, 1x SD/TF, The host",79000,AMD,1,NO,108000
+X-ART,Ugreen,,10111,"HDMI Cable 1.2 1080P60Hz 15m (Black, box)",11500,AMD,1,NO,15500
+X-ART,Ugreen,,10112,"HDMI Cable 1.2 1080P60Hz 20m (Black, box)",19800,AMD,1,NO,26700
+X-ART,Ugreen,,10113,"HDMI 1.2 Cable 1080P60Hz 25m (Black, box)",22500,AMD,1,NO,30000
+X-ART,Ugreen,,10114,"HDMI 1.2 Cable 1080P60Hz 30m (Black, box)",25000,AMD,1,NO,35000
+X-ART,Ugreen,,50819,HDMI 2.0 Flat Cable 4K60Hz (Black) 1.5m,1550,AMD,1,NO,2000
+X-ART,Ugreen,,10128,HDMI 2.0 Round Cable 4K60Hz 1.5m (Yellow/Black),1250,AMD,1,NO,1700
+X-ART,Ugreen,,50820,"HDMI 2.0 Flat Cable 4K60Hz 3m (Black, box)",2100,AMD,1,NO,3000
+X-ART,Ugreen,,40416,"HDMI 2.0 Round With Braid Cable 4K60Hz 15m (Black, Box)",18000,AMD,1,NO,24000
+X-ART,Ugreen,,80401,"HDMI 2.1 Cable with Braided 8K60Hz, 4K120Hz 1m (Black)",1900,AMD,1,NO,2500
+X-ART,Ugreen,,80402,"HDMI 2.1 Cable with Braided 8K60Hz, 4K120Hz 1.5m (Black)",2200,AMD,1,NO,3000
+X-ART,Ugreen,,80405,"HDMI 2.1 Cable with Braided 8K60Hz, 4K120Hz 5m (Black)",7150,AMD,1,NO,9900
+X-ART,Ugreen,,20124,DVI Male to HDMI Female Adapter 1080P60Hz (Black),800,AMD,1,NO,1300
+X-ART,Ugreen,,20107,"HDMI Female to Female Adapter 20M(Max), ≤3M 4K60Hz (Black)",700,AMD,1,NO,1000
+X-ART,Ugreen,,10943,"HDMI Female to Female 4K HDMI Signal Repeater, booster",4250,AMD,1,NO,5500
+X-ART,Ugreen,,90592,HDMI 8K60Hz Female to Female Adapter For Extension,1000,AMD,1,NO,1500
+X-ART,Ugreen,,10135,"HDMI to DVI(24+1) Round cable 2m 1080P60Hz (Black, Box)",2350,AMD,1,NO,3000
+X-ART,Ugreen,,11167,Mini HDMI to HDMI Cable 4K60Hz 1.5m (Black),1950,AMD,1,NO,2500
+X-ART,Ugreen,,15514,Mini HDMI to HDMI 8K60Hz Cable 1m,2200,AMD,1,NO,3000
+X-ART,Ugreen,,10553,Micro HDMI to HDMI 4K60Hz Cable Male to Female Black 0.25m,1700,AMD,1,NO,2500
+X-ART,Ugreen,,15516,Micro HDMI to HDMI 8K60Hz Cable 1m,2300,AMD,1,NO,3000
+X-ART,Ugreen,,10142,"HDMI Male to Female Extension Cable 2m Black (*Total length after extension ≤ 3M, support 4K60Hz)",1750,AMD,1,NO,2500
+X-ART,Ugreen,,90811,HDMI Extender 50m Over a Single Cat5e/6 （Transmitter*1+Receiver*1) 1080P@60Hz ≤20M 24AWG HDMI cable for both transmitter and receiver ≤50M Cat5e/6 lan cable need *Aluminum Case,10000,AMD,1,NO,13500
+X-ART,Ugreen,,40201 UK,"HDMI 1x2 Splitter (4K30Hz ≤ 12m-In, 12m-Out, 1080P60Hz ≤ 20m-In, 20m-Out, Long Distance 40m with 1080P) UK",6700,AMD,1,NO,10000
+X-ART,Ugreen,,40201,"HDMI 1x2 Splitter (4K30Hz ≤ 12m-In, 12m-Out, 1080P60Hz ≤ 20m-In, 20m-Out, Long Distance 40m with 1080P)",8000,AMD,1,NO,11500
+X-ART,Ugreen,,50707,HDMI 2.0 Splitter 1x2 4K60Hz 8M 28AWG cable for input and 8M 28AWG cable for output(4K60Hz) Long Distance 40m with 1080P,15600,AMD,1,NO,21000
+X-ART,Ugreen,,35031A,HDMI Wireless Extender Transmitter + Receiver 1080P60Hz Distance up to 30 meters 5GHz Band,35000,AMD,1,NO,45000
+X-ART,Ugreen,,50633,HDMI Wireless Extender Transmitter + Receiver 1080P60Hz Distance 50m if No blocking,50000,AMD,1,NO,60000
+X-ART,Ugreen,,90909A,"HDMI Wireless Transmitter and Receiver, One Click to Connection, /50M Range, 2.4G/5G 4K30Hz Extender Kit",55000,AMD,1,NO,65000
+X-ART,Ugreen,,50744,HDMI Switch Box 2 In 1 Out KVM Switching,10500,AMD,1,NO,14000
+X-ART,Ugreen,,15604,"HDMI 2.1 Switch, 8K60Hz,4K120Hz HDMI Switcher Splitter 3 In 1 Out, Support HDCP 2.3, VRR & ALLM, Dolby Vision & Atmos, High-Speed 48Gbps for PS5, Xbox, TV Box, DVD Player",14000,AMD,1,NO,18000
+X-ART,Ugreen,,80390,DP 1.4 Plastic Case Braided Cable 1080P240Hz/2K165Hz/4K-144Hz/8K60Hz 1m (Black),2200,AMD,1,NO,3000
+X-ART,Ugreen,,80391,DP 1.4 Plastic Case Braided Cable 1080P240Hz/2K165Hz/4K-144Hz/8K60Hz 1.5m (Black),2400,AMD,1,NO,3200
+X-ART,Ugreen,,80392,DP 1.4 Plastic Case Braided Cable 1080P240Hz/2K165Hz/4K-144Hz/8K60Hz 2m (Black),2700,AMD,1,NO,3600
+X-ART,Ugreen,,80393,DP 1.4 Plastic Case Braided Cable 1080P240Hz/2K165Hz/4K-144Hz/8K60Hz 3m (Black),3400,AMD,1,NO,4500
+X-ART,Ugreen,,80394,DP 1.4 Plastic Case Braided Cable 1080P240Hz/2K165Hz/4K-144Hz/8K60Hz 5m (Black),3800,AMD,1,NO,5200
+X-ART,Ugreen,,15774,DP to HDMI 4K Cable 4K@60Hz&2K/144Hz &1080P/240Hz 2m,4900,AMD,1,NO,6500
+X-ART,Ugreen,,80397,DisplayPort to HDMI Cable 8K60Hz 4K120Hz Active DP 1.4 to HDMI 2.1 2m,7800,AMD,1,NO,11000
+X-ART,Ugreen,,70694,"DP Male to HDMI Female Converter 4K,2K60Hz 25cm (box, ABS Case)",4200,AMD,1,NO,5500
+X-ART,Ugreen,,20848,Mini DP Male to HDMI Cable 4K 1.5m (Black),3250,AMD,1,NO,4400
+X-ART,Ugreen,,40360,Mini DP to HDMI Converter 4K (Black),2700,AMD,1,NO,3500
+X-ART,Ugreen,,20421,"Mini DP to HDMI + VGA Converter 4K30Hz for HDMI; 1080P60Hz for VGA (Aluminum case, box)",4000,AMD,1,NO,5500
+X-ART,Ugreen,,10477,"Mini DP to DP Cable 1.5m (4K60Hz, 2K144Hz) (Black)",2100,AMD,1,NO,2800
+X-ART,Ugreen,,11606,DVI (24+1) M/M Cable Gold Plated 1.5m 2K60Hz (Black),2300,AMD,1,NO,3100
+X-ART,Ugreen,,11604,DVI (24+1) M/M Cable Gold Plated 2m 2K60Hz (Black),2400,AMD,1,NO,3400
+X-ART,Ugreen,,20122,DVI (24+5) Male to VGA Female Converter 1080P60Hz (Black),900,AMD,1,NO,1200
+X-ART,Ugreen,,11646,VGA Male to Male 1080P60Hz Cable 2m (Black),1800,AMD,1,NO,2500
+X-ART,Ugreen,,11631,VGA Male to Male 1080P60Hz Cable 3m (Black),2200,AMD,1,NO,3000
+X-ART,Ugreen,,11634,"VGA Male to Male 1080P60Hz Cable 15m (Black, box)",7900,AMD,1,NO,12000
+X-ART,Ugreen,,11635,"VGA Male to Male 1080P60Hz Cable 20m (Black, box)",11300,AMD,1,NO,15000
+X-ART,Ugreen,,50994,USB-C to DisplayPort Cable 4K30Hz 1.5m (Black),5600,AMD,1,NO,7500
+X-ART,Ugreen,,15575,USB-C to DisplayPort 8K60Hz Cable 10cm,4300,AMD,1,NO,5800
+X-ART,Ugreen,,25854,USB A/C to HDMI Video Capture Card FullHD,6300,AMD,1,NO,8500
+X-ART,Ugreen,,10350,"USB 2.0 AM to BM Print Cable 1.5m (Black, Connector gold-plated)",1000,AMD,1,NO,1500
+X-ART,Ugreen,,10351,"USB 2.0 AM to BM Print Cable 3m (Black, Connector gold-plated)",1500,AMD,1,NO,2000
+X-ART,Ugreen,,10352,"USB 2.0 AM to BM Print Cable 5m (Black, Connector gold-plated)",2000,AMD,1,NO,2700
+X-ART,Ugreen,,10841,USB 3.0 A Male to MicroUSB 3.0 Male Cable 1m up to 5Gpbs (Black),1100,AMD,1,NO,1500
+X-ART,Ugreen,,10355,USB 2.0 A Male to Mini 5 Pin Male Cable 1m (Black),600,AMD,1,NO,1000
+X-ART,Ugreen,,60137,"USB 2.0 A to Micro USB Cable Nickel Plating 1.5m up to 480Mbps, 18W (Black)",1000,AMD,1,NO,1500
+X-ART,Ugreen,,60141,"USB 2.0 A to Micro USB Cable Nickel Plating 1m up to 480Mbps, 18W (White)",950,AMD,1,NO,1300
+X-ART,Ugreen,,60145,"USB 2.0 A to Micro USB Cable Nickel Plating Aluminum Braid 0.5m up to 480Mbps, 18W (Black)",1300,AMD,1,NO,1700
+X-ART,Ugreen,,60146,"USB 2.0 A to Micro USB Cable Nickel Plating Aluminum Braid 1m up to 480Mbps, 18W (Black)",1400,AMD,1,NO,2000
+X-ART,Ugreen,,60147,"USB 2.0 A to Micro USB Cable Nickel Plating Aluminum Braid 1,5m up to 480Mbps, 18W (Black)",1650,AMD,1,NO,2200
+X-ART,Ugreen,,90576,USB 3.0 Male to Male Cable 3m up to 5Gbps (Black),2200,AMD,1,NO,3500
+X-ART,Ugreen,,10368,USB 3.0 Extension Male To Female Cable 1m up to 5Gbps (Black),1400,AMD,1,NO,2000
+X-ART,Ugreen,,30126,USB 3.0 Extension Male To Female Cable 1.5m up to 5Gbps (Black),2000,AMD,1,NO,2500
+X-ART,Ugreen,,90722,USB 3.0 Extension Male To Female Cable 5m up to 5Gbps (Black),3600,AMD,1,NO,5000
+X-ART,Ugreen,,20213,"USB 2.0 Active Extension Cable with USB for Power 5m 480Mbps (Black, box)",4700,AMD,1,NO,6300
+X-ART,Ugreen,,10321,"USB 2.0 Active Extension Male To Female Cable with Chipset 10m up to 480Mbps (Black, Box)",6800,AMD,1,NO,9000
+X-ART,Ugreen,,10323,"USB 2.0 Active Extension Male To Female Cable with Chipset 15m (Up to 30m) 480Mbps (Black, box)",11000,AMD,1,NO,14000
+X-ART,Ugreen,,10324,"USB 2.0 Active Extension Male To Female Cable with Chipset 20m (Up to 30m) 480Mbps (Black, box)",14000,AMD,1,NO,20000
+X-ART,Ugreen,,10383,Mini USB Male to USB Female OTG Cable,400,AMD,1,NO,1000
+X-ART,Ugreen,,20119,USB-A 3.0 F/F Adapter Aluminum Case,700,AMD,1,NO,1200
+X-ART,Ugreen,,60722,"USB-A 3.0 to TF/SD 3.0 Card Reader up to ≈95MB/S (Black, box)",1850,AMD,1,NO,2500
+X-ART,Ugreen,,50706,USB-C 3.1 Card Reader For TF/SD (Gray Aluminum case) Memory card transfer speed:≈100MB/S,3000,AMD,1,NO,4500
+X-ART,Ugreen,,30333,"USB-A 3.0 Card Reader TF/SD/MS/CF 3.0 All-in-One 50cm ≈90MB/S (Black, box)",3200,AMD,1,NO,4500
+X-ART,Ugreen,,50541,USB-A 3.0 to TF/SD/CF/MS Multifunction Card Reader Multi-Read ≈100MB/S,3400,AMD,1,NO,4500
+X-ART,Ugreen,,45167,USB-C /USB-A To TF/SD 3.0 + 2xUSB-A 3.0 Card Reader Theoretical transfer rate ofup to 170MB/s,3400,AMD,1,NO,4500
+X-ART,Ugreen,,50737,USB-C 3.1 to RJ45 Gigabit Ethernet Adapter 10cm Aluminum case,5000,AMD,1,NO,6500
+X-ART,Ugreen,,35921,USB-C to RJ45 5GbE Adapter,11000,AMD,1,NO,15000
+X-ART,Ugreen,,80111,USB-A 2.0 To DB9 RS-232 Female Adapter,2300,AMD,1,NO,3200
+X-ART,Ugreen,,30771,Gigabit 10/100/1000Mbps PCI Express Network Adapter,3400,AMD,1,NO,4500
+X-ART,Ugreen,,70504,M.2 NVME to PCI Express 3.0 x4 Adapter Card M.2 M-Key+M.2 B-Key to PCI-E 3.0 × 4 Expansion Card,3500,AMD,1,NO,5000
+X-ART,Ugreen,,30848,2.5 Inch Hard Drive Box,2850,AMD,1,NO,3800
+X-ART,Ugreen,,30847,"USB 3.0 To 2.5'' SATA Hard Driver Enclosure, 5Gbps, 30cm",2850,AMD,1,NO,3800
+X-ART,Ugreen,,70499,2.5'' SATA 3.0 6Gbps Hard Driver Enclosure + USB-C - USB-C cable 0.5m Aluminum case,6900,AMD,1,NO,9300
+X-ART,Ugreen,,50422,"USB 3.0 To 3.5''/2.5"" SATA Hard Driver Enclosure with Power Adapter (Hard Drive Box) up to 16TB",7500,AMD,1,NO,10000
+X-ART,Ugreen,,15813,M.2 NVMe/SATA SSD Enclosure,7000,AMD,1,NO,9500
+X-ART,Ugreen,,15512,M.2 NVMe Enclosure SSD Adapter 10Gbps USB C 3.2 Gen2,7000,AMD,1,NO,9500
+X-ART,Ugreen,,10902,USB-C Female to M.2 M-Key 10Gbps Enclosure C TO C Cable 50cm Up to 2TB （NVME;PCIE 3.0 stand）,7000,AMD,1,NO,9500
+X-ART,Ugreen,,90264,M.2 SATA/NVMe Hard Drive Enclosure with C to C and C to A cable,8200,AMD,1,NO,11000
+X-ART,Ugreen,,50857,"USB-A 3.0 Hard Drive Docking Station with Power Adapter, USB Cable 1M, Dual-Bay Hard Drive Duplicator/Cloner Support 2.5/3.5 inch SATA 12TB hard disk",12000,AMD,1,NO,16000
+X-ART,Ugreen,,60638,"USB 3.1 To 3.5''/2.5"" 5 Bay RAID Hard Drive Enclosure SATA 2x18TB Hard Drive 1Gb file 3 Second",80000,AMD,1,NO,85000
+X-ART,Ugreen,,45415,"Adjustable Clip-On Laptop Stand (11–17″) – Foldable, Aluminum Holder with Ergonomic Angle Support",2600,AMD,1,NO,3500
+X-ART,Ugreen,,20471,"Vertical Laptop Stand up to 15.6'' (Adjustable width: 12-26mm, Aluminum alloy+silicone)",4900,AMD,1,NO,6500
+X-ART,Ugreen,,80459,"38-in-1 Aluminum Alloy Screwdriver Set (Aluminum Alloy Handle, Magnetic Extension Bar, Screw Bits Dimension)",3900,AMD,1,NO,5000
+X-ART,Ugreen,,50654,Wireless Presenter,3300,AMD,1,NO,4500
+X-ART,Ugreen,,35579,Hidden Infrared Camera Detector,3500,AMD,1,NO,5000
+X-ART,Ugreen,,90416,"Desktop USB Microphone (Adjustment knob for mic volume, 3.5mm Audio Port)",4900,AMD,1,NO,6500
+X-ART,Ugreen,,10934,"Desktop USB Microphone Sampling rate: 360° omnidirectional 16bit/48KHz, Frequency response: 100-15000Hz, SNR: >70dB, (Black)",8200,AMD,1,NO,11000
+X-ART,Ugreen,,90561,"Wired Keyboard and Mouse Combo 1.5meters Black Keyboard - Cable length 1.55M, Dimension - 488.96*142.8*25.2mm Mouse - 1200 DPI, Cable length 1.5M",3500,AMD,1,NO,5000
+X-ART,Ugreen,,55655,Red Switch Mini Mechanical Keyboard Wired Mechanical Axis 61 Keys RU,7800,AMD,1,NO,10500
+X-ART,Ugreen,,25248,Ergonomic Keyboard Wrist Rest L:435mm x W:70mm Black,2000,AMD,1,NO,3000
+X-ART,Ugreen,,90789,Wired USB-A Mouse 1200dpi 1.5 meters,1650,AMD,1,NO,2500
+X-ART,Ugreen,,90550,"2.4G Wireless Mouse with USB Nano Receiver, Midnight Blue 800/1200/1600/2400 DPI, SILENT button",2600,AMD,1,NO,3500
+X-ART,Ugreen,,90671,"2.4G Wireless Mouse with USB Nano Receiver, Dusty Blue 800/1200/1600/2400 DPI, SILENT button",2600,AMD,1,NO,3500
+X-ART,Ugreen,,90686,"2.4G Wireless Mouse with USB Nano Receiver, Cherry Pink 800/1200/1600/2400 DPI, SILENT button",2600,AMD,1,NO,3500
+X-ART,Ugreen,,90531,"Wireless Bluetooth Mouse USB 2.4G Silent Mice Cordless Slim, 4000 DPI Design (Starry Black)",3500,AMD,1,NO,4700
+X-ART,Ugreen,,55780,"Wireless Ergonomic Mouse, 1600DPI, Silent",2500,AMD,1,NO,3500
+X-ART,Ugreen,,45149,"Dual Mode Wireless Bluetooth Mouse, 4000DPI",4200,AMD,1,NO,5700
+X-ART,Ugreen,,90538,"Rechargeable Dual Mode Wireless Mouse (Blue), Bluetooth 5.0/3.0 & 2.4G, High-Precision Blue Light, 4000 DPI, Multi-Device Compatibility",5800,AMD,1,NO,8000
+X-ART,Ugreen,,90539,"Wireless Mouse Rechargeable Bluetooth 2.4G Gaming Mouse Ergonomic Computer Mouse with 5000 DPI, RGB, 6 Programmable Buttons Black",8000,AMD,1,NO,11000
+X-ART,Ugreen,,CY016,Mouse Pad Non-slip rubber BLACK 260x210mm,500,AMD,1,NO,1000
+X-ART,Ugreen,,15728,"USB Webcam Full HD 1080P/30fps with Microphone, Clear Stereo Audio, Auto Light Correction, 85° View Web Cam for Live Streaming, Video Calling, Studying, Conferences",10000,AMD,1,NO,13500
+X-ART,Ugreen,,30143,USB-A To 3.5mm External Stereo Sound Adapter 15cm (White),2250,AMD,1,NO,3000
+X-ART,Ugreen,,30724,USB-A To 3.5mm External Stereo Sound Adapter 15cm (Black),2350,AMD,1,NO,3500
+X-ART,Ugreen,,50363,"3.5mm Male To Male Round Cable 2m (Black, Hi-Fi stereo)",1300,AMD,1,NO,1800
+X-ART,Ugreen,,10739,3.5mm Male to 2 Female Audio Cable 20cm (White),1200,AMD,1,NO,1600
+X-ART,Ugreen,,30619,3.5mm male to 2 Female Audio Cable Aluminum Case (Black),1350,AMD,1,NO,1800
+X-ART,Ugreen,,20497,3.5mm Male to Male 4-Pole Microphone Audio Cable 1.5m,1400,AMD,1,NO,1900
+X-ART,Ugreen,,20785,3.5mm 4-Pole M/M Audio Cable Alu Case 3m,2000,AMD,1,NO,2700
+X-ART,Ugreen,,10789,3.5mm male to 2 Female Audio Cable ABS Case (White),1150,AMD,1,NO,1600
+X-ART,Ugreen,,40673,3.5mm Male to 3.5mm Female Extension Braid 1m (Black),1050,AMD,1,NO,1500
+X-ART,Ugreen,,10595,"3.5mm Male To Female Extensioin Cable 3m Do not support Mic (Black, Aluminum case)",1300,AMD,1,NO,1800
+X-ART,Ugreen,,20898,"3.5mm Female to 2 Male Audio Cable ABS Case (Black, 20cm)",1050,AMD,1,NO,1500
+X-ART,Ugreen,,30620,3.5mm Male To Dual 3.5mm Female Headset Splitter 20cm (Black),1100,AMD,1,NO,1500
+X-ART,Ugreen,,30747,2RCA Male to 2RCA Male Cable 1m (Black),1400,AMD,1,NO,2000
+X-ART,Ugreen,,10518,2RCA Male to 2RCA Male Cable 2m (Black),1900,AMD,1,NO,2500
+X-ART,Ugreen,,10520,2RCA Male to 2RCA Male Cable 5m (Black),3000,AMD,1,NO,4100
+X-ART,Ugreen,,10542,Toslink Optical Audio Cable 1.5m,2000,AMD,1,NO,2700
+X-ART,Ugreen,,50213,Bluetooth 5.0 Transmitter Audio Adapter,9900,AMD,1,NO,14000
+X-ART,Ugreen,,35223,"Bluetooth 5.2 Transmitter Receiver, Dual Pair Wireless Adapter",8800,AMD,1,NO,12000
+X-ART,Ugreen,,40759,"Wireless Bluetooth Audio Receiver 5.1 with 3.5mm and 2RCA Adapter, Support HIFI/SBC/AAC/apt-X",6450,AMD,1,NO,8500
+X-ART,Ugreen,,35058,USB Bluetooth 5.4 Adapter for PC,3000,AMD,1,NO,5000
+X-ART,Ugreen,,45134,"USB Bluetooth Adapter, 5.4",3000,AMD,1,NO,5000
+X-ART,Ugreen,,35264,AX900 USB Dual Band Wi-Fi Adapter,3500,AMD,1,NO,5000
+X-ART,Ugreen,,20204,AC650 11ac Dual-Band Wireless USB Adapter,3500,AMD,1,NO,5000
+X-ART,Ugreen,,90339,"AC650 High-Gain Dual Band Wireless USB Adapter (802.11b/g/n 2.4GHz, 802.11a/n/ac 5GHz)",4500,AMD,1,NO,6000
+X-ART,Ugreen,,50340,Wireless Adapter AC1300 Dual-Band USB 3.0,6800,AMD,1,NO,9000
+X-ART,Ugreen mobile,,20728,"Lightning to USB-A Male Cable 1m (MFi ceritified, ABS Shell, White) up to 480Mbps",3900,AMD,1,NO,5000
+X-ART,Ugreen mobile,,80635,"USB-A to Lightning Cable 1m (Aluminum case, Red, MFi Ceritified, up to 480Mbps)",4100,AMD,1,NO,5300
+X-ART,Ugreen mobile,,60751,"Lightning to Type-C Male Cable 1m (MFi ceritified, ABS case+TPE jacket, Black, Box) up to 480Mbps PD 3A",4200,AMD,1,NO,5500
+X-ART,Ugreen mobile,,10493,Lightning to Type-C 2.0 Male Cable Rubber Shell 1m (MFi ceritified White) Speed up to 480Mbps PD fast charge 3A max,4200,AMD,1,NO,5500
+X-ART,Ugreen mobile,,70862,Lightning to 3.5mm Audio Adapter Aluminium Braided 2m (MFi ceritified) (Box),4250,AMD,1,NO,5900
+X-ART,Ugreen mobile,,45297,FineTrack Smart Finder Apple Find My Certified (iOS Only),3200,AMD,1,NO,4500
+X-ART,Ugreen mobile,,60387,"Item Finder, (Apple Certified) Bluetooth Tracker, Smart Tag, Works with Apple Find My (iOS Only)",5800,AMD,1,NO,7800
+X-ART,Ugreen mobile,,70889,USB-C to USB 3.0 OTG Cable Alu Case with Braid (Black),1300,AMD,1,NO,1800
+X-ART,Ugreen mobile,,60118,USB-C Male To USB 2.0 A Male Cable 2m (Black) 18W,1150,AMD,1,NO,1600
+X-ART,Ugreen mobile,,60124,"USB-C Male To USB 2.0 A Male Cable 0.25m (Black, Aluminum alloy case + Nylon braided) up to 480Mbps, 18W",1250,AMD,1,NO,1700
+X-ART,Ugreen mobile,,60125,"USB-C Male To USB 2.0 A Male Cable 0.5m (Black, Aluminum alloy case + Nylon braided) up to 480Mbps, 18W",1300,AMD,1,NO,1800
+X-ART,Ugreen mobile,,60126,"USB-C Male To USB 2.0 A Male Cable 1m (Black, Aluminum alloy case + Nylon braided) up to 480Mbps, 18W",1400,AMD,1,NO,1900
+X-ART,Ugreen mobile,,60127,"USB-C Male To USB 2.0 A Male Cable 1.5m (Black, Aluminum alloy case + Nylon braided) up to 480Mbps, 18W",1500,AMD,1,NO,2100
+X-ART,Ugreen mobile,,60128,"USB-C Male To USB 2.0 A Male Cable 2m (Black, Aluminum alloy case + Nylon braided) up to 480Mbps, 18W",1600,AMD,1,NO,2300
+X-ART,Ugreen mobile,,60408,"USB-C Male To USB 2.0 A Male Cable 3m (Black, Aluminum alloy case + Nylon braided) up to 480Mbps, 18W",2200,AMD,1,NO,3000
+X-ART,Ugreen mobile,,60131,USB 2.0A To USB-C Male Cable Aluminum alloy case + Nylon braided 1m (White) Speed up to 480Mbps fast charg 3A,1350,AMD,1,NO,1800
+X-ART,Ugreen mobile,,60132,USB 2.0A To USB-C Male Cable Aluminum alloy case + Nylon braided 1.5m (White) Speed up to 480Mbps fast charg 3A,1450,AMD,1,NO,1900
+X-ART,Ugreen mobile,,60133,USB 2.0A To USB-C Male Cable Aluminum alloy case + Nylon braided 2m (White) Speed up to 480Mbps fast charg 3A,1550,AMD,1,NO,2100
+X-ART,Ugreen mobile,,20881,"USB 3.0 A to USB-C Cable Nickel Plating 0.5m (Black, Speed up to 5Gbps)",1300,AMD,1,NO,1800
+X-ART,Ugreen mobile,,20882,"USB 3.0 A to USB-C Cable Nickel Plating 1m (Black, Speed up to 5Gbps)",1550,AMD,1,NO,2000
+X-ART,Ugreen mobile,,20883,"USB 3.0 A to USB-C Cable Nickel Plating 1.5m (Black, Speed up to 5Gbps)",1750,AMD,1,NO,2300
+X-ART,Ugreen mobile,,20884,"USB 3.0 A to USB-C Cable Nickel Plating 2m (Black, Speed up to 5Gbps)",1950,AMD,1,NO,2500
+X-ART,Ugreen mobile,,30875,"USB 2.0 A Male To Micro USB 2A + USB-C Male 3A Cable 1m (Black, Alunimum alloy + Nylon braideded)",2100,AMD,1,NO,2800
+X-ART,Ugreen mobile,,50941,USB-C To USB2.0 A 3A Data Cable(90°Angle) Aluminum alloy case 1m (Space Gray),1400,AMD,1,NO,2000
+X-ART,Ugreen mobile,,20856,Angled USB-C Male To Angled USB 2.0A Male Cable Nickel Plating Aluminum Shell 1m Black 480Mbps fast charge 3A,1400,AMD,1,NO,1900
+X-ART,Ugreen mobile,,45612,Uno USB C to USB C Cable 100W Fast Charging Cable Type C Charging Cord with LED Display 0.5m,2600,AMD,1,NO,3500
+X-ART,Ugreen mobile,,35501,Uno USB C to USB C Cable 100W Fast Charging Cable Type C Charging Cord with LED Display 1m,2800,AMD,1,NO,4000
+X-ART,Ugreen mobile,,35512,Uno USB C to USB C Cable 100W Fast Charging Cable Type C Charging Cord with LED Display 2m,3700,AMD,1,NO,5000
+X-ART,Ugreen mobile,,50997,USB-C 2.0 Male To USB-C 2.0 Male Cable 1m (Black) up to 480Mbps 60W,1350,AMD,1,NO,1800
+X-ART,Ugreen mobile,,50998,"USB-C 2.0 Male To USB-C 2.0 Male Cable 1,5m (Black) up to 480Mbps 60W",1500,AMD,1,NO,2000
+X-ART,Ugreen mobile,,10306,USB-C 2.0 Male To USB-C 2.0 Male Cable 2m (Black) up to 480Mbps 60W,1600,AMD,1,NO,2200
+X-ART,Ugreen mobile,,25310,USB-C to USB-C PD Fast Charging Cable 1m (Blue) up to 480Mbps 60W,1300,AMD,1,NO,1800
+X-ART,Ugreen mobile,,65124,USB-C to USB-C PD Fast Charging Cable 60W Max Pink 1m,1300,AMD,1,NO,1800
+X-ART,Ugreen mobile,,60518,USB-C 2.0 Male To USB-C 2.0 Male Cable 1m (White) up to 480Mbps 60W,1300,AMD,1,NO,1600
+X-ART,Ugreen mobile,,70529,Angled USB-C Cable Aluminum Case with Braided 1m (Black) 60W,1800,AMD,1,NO,2500
+X-ART,Ugreen mobile,,70696,Angled USB-C M/M Cable Aluminium Shell with Braided 1m (Black) 480Mbps 100W,2900,AMD,1,NO,3900
+X-ART,Ugreen mobile,,45063GI,USB-C to USB-C PD Fast Charging Cable Genshin Impact Edition 100W Max 1m,2900,AMD,1,NO,3900
+X-ART,Ugreen mobile,,60551,USB-C 2.0 Male To USB-C 2.0 Male Cable 1m (White) up to 480Mbps 100W,2000,AMD,1,NO,2900
+X-ART,Ugreen mobile,,65255,USB-C to USB-C PD Fast Charging Braided Cable Max 1m (White) up to 480Mbps 100W,2000,AMD,1,NO,2700
+X-ART,Ugreen mobile,,65256,USB-C to USB-C PD Fast Charging Braided Cable Max 2m (White) up to 480Mbps 100W,2600,AMD,1,NO,3500
+X-ART,Ugreen mobile,,15275,USB-C 2.0 Male To USB-C 2.0 Male Cable 1m (Black) up to 480Mbps 100W with braid,2150,AMD,1,NO,2900
+X-ART,Ugreen mobile,,80371,USB-C 2.0 Male To USB-C 2.0 Male Cable 1m (Black) up to 480Mbps 100W,1800,AMD,1,NO,2500
+X-ART,Ugreen mobile,,80372,USB-C 2.0 Male To USB-C 2.0 Male Cable 2m (Black) up to 480Mbps 100W,2700,AMD,1,NO,3600
+X-ART,Ugreen mobile,,35087,"USB C to USB C Cable, Y Splitter 2 in 1 Dual Type C PD Charging Cord 1.5m 100W",6000,AMD,1,NO,8000
+X-ART,Ugreen mobile,,15311,USB-C to USB-C PD Fast Charging Cable 240W Max Space Gray 1m,2250,AMD,1,NO,3000
+X-ART,Ugreen mobile,,65909,USB-C to USB-C PD Fast Charging Cable 240W Max 3m,3500,AMD,1,NO,5000
+X-ART,Ugreen mobile,,90629,"Right Angle USB-C to USB-C Link Cable 5m for VR (Black, Box)",6000,AMD,1,NO,8000
+X-ART,Ugreen mobile,,50751,"USB-C 3.1 M/M Cable Nickel Plating Aluminum Shell 1.5m Data&Charging+&Audio+Video, Compatible with Thunderbolt 3 interface, up to 5Gbps, (60W max), 4K60Hz (Gray)",3500,AMD,1,NO,4700
+X-ART,Ugreen mobile,,80150,"USB-C 3.1 Male To USB-C 3.1 Male Cable 1m (Black, Aluminum case with braid) up to 10Gbps, 240W, 4K60Hz",5000,AMD,1,NO,7000
+X-ART,Ugreen mobile,,45191,USB 3.2 Gen 2 USB C Extension Cable 10Gbps Type C Male to Female Extender Cord Nylon Braided 100W Fast Charge 4K60Hz Video Display 1m,4000,AMD,1,NO,5400
+X-ART,Ugreen mobile,,45996,"Thunderbolt 5 Cable Max 120Gbps, 8K60Hz, 240W Black 1m",12500,AMD,1,NO,16000
+X-ART,Ugreen mobile,,80154,"USB-C Male to 3.5mm Female Cable With Chip 10cm (Black, Aluminum Shell with Braided)",2650,AMD,1,NO,4200
+X-ART,Ugreen mobile,,25207,Power Bank 5000mAh Magnetic Wireless Beige 20W PD Fast Charge 105.8*68.7*13.1mm,9900,AMD,1,NO,14000
+X-ART,Ugreen mobile,,25188,"Power Bank 20000mAh with Digital Display, for Notebook, Phone and more, 100W Two-way Fast Charging (Abyss Blue)* Flight Approved",21500,AMD,1,NO,29000
+X-ART,Ugreen mobile,,25685B,"UNO USB C Charger, 65 W USB C Power Supply, 3-Port GaN Fast Charger, LED Display Black",11500,AMD,1,NO,14900
+X-ART,Ugreen mobile,,35291,"UNO USB C Charger, 65 W USB C Power Supply, 3-Port GaN Fast Charger, LED Display Pink",11500,AMD,1,NO,14900
+X-ART,Ugreen mobile,,35855,"UNO USB C Charger, 65 W USB C Power Supply, 3-Port GaN Fast Charger, LED Display Pink Blue",11500,AMD,1,NO,14900
+X-ART,Ugreen mobile,,45515B,"UNO USB C Charger, 100 W USB C Power Supply, 4-Port GaN Fast Charger, LED Display Black",18500,AMD,1,NO,23500
+X-ART,Ugreen mobile,,35316,"MagFlow Qi2 15W Magnetic Foldable Charging Station, 2-in-1 Fast Wireless Charger",14500,AMD,1,NO,19000
+X-ART,Ugreen mobile,,35316GI,"MagFlow Qi2 15W Magnetic Foldable Charging Station, 2-in-1 Fast Wireless Charger Genshin Impact Edition",15500,AMD,1,NO,20500
+X-ART,Ugreen mobile,,45023,MagFlow Qi2 15W Induction Charger iPhone Certified 2 in 1 Foldable Compatible with MagSafe,15500,AMD,1,NO,21000
+X-ART,Ugreen mobile,,45775,Uno 2-in-1 Magnetic Wireless Charger 15W charger is Qi2 certified,12500,AMD,1,NO,16500
+X-ART,Ugreen mobile,,30233,"Magnetic Wireless Charger 15W (for iOS devices: 7.5W, charging cable 1M included)",7200,AMD,1,NO,9700
+X-ART,Ugreen mobile,,35565,"MagFlow Qi2 Wireless Charger, 15W Magnetic Charging Pad",10500,AMD,1,NO,14000
+X-ART,Ugreen mobile,,55206,"Qi2 15W Wireless Charging Pad, MagFlow Wireless Charger MagSafe Compatible, Magsafe Charger with 1.5 m Cable",8500,AMD,1,NO,11500
+X-ART,Ugreen mobile,,70273,18W Fast Charger QC3.0 1*USB-A (Black),2500,AMD,1,NO,3400
+X-ART,Ugreen mobile,,10133,18W Fast Charger QC3.0 1*USB-A (White),2850,AMD,1,NO,3500
+X-ART,Ugreen mobile,,10191,20W Fast Charger with PD USB-C (Black),2200,AMD,1,NO,3200
+X-ART,Ugreen mobile,,55528,20W USB-C GaN Fast Charger (Gray),2150,AMD,1,NO,3000
+X-ART,Ugreen mobile,,55554,20W USB-C GaN Fast Charger (White),2150,AMD,1,NO,3000
+X-ART,Ugreen mobile,,55553,20W USB-C GaN Fast Charger (Black),2150,AMD,1,NO,3000
+X-ART,Ugreen mobile,,55555,20W USB-C GaN Fast Charger (Blue),2150,AMD,1,NO,3000
+X-ART,Ugreen mobile,,55556,20W USB-C GaN Fast Charger (Pink),2150,AMD,1,NO,3000
+X-ART,Ugreen mobile,,45310,20W 2-Port Fast Charger 1*USB-A + 1*USB-C (White),2350,AMD,1,NO,3500
+X-ART,Ugreen mobile,,15324,20W Nexode USB-C PD GaN Fast Charger (White),2850,AMD,1,NO,4300
+X-ART,Ugreen mobile,,65007,30W USB-C GaN Fast Charger Black,2550,AMD,1,NO,4000
+X-ART,Ugreen mobile,,55531,30W USB-C GaN Fast Charger,2550,AMD,1,NO,4000
+X-ART,Ugreen mobile,,35006,30W Nexode Pro GaN Fast Charger 1*USB-C (Space Gray),4400,AMD,1,NO,6000
+X-ART,Ugreen mobile,,65012,30W USB-C GaN Fast Charger Set (Black),3550,AMD,1,NO,5000
+X-ART,Ugreen mobile,,65013,30W USB-C GaN Fast Charger Set (White),3550,AMD,1,NO,5000
+X-ART,Ugreen mobile,,35008,"45W Nexode GaN Pro wall charger, 2*USB-C (gray)",7500,AMD,1,NO,10000
+X-ART,Ugreen mobile,,35042,65W Nexode S USB-A+2*USB-C GaN Tech Fast Charger,9500,AMD,1,NO,13500
+X-ART,Ugreen mobile,,25356,65W Nexode Pro 3-Port GaN Ultra-Slim Fast Charger 1*USB-A+2*USB-C,12500,AMD,1,NO,17000
+X-ART,Ugreen mobile,,90747,65W Nexode GaN Desktop Fast Charger 2*USB-A+2*USB-C,12500,AMD,1,NO,17000
+X-ART,Ugreen mobile,,90928,100W Nexode 1*USB-A+3*USB-C Desktop Fast Charger (Support 45W Samsung Quick Charge 2.0),17000,AMD,1,NO,23000
+X-ART,Ugreen mobile,,35043,100W Nexode S 1*USB-A+3*USB-C GaN Tech Fast Charger,14000,AMD,1,NO,19000
+X-ART,Ugreen mobile,,25874,100W Nexode Pro 1*USB-A+2*USB-C GaN Charger + 1.5M cable,16500,AMD,1,NO,22000
+X-ART,Ugreen mobile,,90549,"140W GaN Charger 1*USB-A + 2*USB-C, 1.5m Cable (Gray)",21000,AMD,1,NO,28000
+X-ART,Ugreen mobile,,25877,160W Nexode Pro 4-Port GaN Fast Charger 1*USB-A + 3*USB-C (Grey folding foot）+ 1.5M cable,26000,AMD,1,NO,35000
+X-ART,Ugreen mobile,,40914,"200W GaN Desktop Charger 2*USB-A + 4*USB-C, 2m Cable (Black)",29500,AMD,1,NO,38000
+X-ART,Ugreen mobile,,90903B,300W Nexode 5-Port PD GaN Fast Charger Black USB-C1 140.0W Max USB-C2/C3 100.0W Max,48000,AMD,1,NO,65000
+X-ART,Ugreen mobile,,90613,Outlet Extender (1 AC outlets + 30W 2A1C),6000,AMD,1,NO,8000
+X-ART,Ugreen mobile,,60113,"DigiNest Cube Power Strip 65W 2*USB-A + 2*USB-C, AC 3*port outlets 3680W 16A",16500,AMD,1,NO,20000
+X-ART,Ugreen mobile,,35347,Car Safety Hammer (Window Breaker & Seatbelt Cutter) Life-Saving Emergency Tool,2000,AMD,1,NO,3000
+X-ART,Ugreen mobile,,60108,Car Headrest Mount Holder for phone and tablet with 4.7-12.9 inch screen,3200,AMD,1,NO,4300
+X-ART,Ugreen mobile,,70601,"Bluetooth Car Receiver Aux with Mic, Connect 2 Devices at One Time SBC/AAC (Space Gray)",3000,AMD,1,NO,4000
+X-ART,Ugreen mobile,,70304,"Bluetooth 5.1 Receiver Audio Adapter APTX with Mic+Button, HIFI/SBC/AAC/apt-X/apt-X LL, Operating Time: up to 10hours",7050,AMD,1,NO,9900
+X-ART,Ugreen mobile,,30337,Car Seat Hanger Max Load 20Kgs,650,AMD,1,NO,1200
+X-ART,Ugreen mobile,,60326,Car Temporary Parking Card (Dual Numbers),1900,AMD,1,NO,2500
+X-ART,Ugreen mobile,,80785,Magnetic Phone holder for Car (1 × Magnetic Phone Holder; 2 × Magnetic Piece),2250,AMD,1,NO,3300
+X-ART,Ugreen mobile,,80712B,Waterfall-Shaped Magnetic Phone Holder Small (1 × Waterfall Magnetic Phone Holder; 2 × Magnetic Piece),2650,AMD,1,NO,3500
+X-ART,Ugreen mobile,,10422,Air Vent Aluminum Phone Holder (PC+Aluminum alloy),1400,AMD,1,NO,2000
+X-ART,Ugreen mobile,,60796,Phone Holder for Car Dashboard (ABS+Silicone),2400,AMD,1,NO,3500
+X-ART,Ugreen mobile,,40907,"Gravity Drive Air Vent Mount Aluminum Phone Holder (Deep Black, Aluminum alloy + ABS + silica gel)",2900,AMD,1,NO,3900
+X-ART,Ugreen mobile,,50564,"Gravity Drive Air Vent Mount Aluminum Phone Holder (Space gray, Aluminum alloy + ABS + silica gel)",3100,AMD,1,NO,4500
+X-ART,Ugreen mobile,,80871,Gravity Phone Holder for Car with Hook,2700,AMD,1,NO,3700
+X-ART,Ugreen mobile,,20473,"Waterfall-Shaped Suction Cup Phone Mount ≈L244×W75×H110mm (Black, PC+ABS+TPU)",3450,AMD,1,NO,4700
+X-ART,Ugreen mobile,,50875,24W Car Charger 2*USB-A (Black),1850,AMD,1,NO,2700
+X-ART,Ugreen mobile,,25845,30W USB-C PD+USB-A QC Fast Car Charger,2200,AMD,1,NO,3000
+X-ART,Ugreen mobile,,40858,30W Fast Car Charger 1*USB-C 1*USB-A PD+QC3.0 (Gray),2900,AMD,1,NO,3800
+X-ART,Ugreen mobile,,10144,36W Fast Car Charger 2*USB-A QC3.0 (Gray),3200,AMD,1,NO,4500
+X-ART,Ugreen mobile,,55511,130W 3-Port Fast Car Charger Set,6700,AMD,1,NO,9000
+X-ART,Ugreen mobile,,80710,Foldable Multifunctional Car Trunk Organizer Oxford + Aluminium Alloy L52 x W35 x H30 cm,9100,AMD,1,NO,13500
+X-ART,Ugreen mobile,,45165,Magnetic Wallet with Stand,6000,AMD,1,NO,8000
+X-ART,Ugreen mobile,,45166,Magnetic Wallet with Stand,6500,AMD,1,NO,8500
+X-ART,Ugreen mobile,,50320,"Cable Organizer With 7 Slots, Suitable for the cable within 5mm diameter (Black)",800,AMD,1,NO,1000
+X-ART,Ugreen mobile,,30762,"Cable Organizer With 4 Slots, Suitable for the cable within 5mm diameter, 2 Pack (Black)",1250,AMD,1,NO,1700
+X-ART,Ugreen mobile,,60959,"Waterproof Phone Pouch, IPX8 level 30m depth",850,AMD,1,NO,1200
+X-ART,Ugreen mobile,,70577,"Earphone Carrying Case Bag (Fabric, Gray)",800,AMD,1,NO,1400
+X-ART,Ugreen mobile,,50274,Hard Disk&Accessory Multi-functional Storage Bag Large Size 18*9.5*5.5cm,2500,AMD,1,NO,3200
+X-ART,Ugreen mobile,,50903,Travel Storage Case (Gray) L203*W129*H72(mm),4500,AMD,1,NO,6100
+X-ART,Ugreen mobile,,65556,Electronics Accessories Travel Organizer M,4500,AMD,1,NO,6000
+X-ART,Ugreen mobile,,65554,Electronics Accessories Travel Organizer,7500,AMD,1,NO,10000
+X-ART,Ugreen mobile,,15062,Selfie Stick Tripod Stand With Bluetooth 5.0 Remote and Length Adjusted (30.5cm - 157cm),9000,AMD,1,NO,12000
+X-ART,Ugreen mobile,,15647,"Tablet and Phone Tripod Stand, aluminum alloy, iron, ABS, silica gel, 360°+180 ° adjustment angle",11000,AMD,1,NO,13000
+X-ART,Ugreen mobile,,30394,Adhesive Wall Mount Phone Charging Holder 118*69*18mm (White),950,AMD,1,NO,1300
+X-ART,Ugreen mobile,,20439,"Desktop Tablet Stand Compatible with tablets and phones up to 12.9"" (Material:PC+ABS, Product size:108x188x24mm, Black)",1440,AMD,1,NO,2000
+X-ART,Ugreen mobile,,80704,"Adjustable Portable Stand Suitable for phone or tablet ≤ 7.2 inch (Material: PC+ABS *Product size: 84x110x26.8mm, White)",1530,AMD,1,NO,2000
+X-ART,Ugreen mobile,,50747,Adjustable Phone Stand (Black) Suitable for phone or tablet ≤ 7.9 inch *Material: ABS *Product size: 95*85*21(mm),1250,AMD,1,NO,1600
+X-ART,Ugreen mobile,,50748,Multi-Angle Adjustable Portable Stand for iPad (Black) Suitable for phone or tablet ≤12 inch *Material: ABS *Product size: 120*107*26(mm),1410,AMD,1,NO,2000
+X-ART,Ugreen mobile,,30285,Adjustable Phone Stand (White) Suitable for phone or tablet ≤12 inch *Material: ABS *Product size: 120*107*26(mm),1050,AMD,1,NO,1500
+X-ART,Ugreen mobile,,15608,"Desktop Phone Stand Material: Aluminium alloy + Silicone *Suitable for phone with 4.7""-7.2"" screen *Dimensions: L120 × W70 × H28",2900,AMD,1,NO,4000
+X-ART,Ugreen mobile,,60324,Desktop Phone Stand (Black) PC+ABS case *Alloy support rod *Suitable forbphone or tablet ≤ 7.9 inch,2550,AMD,1,NO,3500
+X-ART,Ugreen mobile,,60343,Desktop Phone Stand (Silver) PC+ABS case *Alloy support rod *Suitable forbphone or tablet ≤ 7.9 inch,2550,AMD,1,NO,3500
+X-ART,Ugreen mobile,,20434,Phone Stand Desk Foldable Holder Height Adjustable ≤ 7.9 inch,2200,AMD,1,NO,3000
+X-ART,Ugreen mobile,,35152,Phone Stand Multi-Angle Adjustable Foldable Holder 360° Rotation up to 9.7 Inch,2800,AMD,1,NO,3800
+X-ART,Ugreen mobile,,45860,Stand 360° Rotatable Metal Phone and Tablet Stand Holder for Desk Adjustable Foldable Tablet Mount Compatible with All up tp 13'',3500,AMD,1,NO,5000
+X-ART,Ugreen mobile,,80701,"Metal Desktop Stand For Headset (Aluminium alloy + Silicone, H287.2mm)",4500,AMD,1,NO,6000
+X-ART,Ugreen mobile,,80906,Phone Holder With Flexible Long Arm 90cm (Black),2000,AMD,1,NO,2500
+X-ART,Ugreen mobile,,30488,Phone Stand Flexible Long arm length: 90CM/120CM (White),2100,AMD,1,NO,2500
+X-ART,Ugreen mobile,,30638,"In-Ear Earphones with Type-C (Black, 1.2m)",5000,AMD,1,NO,7000
+X-ART,Ugreen mobile,,35753,In-Ear Earphones with 3.5mm Plug,2500,AMD,1,NO,3500
+X-ART,Ugreen mobile,,45110,HiTune P3 Wireless Earbuds,6700,AMD,1,NO,9000
+X-ART,Ugreen mobile,,45786,HiTune S3 True Wireless Earbuds White,6800,AMD,1,NO,9000
+X-ART,Ugreen mobile,,45761,HiTune S5 Open Wearable Ear Clip True Wireless Earbuds White,9200,AMD,1,NO,12500
+X-ART,Ugreen mobile,,45760,HiTune S5 Open Wearable Ear Clip True Wireless Earbuds Black,9500,AMD,1,NO,12500
+X-ART,Ugreen mobile,,15612,HiTune H5 True Wireless Earbuds * Light Bulb Shape * Entry-Level * Support Game Mode Bluetooth 5.3,8500,AMD,1,NO,11300
+X-ART,Ugreen mobile,,45585,HiTune T6s Hybrid Active Noise-Cancelling Earbuds White,12200,AMD,1,NO,16500
+X-ART,Ugreen mobile,,15158,HiTune T6 Hybrid Active Noise-Cancelling Earbuds * Double-Devices Connection; * Excellent Sound Quality: Sony Hi-Res certificates; * Better ANC Noise Cancelling-40dB * Flapship version,18000,AMD,1,NO,23900
+X-ART,Ugreen mobile,,55137,"HiTune T6 Magic True Wireless Earbuds - White, LCD Touch Screen Charging Case 52dB Active Noise Cancellation (ANC)",15500,AMD,1,NO,20500
+X-ART,Ugreen mobile,,35873,HiTune H6 Pro Hybrid Active Noise-Cancelling Earbuds White 5.3 Bluetooth 13 mm dynamic drivers Dual-mic system with hybrid ANC 6 hours Battery Life per earbud on a single charge Ultra-low Latency (~0.08s) IPX4 Water Resistance,17000,AMD,1,NO,23000
+X-ART,Ugreen mobile,,45018,"Studio Max2 Wireless Over Ear Headset Black , Bluetooth 5.4, up to 80 hours of playback on a single charge, AI Noise Cancellation",8000,AMD,1,NO,10500
+X-ART,Ugreen mobile,,65384,"HiTune Max5c Hybrid Active Noise-Cancelling Headphones Blue (* Support Double-Devices seamless connection * Excellent Sound Quality: Sony Hi-Res certificates; * Low delay：Bluetooth 5.4 * Long battery life: 45hrs with ANC On, 75hrs with ANC Off)",11500,AMD,1,NO,15000
+X-ART,Ugreen mobile,,35758,"HiTune Max5c Hybrid Active Noise-Cancelling Headphones White (* Support Double-Devices seamless connection * Excellent Sound Quality: Sony Hi-Res certificates; * Low delay：Bluetooth 5.4 * Long battery life: 45hrs with ANC On, 75hrs with ANC Off)",11300,AMD,1,NO,15000
+X-ART,Ugreen mobile,,35757,"HiTune Max5c Hybrid Active Noise-Cancelling Headphones Black (* Support Double-Devices seamless connection * Excellent Sound Quality: Sony Hi-Res certificates; * Low delay：Bluetooth 5.4 * Long battery life: 45hrs with ANC On, 75hrs with ANC Off)",11300,AMD,1,NO,15000
+X-ART,Ugreen Network,,,CABLE,0,AMD,1,NO,RRP
+X-ART,Ugreen Network,,60547,"Cat 5e Unshielded Pure Copper Cable 305m Dark Gray, 24AWG, up to 100 MHz, 0.50±0.008mm",140,AMD,1,NO,
+X-ART,Ugreen Network,,11259,"Cat 6 Unshielded Pure Copper Cable 305m Blue, 23AWG, PVC, up to 250 MHz, 0.57±0.008mm",190,AMD,1,NO,
+X-ART,Ugreen Network,,50246,Connector Cat 5e Unshielded RJ45Plug 100Pcs/Box,25,AMD,1,NO,
+X-ART,Ugreen Network,,60558,Connector Cat 6 Unshielded RJ45Plug 100Pcs/Box,50,AMD,1,NO,
+X-ART,Ugreen Network,,50634,Connector Cat 7 Shielded Modular Plug Gold-plated 50U,500,AMD,1,NO,
+X-ART,Ugreen Network,,80452,Кeystone Jack Cat 6 Network Info Module Unshielded Shell,800,AMD,1,NO,
+X-ART,Ugreen Network,,70423,Cat 6 1U 24-Port UTP Patch Panel,8900,AMD,1,NO,12000
+X-ART,Ugreen Network,,70424,COV Cable Management Panel 24-Port,3000,AMD,1,NO,"5000, New"
+X-ART,Ugreen Network,,50191,Cat 6 U/UTP Pure Copper Ethernet Cable 1m (Black),1000,AMD,1,NO,1300
+X-ART,Ugreen Network,,50192,Cat 6 U/UTP Pure Copper Ethernet Cable 2m (Black),1500,AMD,1,NO,2000
+X-ART,Ugreen Network,,50193,Cat 6 U/UTP Pure Copper Ethernet Cable 3m (Black),1800,AMD,1,NO,2400
+X-ART,Ugreen Network,,70331,Cat 6A Pure Copper Ethernet Cable OD2.8 0.5m (Black),800,AMD,1,NO,1000
+X-ART,Ugreen Network,,70332,Cat 6A Pure Copper Ethernet Cable OD2.8 1m (Black),1100,AMD,1,NO,1500
+X-ART,Ugreen Network,,80420,Cat 7 Round Ethernet Cable 0.5m (Black),1250,AMD,1,NO,1700
+X-ART,Ugreen Network,,80421,Cat 7 Round Ethernet Cable 1m (Black),1400,AMD,1,NO,1900
+X-ART,Ugreen Network,,40356,"Cable Organizer 20mm, Material:Nylon 5m (Black)",2200,AMD,1,NO,3000
+X-ART,Ugreen Network,,30820,"Protection Tube DIA 25mm 5m, can accommodate 12 network cables (Black)",3300,AMD,1,NO,4500
+X-ART,Ugreen Network,,20391,RJ45 Female to Female 1000Mbps Anti-thunder Ethernet Cable Extender Adapter (White),1200,AMD,1,NO,"2000, New"
+X-ART,Ugreen Network,,30837,RJ45 Female to Female 1000Mbps Anti-thunder Ethernet Cable Extender Adapter (Black),1200,AMD,1,NO,"2000, New"
+X-ART,Ugreen Network,,55359,RJ45 Shielded Network Connector 10Gbps Max 1pc,800,AMD,1,NO,"1200, New"
+X-ART,Ugreen Network,,20245P20,Cable Winder Nylon 20-Pack (L180xW12mm),2000,AMD,1,NO,3000
+X-ART,Ugreen Network,,50923,RJ45 Splitter Adapter 1 to 2 100Mbps (Black),1500,AMD,1,NO,2000
+X-ART,Ugreen Network,,45311,RJ45 Active Splitter 1 to 2 1000Mbps Plug and Play,4000,AMD,1,NO,"5500, New"
+X-ART,Ugreen Network,,80740,Surge Protection Device of Closed Circuilt Montoring TV with 2×Binding Post,4900,AMD,1,NO,7000
+X-ART,Ugreen Network,,15641EU,5-Port Gigabit Ethernet Switch Aluminum Housing EU,5600,AMD,1,NO,7500
+X-ART,Ugreen Network,,10950,Network & Telephone Cable Tester RJ12-RJ45,3000,AMD,1,NO,4000
+X-ART,Ugreen Network,,70683,"Multi functional Crimping Tool for lan cable and telephone line RJ-45, RJ-12",4000,AMD,1,NO,"6000, New"
+X-ART,nJoy,,UPLI-LI060KE-CG01B,"Keen 600 600VA / 360W line interactive, tower, 1x 12v 7A, battery, 2x Schuko, 276 x 87 x 165mm, 4kg",17800,AMD,1,NO,"26500, 2 years (1 year for the batteries), 16800"
+X-ART,nJoy,,UPLI-LI080KE-CG01B,"Keen 800 - 800VA / 480W line interactive, tower, 1x 12v 9A, battery, 2x Schuko, 276 x 87 x 165 мм 4.4kg",19800,AMD,1,NO,"28500, 2 years (1 year for the batteries), 18700"
+X-ART,nJoy,,UPLI-LI100KE-CG01B,"Keen 1000 1KVA / 600W line interactive, tower, 2x 12v 7A battery, 4x Schuko, 298 x 148 x 178mm 7.7kg",34500,AMD,1,NO,"48500, 2 years (1 year for the batteries), 32000"
+X-ART,nJoy,,UPLI-LI150KU-CG01B,"Keen 1500 USB - 1.5KVA / 900W line interactive, tower, 2x 12v 9A battery, 4x Schuko, 2x RJ11/45 (in & out) USB auto shutdown 298 x 148 x 178 мм 9.2kg",48500,AMD,1,NO,"63000, 2 years (1 year for the batteries), 45800"
+X-ART,nJoy,,UPLI-LI200KU-CG01B,"Keen 2000 USB 2KVA / 1200W line interactive, tower, 2x 12v 9A battery, 4x Schuko, 2x RJ11/45 (in & out) USB auto shutdown 298 x 148 x 178mm 10.6kg",51700,AMD,1,NO,"65000, 2 years (1 year for the batteries), 49000"
+X-ART,nJoy,,UPCSBLS665TRPCG01B,"Renton 650 Plus - 650VA / 360W line interactive, tower, 1x 12v 5A battery, 4x Schuko, USB-A & USB-c, 30W Fast Charger 267 x 165 x 87 mm",24800,AMD,1,NO,"31000, 2 years (1 year for the batteries), 23800"
+X-ART,nJoy,,UPCSBLS665TRECG01B,"Renton 650 - 650VA / 360W line interactive, tower, 1x 12v 5A battery, 4x Schuko, 267 x 165 x 87 mm",20000,AMD,1,NO,"25000, 2 years (1 year for the batteries), 19300"
+X-ART,nJoy,,UPCSTLP860TAICP01B,"Aira 600 - 600VA / 500W Line-interactive, tower, battery external only, 2 x Schuko, 255 x 290 x 120 mm, 7.6 kg",55500,AMD,1,NO,"69500, 2 years, 54000"
+X-ART,nJoy,,UPCSTLP812HAICP01B,"Aira 1200 - 1.2KVA / 1KW Line-interactive, tower, battery external only, 2 x Schuko, 255 x 290 x 120 mm, 11.3 kg",78000,AMD,1,NO,"97500, 2 years, 74500"
+X-ART,nJoy,,UPOL-OL100EP-CG01B,"Echo Pro 1000 - 1KVA / 800W, on-line, tower, lcd display, 2x 12v 7A battery, 3x Schuko, USB auto shutdown, 327 x 140 x 190 mm, 9.13kg",96500,AMD,1,NO,"121000, 2 years (1 year for the batteries), 85500"
+X-ART,nJoy,,UPOL-OL200EP-CG01B,"Echo Pro 2000 - 2KVA / 1.6KW, on-line, lcd display, 4x 12v 12v 7A battery, 4x Schuko, USB auto shutdown, 390 x 151 x 225 mm, 16.6kg",137500,AMD,1,NO,"172000, 2 years (1 year for the batteries), 129000"
+X-ART,nJoy,,UPOL-OL300EP-CG01B,"Echo Pro 3000 - 3KVA / 2.4KW, on-line, lcd display, 6x 12v 7A battery, 4x Schuko, USB auto shutdown, 416 x 196 x 342 mm, 25.1kg",192000,AMD,1,NO,"240000, 2 years (1 year for the batteries), 180000"
+X-ART,nJoy,,PWUP-OL100AP-AZ01B,"Aten Pro 1000 - 1KVA / 900W, on-line, tower, lcd display, 2x 12v 9A battery,,3x Schuko, USB auto shutdown, 282 x 145 x 220mm, 9.8kg",105400,AMD,1,NO,"132000, 2 years (1 year for the batteries), 95000"
+X-ART,nJoy,,PWUP-OL200AP-AZ01B,"Aten Pro 2000 - 2KVA / 1.8KW, on-line, tower, lcd display, 4x 12v 9A battery, 3x Schuko, USB auto shutdown, 397 x 145 x 220mm, 17kg",154600,AMD,1,NO,"193500, 2 years (1 year for the batteries), 145000"
+X-ART,nJoy,,PWUP-OL300AP-AZ01B,"Aten Pro 3000 - 3KVA / 2.7KW, on-line, lcd display, 6x 12v 9A battery, 4x Schuko, USB auto shutdown, 421 x 190 x 318mm, 27.6kg",214000,AMD,1,NO,"267500, 2 years (1 year for the batteries), 197000"
+X-ART,nJoy,,UPCMTOP960HASCG01B,"Aster 6KT - 6KVA / 5.4KW on-line, lcd display, No batteries installed, 16 pieces of 12V lead acid 7Ah or 9Ah, Dimensions (L x W x H) 196 x 702 x 412 mm, Weight 54 kg",330000,AMD,1,NO,"412500, 2 years, 310000"
+X-ART,nJoy,,UPCMTOP910KASCG01B,"Aster 10KT - 10KVA / 9KW on-line, lcd display, No batteries installed, No batteries installed support 16 pieces of 12V lead acid 7Ah or 9Ah, Dimensions (L x W x H) 196 x 702 x 412 mm, Weight 63,5 kg",389500,AMD,1,NO,"487000, 2 years, 362000"
+X-ART,nJoy,,UPLI-LI080CO-AZ01B,"Code 800 800VA / 480W, line-interactive, rack 2U, lcd display, 1x 9A GP09122L 30.55W/cell battery, 4x IEC-320 C13, USB auto shutdown, 230 x 438 x 86mm, 7.7kg",25000,AMD,1,NO,"32000, 2 years (1 year for the batteries), 23300"
+X-ART,nJoy,,UPLI-LI200CO-AZ01B,"Code 2000 - 2KVA / 1200W, line-intercative, rack 2U, lcd display, 2x 12v 9A battery, 8x IEC-320 C13, USB auto shutdown, 300 x 438 x 86mm, 14.4kg",98500,AMD,1,NO,"123500, 2 years (1 year for the batteries), 93700"
+X-ART,nJoy,,PWUP-LI220AG-CG01B,"Argus 2200 - 2.2KVA / 1320W, line-interactive, On-line, rack 2U/tower, lcd display, 2x 12v 9A battery, 4x IEC-320 C13, USB auto shutdown, 400 x 438 x 88mm, 16.5kg",112500,AMD,1,NO,"141000, 2 years (1 year for the batteries), 110000"
+X-ART,nJoy,,PWUP-LI300AG-CG01B,"Argus 3000 - 3КVA / 1.8КW, Line-interactive, 4 x 12v 9A battery,Output 8 x IEC C13 Battery Backup & Surge Protection, 400 x 438 x 88 mm 23.6 kgs",175700,AMD,1,NO,"220000, 2 years (1 year for the batteries), 168700"
+X-ART,nJoy,,UPCMCOP920HASCG01B,"Aster 2K - 2KVA / 1.8KW, on-line, rack 2U, lcd display, 6x 12v7A battery, Output 8 x IEC-320 C13 + 1 x IEC-320 C19, USB auto shutdown, 438 x 610 x 88 mm 26kg",200000,AMD,1,NO,"250000, 2 years (1 year for the batteries), 191700"
+X-ART,nJoy,,UPCMCOP930HASCG01B,"Aster 3K - 3KVA / 2.7KW, on-line, rack 2U, lcd display, 6x 12v 9A battery, Output 8 x IEC-320 C13 + 1 x IEC-320 C19, USB auto shutdown, 438 x 610 x 88 mm 26kg",247500,AMD,1,NO,"309500, 2 years (1 year for the batteries), 220000"
+X-ART,nJoy,,UPCMCOP110HBAAZ01B,"Balder 1000 - 1KVA / 1KW, on-line, rack 2U/tower, lcd display, 3x 12v 7A battery, 8 x IEC C13 (4 x Programmable power management outlets), USB auto shutdown, 410 x 438 x 88 mm, 14.1 kg",186800,AMD,1,NO,"233500, 2 years (1 years for the batteries), 173000"
+X-ART,nJoy,,PWUP-OL300BA-AZ01B,"Balder 3000 - 3KVA / 3KW, on-line, rack 2U/tower, lcd display, 6x 12v 9A battery, 8x IEC C13, USB auto shutdown, 630 x 438 x 88mm, 27.5kg",337600,AMD,1,NO,"422000, 2 years (1 years for the batteries), 310000"
+X-ART,nJoy,,PWUP-OL06KBA-AZ01B,"Balder 6000 - 6KVA / 6KW, on-line, rack 2U/tower, lcd display, no battery, 600 x 438 x 88mm, 17kg",381800,AMD,1,NO,"477500, 2 years, 362000"
+X-ART,nJoy,,PWUP-OL10KBA-AZ01B,"Balder 10000 - 10KVA / 10KW, on-line, rack 2U/tower, lcd display, no battery, 600 x 438 x 88mm, 20kg",505500,AMD,1,NO,"632000, 2 years, 458000"
+X-ART,nJoy,,UP33TOP130KRAAZ01B,"Ranger 30KT -30KVA / 30KW, 3 Phase In - 3 Phase Out , Up to 80 pcs of 12V9Ah or 12V7Ah type batteries supported, dimensions 785 x 300 x 1000 mm, 88 Kgs",0,AMD,0,NO,
+X-ART,nJoy,,PWAV-10003PL-AZ01B,"Paladin 1000 - 1KVA / 500W, tower, display, 1x Universal, 180 x 95 x 119mm, 1.87kg",8800,AMD,1,NO,"10500, 1 year, 8000"
+X-ART,nJoy,,AVRL-10001AL-CS01B,"Alvis 1000 - 1000 VA / 600 W, 2 x Schuko, Full protection: Over-voltage, Under-voltage, Overheat, Overload protection, Surge protection, 250 x 140 x 175 mm, weight 4,6kg",15900,AMD,1,NO,"20000, 1 year, 14500"
+X-ART,nJoy,,AVRL-20002AL-CS01B,"Alvis 2000 - 2000 VA / 1200 W, 2 x Schuko, Full protection: Over-voltage, Under-voltage, Overheat, Overload protection, Surge protection, 250 x 140 x 175 mm, weight 4,6kg",25200,AMD,1,NO,"31500, 1 year, 21300"
+X-ART,nJoy,,AVRL-3005TAL-CS01B,"Alvis 3000 - 3KVA / 1800W 5 x Pin terminal, Full protection: Over-voltage, Under-voltage, Overheat, Overload protection, Surge protection, 250 x 140 x 175 mm, weight 4,6kg",40400,AMD,1,NO,"48500, 1 year, 37500"
+X-ART,nJoy,,AVRL-5005TAL-CS01B,"Alvis 5000 - 5KVA / 3000W 5 x Pin terminal, Full protection: Over-voltage, Under-voltage, Overheat, Overload protection, Surge protection, 250 x 140 x 175 mm, weight 4,6kg",46200,AMD,1,NO,"56000, 1 year"
+X-ART,nJoy,,PWAV-30002AK-AZ01B,"Akin 3000 - 3KVA / 2.4KW, tower, display, 1 x Schuko, 1 x IEC C19, 297.1 x 150 x 199mm, 8.56kg",47400,AMD,1,NO,"59500, 2 years, 39500"
+X-ART,nJoy,,UPAC-RAILKIT-CG01B,UPS rail kit max weight 70kg,15800,AMD,1,NO,"20000, 2 years, 15000"
+X-ART,nJoy,,UPBPCA0712GX-AZ01B,"Battery Pack 2U Rack/tower, max batteries 12 - 151 x 65 x 95 7A/9A compatible with Balder 2000/3000, 630 x 438 x 88mm 13.5kg",136500,AMD,1,NO,"171000, 2 Years, 136000"
+X-ART,nJoy,,PWUP-BP16PBA-AZ01B,"Battery Pack 2U - Rack/tower, max batteries 16 - 151 x 65 x 95 7A/9A compatible with Balder 6000/10000, 688 x 438 x 88mm 16kg",141300,AMD,1,NO,"176500, 2 years, 129000"
+X-ART,nJoy,,PWUP-BP20PBA-AZ01B,"Battery Pack 3U - Rack/tower, max batteries 20 - 151 x 65 x 95 7A/9A compatible with Balder 6000/10000, 600 x 438 x 133mm, 18.5kg",158300,AMD,1,NO,"197500, 2 years, 150000"
+X-ART,nJoy,,ACUP-PDU00RK-AZ01B,"PDU - PDU bypass switch module, 1x IEC-320 C20 (UPS input), 1x IEC-320 C19 (UPS output), 1x Schuko (master), 3 x Schuko (slave), 1.67 kg",74600,AMD,1,NO,"92500, 2 years"
+X-ART,nJoy,,SNMP UPAC-SNMPCRD-CG01B,"SNMP Card PM - HTTP/HTTPs, TCP/IP, Telnet, SN, Rj45, 41 x 36.1 x 76.5mm, software - PowerMaster Supported models: Echo Pro/Argus/Aster",52500,AMD,1,NO,"66000, 2 years"
+X-ART,nJoy,,ACUP-SN000MP-CG01B,"SNMP Card PM Lite - HTTP/HTTPs, TCP/IP, Telnet, SNMPv1/v3, IPv4, NTP, UDP, DHCP, NTP, DNS, SMTP, SSL, TLS, Telnet, FTP, Software Supported - PowerMaster, Environment Sensor Support - No, Dimensions 41 x 36.1 x 76.5 mm Compatible with Aster / Argus / Echo Pro",58900,AMD,1,NO,"74000, 2 years, 53000"
+X-ART,nJoy,,ACUP-SN000MP-AZ01B?el=specs,"SNMP Card WP - SNMP card, TCP/IP, UDP, SNTP, HTTP, DHCP, SNMP v1/2/3, SMTP, Rj45, 80 x 26 x 52mm, software - ViewPower Pro, Supported models: Aten Pro/Balder/Garun",84000,AMD,1,NO,"105000, 2 years, 55500"
+X-ART,nJoy,,SSVV-20H211M-MI01B,"Soft Start/Stop - 2kW, Starting voltage 55 VAC - 220 VAC (Adjustable), Starting time 0s - 30s (Adjustable), Spike current protection, Adjustable starting time and voltage, Suitable for water pump, electric engine, domestic appliances, etc. Dimensions 138 x 100 x 125 mm",36500,AMD,1,NO,"46000, 1 years, 34000"
+X-ART,nJoy,,PSAT1040A20CSCO01B,"Synergy 400 Bulk PSU 400W ATX 12V 1 x Motherboard 20+4pin, 1 x CPU 4+4pin, 1 x PCI-E 6+2pin, 2 x SATA + 2 x 4pin Molex / cable, 3 x SATA + 1 x 4pin Molex / cable Protection 2.3OVP, UVP, OCP, OPP, SCP, OTP,",15300,AMD,1,NO,"19500, 1 years, 13000"
+X-ART,nJoy,,PSAT5055A2SCQCO01B,"Theta 550 PSU 550W ATX 12V, 1 x Motherboard 20+4pin, 1 x CPU 4+4pin, 1 x PCI-E 6+2pin, 2 x SATA + 2 x 4pin Molex / cable, 5 x SATA + 3 x 4pin Molex / cable",19800,AMD,1,NO,"25000, 1 years"
+X-ART,nJoy,,PSAT1060A20CSCO02B,"Synergy 600 Bulk PSU 600W ATX 12V 1 x Motherboard 20+4pin, 1 x CPU 4+4pin, 2 x PCI-E 6+2pin, 2 x SATA + 2 x 4pin Molex / cable, 3 x SATA + 1 x 4pin Molex / cable Protection 2.3OVP, UVP, OCP, OPP, SCP, OTP,",17800,AMD,1,NO,"22500, 1 years"
+X-ART,nJoy,,GP05122F BTVACEUOATF2FCN01B,"GP05122F 12V-5A, 15.78W/cell rated at 1.65V/cell @ 15 min, VRLA, 90 x 70 x 107 mm, 1.41KG",4700,AMD,1,NO,"6000, 1 year, 4100"
+X-ART,nJoy,,GP07122F BTVACGUOBTD2FCN01B,"GP07122F 12V-7A, Power Discharged to @10V/15min 26.5 W/cell, Floating & standby use: up to 5 years (25° C), 151 x 65 x 94 mm, 2 Kg",6000,AMD,1,NO,"8000, 1 year, 5300"
+X-ART,nJoy,,GP07122F BTVACGUOBTF2FCW01B,"GPL07122F 12V-7A, Long life, Power Discharged to @10V/15min 25.5 W/cell, Floating & standby use: up to 9 years (25° C), 151 x 65 x 94 mm, 2,1 Kg",6800,AMD,1,NO,"8500, 1 year, 6000"
+X-ART,nJoy,,GP09122F BTVACIUOCTA2FCN01B,"GP09122F 12V-9A, Power Discharged to @10V/15min 29.82 W/cell, Floating & standby use: up to 5 years (25° C), 151 x 65 x 94 mm, 2.42KG",7500,AMD,1,NO,"9500, 1 year, 6700"
+X-ART,nJoy,,GP09122F BTVACIUOCTA2FCN01B,"GPL09122F 12V-9A, Long life, Power Discharged to @10V/15min 29.91 W/cell, Floating & standby use: up to 9 years (25° C), 151 x 65 x 94 mm, 2.5KG",8500,AMD,1,NO,"11500, 1 year, 7900"
+X-ART,nJoy,,HR09122F BTVACIUOCTH2FCN01B,"HR09122F 12V-9A, High Rate Discharge 38.31W/cell rated at 1.67V/cell @ 15 min, 151 x 65 x 95 mm, 2.57KG",11000,AMD,1,NO,"14000, 2 Years, 10000"
+X-ART,nJoy,,GP12122F BTVACATBCTI2FCN01B,"GP12122F 12V-12A, 38.54W/cell rated at 1.65V/cell @ 15 min, 151 x 98 x 101 mm, 3.3KG",11550,AMD,1,NO,"15000, 1 year, 11000"
+X-ART,nJoy,,GP1812CF BTVACATHETHCFCN01B,"GP1812CF 12V-18A, 57.50W/cell rated at 1.65V/cell @ 15 min, 181 x 77 x 167 mm, 5KG",16800,AMD,1,NO,"21000, 1 year, 13600"
+X-ART,Ajax Systems,,,"DoorBell (Видеозвонок с ИИ, ИК-сенсором и управлением в приложениях) Grey",74400,AMD,1,NO,"87000, New"
+X-ART,Ajax Systems,,,"DoorBell (Видеозвонок с ИИ, ИК-сенсором и управлением в приложениях) White",74400,AMD,1,NO,"87000, New"
+X-ART,Ajax Systems,,,"NVR (16ch) 16 каналов, 4K (25/30 к/с), ONVIF, 16 ТБ White",90400,AMD,0,NO,"106000, 78000"
+X-ART,Ajax Systems,,,"NVR (16ch) 16 каналов, 4K (25/30 к/с), ONVIF, 16 ТБ Black",90400,AMD,0,NO,"106000, 78000"
+X-ART,Ajax Systems,,,"NVR (8ch) 8 каналов, 4K (25/30 к/с), ONVIF, 16 ТБ White",60300,AMD,0,NO,"71000, 51000"
+X-ART,Ajax Systems,,,"NVR (8ch) 8 каналов, 4K (25/30 к/с), ONVIF, 16 ТБ Black",60300,AMD,0,NO,"71000, 51000"
+X-ART,Ajax Systems,,,"TurretCam (5 Mp/4 mm) White угол обзора 85°;(2880 × 1620) - 25 к\с; ИК (до 50 мм); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65, IK08",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"TurretCam (5 Mp/4 mm) Black угол обзора 85°;(2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65, IK08",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"TurretCam (5 Mp/2.8 mm) White угол обзора 110°;(2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65, IK08",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"TurretCam (5 Mp/2.8 mm) Black угол обзора 110°;(2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65, IK08",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"DomeCam Mini (5 Mp/2.8 mm) Black угол обзора 110°; (2880 × 1620) - 25 к\с; ИК (до 15мм); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"TurretCam (8 Mp/4 mm) Black угол обзора 85°; (3840 × 2160) - 20 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65, IK08",65100,AMD,0,NO,"76000, 51000"
+X-ART,Ajax Systems,,,"BulletCam (8 Mp/4 mm) White угол обзора 110°; (3840 × 2160) - 20 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65",65100,AMD,0,NO,"76000, 51000"
+X-ART,Ajax Systems,,,"BulletCam (5 Mp/2.8 mm) White угол обзора 110°; (2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"BulletCam (5 Mp/2.8 mm) Black угол обзора 110°; (2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"BulletCam (5 Mp/4 mm) ASP відеокамера спостереження White угол обзора 85°;(2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"BulletCam (5 Mp/4 mm) ASP відеокамера спостереження Black угол обзора 85°;(2880 × 1620) - 25 к\с; ИК (до 50м); HDR, WDR; микрофон; Micro SD (256ГБ); 12 VDC/PoE; IP65",48900,AMD,0,NO,"57000, 39000"
+X-ART,Ajax Systems,,,"Ajax IndoorCam, Wi-Fi камера видеонаблюдения, датчиком движения, встроенный ИИ. White",62000,AMD,0,NO,"73000, 51000"
+X-ART,Ajax Systems,,,"Ajax IndoorCam, Wi-Fi камера видеонаблюдения, датчиком движения, встроенный ИИ. Black",62000,AMD,0,NO,"73000, 51000"
+X-ART,Ajax Systems,,,JunctionBox (118×59) White (Монтажная коробка для IP-камеры видеонаблюдения),9200,AMD,0,NO,"11000, 7800"
+X-ART,Ajax Systems,,,JunctionBox (118×59) Black (Монтажная коробка для IP-камеры видеонаблюдения),9200,AMD,0,NO,"11000, 7800"
+X-ART,Ajax Systems,,,"Hub 2 Plus (200 устройств, 64 сценария, 1x Lan,2 × 2G/3G/4G/LTE, WI-FI) White",100800,AMD,0,NO,118000
+X-ART,Ajax Systems,,,"Hub 2 Plus (200 устройств, 64 сценария, 1x Lan,2 × 2G/3G/4G/LTE, WI-FI) Black",100800,AMD,0,NO,118000
+X-ART,Ajax Systems,,,"Hub Hybrid (2G) (100 устройств, 32 сценария, 1x Lan, 2 × SIM 2G) White",99200,AMD,0,NO,116000
+X-ART,Ajax Systems,,,"Hub Hybrid (2G) (100 устройств, 32 сценария, 1x Lan, 2 × SIM 2G) Black",99200,AMD,0,NO,116000
+X-ART,Ajax Systems,,,"Hub Hybrid (4G) (100 устройств, 32 сценария, 1x Lan, 2 × SIM 2G/3G/LTE) White",138900,AMD,0,NO,163000
+X-ART,Ajax Systems,,,"Hub Hybrid (4G) (100 устройств, 32 сценария, 1x Lan, 2 × SIM 2G/3G/LTE) Black",138900,AMD,0,NO,163000
+X-ART,Ajax Systems,,,"Hub 2 4G (100 устройств, 32 сценария, 1x Lan,2 × 2G/3G/LTE) White",85600,AMD,0,NO,100000
+X-ART,Ajax Systems,,,"Hub 2 2G (100 устройств, 32 сценария, 1x Lan, 2x SIM 2G) White",58900,AMD,0,NO,69000
+X-ART,Ajax Systems,,,"Hub 2 2G (100 устройств, 32 сценария, 1x Lan, 2x SIM 2G) Black",58900,AMD,0,NO,69000
+X-ART,Ajax Systems,,,"Hub (100 устройств, 5 сценариев, 1x Lan, 1x SIM 2G) White",41900,AMD,0,NO,49000
+X-ART,Ajax Systems,,,"Hub (100 устройств, 5 сценарев, 1x Lan, 1x SIM 2G) Black",41900,AMD,0,NO,49000
+X-ART,Ajax Systems,,,"Hub (4G) (100 устройств, 5 сценариев, 1x Lan, 1x SIM 4G) White",51100,AMD,0,NO,60000
+X-ART,Ajax Systems,,,"Hub (4G) (100 устройств, 5 сценариев, 1x Lan, 1x SIM 4G) Black",51100,AMD,0,NO,60000
+X-ART,Ajax Systems,,,ReX 2 (Ретранслятор радиосигнала с поддержкой фотоверификации) White,43400,AMD,0,NO,51000
+X-ART,Ajax Systems,,,ReX (Ретранслятор сигнала системы безопасности) Black,31000,AMD,0,NO,37000
+X-ART,Ajax Systems,,,Keypad (Беспроводная сенсорная клавиатура управления системой безопасности) White,24800,AMD,0,NO,29000
+X-ART,Ajax Systems,,,Keypad (Беспроводная сенсорная клавиатура управления системой безопасности) Black,24800,AMD,0,NO,29000
+X-ART,Ajax Systems,,,Button (тривожная кнопка) White,8000,AMD,0,NO,10000
+X-ART,Ajax Systems,,,Button (тривожная кнопка) Black,8000,AMD,0,NO,10000
+X-ART,Ajax Systems,,,DoubleButton (Беспроводная экстренная кнопка с продвинутой защитой от случайных нажатий) White,8000,AMD,0,NO,10000
+X-ART,Ajax Systems,,,DoubleButton (Беспроводная экстренная кнопка с продвинутой защитой от случайных нажатий) Black,8000,AMD,0,NO,10000
+X-ART,Ajax Systems,,,MotionProtect Outdoor (Беспроводной уличный датчик движения c защитой от маскирования и иммунитетом к животным) White,55900,AMD,0,NO,66000
+X-ART,Ajax Systems,,,DualCurtain Outdoor (Беспроводной уличный двунаправленный датчик движения типа «штора») White,54300,AMD,0,NO,64000
+X-ART,Ajax Systems,,,Curtain Outdoor «штора» с двойным обнаружением для использования на улице White,43400,AMD,0,NO,51000
+X-ART,Ajax Systems,,,"MotionCam PhOD (Беспроводной датчик движения, снимающий фото по тревоге и по запросу) White",40400,AMD,0,NO,48000
+X-ART,Ajax Systems,,,"MotionCam PhOD (Беспроводной датчик движения, снимающий фото по тревоге и по запросу) Black",40400,AMD,0,NO,48000
+X-ART,Ajax Systems,,,MotionCam (Беспроводной датчик движения с фотоверификацией тревог и иммунитетом к животным) Black,36800,AMD,0,NO,43000
+X-ART,Ajax Systems,,,CombiProtect (Беспроводной датчик движения и разбития) White,22400,AMD,0,NO,27000
+X-ART,Ajax Systems,,,CombiProtect (Беспроводной датчик движения и разбития) Black,22400,AMD,0,NO,27000
+X-ART,Ajax Systems,,,MotionProtect Plus (Беспроводной датчик движения c микроволновым сенсором и иммунитетом к животным) Black,22400,AMD,0,NO,27000
+X-ART,Ajax Systems,,,MotionProtect Curtain (Беспроводной датчик движения штора для помещений) White,19200,AMD,0,NO,23000
+X-ART,Ajax Systems,,,MotionProtect Curtain (Беспроводной датчик движения штора для помещений) Black,19200,AMD,0,NO,23000
+X-ART,Ajax Systems,,,MotionProtect (Беспроводной датчик движения c иммунитетом к животным) White,16000,AMD,0,NO,19000
+X-ART,Ajax Systems,,,MotionProtect (Беспроводной датчик движения c иммунитетом к животным) Black,16000,AMD,0,NO,16000
+X-ART,Ajax Systems,,,Glassprotect (Беспроводной датчик разбития стекла) White,16000,AMD,0,NO,19000
+X-ART,Ajax Systems,,,Glassprotect (Беспроводной датчик разбития стекла) Black,16000,AMD,0,NO,19000
+X-ART,Ajax Systems,,,"DoorProtect Plus (Беспроводной датчик открытия, удара и наклона) White",14400,AMD,0,NO,17000
+X-ART,Ajax Systems,,,DoorProtect (Беспроводной датчик открытия дверех и окон) White,9600,AMD,0,NO,12000
+X-ART,Ajax Systems,,,DoorProtect (Беспроводной датчик открытия дверех и окон) Black,9600,AMD,0,NO,12000
+X-ART,Ajax Systems,,,"FireProtect 2 RB (Heat/Smoke/CO) (Датчик дыма, температуры и угарного газа) White",31700,AMD,0,NO,37000
+X-ART,Ajax Systems,,,"FireProtect 2 RB (Heat/Smoke/CO) (Датчик дыма, температуры и угарного газа) Black",31700,AMD,0,NO,37000
+X-ART,Ajax Systems,,,FireProtect Plus (Беспроводной дымо-тепловой датчик с сенсором угарного газа и сиреной) Black,28800,AMD,0,NO,34000
+X-ART,Ajax Systems,,,FireProtect 2 AC (Heat/Smoke) (Беспроводной пожарный датчик дыма и тепла с питанием от сети) White,22000,AMD,0,NO,31000
+X-ART,Ajax Systems,,,"FireProtect 2 RB (Heat/Smoke) (Датчик дыма, температуры) White",21100,AMD,0,NO,25000
+X-ART,Ajax Systems,,,"FireProtect 2 RB (Heat/Smoke) (Датчик дыма, температуры) Black",21100,AMD,0,NO,25000
+X-ART,Ajax Systems,,,Manual Call Point (Red) (8MA) Беспроводная программируемая кнопка с механизмом сброса,18600,AMD,0,NO,22000
+X-ART,Ajax Systems,,,StreetSiren (Беспроводная уличная сирена) White,31000,AMD,0,NO,37000
+X-ART,Ajax Systems,,,StreetSiren (Беспроводная уличная сирена) Black,31000,AMD,0,NO,37000
+X-ART,Ajax Systems,,,HomeSiren (Беспроводная комнатная сирена) White,16000,AMD,0,NO,19000
+X-ART,Ajax Systems,,,HomeSiren (Беспроводная комнатная сирена) Black,16000,AMD,0,NO,19000
+X-ART,Ajax Systems,,,"Sim slot (SIM slot for Hub, Hub Plus, Hub 2, Hub 2 Hub Plus)",1500,AMD,0,NO,2000
+X-ART,Ajax Systems,,,Holder for Button/DoubleButton (Держатель для фиксации Button или DoubleButton на поверхностях) Black,1400,AMD,0,NO,2000
+X-ART,Ajax Systems,,,DIN Holder (Держатель для фиксации Relay или WallSwitch на DIN-рейке),2400,AMD,0,NO,3000
+X-ART,Ajax Systems,,,"Hood (Козырек для датчика движения MotionProtect Outdoor, защищающий сенсоры маскирования от дождя и снега) White",3400,AMD,0,NO,4000
+X-ART,Ajax Systems,,,"12V PSU (Плата блока питания для подключения централей Hub/Hub Plus, а также ретранслятора радиосигнала ReX к низковольтным источникам питания)",6200,AMD,0,NO,8000
+X-ART,Ajax Systems,,,12V-24V PSU (Плата блока питания для подключения централи Hub 4G/Hub 2/Hub 2 Plus или ретранслятора ReX 2 к низковольтному источнику питания),6200,AMD,0,NO,8000
+X-ART,Ajax Systems,,,Ajax Battery CR2,1300,AMD,0,NO,1700
+X-ART,Ajax Systems,,,Ajax Battery CR123A,1700,AMD,0,NO,2200
+X-ART,Ajax Systems,,,WaterStop [1] (кран перекрытия воды) White,68400,AMD,0,NO,80000
+X-ART,Ajax Systems,,,WaterStop [1] (кран перекрытия воды) Black,68400,AMD,0,NO,80000
+X-ART,Ajax Systems,,,WaterStop [3/4] (кран перекрытия воды) White,58400,AMD,0,NO,69000
+X-ART,Ajax Systems,,,WaterStop [3/4] (кран перекрытия воды) Black,58400,AMD,0,NO,69000
+X-ART,Ajax Systems,,,WaterStop [1/2] (кран перекрытия воды) White,51800,AMD,0,NO,61000
+X-ART,Ajax Systems,,,WaterStop [1/2] (кран перекрытия воды) Black,51800,AMD,0,NO,61000
+X-ART,Ajax Systems,,,LeaksProtect (Беспроводной датчик раннего обнаружения затопления) White,11400,AMD,0,NO,14000
+X-ART,Ajax Systems,,,LeaksProtect (Беспроводной датчик раннего обнаружения затопления) Black,11400,AMD,0,NO,14000
+X-ART,Ajax Systems,,,WallSwitch (Силовое реле) 110/230V 3KW,11400,AMD,0,NO,14000
+X-ART,Ajax Systems,,,LifeQuality (Датчик качества воздуха) White,71700,AMD,0,NO,84000
+X-ART,Ajax Systems,,,Socket (умная розетка) White,20100,AMD,0,NO,24000
+X-ART,Ajax Systems,,,Socket (умная розетка) Black,20100,AMD,0,NO,24000
+X-ART,Ajax Systems,,,SoloButton (Dimmer) [55] (8EU) White,6900,AMD,0,NO,9000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] White,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Black,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Fog,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Graphite,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Grey,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Ivory,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Olive,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloButton (1-gang/2-way) [55] Oyster,2700,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SideButton (1-gang/2-way) [55] White,2600,AMD,0,NO,3000
+X-ART,Ajax Systems,,,SoloButton (2-gang) [55] White,3100,AMD,0,NO,4000
+X-ART,Ajax Systems,,,SoloCover (smart) [type F] [55] White,4900,AMD,0,NO,6000
+X-ART,Ajax Systems,,,CenterCover (basic) [type F] [55] White,4600,AMD,0,NO,6000
+X-ART,Ajax Systems,,,SideCover smart [type F] [55] White,4800,AMD,0,NO,6000
+X-ART,Ajax Systems,,,LightCore (1-gang) [55] реле,16900,AMD,0,NO,20000
+X-ART,Ajax Systems,,,LightCore (2-gang) [55] реле,19500,AMD,0,NO,23000
+X-ART,Ajax Systems,,,OutletCore (smart) [type F],14000,AMD,0,NO,17000
+X-ART,Ajax Systems,,,"Frame (2 seats) Рамки для двух, трех, четырех встраиваемых выключателей и розеток",1700,AMD,0,NO,2000
+X-ART,Ajax Systems,,,"Frame (3 seats) Рамки для двух, трех, четырех встраиваемых выключателей и розеток",2000,AMD,0,NO,3000
+X-ART,Ajax Systems,,,"Frame (4 seats) Рамки для двух, трех, четырех встраиваемых выключателей и розеток",2500,AMD,0,NO,3000
+X-ART,Ajax Systems,,,SurfaceMounting box [55] ASP монтажна коробка White,2500,AMD,0,NO,3000
+X-ART,Ajax Systems,,,Ajax Superior SeismoProtect (Проводной датчик вибрации с дополнительным сенсором удара) Black,89400,AMD,0,NO,"105000, New"
+X-ART,Ajax Systems,,,StreetSiren (Проводная уличная сирена) White,27900,AMD,0,NO,33000
+X-ART,Ajax Systems,,,StreetSiren (Проводная уличная сирена) Black,27900,AMD,0,NO,33000
+X-ART,Ajax Systems,,,HomeSiren (Проводная комнатная сирена) White,14000,AMD,0,NO,17000
+X-ART,Ajax Systems,,,HomeSiren (Проводная комнатная сирена) Black,14000,AMD,0,NO,17000
+X-ART,Ajax Systems,,,DoorProtect (Проводной датчик открытия дверех и окон) White,8700,AMD,0,NO,11000
+X-ART,Ajax Systems,,,DoorProtect (Проводной датчик открытия дверех и окон) Black,8700,AMD,0,NO,11000
+X-ART,Ajax Systems,,,"DoorProtect Plus (проводной датчик открытия, удара и наклона) White",14400,AMD,0,NO,17000
+X-ART,Ajax Systems,,,"DoorProtect Plus (проводной датчик открытия, удара и наклона) Black",14400,AMD,0,NO,17000
+X-ART,Ajax Systems,,,MotionProtect (Проводной датчик движения c иммунитетом к животным) White,14400,AMD,0,NO,17000
+X-ART,Ajax Systems,,,MotionProtect (Проводной датчик движения c иммунитетом к животным) Black,14400,AMD,0,NO,17000
+X-ART,Ajax Systems,,,CombiProtect Fibra (Проводной датчик движения и разбития) White,20200,AMD,0,NO,24600
+X-ART,Ajax Systems,,,CombiProtect Fibra (Проводной датчик движения и разбития) Black,20200,AMD,0,NO,24600
+X-ART,Ajax Systems,,,"KeyPad Outdoor (Проводная клавиатура, поддерживающая аутентификацию с помощью Pass, Tag, смартфонов и кодов) White",35200,AMD,0,NO,41000
+X-ART,Ajax Systems,,,Keypad (Проводная сенсорная клавиатура управления системой безопасности) White,22400,AMD,0,NO,27000
+X-ART,Ajax Systems,,,Keypad (Проводная сенсорная клавиатура управления системой безопасности) Black,22400,AMD,0,NO,27000
+X-ART,Logitech,,981-000271,Logitech® Stereo Headset H110 - EMEA,4500,AMD,1,NO,
+X-ART,Logitech,,981-000593,Logitech® Stereo Headset H111 - ANALOG - EMEA - ONE PLUG,4400,AMD,1,NO,
+X-ART,Logitech,,981-000589,Logitech® Stereo Headset H151 - ANALOG - ONE PLUG,6800,AMD,1,NO,
+X-ART,Logitech,,981-000475,Logitech® Stereo Headset H340 - BLACK - USB,9500,AMD,1,NO,New
+X-ART,Logitech,,981-000406,Logitech® Corded Stereo Headset H390 - EMEA - USB,13100,AMD,1,NO,
+X-ART,Logitech,,981-000100,Logitech® Corded Stereo Headset PC960 - BLACK - USB,10500,AMD,1,NO,
+X-ART,Logitech,,L981-001213,Logitech® Zone Vibe 100 - GRAPHITE - BT- EMEA - STANDALONE,43500,AMD,1,NO,
+X-ART,Logitech,,981-000668,Logitech® G433 7.1 Wired Surround Gaming Headset,68000,AMD,1,NO,Sale
+X-ART,Logitech,,920-002522,Logitech® K120 Keyboard for Business - USB,3700,AMD,1,NO,
+X-ART,Logitech,,920-006368,Logitech® K480 Bluetooth Multi-Device Keyboard - BLACK- RUS,23500,AMD,1,NO,
+X-ART,Logitech,,920-010501,Logitech® MX Keys Mini Bluetooth Illuminated Keyboard -GRAPHITE,45500,AMD,1,NO,
+X-ART,Logitech,,910-001794,Logitech® M90 Mouse GREY - USB,2000,AMD,1,NO,
+X-ART,Logitech,,910-003357,Logitech® B100 Mouse BLACK - Business EMEA USB,2100,AMD,1,NO,
+X-ART,Logitech,,910-004642,Logitech® M170 Wireless Mouse - EMEA,3300,AMD,1,NO,New
+X-ART,Logitech,,910-004424,Logitech® M171 Wireless Mouse - BLACK,3700,AMD,1,NO,
+X-ART,Logitech,,910-002238,Logitech® M185 Wireless Mouse - SWIFT GREY,4200,AMD,1,NO,
+X-ART,Logitech,,910-007459,Logitech® M196 Bluetooth Mouse - GRAPHITE - BT,4800,AMD,1,NO,
+X-ART,Logitech,,910-004878,Logitech® M220 SILENT - CHARCOAL OFL - 2.4GHZ,5500,AMD,1,NO,
+X-ART,Logitech,,910-004909,Logitech® M330 SILENT PLUS - BLACK - 2.4GHZ,6500,AMD,1,NO,
+X-ART,Logitech,,910-007119,Logitech® M240 Bluetooth Mouse - GRAPHITE - SILENT - BT,6500,AMD,1,NO,
+X-ART,Logitech,,910-006253,Logitech® M650 Signature Wireless Mouse - GRAPHITE - BT,12300,AMD,1,NO,
+X-ART,Logitech,,910-006236,Logitech® M650 L Signature Wireless Mouse - GRAPHITE - BT,12000,AMD,1,NO,New
+X-ART,Logitech,,910-001949,Logitech® M705 Marathon Wireless Mouse - BLACK,18500,AMD,1,NO,Sale
+X-ART,Logitech,,910-004530,Logitech® M535 Bluetooth® Mouse - GREY - BT,18500,AMD,1,NO,Sale
+X-ART,Logitech,,910-006930,Logitech® MX Anywhere 3S - PALE GREY - 2.4GHZ/BT,31000,AMD,1,NO,Sale
+X-ART,Logitech,,910-007501,LOGITECH MX Master 3S Performance Wireless Mouse - GRAPHITE - Bluetooth,33000,AMD,1,NO,New
+X-ART,Logitech,,910-006559,Logitech® MX Master 3S Bluetooth Mouse - PALE GREY,38000,AMD,1,NO,New
+X-ART,Logitech,,910-005823,Logitech® G102 LIGHTSYNC - BLACK,8200,AMD,1,NO,
+X-ART,Logitech,,920-002561,Logitech® Desktop - USB MK120 - RUS,5500,AMD,1,NO,
+X-ART,Logitech,,920-003169,Logitech® Wireless Combo MK220 - N/A - RUS - 2.4GHZ,7200,AMD,1,NO,
+X-ART,Logitech,,920-004518,Logitech® Wireless Combo MK270 - RUS - 2.4GHZ,9500,AMD,1,NO,
+X-ART,Logitech,,920-007948,Logitech® Wireless Combo MK235 - GREY - RUS,9500,AMD,1,NO,
+X-ART,Logitech,,920-008534,Logitech® Wireless Combo MK345 - RUS- INTNL 2.4GHZ,14500,AMD,1,NO,
+X-ART,Logitech,,960-001063,Logitech® HD Webcam C270 - USB,9500,AMD,1,NO,
+X-ART,Logitech,,960-001088,Logitech® FullHD Webcam C922 Pro Stream - Tripod - BLACK - USB,43000,AMD,1,NO,Sale
+X-ART,Logitech,,960-001422,Logitech® FullHD Webcam Brio 500 - GRAPHITE - USB,58000,AMD,1,NO,Sale
+X-ART,Logitech,,960-001281,Logitech® FullHD StreamCam - GRAPHITE,74600,AMD,1,NO,Sale
+X-ART,Logitech,,960-001297,Logitech® FullHD StreamCam - OFF WHITE,74600,AMD,1,NO,Sale
+X-ART,Thermaltake,,CA-1J4-00S1WN-00,"Versa H18, Micro ATX, Transparent Window 398(H) x 205(W )x 439(D) Cooling system: 120 x 120 x 25 mm fan x 1 VGA length: 350mm",16600,AMD,1,NO,20000
+X-ART,Thermaltake,,CA-1C2-00M1NN-00,"Versa H25, ATX, No window 429 x 209 x 478mm Cooling system: 120 x 120 x 25 mm Turbo fan x 1 VGA length limitation: 315mm Drive Bays: DVD slot x 2",18000,AMD,1,NO,22500
+X-ART,Thermaltake,,CA-1B2-00M1NN-00,"Versa H21, Mid Tower, ATX, No window 429 x 209 x 480 mm Cooling system: Front 120 x 120 x 25 mm x 2 VGA length limitation: 315mm Drive Bays: DVD slot x 3",18000,AMD,1,NO,21000
+X-ART,Thermaltake,,CA-1X2-00M1WN-00,"S200 TG ARGB Mid Tower, ATX, Tempered Glass*1 460x 210 x 395.3 mm Cooling system: 120 x 120 x 25 mm ARGB Lite fan (1000rpm, 22.3 dBA) x 3 VGA length: 300mm (with radiator), 330mm (without radiator)",24500,AMD,1,NO,29500
+X-ART,Thermaltake,,CA-1X4-00M1WN-00,"H590 TG ARGB Mid Tower, E-ATX, 4mm Tempered Glass 487 x 216 x 467 mm Cooling System: 120 x 120 x 25 mm Standard fan (1100rpm, 22.5 dBA) x 1 VGA length: 360mm",32500,AMD,1,NO,39000
+X-ART,Thermaltake,,CA-1X4-00M6WN-00,"H590 TG ARGB Mid Tower, E-ATX, 4mm Tempered Glass 487 x 216 x 467 mm Cooling System: 120 x 120 x 25 mm Standard fan (1100rpm, 22.5 dBA) x 1 VGA length: 360mm",33500,AMD,1,NO,40000
+X-ART,Thermaltake,,CA-1P5-00M1WN-00,"S300 TG, Mid Tower, ATX, Tempered Glass x 1 493 x 230 x 508mm Cooling System: 120mm fan x 1 VGA length: 280mm(With reservoir), 360mm(Without reservoir)",33000,AMD,1,NO,43000
+X-ART,Thermaltake,,CA-1T9-00M1WN-01,"H570 TG ARGB, Mid Tower, E-ATX, Tempered Glass*1 Black 487 x 216 x 463.6 mm Cooling system: 120 x 120 x 25 mm ARGB Lite fan *3 VGA length: 375mm",32000,AMD,1,NO,38000
+X-ART,Thermaltake,,CA-1T9-00M6WN-01,"H570 TG ARGB, Mid Tower, E-ATX, Tempered Glass*1 White 487 x 216 x 463.6mm, Cooling system: 120 x 120 x 25 mm ARGB Lite fan (1000rpm, 22.3 dBA) x 3 VGA length: 375mm",32000,AMD,1,NO,38000
+X-ART,Thermaltake,,CA-1Y7-00M1WN-01,"View 270 Plus TG, ARGB, Mid Tower, E-ATX, Tempered Glass x 2 456 x 230 x 454 mm Cooling system: Front: 120 x 120 x 25 mm ARGB Lite fan (1000rpm, 22.3 dBA) x 2 VGA length: 420mm",32000,AMD,1,NO,38000
+X-ART,Thermaltake,,CA-1Y7-00M6WN-01,"View 270 Plus TG, White, ARGB, Mid Tower, E-ATX, Tempered Glass x 2 456 x 230 x 454 mm Cooling system: Front: 120 x 120 x 25 mm ARGB Lite fan (1000rpm, 22.3 dBA) x 2 VGA length: 420mm",33000,AMD,1,NO,39000
+X-ART,Thermaltake,,CA-1Y6-00M1WN-00,"S250 TG ARGB, Mid Tower, ATX, 4mm Tempered Glass 490 x 218 x 462 mm Cooling system: Front: 120 x 120 x 25 mm CT120 ARGB fan (2000rpm, 25.8 dBA) x 3 VGA max length: 400mm",39500,AMD,1,NO,47500
+X-ART,Thermaltake,,CA-1Y2-00M1WN-00,"Ceres 300 TG ARGB, Tempered Glass*1, ATX 475 x 245 x 463mm, Cooling system: 140 x 140 x 25 mm CT140 ARGB fan (1500rpm, 30.5 dBA) x 2, Rear: 140 x 140 x 25 mm CT140 (1500rpm, 30.5 dBA) x 1 VGA max length: 340mm (with radiator), 370mm (without radiator)",39900,AMD,1,NO,48000
+X-ART,Thermaltake,,CA-1Z3-00M6WN-00,"Ceres 350 MX Snow, ARGB, Mid Tower, ATX 475 x 245 x 463 mm Cooling system: Front: 140 x 140 x 25 mm CT140 ARGB white fan (1500rpm, 30.5 dBA) x 2 VGA length: 360mm",47500,AMD,1,NO,57000
+X-ART,Thermaltake,,CA-1N7-00M1WN-00,"Commander C36 TG ARGB , Mid Tower, ATX, Tempered Glass*1 462 x 233 x 527mm Cooling system: Rear (exhaust): 120 x 120 x 25 mm fan (1000rpm, 16 dBA)x 1, Front (intake):200 x 200 x 30 mm ARGB fan x 2 VGA length: 310mm(With reservoir) 410mm(Without reservoir)",47500,AMD,1,NO,57000
+X-ART,Thermaltake,,CA-11F-00M1WN-00,"View 390 Air, Mid Tower, ATX, 4mm Tempered Glass 503 x 287 x 485mm Cooling system: Rear (exhaust): 120 x 120 x 25 mm CT120 fan (500~2000rpm, 25.8 dBA) x 2 VGA length: 390mm with Radiator /420mm without Radiator",52000,AMD,1,NO,57500
+X-ART,Thermaltake,,CA-1L6-00M1WN-01,"Versa J23, ARGB, Middle tower, ATX, 447 x 205 x 455mm Cooling system; Front: 120 x 120 x25 mm RGB fan (1000rpm, 16dBA) x 3, Rear: 120 x 120 x 25 mm fan x 1 VGA length: 310mm",56000,AMD,1,NO,71000
+X-ART,Thermaltake,,CA-1X8-00F1WN-01,"CTE T500 TG, ARGB, Full Tower, E-ATX, Tempered Glass*1 550 x 248 x 548 mm Cooling system: Front: _x000B_140 x 140 x 25 mm CT140 ARGB fan (1500rpm, 30.5 dBA) x 1 Top: 140 x 140 x 25 mm CT140 ARGB fan (1500rpm, 30.5 dBA) x 1, Rear:140 x 140 x 25 mm CT140 ARGB fan (1500rpm, 30.5 dBA) x 1 VGA length limitation: 385mm",60000,AMD,1,NO,72000
+X-ART,Thermaltake,,CA-11D-00F1WN-00,"AX500 Full Tower, Full Tower, E-ATX/SSI-EEB, Tempered Glass*1 550 x 248 x 548 mm Cooling system: 140 x 140 x 25 mm CT140 fan (1500rpm, 30.5 dBA) x 4 (installed) VGA length limitation:460mm(Max)",61500,AMD,1,NO,73000
+X-ART,Thermaltake,,CA-1P6-00M1WN-00,"View 300 MX ARGB , Mid Tower, E-ATX, 4mm Tempered Glass x 1 505 x 230 x 506 mm Cooling system: Front(intake): 200 x 200 x 30 mm ARGB PWM fan (1000rpm, 35.5 dBA) x 2, Rear(exhaust): 120 x 120 x 25 mm ARGB PWM fan (1500rpm, 27.2 dBA) x 1 VGA length: 280mm(With reservoir), 400mm(Without reservoir)",62800,AMD,1,NO,76000
+X-ART,Thermaltake,,CA-1Y3-00M6WN-00,"CTE E600 MX, Mid Tower Snow, Tempered Glass *2 558.5 x 270 x 513mm VGA max length: 415mm (with radiator), 443.8mm (without radiator)",79000,AMD,1,NO,95000
+X-ART,Thermaltake,,CA-1Q6-00M6WN-00,"View 51 TG Snow ARGB ,Full Tower ATX ,E-ATX 550 x 315 x 525 mm Cooling system:2 x 200 x 200 x 30mm Addressable RGB fan (600rpm, 24dBA)",94900,AMD,1,NO,"101500, Cooler LED is not working, 84500"
+X-ART,Thermaltake,,PO-ULA-PC45BK-01,"Power Supply Universal Laptop Adapter, EnerG Bar 45W",9500,AMD,1,NO,
+X-ART,Thermaltake,,PO-ULA-PC65BK-01,"Power Supply Universal Laptop Adapter, EnerG Bar 65W",13000,AMD,1,NO,
+X-ART,Thermaltake,,PO-ULA-PC90BK-01,"Power Supply Universal Laptop Adapter, EnerG Bar 90W",16500,AMD,1,NO,
+X-ART,Thermaltake,,PS-LTP-0650NPCNEU-2,"Litepower 650W, 12cm Fan, Peak Output 650W, Non-Modular, Standard Efficiency",20000,AMD,1,NO,24000
+X-ART,Thermaltake,,PS-TPD-0850FNFAPE-3,"Toughpower PF3, 850W, Fully Modular, 80 Plus Platinum, Gen 5",73500,AMD,1,NO,89000
+X-ART,Thermaltake,,PS-TPD-1550FN FATE-1,"Toughpower TF1 1550W, Fully Modular, Non Light, 80 Plus Titanium",160000,AMD,1,NO,"192000, SALE"
+X-ART,Thermaltake,,CL-P065-AL12SW-A,"UX 200 ARGB Lighting 120mm, 300 - 1500 RPM 130 W Intel: LGA 1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",10000,AMD,1,NO,12000
+X-ART,Thermaltake,,CL-P074-AL12BL-A,"TOUGHAIR 310 120mm, 500-2000 RPM 170W Intel LGA: 1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",13000,AMD,1,NO,"16000, SALE"
+X-ART,Thermaltake,,CL-P073-AL12BL-A,"TOUGHAIR 110 120mm, 500-2000RPM, 140W Intel LGA: 1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",15500,AMD,1,NO,"20000, SALE"
+X-ART,Thermaltake,,CL-P075-AL12BL-A,"TOUGHAIR 510 120mm, 500-2000 RPM 180W Intel LGA: 1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",16000,AMD,1,NO,"20500, SALE"
+X-ART,Thermaltake,,CL-P120-CA12SW-A,"ASTRIA 400 6Pipe, CU+AL, Fan120 x1, PWM 500~1800rpm/MB, 230W, ARGB Intel: LGA։ 2066/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4",18500,AMD,1,NO,"23500, SALE"
+X-ART,Thermaltake,,CL-W363-PL12SW-A,"TH120 V2 ARGB, All-In-One Liquid Cooler System/120 ARGB Fan *1 /PWM500~ 2000RPM/White Intel: LGA 1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2",24000,AMD,1,NO,"34000, SALE"
+X-ART,Thermaltake,,CL-W364-PL12SW-A,"TH240 V2 ARGB Sync, All-In-One Liquid Cooler System/ 345W, 120 ARGB Fan *2/ PWM500~2000RPM/MB Sync only/White Intel: LGA 2066/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2",31000,AMD,1,NO,"41000, SALE"
+X-ART,Thermaltake,,CL-W361-PL12SW-A,"TH240 V2 ARGB Sync, All-In-One Liquid Cooler System/ 345W, 120 ARGB Fan *2/ PWM500~2000RPM/MB Sync only/Black Intel: LGA 2066/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2",31000,AMD,1,NO,"39000, SALE"
+X-ART,Thermaltake,,CL-P110-CA14G M-A,"TOUGHAIR 710 CPU DUAL air Cooler, 250W, 2x 140mm cooler Intel: LGA 2066/2011/2011-3/1851/1700/1200/1156/1155/1151/1150 AM: AM5/AM4",36000,AMD,1,NO,"46000, SALE"
+X-ART,Thermaltake,,CL-W375-PL14SW-A,"TH280 V2 ARGB Black Sync, All-In-One Liquid Cooler System/140, 265W, ARGB Fan *2/PWM500~1800RPM Intel: LGA 2066/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2",35000,AMD,1,NO,"45000, SALE"
+X-ART,Thermaltake,,CL-W377-PL14SW-A,"TH280 V2 ARGB Sync, All-In-One Liquid Cooler System/140 ARGB Fan *2/ PWM500~1800RPM/MB Sync only/White Intel: LGA 2066/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2",35000,AMD,1,NO,"45000, SALE"
+X-ART,Thermaltake,,CL-W375-PL14MG-A,"TH280 V2 ARGB Sync, All-In-One Liquid Cooler System/, 355W, 140 ARGB Fan *2/ PWM500~1800RPM/MB Sync only/Matcha Green Intel: LGA 2066/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2",35000,AMD,1,NO,"45000, SALE"
+X-ART,Thermaltake,,CL-W319-PL12BL-A,"TOUGHLIQUID 240 ARGB Sync 240mm AIO Liquid Cooler, ARGB, 500–2000 RPM, up to 280W TDP Intel socket support: LGA 2066/2011-3/2011/1700/1200/1156/1155/1151/1150 AMD socket support: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",36000,AMD,1,NO,"46000, SALE"
+X-ART,Thermaltake,,CL-W319-PL12TQ-A,"TOUGHLIQUID 240 ARGB Sync Turquoise, 500-2000 RPM, 230W Intel LGA 2066/2011-3/2011/1700/1200/1156/1155/ 1151/1150 AMD AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",45000,AMD,1,NO,"55000, SALE"
+X-ART,Thermaltake,,CL-W404-PL12SW-A,"TH240 V2 Ultra ARGB Sync, All-In-One Liquid Cooler System/ARGB Fan 120*2/ PWM 500~1500rpm/Water Block 2.1inch LCD/White Intel: LGA 2066/2011-3/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",50000,AMD,1,NO,"60000, SALE"
+X-ART,Thermaltake,,CL-W385-PL14SW-A,"TH280 V2 Ultra ARGB Sync, All-In-One Liquid Cooler System/ARGB Fan 140*2/ PWM 500~1800rpm/Water Block 2.1inch LCD Intel: LGA2066/2011-3/2011/1851/1700/1200/1156/1155/1151/ 1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",53000,AMD,1,NO,"73000, SALE"
+X-ART,Thermaltake,,CL-W302-PL12SW-A,"TH360 ARGB Sync Snow Edition, 1500 RPM Intel: LGA 2066/2011-3/2011/1851/1700/1200/1156/1155/1151/1150 AMD: FM2/FM1/AM5/AM4/AM3+/AM3/AM2+/AM2",36000,AMD,1,NO,43000
+X-ART,Thermaltake,,CL-W369-PL14SW-A,"TH420 ARGB Sync, Snow Edition, 3100 RPM, Intel: LGA 2066/2011-3/2011/1851/1700/1200/1156/1155/1151/1150 AMD: AM5/AM4/AM3+/AM3/AM2+/AM2/FM2/FM1",40000,AMD,1,NO,48000
+X-ART,Thermaltake,,GMP-TTP-BLKSMS-01,TTP M300 360 x 300 x 4 mm,5500,AMD,1,NO,
+X-ART,Thermaltake,,KB-MEG005RU,MEG-MEKA G1/RU/U+P/Black,34500,AMD,1,NO,
+X-ART,Thermaltake,,,VERTO Ear-cup Black 2.0 Stereo,34000,AMD,1,NO,
+X-ART,Thermaltake,,,LEVEL 10 M Gaming Headset White Stereo,41000,AMD,1,NO,
+X-ART,Thermaltake,,GGC-UFT-BRMWDS-01,"U Fit Black & Red, 36cm(Front) x 36cm(Back) x 48cm, 2D Adjustable Armrests Height Adjustment, ARMREST PAD SIZE: 25cm x 9cm, Basic type (up/down, Tilted), 4 GAS LIFT CLASS , High-back, ADJUSTABLE BACK ANGLE: 90°~135°, Weight Capacity: 140kg",95000,AMD,1,NO,SALE
+X-ART,Cooler Master,,MCB-B530P-KHNN-S01,"MasterBox MB530P, 489 x 229 x 469mm, Cooling System: 3 x 120mm CF120 ARGB Fan (Front), 1 x 120mm Non-Led fan (Rear), CPU Cooler: 165mm / 6.49"", Drive Bays: 4x 2.5"", 2x 3.5, Black",48000,AMD,1,NO,
+X-ART,Cooler Master,,MPX-7503-AFAG,"GX3 750 Gold Modular 80+ Gold, 135mm, Fully Modular",56500,AMD,1,NO,
+X-ART,Cooler Master,,MPX-8503-AFAG,"GX3 850 Gold 80+ Gold, 135mm, fully Modular",64000,AMD,1,NO,
+X-ART,Cooler Master,,MPE-C501-AFCAG-EU,MWE GOLD 1250W; 14cm; Full Modular,97200,AMD,1,NO,
+X-ART,Cooler Master,,RR-TX3E-22PK-R1,"HYPER TX3 EVO (EUROPE VER.), 92mm, 4-pin, TDP 95W; 800-2200 RPM (PWM) ± 10% Intel: LGA1366, LGA1200, LGA1156, LGA1155, LGA1151, LGA1150, LGA775, AMD: AM4, AM3+, AM3, AM2+, AM2, FM2+, FM2, FM1",7400,AMD,1,NO,
+X-ART,Cooler Master,,MAM-D6PN-120PA-R1,"MasterAir MA620M, RGB, 120mm; 4-pin, TDP 200W; 650-2000 RPM (PWM) ± 10% Intel: LGA1200, LGA2066, LGA2011-v3, LGA2011, LGA1151, LGA1150, LGA1155, LGA1156, AMD: AM4, AM3+, AM3, AM2+, AM2, FM2+, FM2, FM1",35000,AMD,1,NO,
+X-ART,CSB Battery,,HR1221,"Մարտկոց Battery CSB 12V 5A 70 x 90 x 106 mm, 1.8kg, F2-Faston 250",10300,AMD,1,NO,
+X-ART,CSB Battery,,GP1272,"Մարտկոց Battery CSB 12V 7.2A 65 x 100 x 151 mm, 2.4kg, F1/F2-Faston Tab187/250",10300,AMD,1,NO,
+X-ART,CSB Battery,,HR 1234,"Մարտկոց Battery CSB 12V 9A 65 x 100 x 151 mm, 2.5 kg, F2-Faston Tab250",10900,AMD,1,NO,
+X-ART,CSB Battery,,GP 12120,"Մարտկոց Battery CSB 12V 12A 151 x 101 x 98 mm, 3.67kg, F1/F2-Faston Tab187/250",19800,AMD,1,NO,
+X-ART,CSB Battery,,HRL1234,"Մարտկոց Battery CSB 12V 9A long life 151 x 65 x 94 mm, 2.7kg, F2-Faston Tab250",11500,AMD,1,NO,
+X-ART,CSB Battery,,GP12170,"Մարտկոց Battery CSB 12V 17A 76 x 167 x 181 mm, 5.5kg, B1/B3-L terminal to accept M5 nut & bolt",23000,AMD,1,NO,
+X-ART,Hyperline,,UTP2-C5E-SOLID-GY,"Hyperline UTP2-C5E-SOLID-GY Кабель витая пара UTP (U/UTP), категория 5, 2 пары (24 AWG) , solid, PVC, серый",100,AMD,1,NO,110
+X-ART,Hyperline,,UFTP4-C6-P26-IN-LSZH-GN-500,"Hyperline UFTP4-C6-P26-IN-LSZH-GN-500 Кабель витая пара, экранированная F/UTP, категория 6, 4 пары (26 AWG), многожильный (patch), экран - фольга , LSZH,",290,AMD,1,NO,310
+X-ART,Hyperline,,UTC2x2x0.12-C2-PATCH-INDOOR,"Hyperline UTC2x2x0.12-C2-PATCH-INDOOR Кабель телефонный, плоский, 4 провода, многожильный, белый (100м)",11000000000000001,AMD,1,NO,125
+X-ART,Hyperline,,Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-0.3M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-0.3M-LSZH-GY Патч-корд U/UTP, Cat.5е (100% Fluke Component Tested), LSZH, 0.3 м, серый, зеленый",430,AMD,1,NO,550
+X-ART,Hyperline,,Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-0.5M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-0.5M-LSZH-GY Патч-корд U/UTP, Cat.5e (100% Fluke Component Tested), LSZH, 0.5 м, серый",600,AMD,1,NO,750
+X-ART,Hyperline,,Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-1M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-C5e-1M-LSZH-GY Патч-корд U/UTP, Cat.5e (100% Fluke Component Tested), LSZH, 1 м, серый",1100,AMD,1,NO,1200
+X-ART,Hyperline,,Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-1.5M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-1.5M-LSZH-GY Патч-корд U/UTP, Cat.5e (100% Fluke Component Tested), LSZH, 1.5 м, серый",1300,AMD,1,NO,1600
+X-ART,Hyperline,,Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-2M-LSZH,"Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-2M-LSZH Патч-корд U/UTP, Cat.5e (100% Fluke Component Tested), LSZH, 2 м",1600,AMD,1,NO,1800
+X-ART,Hyperline,,PC-LPM-UTP-RJ45-C5e-3M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-C5e-3M-LSZH-GY Патч-корд U/UTP, Cat.5e (100% Fluke Component Tested), LSZH, 3 м, серый",2100,AMD,1,NO,2400
+X-ART,Hyperline,,PC-LPM-UTP-RJ45-RJ45-C5e-5M-LSZH,"Hyperline PC-LPM-UTP-RJ45-RJ45-C5e-5M-LSZH Патч-корд U/UTP, Cat.5e (100% Fluke Component Tested), LSZH, 5 м",3200,AMD,1,NO,3600
+X-ART,Hyperline,,PC-LPM-UTP-RJ45-RJ45-C6-0.5M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-RJ45-C6-0.5M-LSZH-GY Патч-корд U/UTP, Cat.6 (100% Fluke Component Tested), LSZH, 0.5 м, серый",1000,AMD,1,NO,1100
+X-ART,Hyperline,,PC-LPM-UTP-RJ45-RJ45-C6-1M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-RJ45-C6-1M-LSZH-GY Патч-корд U/UTP, Cat.6 (100% Fluke Component Tested), LSZH, 1 м, серый",1500,AMD,1,NO,1700
+X-ART,Hyperline,,PC-LPM-UTP-RJ45-RJ45-C6-3M-LSZH-WH,"Hyperline PC-LPM-UTP-RJ45-RJ45-C6-3M-LSZH-WH Патч-корд U/UTP, Cat.6 (100% Fluke Component Tested), LSZH, 3 м, белый",2650,AMD,1,NO,2900
+X-ART,Hyperline,,PC-LPT-SFTP-RJ45-RJ45-C6-1M-LSZH-WH,"Hyperline PC-LPT-SFTP-RJ45-RJ45-C6-1M-LSZH-WH Патч-корд S/FTP, экранированный, категория 6 (100% Fluke Component Tested), 28AWG, LSZH, 1 м, белый",2200,AMD,1,NO,2500
+X-ART,Hyperline,,PC-LPT-SFTP-RJ45-RJ45-C6-1.5M-LSZH-WH,"Hyperline PC-LPT-SFTP-RJ45-RJ45-C6-1M-LSZH-WH Патч-корд S/FTP, экранированный, категория 6 (100% Fluke Component Tested), 28AWG, LSZH, 1.5 м, белый",1900,AMD,1,NO,2100
+X-ART,Hyperline,,PC-LPM-UTP-RJ45-RJ45-C6-2M-LSZH-GY,"Hyperline PC-LPM-UTP-RJ45-RJ45-C6-2M-LSZH-GY Патч-корд U/UTP, Cat.6 (100% Fluke Component Tested), LSZH, 2 м, серый",2300,AMD,1,NO,2800
+X-ART,Hyperline,,PC-LPT-SFTP-RJ45-RJ45-C6-3M-LSZH-WH,"Hyperline PC-LPT-SFTP-RJ45-RJ45-C6-3M-LSZH-WH Патч-корд S/FTP, экранированный, категория 6 (100% Fluke Component Tested), 28AWG, LSZH, 3 м, белый",3000,AMD,1,NO,3500
+X-ART,Hyperline,,PC-LPT-SFTP-RJ45-RJ45-C6-5M-LSZH-WH,"Hyperline PC-LPT-SFTP-RJ45-RJ45-C6-5M-LSZH-WH Патч-корд S/FTP, экранированный, категория 6 (100% Fluke Component Tested), 28AWG, LSZH, 5 м, белый",4200,AMD,1,NO,4700
+X-ART,Hyperline,,PP3-19-24-8P8C-C5E-110D,"Hyperline PP3-19-24-8P8C-C5E-110D Патч-панель 19"", 1U, 24 порта RJ-45, категория 5e, Dual IDC, ROHS, цвет черный",17500,AMD,1,NO,19500
+X-ART,Hyperline,,PP3-19-24-8P8C-C5E-SH-110D,"Hyperline PP3-19-24-8P8C-C5E-SH-110D Патч-панель 19"", 1U, 24 порта RJ-45 полн. экран., категория 5e, Dual IDC, ROHS, цвет черный",32000,AMD,1,NO,35000
+X-ART,Hyperline,,PP-19-50-8P8C-C5-110D,"Hyperline PP-19-50-8P8C-C5-110D Патч-панель 19"", 1U, 50 портов RJ-45, категория 5, Dual IDC (комп. раскладка, 2 пары на порт 1,2,3,6)",23650,AMD,1,NO,25000
+X-ART,Hyperline,,PP3-19-24-8P8C-C6-110D,"Hyperline PP3-19-24-8P8C-C6-110D Патч-панель 19"", 1U, 24 порта RJ-45, категория 6, Dual IDC, ROHS, цвет черный (задний кабельный организатор в комплекте)",24000,AMD,1,NO,26000
+X-ART,Hyperline,,PPBL3-19-24-SH-RM,"Hyperline PPBL3-19-24-SH-RM Модульная патч-панель 19"", 24 порта, Flat Type, 1U, для экранированных и неэкранированных модулей Keystone Jack (кроме KJ1-C2, KJ2-C5e, KJ2-C6), с задним кабельным организатором (без модулей)",11350,AMD,1,NO,12350
+X-ART,Hyperline,,Hyperline PPBL6-19-24-RM,"Hyperline PPBL6-19-24-RM Модульная патч-панель 19"", 24 порта, 4 съемные панели по 6 модулей, 1U, для неэкранированных модулей, с задним кабельным организатором (без модулей)",7600,AMD,1,NO,8200
+X-ART,Hyperline,,CMF-OTR-42U-89x106-C-RAL9005,"Hyperline CMF-OTR-42U-89x106-C-RAL9005 Вертикальный кабельный организатор 42U для шкафов TTR, TTB, стоек ORK2A, ORL1, ширина 89мм, высота пальцев 106мм с крышками и кронштейнами, черный",61000,AMD,1,NO,67000
+X-ART,Hyperline,,CMV-42U-ML,"Hyperline CMV-42U-ML Металлический вертикальный кабельный организатор с крышкой 42U, для шкафов TTB, TTR шириной 800 мм, черный (RAL 9004)",23500,AMD,1,NO,25800
+X-ART,Hyperline,,"Hyperline RST-PMT-100-50-3000-0,7-SZ","Hyperline RST-PMT-100-50-3000-0,7-SZ Лоток перфорированный 100x50x3000x0,7 мм",1500,AMD,1,NO,1800
+X-ART,Hyperline,,"Hyperline RST-NMT-100-50-3000-0,7-SZ","Hyperline RST-NMT-100-50-3000-0,7-SZ Лоток неперфорированный 100x50x3000x0,7 мм",1500,AMD,1,NO,1800
+X-ART,Hyperline,,"Hyperline RST-PMT-150-50-3000-0,7-SZ","Մալուխատար Hyperline RST-PMT-150-50-3000-0,7-SZ",1700,AMD,1,NO,1900
+X-ART,Hyperline,,"Hyperline RST-PMT-2000-50-3000-0,7-SZ","Մալուխատար Hyperline RST-PMT-200-50-3000-0,7-SZ",2300,AMD,1,NO,2800
+X-ART,Hyperline,,"Hyperline RST-PMT-300-50-3000-0,7-SZ","Hyperline RST-PMT-300-50-3000-0,7-SZ Лоток перфорированный 300x50x3000x0,7 мм",2500,AMD,1,NO,3100
+X-ART,Hyperline,,"Hyperline RST-NMT-300-50-3000-0,7-SZ","Hyperline RST-NMT-300-50-3000-0,7-SZ Лоток неперфорированный 300x50x3000x0,7 мм",2600,AMD,1,NO,3200
+X-ART,Hyperline,,Hyperline SB1-1-8P8C-C5E-WH,"Hyperline SB1-1-8P8C-C5e-WH Розетка компьютерная RJ-45(8P8C), категория 5e, одинарная, внешняя, Dual IDC",1200,AMD,1,NO,1450
+X-ART,Hyperline,,Hyperline SB1-2-8P8C-C6-WH,"Hyperline SB1-1-8P8C-C6-WH Розетка компьютерная RJ-45(8P8C), категория 6, одинарная, внешняя, Dual IDC(110&Krone type)",1300,AMD,1,NO,1800
+X-ART,Hyperline,,Hyperline SB1-2-8P8C-C6-WH,"Hyperline SB1-2-8P8C-C6-WH Розетка компьютерная RJ-45(8P8C), категория 6, двойная, внешняя, Dual IDC",2200,AMD,1,NO,2500
+X-ART,Hyperline,,Hyperline KJ9-8P8C-C5e-90-WH,"Hyperline KJ9-8P8C-C5e-90-WH Вставка Keystone Jack RJ-45(8P8C), категория 5e, белая",500,AMD,1,NO,700
+X-ART,Hyperline,,Hyperline KJ9-8P8C-C6-90-WH,"Hyperline KJ9-8P8C-C6-90-WH Вставка Keystone Jack RJ-45(8P8C), категория 6, белая",700,AMD,1,NO,900
+X-ART,Hyperline,,Hyperline SIP2K-C5E-M45-22.5,"Hyperline SIP2K-C5E-M45-22.5 Розетка (вставка) 45x22,5 (аналог Mosaic) с наклонным модулем RJ-45 категории 5е",1000,AMD,1,NO,1300
+X-ART,Hyperline,,Hyperline SIP2K-C6-M45-22.5,"Hyperline SIP2K-C6-M45-22.5 Розетка (вставка) 45x22,5 (аналог Mosaic) с наклонным модулем RJ-45 категории 6",1300,AMD,1,NO,1500
+X-ART,Hyperline,,Hyperline SIP2-BL-M45-22.5,"Hyperline SIP2-BL-M45-22.5 Вставка-заглушка 45x22,5 (аналог Mosaic)",300,AMD,1,NO,450
+X-ART,Hyperline,,Hyperline SIP3A-2K-M45-45,"Hyperline SIP3A-2K-M45-45 Вставка угловая 45x45 (аналог Mosaic) для 2х модулей Кeystone Jack, со шторками",900,AMD,1,NO,1100
+X-ART,Hyperline,,SIP2-1K-M45-22.5,Վարդակի մաս Hyperline SIP2-1K-M45-22.5,700,AMD,1,NO,900
+X-ART,Hyperline,,SIP3-2K-M45-45,Վարդակի մաս Hyperline SIP3-2K-M45-45,500,AMD,1,NO,700
+X-ART,Hyperline,,KJ1-HDMI-AV18-BK,Վարդակի մաս Hyperline KJ1-HDMI-AV18-BK,3300,AMD,1,NO,3600
+X-ART,Hyperline,,Hyperline CA2-KJ-C5E-BK,"Hyperline CA2-KJ-C5E-BK Проходной адаптер (coupler), RJ-45(8P8C) формата Keystone Jack, категория 5e, черный",700,AMD,1,NO,800
+X-ART,Hyperline,,Hyperline PLUG-8P8C-U-C5-100,"Hyperline PLUG-8P8C-U-C5-100 Разъем RJ-45(8P8C) под витую пару, категория 5e (50 µ""/ 50 микродюймов), универсальный (для одножильного и многожильного кабеля)",100,AMD,1,NO,120
+X-ART,Hyperline,,Hyperline PLUG-8P8C-U-C5-SH-100,"Hyperline PLUG-8P8C-U-C5-SH-100 Разъем RJ-45(8P8C) под витую пару, категория 5e (50 µ""/ 50 микродюймов), экранированный, универсальный (для одножильного и многожильного кабеля)",200,AMD,1,NO,220.00000000000003
+X-ART,Hyperline,,Hyperline PLUG-8P8C-U-C6-100,"Hyperline PLUG-8P8C-U-C6-100 Разъем RJ-45(8P8C) под витую пару, категория 6 (50 µ""/ 50 микродюймов), универсальный (для одножильного и многожильного кабеля)",140,AMD,1,NO,160
+X-ART,Hyperline,,Hyperline BOOT,"Hyperline BOOT Изолирующий колпачок для разъемов RJ-45,Цвета: зеленый, серый",60,AMD,1,NO,65
+X-ART,Hyperline,,Hyperline HT-3240,"Hyperline HT-3240 Инструмент для заделки витой пары (нож в комплект не входит), ударный (без возможности регулировки)",8800,AMD,1,NO,9900
+X-ART,Hyperline,,Hyperline HT-14TBK,Hyperline HT-14TBK Нож-вставка,38500000000000005,AMD,1,NO,4200
+X-ART,Hyperline,,HT-14B,"Hyperline HT-14B Нож-вставка, тип 110, для HT-314,324,334",33000000000000005,AMD,1,NO,3850
+X-ART,Hyperline,,HT-222,Hyperline HT-222 Кусачки для обрезки кабеля (до 1мм),2400,AMD,1,NO,2600
+X-ART,Hyperline,,Hyperline HT-568,"Hyperline HT-568 Инструмент обжимной для RJ-45, RJ-12",8600,AMD,1,NO,9250
+X-ART,Hyperline,,HT-S501A,Hyperline HT-S501A Инструмент для зачистки и обрезки кабеля витая пара (UTP/STP) и телефонного кабеля диаметром 3.2 -9.0 мм,4400,AMD,1,NO,4950
+X-ART,Hyperline,,Hyperline HT-210C,Hyperline HT-210C Инструмент обжимной для RJ-45,4750,AMD,1,NO,5200
+X-ART,Hyperline,,Hyperline HT-3640R,"Hyperline HT-3640R Инструмент для заделки витой пары (нож в комплект не входит), ударный, регулируемый",11900,AMD,1,NO,12900
+X-ART,Hyperline,,Hyperline HT-3340,"Hyperline HT-3340 Инструмент для заделки витой пары (нож в комплект не входит), безударный",2900,AMD,1,NO,3100
+X-ART,Hyperline,,Hyperline SHT-19-8IEC-2.5IEC,"Hyperline SHT19-8IEC-2.5IEC Блок розеток для 19"" шкафов, горизонтальный, 8 розеток IEC320 C13, кабель питания 2.5м (3х1.0мм2) с вилкой IEC320 C14 10A, 250В, 482.6x44.4x44.4мм (ШхГхВ), корпус алюминий",15000,AMD,1,NO,18000
+X-ART,Hyperline,,Hyperline SHE19-9SH-2.5EU,"Hyperline SHE19-9SH-2.5EU Блок розеток для 19"" шкафов, горизонтальный, 9 розеток Schuko, кабель питания 2.5м (3х1.5мм2) с вилкой Schuko 16A, 250В, 482.6x44.4x44.4мм (ШхГхВ), корпус алюминий, цвет черный",15000,AMD,1,NO,18000
+X-ART,Hyperline,,SHT19-9SH-2.5IEC,"Hyperline SHT19-9SH-2.5IEC Блок розеток для 19"" шкафов, горизонтальный, 9 розеток Schuko, 10A, кабель питания 2.5м (3х1.5мм2) с вилкой IEC320 C14 10A, 250В, 482.6x44.4x44.4мм (ШхГхВ), корпус алюминий",15000,AMD,1,NO,18000
+X-ART,Hyperline,,SHE-32SH-BAV-3PVB,"Hyperline SHE-32SH-BAV-3PVB Блок розеток вертикальный, 32 розетки Schuko, автоматический выключатель, амперметр/вольтметр, кабель питания 3м (3х4.0мм2) с вилкой IEC 60309 32A (2P+E), 250В, корпус алюминий, черный",166350,AMD,1,NO,179650
+X-ART,Hyperline,,Hyperline PWC-IEC13-IEC14-1.0-BK 1m,"Hyperline PWC-IEC13-IEC14-1.0-BK Кабель питания монитор-компьютер IEC 320 C13 - IEC 320 C14 (3x0.75), 10A, прямая вилка, 1м, цвет черный (ПВС-АП-3*0,75-250-C13C14-10-1,0 ГОСТ 30851.1-2002 (МЭК 60320-1:1994))",1800,AMD,1,NO,2100
+X-ART,Hyperline,,Hyperline PWC-IEC13-IEC14-1.8 BK 1.8m,"Hyperline PWC-IEC13-IEC14-1.8 BK 1.8m Кабель питания монитор-компьютер IEC 320 C13 - IEC 320 C14 (3x0.75), 10A, прямая вилка, 1.8м, цвет черный (ПВС-АП-3*0,75-250-C13C14-10-1,8 ГОСТ 30851.1-2002 (МЭК 60320-1:1994))",2000,AMD,1,NO,2400
+X-ART,Hyperline,,PWC-IEC13-IEC14-3.0-BK,"Hyperline PWC-IEC13-IEC14-3.0-BK Кабель питания монитор-компьютер IEC 320 C13 - IEC 320 C14 (3x1.0), 10A, прямая вилка, 3м, цвет черный (ПВС-АП-3*1,0-250-C13C14-10-3,0 ГОСТ 30851.1-2002 (МЭК 60320-1:1994))",2500,AMD,1,NO,3000
+X-ART,Hyperline,,PWC-IEC19-IEC20-3.0-BK,"Hyperline PWC-IEC19-IEC20-3.0-BK Кабель питания IEC 320 C19 - IEC 320 C20 (3x1.5), 16A, прямая вилка, 3м, цвет черный (ПВС-АП-3*1,5-250-C19C20-16-3,0 ГОСТ 30851.1-2002 (МЭК 60320-1:1994))",6500,AMD,1,NO,8000
+X-ART,Hyperline,,PWC-IEC19-IEC20-5.0-BK,"Hyperline PWC-IEC19-IEC20-5.0-BK Кабель питания IEC 320 C19 - IEC 320 C20 (3x1.5), прямая вилка, 16A, 5м, цвет черный (ПВС-АП-3*1,5-250-C19C20-16-5,0 ГОСТ 30851.1-2002 (МЭК 60320-1:1994))",8000,AMD,1,NO,11550.000000000002
+X-ART,Hyperline,,Hyperline PWC-IEC19-SHM-1.8-BK,"Hyperline PWC-IEC19-SHM-1.8-BK Кабель питания (Schuko+C19) (3x1.5), 16A, угловая вилка, 1.8м, цвет черный (ПВС-АП-3*1,5-250-S22C19-16-1,8 ГОСТ 28244-96, ГОСТ 30851.1-2002 (МЭК 60320-1:1994))",6500,AMD,1,NO,7500
+X-ART,Hyperline,,FV-M12,"Hyperline FV-M12 Ножка M12x108 (полная длина 108 мм, длина рабочей резьбовой части 89 мм, нагрузка до 500 кг), цвет черный, для шкафов и стоек серий TTC2, TTB, TWFS-FC, TWB-FC, ORV, TSR",16500000000000002,AMD,1,NO,2000
+X-ART,Hyperline,,TCAS-2IBRK,"Hyperline TCAS-2IBRK Ролик для шкафов, макс. нагр. 150 кг, d= 50.8 мм, для шкафов серии TTC, TSC",2100,AMD,1,NO,2200
+X-ART,Hyperline,,GST-20,"Hyperline GST-20 Спиральный витой жгут для кабеля, Flexible PE, внутренний диаметр 20 мм, цвет натуральный прозрачный",6000,AMD,1,NO,7000
+X-ART,Hyperline,,Hyperline TAL3-1U-250-RAL9005,"Hyperline TAL3-1U-250-RAL9005 Полка угловая с перфорацией 19"", 1U, ширина 440 мм, глубина 250 мм, цвет черный (RAL 9005)",7500,AMD,1,NO,8500
+X-ART,Hyperline,,TLT-681-RAL9004,"Hyperline TLT-681-RAL9004 Цоколь 600х800х100мм, для шкафов серии TTC, цвет черный (RAL 9004)",20350,AMD,1,NO,21450
+X-ART,Hyperline,,GTK-110MC,"Hyperline GTK-110MC Стяжка нейлоновая неоткрывающаяся, безгалогенная (halogen free), 110x2.5 мм, полиамид 6.6, -40°C - +85°C, с площадкой для маркера (100 шт)",2200,AMD,1,NO,2500
+X-ART,Hyperline,,WASNR-5x16-BK,"Hyperline WASNR-5x16-BK Лента (липучка) в рулоне, ширина 16 мм, длина 5 м, black, blue, green, red",3500,AMD,1,NO,4000
+X-ART,WRLine,,WRline WR-UTP-4P-C5E-PVC-GY,"WRline WR-UTP-4P-C5E-PVC-GY Кабель витая пара, неэкранированная U/UTP, категория 5e, 4 пары (0,50 мм), одножильный, внутренний, PVC нг(А)-LS, серый, 305 м",145,AMD,1,NO,"160, Tested by Fluke DSX 50000 according to ISO 11801 standard."
+X-ART,WRLine,,WRline WR-UTP-4P-C5E-L-PVC-GY,"WRline WR-UTP-4P-C5E-L-PVC-GY Кабель витая пара, неэкранированная U/UTP, категория 5e, 4 пары (0,48 мм), одножильный, внутренний, PVC нг(А)-LS, серый, 305 м",120,AMD,1,NO,"140, Tested by Fluke DSX 50000 according to ISO 11801 standard."
+X-ART,WRLine,,WRline WR-UTP-4P-C5E-L-LSZH-GY,"WRline WR-UTP-4P-C5E-L-LSZH-GY Кабель витая пара, неэкранированная U/UTP, категория 5e, 4 пары (0.48 мм), одножильный, внутренний, LSZH, нг(A)-HF, серый, 305 м",130,AMD,1,NO,"150, Tested by Fluke DSX 50000 according to ISO 11801 standard."
+X-ART,WRLine,,Wrline WR-UTP-4P-C5E-PE-BK,"WRline WR-UTP-4P-C5E-PE-BK Кабель витая пара, неэкранированная U/UTP, категория 5e, 4 пары (0,50 мм), одножильный, внешний, PE, черный, 305 м",200,AMD,1,NO,240
+X-ART,WRLine,,WRline WR-FTP-4P-C5E-PE-BK,"WRline WR-FTP-4P-C5E-PE-BK Кабель витая пара, экранированная F/UTP, категория 5e, 4 пары (0,50 мм), одножильный, внешний, PE, черный, 305 м",220,AMD,1,NO,260
+X-ART,WRLine,,WRline WR-8P8C-C5E,"WRline WR-8P8C-C5E Коннектор RJ-45 под витую пару, категория 5e, неэкранированный, универсальный (100 шт в упак.)",50,AMD,1,NO,60
+X-ART,WRLine,,WRline WR-PC-RJ45-UTP-5E-0.3,"WRline WR-PC-RJ45-UTP-5E-0.3 Патч-корд U/UTP, категория 5е, 2xRJ45, неэкранированный, серый, LSZH, 0.3м",330,AMD,1,NO,400
+X-ART,WRLine,,WRline WR-PC-RJ45-UTP-5E-0.5,"WRline WR-PC-RJ45-UTP-5E-0.5 Патч-корд U/UTP, категория 5е, 2xRJ45, неэкранированный, серый, LSZH, 0.5м",400,AMD,1,NO,450
+X-ART,WRLine,,WRline WR-PC-RJ45-UTP-5E-1,"WRline WR-PC-RJ45-UTP-5E-1Патч-корд U/UTP, категория 5е, 2xRJ45, неэкранированный, серый, LSZH, 1м",500,AMD,1,NO,550
+X-ART,WRLine,,WRline WR-PC-RJ45-UTP-5E-1.5,"WRline WR-PC-RJ45-UTP-5E-1.5 Патч-корд U/UTP, категория 5е, 2xRJ45, неэкранированный, серый, LSZH, 1.5м",650,AMD,1,NO,660
+X-ART,WRLine,,WRline WR-PC-RJ45-UTP-5E-2,"WRline WR-PC-RJ45-UTP-5E-2 Патч-корд U/UTP, категория 5е, 2xRJ45, неэкранированный, серый, LSZH, 2м",750,AMD,1,NO,850
+X-ART,WRLine,,WRline WR-PC-RJ45-UTP-5E-3,"WRline WR-PC-RJ45-UTP-5E-3 Патч-корд U/UTP, категория 5е, 2xRJ45, неэкранированный, серый, LSZH, 3м",1000,AMD,1,NO,1200
+X-ART,WRLine,,WRline WR-WS-8P8C-C5E-1,"WR-WS-8P8C-C5E-1 Розетка компьютерная RJ-45, категория 5e, неэкранированная, одинарная, внешняя, Dual IDC, цвет белый",550,AMD,1,NO,700
+X-ART,WRLine,,WRline WR-WS-8P8C-C5E-2,"WR-WS-8P8C-C5E-2 Розетка компьютерная RJ-45, категория 5e, неэкранированная, двойная, внешняя, Dual IDC, цвет белый",650,AMD,1,NO,800
+X-ART,WRLine,,WRline WR-PL-24-C5E-D,"WR-PL-24-C5E-D Патч-панель 19"" (1U), 24 порта RJ-45, категория 5e, Dual IDC, с задним кабельным организатором, цвет черный",9000,AMD,1,NO,10000
+X-ART,WRLine,,Wrline WR-TW-0645-GP-RAL9004,"WR-TW-0645-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 6U, 367x600х450мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",50400,AMD,1,NO,55000.00000000001
+X-ART,WRLine,,Wrline WR-TW-0666-GP-RAL9004,"WR-TW-0666-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 6U, 367x600х600мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",57550,AMD,1,NO,62300
+X-ART,WRLine,,WRline WR-TW-0645-GP-RAL9004,"WR-TW-0945-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 9U, 500x600х450мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",5830000000000001,AMD,1,NO,63150
+X-ART,WRLine,,WRline WR-TW-0966-GP-RAL9004,"WRline WR-TW-0966-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 9U, 500x600х600мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",67320,AMD,1,NO,72600
+X-ART,WRLine,,WRline WR-TW-1245-GP-RAL9004,"WR-TW-1245-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 12U, 650x600х450мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",68000,AMD,1,NO,73700
+X-ART,WRLine,,WRline WR-TW-1266-GP-RAL9004,"WR-TW-1266-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 12U, 650x600х600мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",61000,AMD,1,NO,65800
+X-ART,WRLine,,WRline WR-TW-1566-GP-RAL9004,"WR-TW-1566-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 15U, 775x600х600мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",65800,AMD,1,NO,71300
+X-ART,WRLine,,WRline WR-TW-1845-SD-RAL9004,"WRline WR-TW-1845-SD-RAL9004 Шкаф настенный 19-дюймовый (19""), 18U, 908x600х450мм, перфорированная металлическая дверь с замком, цвет черный (RAL 9004) (разобранный)",82500,AMD,1,NO,89000
+X-ART,WRLine,,WRline WR-TW-1866-GP-RAL9004,"WRline WR-TW-1866-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 18U, 908x600х600мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",84000,AMD,1,NO,91000
+X-ART,WRLine,,WRline WR-TW-2266-GP-RAL9004,"WR-TW-2266-GP-RAL9004 Шкаф настенный 19-дюймовый (19""), 22U, 1086x600х600мм, стеклянная дверь, ручка с замком, цвет черный (RAL 9004) (разобранный)",81650,AMD,1,NO,88550
+X-ART,WRLine,,WRline WR-TT-3261-DD-RAL9004,"WRline WR-TT-3261-DD-RAL9004 Шкаф напольный 19-дюймовый, 32U, 1610x600х1000 мм (ВхШхГ), передняя и задняя распашные перфорированные двери (75%), цвет черный (RAL 9004) (разобранный)",221250,AMD,1,NO,238950
+X-ART,Draka,,UC300 24 PE,"UC300 24 PE - Product Type: Cat 5e U/UTP Outdoor, Conductor: Bare copper wire, Ø 0.51 mm (24 AWG), Sheath/color: Polyethylene (PE); Operating Temperature Range: -20°C to +60°C, Packaging: 500Black, Weight: Approximately 28 kg per kilometer",190,AMD,1,NO,210
+X-ART,Draka,,Draka UC300 S24 C5e F/UTP 4P LSHF 305BR,"Draka UC300 S24 C5e F/UTP 4P LSHF 305BR – Product Type: Category 5e (Cat 5e), Conductor: Solid bare copper, Ø 0.51 mm (24 AWG), Twisting: 4 pairs of twisted wires (F/UTP - Foiled Unshielded Twisted Pair), Sheath: Low Smoke Halogen-Free (LSHF), Length: 305 meters, Operating Temperature Range: -20°C to +60°C.",200,AMD,1,NO,220
+X-ART,Draka,,Draka UC300 24 C5e U/UTP LSHF 305BR,"Draka UC300 24 C5e U/UTP LSHF 305BR - Product Type, Category 5e (Cat 5e), Conductor: Solid bare copper, Ø 0.5 mm (24 AWG), Twisting: 4 pairs of unshielded twisted wires (U/UTP), Sheath: Low Smoke Halogen-Free (LSHF), Sheath Color: Gray, Length: 305 meters, Operating Temperature Range: -20°C to +60°C",180,AMD,1,NO,200
+X-ART,Draka,,UC400 S23 C6 U/FTP 4P LSHF Dca,"UC400 S23 C6 U/FTP 4P LSHF Dca - Product Type: Category 6 (Cat 6), Conductor: Solid bare copper, Ø 0.56 mm (23 AWG), Pair Shielding: Aluminum foil (U/FTP - Unshielded Twisted Pair with overall foil shielding), Sheath: Low Smoke Halogen-Free (LSHF), Sheath Color: Blue (BU), Operating Temperature Range: -20°C to +60°C,Weight: Approximately 40 kg per kilometer",240,AMD,1,NO,260
+X-ART,Draka,,UC400 C6 U/UTP HD 4P LSHF Eca,"UC400 C6 U/UTP HD 4P LSHF Eca - Product Type: Category 6 (Cat 6), Conductor: Solid bare copper, Ø 0.56 mm (23 AWG), Twisting: 4 pairs of twisted wires (U/UTP - Unshielded Twisted Pair), Sheath: Low Smoke Halogen-Free (LSHF), Sheath Color: Blue (BU), Weight: Approximately 45 kg per kilometer, Operating Temperature Range: -20°C to +60°C",200,AMD,1,NO,220
+X-ART,Kopos,,PK-90X55,Մալուխների մոնտ․ պլ․ փողրակ Hollow Parapet Trunking PK 90X55 D,3800,AMD,1,NO,
+X-ART,Kopos,,8401,Մալուխների մոնտ․ պլ․ կցամաս PK 90X55 D END PIECE,650,AMD,1,NO,
+X-ART,Kopos,,8402,Մալուխների մոնտ․ պլ․ կցամաս PK 90X55 D Connect Cover,800,AMD,1,NO,
+X-ART,Kopos,,8403,Մալուխների մոնտ․ պլ․ կցամաս PK 90X55 D Bending Cover,1400,AMD,1,NO,
+X-ART,Kopos,,8404,Մալուխների մոնտ․ պլ․ կցամաս PK 90X55 D Branch Cover,1100,AMD,1,NO,
+X-ART,Kopos,,8405,Մալուխների մոնտ․ պլ․ կցամաս PK 90X55 D Inner corner,1700,AMD,1,NO,
+X-ART,Kopos,,8406,Մալուխների մոնտ․ պլ․ կցամաս PK 90X55 D Outer corner,1700,AMD,1,NO,
+X-ART,Kopos,,LH 60x40,Մալուխների մոնտ․ պլ․ փողրակ Angular Trunking LH 60x40,1500,AMD,1,NO,
+X-ART,Kopos,,8651,Մալուխների մոնտ․ պլ․ կցամաս LH 60x40 End Cover,650,AMD,1,NO,
+X-ART,Kopos,,8652,Մալուխների մոնտ․ պլ․ կցամաս LH 60x40 Connecting Cover,650,AMD,1,NO,
+X-ART,Kopos,,8653,Մալուխների մոնտ․ պլ․ կցամաս LH 60x40 Bending Cover,650,AMD,1,NO,
+X-ART,Kopos,,8654,Մալուխների մոնտ․ պլ․ կցամաս LH 60x40 Branching Cover,650,AMD,1,NO,
+X-ART,Kopos,,8655,Մալուխների մոնտ․ պլ․ կցամաս LH 60x40 Inner Cover,1400,AMD,1,NO,
+X-ART,Kopos,,8656,Մալուխների մոնտ․ պլ․ կցամաս LH 60x40 Outer Cover,1200,AMD,1,NO,
+X-ART,Kopos,,PEKE 60,Մալուխների մոնտ․ պլ․ փողրակ Partition Wall PEKE 60,700,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6404 4U,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6404 4U 600*450mm, Wall Mount, single section, front door is tempered glass",27000,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6604,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6604 4U 600*600mm, Wall Mount, single section, front door is tempered glass door",31050000000000004,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6406,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6406 6U 600*450mm, Wall Mount, single section, front door is tempered glass door",30000,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6606,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6606 6U 600*600mm, Wall Mount, single section, front door is tempered glass door",34000,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6409,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6409 9U 600*450mm, Wall Mount, single section, front door is tempered glass door",35100,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6609 9U,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6609 9U 600*600mm, Wall Mount, single section, front door is tempered glass door",41000,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6412,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6412 12U 600*450mm, Wall Mount, single section, front door is tempered glass door",42000,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6612,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6612 12U 600*600mm, Wall Mount, single section, front door is tempered glass door",43200,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6418,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6418 18U 600*450mm, Wall Mount, single section, front door is tempered glass door",49000,AMD,1,NO,
+X-ART,Ning Bo,,WS3-6618,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO WS3-6618 18U 600*600mm, Wall Mount, single section, front door is tempered glass door",54000,AMD,1,NO,
+X-ART,Ning Bo,,NA-6818,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO NA-6818 18U 600*800mm, Front glass door with lock JC02",115000,AMD,1,NO,
+X-ART,Ning Bo,,ND-6018,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO ND-6018 18U 600*1000mm, single open front mesh door with lock JC02",125000,AMD,1,NO,
+X-ART,Ning Bo,,NA-6822,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO NA-6822 22U 600*1000mm, single open front mesh door with lock JC02",12150000000000001,AMD,1,NO,
+X-ART,Ning Bo,,NA-6022,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO NA-6022 22U 600*1000mm, Front glass door with lock JC02",135000,AMD,1,NO,
+X-ART,Ning Bo,,ND-6022,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO ND-6022 22U 600*1000mm, single open front mesh door with lock JC02",138000,AMD,1,NO,
+X-ART,Ning Bo,,NA-6827,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO NA-6827 27U 600*800mm, Front glass door with lock JC02",134000,AMD,1,NO,
+X-ART,Ning Bo,,ND-6027,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO ND-6027 27U 600*1000mm, single open front mesh door with lock JC02",155000,AMD,1,NO,
+X-ART,Ning Bo,,ND-6842 42U,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO ND-6842 42U 600*800mm, RAL9004 single open front mesh door with lock JC02,",168000,AMD,1,NO,
+X-ART,Ning Bo,,ND-6042 42U,"Հեռահաղորդ սարքերի մոնտաժ․ մետաղյա պահարան NINGBO ND-6042 42U 600*1000mm, RAL9004 42U 600*1000mm, single open front mesh door with lock JC02,",196000,AMD,1,NO,
+X-ART,Ning Bo,,NINGBO ND-6045 45U,"Հեռահաղորդ սարքերի մոնտաժ․ մետաղյա պահարան NINGBO ND-6045 45U 600*1000mm, single open front mesh door with lock JC02,",205000,AMD,1,NO,
+X-ART,Ning Bo,,ND-8042,"Հեռահաղորդակցության սարքերի մոնտաժման մետաղյա պահարան NINGBO ND-8042 42U 800*1000mm, single open front mesh door with lock JC02",280000,AMD,1,NO,
+X-ART,Ning Bo,,JB01-1U,"Մալուխների մոնտաժման, մետաղյա հարմարանք NINGBO JB01-1U 1U cable manager",1600,AMD,1,NO,
+X-ART,Ning Bo,,JB05-1U,"Մալուխների մոնտաժման, պլ․ հարմարանք NINGBO JB05-1U 1U cable manager, plastic",2000,AMD,1,NO,
+X-ART,Ning Bo,,UTP4-C5E-SOLID-1YLGY035,Մալուխ NB UTP4-C5E-SOLID-1YLGY035 PVC 1*0.51,160,AMD,1,NO,
+X-ART,Ning Bo,,FTP4-Cat5e-SOLID-1YLBKPEO outdoor,Մալուխ NB FTP4-Cat5e-SOLID-1YLBKPEO outdoor with protect robe,240,AMD,1,NO,
+X-ART,Ning Bo,,FTP4-Cat5e-SOLID-1YLBKPEO outdoor,Մալուխ NB FTP4-Cat5e-SOLID-1YLBKPEO outdoor,310,AMD,1,NO,
+X-ART,Ning Bo,,CAT5E UTP 24Port,"Միացուցիչների բլոկ Pach panel, CAT5E UTP 24Port",7000,AMD,1,NO,
+X-ART,Ning Bo,,CAT6 UTP 24Port,Միացուցիչների բլոկ Patch panel CAT6 UTP 24Port Dual IDC with cable manager,8000,AMD,1,NO,
+X-ART,Ning Bo,,,Միաց. բլոկ Patch panel CAT5E FTP 24Port,8000,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-0.3M,Մալուխ միացուցիչ. NB C6 UTP 26AWG 7*0.16MM LSZH-0.3M-Grey,260,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-0.5M,Մալուխ միացուցիչ. NB C6 UTP 26AWG 7*0.16MM LSZH-0.5M-Grey,360,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-1M,Մալուխ միացուցիչ. NB C6 UTP 26AWG 7*0.16MM LSZH-1M-Grey,450,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-1M,Մալուխ միացուցիչ. NB C6 UTP 26AWG 7*0.16MM LSZH-1M-color,450,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-1.5M,Մալուխ միացուցիչ. NB C6 UTP 26AWG 7*0.16MM LSZH-1.5M-Grey,500,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-2M,"Մալուխ միացուցիչներով Pach cord U/UTP cat6 2m LSZH 24AWG, white",700,AMD,1,NO,
+X-ART,Ning Bo,,C6 UTP 26AWG 7*0.16MM LSZH-3M,Մալուխ միացուցիչ. NB C6 UTP 26AWG 7*0.16MM LSZH-3M-Grey,750,AMD,1,NO,
+X-ART,Ning Bo,,SW-1U-9G,Վարդակների բլոկ երկ․ լարով NB SW-1U-9G,11000,AMD,1,NO,
+X-ART,Ning Bo,,SW-1U-9G-C14,Վարդակների բլոկ երկ․ լարով NB SW-1U-9G-C14,11000,AMD,1,NO,
+X-ART,Ning Bo,,SW-0U-18G,"Վարդակների բլոկ NB SW-0U-18G Vertical PDU, 1U, 18 sockets DIN49440, 2m *1.5mm2 cable, without master switch, with a DIN49441 plug, Rohs&CE marked. Black",15000,AMD,1,NO,
+X-ART,Ning Bo,,"Մալուխի կազմակերպիչ փակ SN 19"" 1U(80mm)-9005",հորիզոնական,3000,AMD,1,NO,
+X-ART,Ning Bo,,SN OPБ-SN ОРБ-LC-24.001-9005,Տուփ օպտիկական-24,13000,AMD,1,NO,
+X-ART,Ning Bo,,"LC-LC, SM",Օպտիկական մալուխ միացուցիչ LC-LC,500,AMD,1,NO,
+X-ART,Ning Bo,,SN-ORB-LCdx-8.002-9005,Մետաղյա արկղ FO,8000,AMD,1,NO,
+X-ART,Ning Bo,,Deepnet,Մալոխ միաց. ԼC/UPC-LC/UPC/MM/simplex/2m,1000,AMD,1,NO,
+X-ART,Ning Bo,,Deepnet,Մալոխ միաց. ԼC/UPC-LC/UPC/MM/simplex/5m,15000,AMD,1,NO,
+X-ART,Ning Bo,,Deepnet,Մալոխ միաց. ԼC-LC/UPC/simplex /2m,1200,AMD,1,NO,
+X-ART,Ning Bo,,Deepnet,Մալոխ միաց. ԼC-LC/UPC /simplex/5m,1200,AMD,1,NO,
+X-ART,Ning Bo,,Deepnet,Մալոխ միաց. ԼC-SC/UPC /simplex /2m,1400,AMD,1,NO,
+X-ART,Ning Bo,,Deepnet,Պիգտեյլ ԼC/UPC MM/SM,400,AMD,1,NO,
+X-ART,ZyXEL,,NBG-418NV2,"Wi-Fi Zyxel, 802 .11b/g/n), 1xWAN, 4xLAN",10700,AMD,1,NO,
+X-ART,ZyXEL,,NBG7815,Armor G5 AX6000 12-Stream Multi-Gigabit WiFi 6 Router,185000,AMD,1,NO,
+X-ART,ZyXEL,,GS1900-24EP,Web Managed Gigabit Ethernet с 24 разъемами RJ-45 из которых 12 POE с общим бюджетом 130Вт,114000,AMD,1,NO,
+X-ART,ZyXEL,,XGS2210-52HP,"L3 Access Zyxel, rack, 48x GE, PoE+(375W), 4x SFP+, Stackable",810000,AMD,1,NO,
+X-ART,ZyXEL,,NWA1100-NH,"Long Range PoE Access Point, 2x2 MIMO,",30000,AMD,1,NO,
+X-ART,ZyXEL,,ACCESSORY-ZZ0104F,Zyxel AP Power Supply,7500,AMD,1,NO,
+X-ART,netping,,,NetPing Input+Relay R404,73000,AMD,1,NO,
+X-ART,netping,,,"Temperature sensor 1-wire, (THS)",9400,AMD,1,NO,
+X-ART,netping,,,"Humidity sensor 1-wire, (HS)",25600,AMD,1,NO,
+X-ART,netping,,,Temperature sensor T811,9400,AMD,1,NO,
+X-ART,netping,,,Humidity sensor WS-2,24700,AMD,1,NO,
+X-ART,netping,,,NetPing Supply Voltage Sensor 995S2,9200,AMD,1,NO,
+X-ART,netping,,,Liquid sensor (mod.2605),18000,AMD,1,NO,
+X-ART,netping,,,NetPing AC/DIN,14700,AMD,1,NO,
+X-ART,netping,,,NetPing 8/PWR-220 v4/SMS,216000,AMD,1,NO,
+X-ART,netping,,,NetPing 2 IP PDU GSM3G 203R15,96800,AMD,1,NO,
+X-ART,netping,,,NetPing 2 IP PDU ETH 53R14,57400,AMD,1,NO,
+X-ART,netping,,,NetPing Power Quality Monitoring Sensor 1-wire 910S21,17000,AMD,1,NO,
