@@ -12,6 +12,7 @@ export interface ProductSearchFilters {
   keyword2?: string;
   keyword3?: string;
   source?: string;
+  country?: string;
   supplier?: string;
   category?: string;
   brand?: string;
@@ -107,7 +108,7 @@ export function ProductSearchFilters({ filters, onFiltersChange, onSearch }: Pro
         </div>
 
         {/* Filter controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
           <div>
             <Label className="text-sm font-medium text-slate-700">Source</Label>
             <Select value={filters.source || "all"} onValueChange={(value) => handleFilterChange("source", value)}>
@@ -118,6 +119,23 @@ export function ProductSearchFilters({ filters, onFiltersChange, onSearch }: Pro
                 <SelectItem value="all">All Sources</SelectItem>
                 <SelectItem value="price_list">Price List</SelectItem>
                 <SelectItem value="offer">Offer</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label className="text-sm font-medium text-slate-700">Country</Label>
+            <Select value={filters.country || "all"} onValueChange={(value) => handleFilterChange("country", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Countries" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Countries</SelectItem>
+                {[...new Set(suppliers.map((s: any) => s.country).filter(Boolean))].sort().map((country: string) => (
+                  <SelectItem key={country} value={country}>
+                    {country}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

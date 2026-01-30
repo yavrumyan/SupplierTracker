@@ -19,6 +19,7 @@ export default function SearchPage() {
   if (appliedFilters.keyword2) searchParams.append('keyword2', appliedFilters.keyword2);
   if (appliedFilters.keyword3) searchParams.append('keyword3', appliedFilters.keyword3);
   if (appliedFilters.source) searchParams.append('source', appliedFilters.source);
+  if (appliedFilters.country) searchParams.append('country', appliedFilters.country);
   if (appliedFilters.supplier) searchParams.append('supplier', appliedFilters.supplier);
   if (appliedFilters.category) searchParams.append('category', appliedFilters.category);
   if (appliedFilters.brand) searchParams.append('brand', appliedFilters.brand);
@@ -131,6 +132,11 @@ export default function SearchPage() {
                 {appliedFilters.source && (
                   <Badge variant="secondary">
                     Source: {appliedFilters.source}
+                  </Badge>
+                )}
+                {appliedFilters.country && (
+                  <Badge variant="secondary">
+                    Country: {appliedFilters.country}
                   </Badge>
                 )}
                 {appliedFilters.supplier && (

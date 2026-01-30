@@ -576,6 +576,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         keyword2 = '',
         keyword3 = '',
         source = '',
+        country = '',
         supplier = '', 
         category = '', 
         brand = '', 
@@ -585,6 +586,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const filters = {
         supplier: supplier as string,
+        country: country as string,
         category: category as string,
         brand: brand as string,
         sourceType: source as string
