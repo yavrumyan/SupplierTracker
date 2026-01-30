@@ -37,6 +37,7 @@ interface SearchResultsProps {
   isLoading: boolean;
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
+  onExportAll?: () => Promise<any[]>;
 }
 
 export function SearchResults({ 
@@ -48,18 +49,36 @@ export function SearchResults({
   totalPages,
   isLoading,
   onPageChange,
-  onLimitChange 
+  onLimitChange,
+  onExportAll
 }: SearchResultsProps) {
   const [displayMode, setDisplayMode] = useState<'list' | 'grouped'>('list');
 
+  const [isExporting, setIsExporting] = useState(false);
+
   // Export results to CSV
-  const exportResults = () => {
-    if (!results || results.length === 0) return;
+  const exportResults = async () => {
+    let dataToExport = results;
+    
+    if (onExportAll && totalCount > results.length) {
+      setIsExporting(true);
+      try {
+        dataToExport = await onExportAll();
+      } catch (err) {
+        console.error("Export failed", err);
+        // Fallback to current results if export all fails
+        dataToExport = results;
+      } finally {
+        setIsExporting(false);
+      }
+    }
+
+    if (!dataToExport || dataToExport.length === 0) return;
     
     const headers = ['Source', 'Supplier', 'Category', 'Brand', 'Model', 'Name', 'Price', 'Currency', 'Stock', 'MOQ', 'Notes'];
     const csvData = [headers];
     
-    results.forEach(result => {
+    dataToExport.forEach(result => {
       csvData.push([
         result.sourceType === 'price_list' ? 'Price List' : 'Offer',
         result.supplier || '',
@@ -149,10 +168,10 @@ export function SearchResults({
             onClick={exportResults}
             variant="outline" 
             className="flex items-center gap-2"
-            disabled={results.length === 0}
+            disabled={results.length === 0 || isExporting}
           >
-            <Download className="h-4 w-4" />
-            Export Results
+            <Download className={`h-4 w-4 ${isExporting ? 'animate-bounce' : ''}`} />
+            {isExporting ? 'Exporting...' : 'Export Results'}
           </Button>
           
           <span className="text-sm text-gray-600">Show:</span>

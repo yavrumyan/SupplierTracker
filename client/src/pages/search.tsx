@@ -40,6 +40,24 @@ export default function SearchPage() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  // Handle export of all results
+  const handleExportAll = async () => {
+    try {
+      const allParams = new URLSearchParams(searchParams);
+      allParams.delete('page');
+      allParams.delete('limit');
+      
+      const response = await fetch(`/api/search?${allParams}`);
+      if (!response.ok) throw new Error('Failed to fetch all results for export');
+      
+      const data = await response.json();
+      return data.results || [];
+    } catch (err) {
+      console.error('Export error:', err);
+      throw err;
+    }
+  };
+
   // Handle search execution
   const handleSearch = () => {
     setAppliedFilters({ ...filters });
@@ -180,6 +198,7 @@ export default function SearchPage() {
           isLoading={isLoading}
           onPageChange={handlePageChange}
           onLimitChange={handleLimitChange}
+          onExportAll={handleExportAll}
         />
       ) : (
         <Card>
