@@ -45,7 +45,7 @@ export default function SearchPage() {
     try {
       const allParams = new URLSearchParams(searchParams);
       allParams.delete('page');
-      allParams.delete('limit');
+      allParams.set('limit', '0'); // Request all results
       
       const response = await fetch(`/api/search?${allParams}`);
       if (!response.ok) throw new Error('Failed to fetch all results for export');

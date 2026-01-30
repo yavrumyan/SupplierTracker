@@ -618,6 +618,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Apply pagination
       const pageNum = parseInt(page as string) || 1;
       const limitNum = parseInt(limit as string) || 50;
+      
+      // If limit is -1 or 0, return all results (used for export)
+      if (limitNum <= 0) {
+        return res.json({
+          results: searchResults,
+          groupedResults,
+          totalCount: searchResults.length,
+          page: 1,
+          limit: searchResults.length,
+          totalPages: 1
+        });
+      }
+
       const startIndex = (pageNum - 1) * limitNum;
       const endIndex = startIndex + limitNum;
       const paginatedResults = searchResults.slice(startIndex, endIndex);
