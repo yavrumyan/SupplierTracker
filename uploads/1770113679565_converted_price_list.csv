@@ -1,0 +1,259 @@
+﻿Supplier,Category,Brand,Model,Name,Price,Currency,Stock,MOQ,Notes
+PROKS,General,,PN,Special offer,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,MZ-V8V500BW,Samsung SSD 980 500GB M.2 PCIe 3.0 (NVMe) 3500/3000 MB/s,165.9,USD,180,NO,Price DAP Worldwide
+PROKS,General,,CT1000BX500SSD1,"Crucial SSD BX500 2.5"" 1TB SATA Internal SSD 540MB/s",110.9,USD,150,NO,Price DAP Worldwide
+PROKS,General,,CT1000P310SSD8,Crucial SSD P310 1TB PCIe Gen4 NVMe 2280 M.2 w/o HS,139.9,USD,150,NO,Price DAP Worldwide
+PROKS,General,,CT2K32G48C40S5,Crucial 64GB Kit (32GBx2) DDR5-4800 SODIMM,651.4,USD,5,NO,Price DAP Worldwide
+PROKS,General,,100-000001405,AMD Ryzen 5 9600X TRAY,183.8,USD,194,NO,Price DAP Worldwide
+PROKS,General,,BX8071514100F,Intel Core i3-14100F 4 Cores 4.7GHz LGA1700,93.2,USD,200,NO,Price DAP Worldwide
+PROKS,General,,CM8071505092206,Intel Core i3-14100 4 Cores 4.7GHz LGA1700 TRAY,162.5,USD,236,NO,Price DAP Worldwide
+PROKS,General,,ST6000VN006,"Seagate IronWolf 6TB; SATA 6Gb/s; 5400; 256MB; 3.5""",201.1,USD,6,NO,Price DAP Worldwide
+PROKS,General,,ST12000NT001 P,"Seagate IronWolf Pro 12TB; SATA 6Gb/s; 256MB; 3.5"" (P)",387.6,USD,40,NO,Price DAP Worldwide
+PROKS,General,,ST4000VX016,"Seagate SkyHawk 4TB; SATA 6Gb/s; 256MB; 3.5""",137.7,USD,75,NO,Price DAP Worldwide
+PROKS,General,,ST8000VX010,"Seagate SkyHawk 8TB; SATA 6Gb/s; 256MB; 3.5""; RVS",231.3,USD,25,NO,Price DAP Worldwide
+PROKS,General,,ST16000VE004,"Seagate SkyHawk AI 16TB; SATA 6Gb/s; 512MB; 3.5""; TR 285MB/s",449.2,USD,20,NO,Price DAP Worldwide
+PROKS,General,,ST16000VE005,"Seagate SkyHawk AI 16TB; SATA 6Gb/s; 512MB; 3.5""; TR 240MB/s",430.2,USD,26,NO,Price DAP Worldwide
+PROKS,General,,ST20000VE003,"Seagate SkyHawk AI 20TB; SATA 6Gb/s; 512MB; 3.5""; TR 285MB/s",491.8,USD,5,NO,Price DAP Worldwide
+PROKS,General,,WD11PURZ,"WD Purple. 3.5"". 1TB. SATA/600. 64MB. 180MB/s",105.4,USD,48,NO,Price DAP Worldwide
+PROKS,General,,WD44PURZ,"WD Purple. 3.5"". 4TB. SATA/600. 128MB. 180MB/s",144.7,USD,48,NO,Price DAP Worldwide
+PROKS,General,,WDBYVG0010BBK-WESN,WD My Passport 1TB USB 3.0; Black,73.9,USD,50,NO,Price DAP Worldwide
+PROKS,General,,WDBYVG0020BBK-WESN,WD My Passport 2TB USB 3.0; Black,90.2,USD,25,NO,Price DAP Worldwide
+PROKS,General,,WDBEPK0010BBK-WESN,WD Elements SE 1TB USB 3.0; Black,79.5,USD,30,NO,Price DAP Worldwide
+PROKS,General,,WDBEPK0020BBK-WESN,WD Elements SE 2TB USB 3.0; Black,95.8,USD,5,NO,Price DAP Worldwide
+PROKS,General,,PN,SAMSUNG SSD,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,MZ-77E250B/EU,Samsung SSD 870 EVO 2.5'' 250GB 560/530 MB/s,118.6,USD,60,NO,Price DAP Worldwide
+PROKS,General,,MZ-77E500B/EU,Samsung SSD 870 EVO 2.5'' 500GB 560/530 MB/s,156.5,USD,60,NO,Price DAP Worldwide
+PROKS,General,,MZ-77E1T0B/EU,Samsung SSD 870 EVO 2.5'' 1TB 560/530 MB/s,206.2,USD,25,NO,Price DAP Worldwide
+PROKS,General,,MZ-77E4T0B/EU,Samsung SSD 870 EVO 2.5'' 4TB 560/530 MB/s,516.4,USD,17,NO,Price DAP Worldwide
+PROKS,General,,MZ-V8V250BW,Samsung SSD 980 250GB M.2 PCIe 3.0 (NVMe) 3500/3000 MB/s,123.3,USD,60,NO,Price DAP Worldwide
+PROKS,General,,MZ-V8V500BW,Samsung SSD 980 500GB M.2 PCIe 3.0 (NVMe) 3500/3000 MB/s,165.9,USD,180,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9S1T0BW,Samsung SSD 990 EVO Plus 1TB PCIe 4.0 (NVMe),209.7,USD,120,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9S2T0BW,Samsung SSD 990 EVO Plus 2TB PCIe 4.0 (NVMe),279.6,USD,100,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9S4T0BW,Samsung SSD 990 EVO Plus 4TB PCIe 4.0 (NVMe),435.9,USD,25,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P1T0BW,Samsung SSD 990 PRO 1TB PCIe 4.0 (NVMe) R7450/W6900 MB/s,209.7,USD,60,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P2T0BW,Samsung SSD 990 PRO 2TB PCIe 4.0 (NVMe) R7450/W6900 MB/s,306.8,USD,120,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P4T0BW,Samsung SSD 990 PRO 4TB PCIe 4.0 (NVMe) R7450/W6900 MB/s,508.1,USD,60,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P1T0CW,Samsung SSD 990 PRO 1TB PCIe 4.0 (NVMe) R7450/W6900 MB/s w/ Heatsink (Black box),213.3,USD,30,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P2T0CW,Samsung SSD 990 PRO 2TB PCIe 4.0 (NVMe) R7450/W6900 MB/s w/ Heatsink (Black box),317.5,USD,40,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P4T0CW,Samsung SSD 990 PRO 4TB PCIe 4.0 (NVMe) R7450/W6900 MB/s w/ Heatsink (Black box),516.4,USD,40,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P1T0GW,Samsung SSD 990 PRO 1TB PCIe 4.0 (NVMe) R7450/W6900 MB/s w/ Heatsink (White box),213.3,USD,30,NO,Price DAP Worldwide
+PROKS,General,,MZ-V9P2T0GW,Samsung SSD 990 PRO 2TB PCIe 4.0 (NVMe) R7450/W6900 MB/s w/ Heatsink (White box),306.8,USD,50,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP1T0BW,Samsung SSD 9100 PRO 1TB PCIe 5.0 (NVMe) R14800/W13400 MB/s,212.1,USD,60,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP2T0BW,Samsung SSD 9100 PRO 2TB PCIe 5.0 (NVMe) R14800/W13400 MB/s,319.9,USD,40,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP4T0BW,Samsung SSD 9100 PRO 4TB PCIe 5.0 (NVMe) R14800/W13400 MB/s,531.8,USD,40,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP8T0BW,Samsung SSD 9100 PRO 8TB PCIe 5.0 (NVMe) R14800/W13400 MB/s,1033.8,USD,30,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP1T0CW,Samsung SSD 9100 PRO 1TB PCIe 5.0 (NVMe) R14800/W13400 MB/s w/ Heatsink,225.1,USD,20,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP2T0CW,Samsung SSD 9100 PRO 2TB PCIe 5.0 (NVMe) R14800/W13400 MB/s w/ Heatsink,327.0,USD,33,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP4T0CW,Samsung SSD 9100 PRO 4TB PCIe 5.0 (NVMe) R14800/W13400 MB/s w/ Heatsink,556.7,USD,30,NO,Price DAP Worldwide
+PROKS,General,,MZ-VAP8T0CW,Samsung SSD 9100 PRO 8TB PCIe 5.0 (NVMe) R14800/W13400 MB/s w/ Heatsink,1046.8,USD,17,NO,Price DAP Worldwide
+PROKS,General,,PN,Kingston SSD,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,SA400S37/240G,"Kingston A400, 240GB, SATA3, 2.5', 500r/350w MB/s",68.3,USD,50,NO,Price DAP Worldwide
+PROKS,General,,SA400S37/480G,"Kingston A400, 480GB, SATA3, 2.5', 500r/480w MB/s",102.0,USD,150,NO,Price DAP Worldwide
+PROKS,General,,SA400S37/960G,"Kingston A400, 960GB, SATA3, 2.5', 500r/480w MB/s",160.0,USD,150,NO,Price DAP Worldwide
+PROKS,General,,SKC3000S/1024G,Kingston KC3000 1024GB PCIe 4.0 (NVMe) R7000/W6'000 MB/s SSD,210.9,USD,27,NO,Price DAP Worldwide
+PROKS,General,,SKC600/1024G,"Kingston KC600 1TB SATA 2.5"" 550r/500w MB/s",234.6,USD,14,NO,Price DAP Worldwide
+PROKS,General,,SFYR2S/1T0,Kingston FURY Renegade G5 1TB PCIe 5.0 (NVMe) R14'200/W11'000 MB/s SSD,235.8,USD,20,NO,Price DAP Worldwide
+PROKS,General,,SFYR2S/2T0,Kingston FURY Renegade G5 2TB PCIe 5.0 (NVMe) R14'700/W41'000 MB/s SSD,353.0,USD,20,NO,Price DAP Worldwide
+PROKS,General,,SNV3S/500G,Kingston NV3 500GB PCIe 4.0 (NVMe) R6000/W2200 MB/s SSD,112.7,USD,50,NO,Price DAP Worldwide
+PROKS,General,,SNV3S/1000G,Kingston NV3 1TB PCIe 4.0 (NVMe) R6000/W2200 MB/s SSD,156.5,USD,240,NO,Price DAP Worldwide
+PROKS,General,,SNV3S/2000G,Kingston NV3 2TB PCIe 4.0 (NVMe) R6000/W2200 MB/s SSD,282.0,USD,140,NO,Price DAP Worldwide
+PROKS,General,,PN,Crucial SSD,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,CT240BX500SSD1,"Crucial SSD BX500 240GB, SATA3, 2.5' 540r/500w MB/s",52.3,USD,200,NO,Price DAP Worldwide
+PROKS,General,,CT500BX500SSD1,"Crucial SSD BX500 2.5"" 500GB SATA Internal SSD 540MB/s",85.4,USD,200,NO,Price DAP Worldwide
+PROKS,General,,CT1000BX500SSD1,"Crucial SSD BX500 2.5"" 1TB SATA Internal SSD 540MB/s",110.9,USD,150,NO,Price DAP Worldwide
+PROKS,General,,CT2000BX500SSD1,"Crucial SSD BX500 2.5"" 2TB SATA Internal SSD 540MB/s",200.3,USD,100,NO,Price DAP Worldwide
+PROKS,General,,CT500P310SSD8,Crucial SSD P310 500GB PCIe Gen4 NVMe 2280 M.2 w/o HS,99.6,USD,200,NO,Price DAP Worldwide
+PROKS,General,,CT1000P310SSD8,Crucial SSD P310 1TB PCIe Gen4 NVMe 2280 M.2 w/o HS,139.9,USD,150,NO,Price DAP Worldwide
+PROKS,General,,CT2000P310SSD8,Crucial SSD P310 2TB PCIe Gen4 NVMe 2280 M.2 w/o HS,241.7,USD,51,NO,Price DAP Worldwide
+PROKS,General,,CT1000P310SSD5,Crucial SSD P310 1TB PCIe Gen4 NVMe 2280 M.2 + with HS,148.2,USD,2,NO,Price DAP Worldwide
+PROKS,General,,CT1000P510SSD8,Crucial SSD P510 1TB PCIe Gen5 NVMe M.2 SSD w/o HS,169.5,USD,150,NO,Price DAP Worldwide
+PROKS,General,,CT2000P510SSD8,Crucial SSD P510 2TB PCIe Gen5 NVMe M.2 SSD w/o HS,247.6,USD,10,NO,Price DAP Worldwide
+PROKS,General,,CT2000T500SSD8,Crucial SSD T500 encrypted 2TB M.2 2280 Gen4 (NVMe) w/o HS,283.2,USD,13,NO,Price DAP Worldwide
+PROKS,General,,CT480E100SSD8,Crucial SSD E100 48GB PCIe 4.0 NVMe 4500/2500 MB/s,74.2,USD,150,NO,Price DAP Worldwide
+PROKS,General,,CT1000E100SSD8,Crucial SSD E100 1TB PCIe 4.0 NVMe 5000/3000 MB/s,128.0,USD,100,NO,Price DAP Worldwide
+PROKS,General,,PN,WD SSD,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,WDS500G2G0C,WD SSD Green SN350 NVMe M.2 2280 500GB,98.4,USD,100,NO,Price DAP Worldwide
+PROKS,General,,WDS500G4G0E,WD SSD Green SN3000 NVMe Gen4 500GB,102.0,USD,40,NO,Price DAP Worldwide
+PROKS,General,,WDS500G3B0A,WD SSD Blue SA510 SATA 500GB,144.6,USD,30,NO,Price DAP Worldwide
+PROKS,General,,WDS100T3B0A,WD SSD Blue SA510 SATA 1TB,199.1,USD,30,NO,Price DAP Worldwide
+PROKS,General,,WDS500G3B0E,WD SSD Blue SN580 500GB NVMe M.2 2280 PCIe 4.0,123.3,USD,100,NO,Price DAP Worldwide
+PROKS,General,,WDS500G4B0E,WD SSD Blue SN5000 500GB NVMe M.2 PCIe Gen4.0,136.3,USD,15,NO,Price DAP Worldwide
+PROKS,General,,WDS200T4B0E,WD SSD Blue SN5000 2TB NVMe M.2 PCIe Gen4.0,263.0,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WDS400T4B0E,WD SSD Blue SN5000 4TB NVMe M.2 PCIe Gen4.0,454.8,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WDS100T5B0E,SanDisk/WD SSD Blue SN5100 1TB NVMe M.2 PCIe Gen4.0,169.5,USD,40,NO,Price DAP Worldwide
+PROKS,General,,WDS100T2X0E,WD SSD Black SN850X NVMe M.2 2280 1TB,221.6,USD,80,NO,Price DAP Worldwide
+PROKS,General,,WDS200T2X0E,WD SSD Black SN850X NVMe M.2 2280 2TB,347.1,USD,23,NO,Price DAP Worldwide
+PROKS,General,,WDS100T4X0E,WD SSD Black SN7100 NVMe Gen 4 1TB,208.6,USD,50,NO,Price DAP Worldwide
+PROKS,General,,WDS200T4X0E,WD SSD Black SN7100 NVMe Gen 4 2TB,317.5,USD,50,NO,Price DAP Worldwide
+PROKS,General,,PN,SSD EXT,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,MU-PE2T0S/EU,Samsung Portable SSD T7 Shield 2TB; USB 3.2; 1050 MB/s black,272.5,USD,11,NO,Price DAP Worldwide
+PROKS,General,,MU-PE4T0S/EU,Samsung Portable SSD T7 Shield 4TB; USB 3.2; 1050 MB/s black,483.2,USD,5,NO,Price DAP Worldwide
+PROKS,General,,MU-PE1T0K/EU,Samsung Portable SSD T7 Shield 1TB; USB 3.2; 1050 MB/s beige,175.4,USD,10,NO,Price DAP Worldwide
+PROKS,General,,MU-PE2T0K/EU,Samsung Portable SSD T7 Shield 2TB; USB 3.2; 1050 MB/s beige,260.7,USD,9,NO,Price DAP Worldwide
+PROKS,General,,MU-PE2T0R/EU,Samsung Portable SSD T7 Shield 2TB; USB 3.2; 1050 MB/s blue,277.2,USD,21,NO,Price DAP Worldwide
+PROKS,General,,MU-PC1T0T/WW,Samsung Portable SSD T7 1TB; USB 3.2; 1050 MB/s TitanGrey,165.9,USD,50,NO,Price DAP Worldwide
+PROKS,General,,MU-PC2T0T/WW,Samsung Portable SSD T7 2TB; USB 3.2; 1050 MB/s TitanGrey,232.2,USD,28,NO,Price DAP Worldwide
+PROKS,General,,MU-PC4T0T/WW,Samsung Portable SSD T7 4TB; USB 3.2; 1050 MB/s TitanGrey,413.4,USD,5,NO,Price DAP Worldwide
+PROKS,General,,MU-PC1T0H/WW,Samsung Portable SSD T7 1TB; USB 3.2; 1050 MB/s Blue,154.1,USD,30,NO,Price DAP Worldwide
+PROKS,General,,MU-PC2T0H/WW,Samsung Portable SSD T7 2TB; USB 3.2; 1050 MB/s Blue,229.9,USD,33,NO,Price DAP Worldwide
+PROKS,General,,MU-PG1T0B/EU,Samsung Portable SSD T9 1TB; USB 3.2; 2000 MB/s Black,175.4,USD,51,NO,Price DAP Worldwide
+PROKS,General,,MU-PG2T0B/EU,Samsung Portable SSD T9 2TB; USB 3.2; 2000 MB/s Black,284.3,USD,41,NO,Price DAP Worldwide
+PROKS,General,,MU-PG4T0B/EU,Samsung Portable SSD T9 4TB; USB 3.2; 2000 MB/s Black,454.8,USD,24,NO,Price DAP Worldwide
+PROKS,General,,MU-PH2T0S/EU,Samsung Portable SSD T5 EVO 2TB; USB 3.2 Silver,213.3,USD,30,NO,Price DAP Worldwide
+PROKS,General,,MU-PH4T0S/EU,Samsung Portable SSD T5 EVO 4TB; USB 3.2 Silver,433.5,USD,5,NO,Price DAP Worldwide
+PROKS,General,,MU-PE2T0S/WW,Samsung Portable SSD T7 Shield 2TB; USB 3.2; 1050 MB/s black,267.8,USD,5,NO,Price DAP Worldwide
+PROKS,General,,MU-PE4T0S/WW,Samsung Portable SSD T7 Shield 4TB; USB 3.2; 1050 MB/s black,433.5,USD,19,NO,Price DAP Worldwide
+PROKS,General,,MU-PE2T0K/WW,Samsung Portable SSD T7 Shield 2TB; USB 3.2; 1050 MB/s beige,260.7,USD,15,NO,Price DAP Worldwide
+PROKS,General,,MU-PE2T0R/WW,Samsung Portable SSD T7 Shield 2TB; USB 3.2; 1050 MB/s blue,260.7,USD,5,NO,Price DAP Worldwide
+PROKS,General,,SDSSDE30-1T00-G26,SanDisk 1TB Portable SSD USB 3.2,117.4,USD,10,NO,Price DAP Worldwide
+PROKS,General,,SDSSDE30-2T00-G26,SanDisk 2TB Portable SSD USB 3.2,176.6,USD,50,NO,Price DAP Worldwide
+PROKS,General,,SDSSDE61-2T00-G25,SanDisk Extreme 2TB Portable SSD; 1050 MB/s; USB 3.2,200.3,USD,20,NO,Price DAP Worldwide
+PROKS,General,,SXS2000/1000G,Kingston 1TB XS2000 external SSD; 2000 MB/s; USB-C,201.5,USD,30,NO,Price DAP Worldwide
+PROKS,General,,SXS2000/2000G,Kingston 2TB XS2000 external SSD; 2000 MB/s; USB-C,267.8,USD,19,NO,Price DAP Worldwide
+PROKS,General,,SXS1000/1000G,Kingston 1TB XS1000 external SSD; 1050 MB/s; USB-C,128.0,USD,50,NO,Price DAP Worldwide
+PROKS,General,,SXS1000/2000G,Kingston 2TB XS1000 external SSD; 1050 MB/s; USB-C,182.5,USD,4,NO,Price DAP Worldwide
+PROKS,General,,SXS1000R/1000G,Kingston 1TB XS1000 external SSD; 1050 MB/s; USB-C; RED,128.0,USD,49,NO,Price DAP Worldwide
+PROKS,General,,SXS1000R/2000G,Kingston 2TB XS1000 external SSD; 1050 MB/s; USB-C; RED,180.1,USD,50,NO,Price DAP Worldwide
+PROKS,General,,PN,Memory Cards (MCA),0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,MB-MC256SA/EU,Samsung EVO Plus 256GB 160Mb/s microSD + adapter,31.0,USD,89,NO,Price DAP Worldwide
+PROKS,General,,MB-MC512SA/EU,Samsung EVO Plus 512GB 160Mb/s microSD + adapter,51.1,USD,74,NO,Price DAP Worldwide
+PROKS,General,,SDSQUAB-128G-GN6MA,Sandisk 128GB Ultra microSDXC 140Mb/s,16.6,USD,100,NO,Price DAP Worldwide
+PROKS,General,,SDSQXAF-032G-GN6MA,Sandisk 32GB Extreme microSDHC,12.3,USD,100,NO,Price DAP Worldwide
+PROKS,General,,SDSQXAA-128G-GN6MA,Sandisk 128GB Extreme microSDXC,21.3,USD,100,NO,Price DAP Worldwide
+PROKS,General,,SDSQXAV-256G-GN6MA,Sandisk 256GB Extreme microSDXC,33.8,USD,100,NO,Price DAP Worldwide
+PROKS,General,,SDSQXAV-512G-GN6MA,Sandisk 512GB Extreme microSDXC,63.5,USD,12,NO,Price DAP Worldwide
+PROKS,General,,SDSQXCD-128G-GN6MA,Sandisk 128GB Extreme PRO microSDXC,25.5,USD,100,NO,Price DAP Worldwide
+PROKS,General,,SDSQXCD-256G-GN6MA,Sandisk 256GB Extreme PRO microSDXC,43.7,USD,100,NO,Price DAP Worldwide
+PROKS,General,,PN,USB Flash Drive (UFD),0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,MUF-512BE3/APC,Samsung Bar Plus 512GB USB 3.2 Silver (Type-A),65.8,USD,16,NO,Price DAP Worldwide
+PROKS,General,,MUF-64BE4/APC,Samsung Bar Plus 64GB USB 3.2 Grey (Type-A),17.9,USD,10,NO,Price DAP Worldwide
+PROKS,General,,SDCZ430-128G-G46,Sandisk Ultra Fit USB 3.2 Flash Drive - 128GB,16.5,USD,100,NO,Price DAP Worldwide
+PROKS,General,,SDCZ430-256G-G46,Sandisk Ultra Fit USB 3.2 Flash Drive - 256GB,26.9,USD,28,NO,Price DAP Worldwide
+PROKS,General,,SDDDC3-512G-G46,SanDisk Ultra Dual Drive Go 512GB USB Type-C,53.0,USD,100,NO,Price DAP Worldwide
+PROKS,General,,PN,RAM (DIMM/SODIMM),0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,CT8G4SFRA32A,8GB DDR4-3200 SODIMM CL22 (8Gbit/16Gbit),61.7,USD,12,NO,Price DAP Worldwide
+PROKS,General,,CT16G4SFRA32A,16GB DDR4-3200 SODIMM CL22 (8Gbit/16Gbit),129.8,USD,35,NO,Price DAP Worldwide
+PROKS,General,,CT16G48C40S5,16GB DDR5-4800 SODIMM CL40,195.5,USD,20,NO,Price DAP Worldwide
+PROKS,General,,CT32G48C40S5,32GB DDR5-4800 SODIMM CL40,284.3,USD,50,NO,Price DAP Worldwide
+PROKS,General,,CT8G56C46S5,8GB DDR5-5600 SODIMM CL46,130.4,USD,30,NO,Price DAP Worldwide
+PROKS,General,,CT16G56C46S5,16GB DDR5-5600 SODIMM CL46,189.6,USD,50,NO,Price DAP Worldwide
+PROKS,General,,CT32G56C46S5,32GB DDR5-5600 SODIMM CL46,308.0,USD,50,NO,Price DAP Worldwide
+PROKS,General,,CT8G4DFRA32A,8GB DDR4-3200 UDIMM CL22 (8Gbit/16Gbit),61.7,USD,23,NO,Price DAP Worldwide
+PROKS,General,,CT2K16G56C46S5,Crucial 32GB Kit (16GBx2) DDR5-5600 SODIMM,390.9,USD,29,NO,Price DAP Worldwide
+PROKS,General,,CT2K32G48C40S5,Crucial 64GB Kit (32GBx2) DDR5-4800 SODIMM,651.4,USD,5,NO,Price DAP Worldwide
+PROKS,General,,CP2K16G4DFRA32A,32GB Pro Kit (2x16GB) DDR4-3200 UDIMM CL22,248.8,USD,33,NO,Price DAP Worldwide
+PROKS,General,,CP2K32G4DFRA32A,64GB Pro Kit (2x32GB) DDR4-3200 UDIMM CL22,414.6,USD,4,NO,Price DAP Worldwide
+PROKS,General,,CT16G48C40U5,16GB DDR5-4800 UDIMM CL40,213.3,USD,40,NO,Price DAP Worldwide
+PROKS,General,,CT32G48C40U5,32GB DDR5-4800 UDIMM CL40,343.5,USD,35,NO,Price DAP Worldwide
+PROKS,General,,CT16G56C46U5,16GB DDR5-5600 UDIMM CL46,205.0,USD,50,NO,Price DAP Worldwide
+PROKS,General,,CT32G56C46U5,32GB DDR5-5600 UDIMM CL42,338.8,USD,34,NO,Price DAP Worldwide
+PROKS,General,,CP16G56C46U5,16GB Pro DDR5-5600 UDIMM CL46 (16Gbit),226.3,USD,50,NO,Price DAP Worldwide
+PROKS,General,,KVR32S22S8/8,8GB DDR4-3200 SODIMM CL22 (1Rx8),73.5,USD,50,NO,Price DAP Worldwide
+PROKS,General,,KVR32S22S8/16,16GB DDR4-3200 SODIMM CL22 (1Rx8),138.7,USD,20,NO,Price DAP Worldwide
+PROKS,General,,KCP556SD8-32,32GB DDR5-5600MT/s SODIMM CL46 (1Rx8),414.6,USD,40,NO,Price DAP Worldwide
+PROKS,General,,KCP556SS8-16,16GB DDR5-5600MT/s SODIMM CL46 (1Rx8),237.0,USD,20,NO,Price DAP Worldwide
+PROKS,General,,KVR56U46BS8-16,16GB DDR5-5600 UDIMM CL46 (1Rx8),218.0,USD,30,NO,Price DAP Worldwide
+PROKS,General,,PN,AMD CPU,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,100-100000589WOF,AMD Ryzen 9 7900X WOF,310.5,USD,79,NO,Price DAP Worldwide
+PROKS,General,,100-100000059WOF,AMD Ryzen 9 5950X BOX,288.0,USD,209,NO,Price DAP Worldwide
+PROKS,General,,100-100001590BOX,AMD Ryzen 7 8700F AM5 BOX,233.5,USD,45,NO,Price DAP Worldwide
+PROKS,General,,100-100000910WOF,AMD Ryzen 7 7800X3D WOF,350.7,USD,214,NO,Price DAP Worldwide
+PROKS,General,,100-100000591WOF,AMD Ryzen 7 7700X WOF,225.2,USD,45,NO,Price DAP Worldwide
+PROKS,General,,100-100000592BOX,AMD Ryzen 7 7700 BOX,269.0,USD,16,NO,Price DAP Worldwide
+PROKS,General,,100-100001904WOF,AMD Ryzen 7 7500X3D WOF,224.0,USD,71,NO,Price DAP Worldwide
+PROKS,General,,100-100000063WOF,AMD Ryzen 7 5800X BOX,186.2,USD,415,NO,Price DAP Worldwide
+PROKS,General,,100-100000263BOX,AMD Ryzen 7 5700G BOX,188.5,USD,280,NO,Price DAP Worldwide
+PROKS,General,,100-100001405WOF,AMD Ryzen 5 9600X BOX,195.6,USD,63,NO,Price DAP Worldwide
+PROKS,General,,100-100001237BOX,AMD Ryzen 5 8600G BOX,166.0,USD,77,NO,Price DAP Worldwide
+PROKS,General,,100-100000931BOX,AMD Ryzen 5 8500G BOX,134.1,USD,379,NO,Price DAP Worldwide
+PROKS,General,,100-100000593WOF,AMD Ryzen 5 7600X WOF,175.5,USD,50,NO,Price DAP Worldwide
+PROKS,General,,100-100001015BOX,AMD Ryzen 5 7600 BOX,176.7,USD,21,NO,Price DAP Worldwide
+PROKS,General,,100-100000252BOX,AMD Ryzen 5 5600G BOX,156.6,USD,551,NO,Price DAP Worldwide
+PROKS,General,,100-100000065BOX,AMD Ryzen 5 5600X BOX,148.3,USD,498,NO,Price DAP Worldwide
+PROKS,General,,100-100000927BOX,AMD Ryzen 5 5600 BOX,134.1,USD,900,NO,Price DAP Worldwide
+PROKS,General,,100-100000457BOX,AMD Ryzen 5 5500 BOX,84.3,USD,500,NO,Price DAP Worldwide
+PROKS,General,,YD3200C5FHBOX,AMD Ryzen 3 3200G BOX,55.9,USD,32,NO,Price DAP Worldwide
+PROKS,General,,100-000000910,AMD Ryzen 7 7800X3D TRAY,288.0,USD,463,NO,Price DAP Worldwide
+PROKS,General,,100-000000591,AMD Ryzen 7 7700X TRAY,208.6,USD,69,NO,Price DAP Worldwide
+PROKS,General,,100-000000592,AMD Ryzen 7 7700 TRAY,190.9,USD,485,NO,Price DAP Worldwide
+PROKS,General,,100-000000926,AMD Ryzen 7 5700X TRAY,142.3,USD,268,NO,Price DAP Worldwide
+PROKS,General,,100-000001405,AMD Ryzen 5 9600X TRAY,183.8,USD,194,NO,Price DAP Worldwide
+PROKS,General,,100-000000927,AMD Ryzen 5 5600 TRAY,108.0,USD,240,NO,Price DAP Worldwide
+PROKS,General,,100-000000457,AMD Ryzen 5 5500 TRAY,77.8,USD,168,NO,Price DAP Worldwide
+PROKS,General,,100-000001591,AMD Ryzen 5 8400F Tray,108.0,USD,73,NO,Price DAP Worldwide
+PROKS,General,,PN,INTEL CPU BOX,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,BX80768285K,Intel Core Ultra 9 285K,531.9,USD,54,NO,Price DAP Worldwide
+PROKS,General,,BX80768265K,Intel Core Ultra 7 265K,295.1,USD,129,NO,Price DAP Worldwide
+PROKS,General,,BX80768245K,Intel Core Ultra 5 245K,200.4,USD,23,NO,Price DAP Worldwide
+PROKS,General,,BX80768245KF,Intel Core Ultra 5 245KF,180.2,USD,24,NO,Price DAP Worldwide
+PROKS,General,,BX8071514900KF,Intel Core i9-14900KF 24 Cores 6.0 GHz LGA1700 w/o GPU,425.3,USD,7,NO,Price DAP Worldwide
+PROKS,General,,BX8071514600K,"Intel Core i5-14600K 5.3 GHz Turbo, LGA1700",238.2,USD,29,NO,Price DAP Worldwide
+PROKS,General,,BX8071514400,Intel Core i5-14400 10 Cores 4.7GHz LGA1700,256.0,USD,153,NO,Price DAP Worldwide
+PROKS,General,,BX8071514400F,Intel Core i5-14400F 10 Cores 4.7GHz LGA1700,181.4,USD,125,NO,Price DAP Worldwide
+PROKS,General,,BX8071514100,Intel Core i3-14100 4 Cores 4.7GHz LGA1700,174.3,USD,450,NO,Price DAP Worldwide
+PROKS,General,,BX8071514100F,Intel Core i3-14100F 4 Cores 4.7GHz LGA1700,93.2,USD,200,NO,Price DAP Worldwide
+PROKS,General,,BX8071513400,"Intel Core i5 13400 4.6GHz Turbo, LGA1700 , BOX",228.8,USD,27,NO,Price DAP Worldwide
+PROKS,General,,BX8071512400F,"Intel Core i5 12400F 4.4GHz Turbo, LGA1700 , BOX (no VGA)",140.4,USD,220,NO,Price DAP Worldwide
+PROKS,General,,BX8071512400,"Intel Core i5 12400 4.4GHz Turbo, LGA1700 , BOX",185.0,USD,48,NO,Price DAP Worldwide
+PROKS,General,,BX8071512100,"Intel Core i3 12100 4.3GHz Turbo, LGA1700 , BOX",149.4,USD,282,NO,Price DAP Worldwide
+PROKS,General,,CM8071505093011,Intel Core i5-14400F 10 Cores 4.7GHz LGA1700 TRAY,149.4,USD,345,NO,Price DAP Worldwide
+PROKS,General,,CM8071504821112,Intel Core i5-14400 10 Cores 4.7GHz LGA1700 TRAY,227.6,USD,74,NO,Price DAP Worldwide
+PROKS,General,,CM8071505092206,Intel Core i3-14100 4 Cores 4.7GHz LGA1700 TRAY,162.5,USD,236,NO,Price DAP Worldwide
+PROKS,General,,CM8071504651012,"Intel Core i3 12100 4.3GHz Turbo, LGA1700, TRAY",134.1,USD,100,NO,Price DAP Worldwide
+PROKS,General,,CM8071504650608,"Intel Core i5 12400 4.4GHz Turbo, LGA1700 , TRAY",169.6,USD,176,NO,Price DAP Worldwide
+PROKS,General,,CM8071504650609,"Intel Core i5 12400F 4.4GHz Turbo, LGA1700 , (no VGA) TRAY",116.3,USD,264,NO,Price DAP Worldwide
+PROKS,General,,CM8071504555318,"Intel Core i5 12400F 4.4GHz Turbo, LGA1700 , (no VGA) TRAY",116.3,USD,310,NO,Price DAP Worldwide
+PROKS,General,,AT807680640F,Intel Core Ultra 5 Desktop Processor 245K TRAY,228.8,USD,1,NO,Price DAP Worldwide
+PROKS,General,,PN,HDD INT,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,ST4000DM004,"Seagate Baracuda 4TB; SATA 6Gb/s; 5400; 256MB; 3.5""",163.8,USD,30,NO,Price DAP Worldwide
+PROKS,General,,ST4000VN006,"Seagate IronWolf 4TB; SATA 6Gb/s; 5400; 256MB; 3.5""",159.1,USD,46,NO,Price DAP Worldwide
+PROKS,General,,ST4000VN006 P,"Seagate IronWolf 4TB; SATA 6Gb/s; 5400; 256MB; 3.5"" (P)",150.8,USD,21,NO,Price DAP Worldwide
+PROKS,General,,ST6000VN006,"Seagate IronWolf 6TB; SATA 6Gb/s; 5400; 256MB; 3.5""",201.1,USD,6,NO,Price DAP Worldwide
+PROKS,General,,ST8000NT001 P,"Seagate IronWolf Pro 8TB; SATA 6Gb/s; 256MB; 3.5"" (P)",290.5,USD,20,NO,Price DAP Worldwide
+PROKS,General,,ST12000NT001,"Seagate IronWolf Pro 12TB; SATA 6Gb/s; 256MB; 3.5""",405.4,USD,26,NO,Price DAP Worldwide
+PROKS,General,,ST12000NT001 P,"Seagate IronWolf Pro 12TB; SATA 6Gb/s; 256MB; 3.5"" (P)",387.6,USD,40,NO,Price DAP Worldwide
+PROKS,General,,ST16000NT001,"Seagate IronWolf Pro 16TB; SATA 6Gb/s; 256MB; 3.5""",434.7,USD,3,NO,Price DAP Worldwide
+PROKS,General,,ST16000NT001 P,"Seagate IronWolf Pro 16TB; SATA 6Gb/s; 256MB; 3.5"" (P)",413.7,USD,40,NO,Price DAP Worldwide
+PROKS,General,,ST20000NT001 P,"Seagate IronWolf Pro 20TB; SATA 6Gb/s; 256MB; 3.5"" (P)",495.4,USD,20,NO,Price DAP Worldwide
+PROKS,General,,ST1000VX013,"Seagate SkyHawk 1TB; SATA 6Gb/s; 256MB; 3.5""",89.1,USD,125,NO,Price DAP Worldwide
+PROKS,General,,ST2000VX017,"Seagate SkyHawk 2TB; SATA 6Gb/s; 256MB; 3.5"";",101.3,USD,50,NO,Price DAP Worldwide
+PROKS,General,,ST4000VX016,"Seagate SkyHawk 4TB; SATA 6Gb/s; 256MB; 3.5""",137.7,USD,105,NO,Price DAP Worldwide
+PROKS,General,,ST6000VX009,"Seagate SkyHawk 6TB; SATA 6Gb/s; 256MB; 3.5""; RVS",194.0,USD,25,NO,Price DAP Worldwide
+PROKS,General,,ST8000VX010,"Seagate SkyHawk 8TB; SATA 6Gb/s; 256MB; 3.5""; RVS",231.3,USD,25,NO,Price DAP Worldwide
+PROKS,General,,ST10000VE001,"Seagate SkyHawk AI 10TB; SATA 6Gb/s; 256MB; 3.5""; TR 245MB/s",323.7,USD,25,NO,Price DAP Worldwide
+PROKS,General,,ST12000VE003,"Seagate SkyHawk AI 12TB; SATA 6Gb/s; 512MB; 3.5""",361.6,USD,30,NO,Price DAP Worldwide
+PROKS,General,,ST16000VE004,"Seagate SkyHawk AI 16TB; SATA 6Gb/s; 512MB; 3.5""; TR 285MB/s",449.2,USD,20,NO,Price DAP Worldwide
+PROKS,General,,ST16000VE005,"Seagate SkyHawk AI 16TB; SATA 6Gb/s; 512MB; 3.5""; TR 240MB/s",430.2,USD,26,NO,Price DAP Worldwide
+PROKS,General,,ST20000VE003,"Seagate SkyHawk AI 20TB; SATA 6Gb/s; 512MB; 3.5""; TR 285MB/s",491.8,USD,5,NO,Price DAP Worldwide
+PROKS,General,,WD40EZZX,WD Blue. 3.5''. 4TB. SATA/600. 5400RPM. 128MB cache,121.2,USD,60,NO,Price DAP Worldwide
+PROKS,General,,WD10EZEX,WD Blue. 3.5''. 1TB. SATA/600. 7200RPM. 64MB cache,91.9,USD,40,NO,Price DAP Worldwide
+PROKS,General,,WD40EFZZ,WD Red Plus. 3.5''. 4TB. SATA/600. 5400RPM. 128MB. Air. NAS,160.3,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD60EFPX,WD Red Plus. 3.5''. 6TB. SATA/600. 5400RPM. 256MB. Air. NAS,196.4,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD100EFGX,WD Red Plus. 3.5''. 10TB. SATA/600. 7200RPM. 512MB. Air. NAS,317.8,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD6005FFBX,"WD Red Pro. 3.5"". 6TB. SATA/600. 7200RPM. 256MB. Air. NAS",224.2,USD,4,NO,Price DAP Worldwide
+PROKS,General,,WD8005FFBX,"WD Red Pro. 3.5"". 8TB. SATA/600. 7200RPM. 256MB. Air. NAS",274.0,USD,18,NO,Price DAP Worldwide
+PROKS,General,,WD142KFGX,"WD Red Pro. 3.5"". 12TB. SATA/600. 7200RPM. 512MB. Helium. NAS",411.3,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD10PURZ,"WD Purple. 3.5"". 1TB. SATA/600. 64MB. 110MB/s",103.2,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD11PURZ,"WD Purple. 3.5"". 1TB. SATA/600. 64MB. 180MB/s",105.4,USD,48,NO,Price DAP Worldwide
+PROKS,General,,WD44PURZ,"WD Purple. 3.5"". 4TB. SATA/600. 128MB. 180MB/s",144.7,USD,48,NO,Price DAP Worldwide
+PROKS,General,,WD43PURZ,"WD Purple. 3.5"". 4TB. SATA/600. 256MB. 180MB/s",179.2,USD,40,NO,Price DAP Worldwide
+PROKS,General,,WD64PURZ,"WD Purple. 3.5"". 6TB. SATA/600. 256MB. 180MB/s",193.4,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD85PURZ,"WD Purple. 3.5"". 8TB. SATA/600. 256MB. 215MB/s",238.4,USD,20,NO,Price DAP Worldwide
+PROKS,General,,WD8002PURP,"WD Purple Pro. 3.5"". 8TB. SATA/600. 7200RPM. 256MB",253.2,USD,10,NO,Price DAP Worldwide
+PROKS,General,,WD122PURP,"WD Purple Pro. 3.5"". 12TB. SATA/600. 7200RPM. 512MB. Air",335.5,USD,25,NO,Price DAP Worldwide
+PROKS,General,,,(P) These models need to be sent to PROKS for RMA processing,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,PN,HDD EXT,0.0,USD,0,NO,Price DAP Worldwide
+PROKS,General,,STJL1000400,"Seagate Basic 1TB; 2.5""; USB 3.0; Black",68.5,USD,20,NO,Price DAP Worldwide
+PROKS,General,,STKM1000400,"Seagate Expansion 1TB; 2.5""; USB 3.0; Black",67.7,USD,51,NO,Price DAP Worldwide
+PROKS,General,,STKM2000400,"Seagate Expansion 2TB; 2.5""; USB 3.0; Black",85.1,USD,11,NO,Price DAP Worldwide
+PROKS,General,,STKM5000400,"Seagate Expansion 5TB; 2.5""; USB 3.0; Black",140.9,USD,16,NO,Price DAP Worldwide
+PROKS,General,,HDTB510EK3AA,Toshiba Canvio Basics 2022 2.5'' 1TB. Black,67.9,USD,42,NO,Price DAP Worldwide
+PROKS,General,,HDTB520EK3AA,Toshiba Canvio Basics 2022 2.5'' 2TB. Black,81.9,USD,40,NO,Price DAP Worldwide
+PROKS,General,,HDTB540EK3CA,Toshiba Canvio Basics 2022 2.5'' 4TB. Black,119.4,USD,50,NO,Price DAP Worldwide
+PROKS,General,,HDTCA10EK3AA,Toshiba Canvio Advance 2.5'' 1TB. Black,66.2,USD,19,NO,Price DAP Worldwide
+PROKS,General,,WDBUZG0010BBK-WESN,WD Elements 1TB USB 3.2; Black,72.7,USD,48,NO,Price DAP Worldwide
+PROKS,General,,WDBU6Y0020BBK-WESN,WD Elements 2TB USB 3.2; Black,89.8,USD,51,NO,Price DAP Worldwide
+PROKS,General,,WDBYVG0010BBK-WESN,WD My Passport 1TB USB 3.0; Black,73.9,USD,50,NO,Price DAP Worldwide
+PROKS,General,,WDBYVG0020BBK-WESN,WD My Passport 2TB USB 3.0; Black,90.2,USD,25,NO,Price DAP Worldwide
+PROKS,General,,WDBEPK0010BBK-WESN,WD Elements SE 1TB USB 3.0; Black,79.5,USD,30,NO,Price DAP Worldwide
+PROKS,General,,WDBEPK0020BBK-WESN,WD Elements SE 2TB USB 3.0; Black,95.8,USD,5,NO,Price DAP Worldwide
