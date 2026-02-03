@@ -62,6 +62,11 @@ export default function AIAgentPage() {
 
   const { data: currentConversation, isLoading: loadingMessages } = useQuery<Conversation>({
     queryKey: ["/api/ai/conversations", selectedConversationId],
+    queryFn: async () => {
+      const res = await fetch(`/api/ai/conversations/${selectedConversationId}`);
+      if (!res.ok) throw new Error("Failed to fetch conversation");
+      return res.json();
+    },
     enabled: !!selectedConversationId,
   });
 
