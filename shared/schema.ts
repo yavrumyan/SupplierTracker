@@ -628,3 +628,52 @@ export type ChipSalesInvoice = typeof chipSalesInvoices.$inferSelect;
 export type InsertChipSalesInvoice = z.infer<typeof insertChipSalesInvoiceSchema>;
 export type ChipSalesInvoiceItem = typeof chipSalesInvoiceItems.$inferSelect;
 export type InsertChipSalesInvoiceItem = z.infer<typeof insertChipSalesInvoiceItemSchema>;
+
+// ==================== AI Agent Chat System ====================
+
+export const aiConversations = pgTable("ai_conversations", {
+  id: serial("id").primaryKey(),
+  title: text("title").default("New Conversation"),
+  llmProvider: text("llm_provider").default("gemini"), // gemini, openai, claude
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const aiMessages = pgTable("ai_messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").references(() => aiConversations.id).notNull(),
+  role: text("role").notNull(), // user, assistant
+  content: text("content").notNull(),
+  attachments: jsonb("attachments").$type<Array<{filename: string; originalName: string; filePath: string; fileType: string}>>().default([]),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// AI Agent Relations
+export const aiConversationsRelations = relations(aiConversations, ({ many }) => ({
+  messages: many(aiMessages),
+}));
+
+export const aiMessagesRelations = relations(aiMessages, ({ one }) => ({
+  conversation: one(aiConversations, {
+    fields: [aiMessages.conversationId],
+    references: [aiConversations.id],
+  }),
+}));
+
+// AI Agent Zod schemas
+export const insertAiConversationSchema = createInsertSchema(aiConversations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertAiMessageSchema = createInsertSchema(aiMessages).omit({
+  id: true,
+  createdAt: true,
+});
+
+// AI Agent Types
+export type AiConversation = typeof aiConversations.$inferSelect;
+export type InsertAiConversation = z.infer<typeof insertAiConversationSchema>;
+export type AiMessage = typeof aiMessages.$inferSelect;
+export type InsertAiMessage = z.infer<typeof insertAiMessageSchema>;

@@ -78,7 +78,13 @@ import {
   type ChipSalesInvoice,
   type InsertChipSalesInvoice,
   type ChipSalesInvoiceItem,
-  type InsertChipSalesInvoiceItem
+  type InsertChipSalesInvoiceItem,
+  aiConversations,
+  aiMessages,
+  type AiConversation,
+  type InsertAiConversation,
+  type AiMessage,
+  type InsertAiMessage
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
@@ -330,6 +336,16 @@ export interface IStorage {
   getChipSalesInvoiceByNumber(invoiceNumber: string): Promise<ChipSalesInvoice | undefined>;
   createChipSalesInvoice(invoice: InsertChipSalesInvoice, items: InsertChipSalesInvoiceItem[]): Promise<ChipSalesInvoice>;
   importSalesInvoices(invoices: Array<{ invoice: InsertChipSalesInvoice; items: InsertChipSalesInvoiceItem[] }>): Promise<{ imported: number; skipped: number; errors: string[] }>;
+
+  // ==================== AI Agent Methods ====================
+  createAiConversation(conversation: InsertAiConversation): Promise<AiConversation>;
+  getAiConversations(): Promise<AiConversation[]>;
+  getAiConversation(id: number): Promise<AiConversation | undefined>;
+  updateAiConversation(id: number, updates: Partial<InsertAiConversation>): Promise<AiConversation>;
+  deleteAiConversation(id: number): Promise<void>;
+  createAiMessage(message: InsertAiMessage): Promise<AiMessage>;
+  getAiMessages(conversationId: number): Promise<AiMessage[]>;
+  getAiDatabaseContext(): Promise<string>;
 }
 
 
@@ -2851,6 +2867,88 @@ export class DatabaseStorage implements IStorage {
       }
     }
     return { imported, skipped, errors };
+  }
+
+  // ==================== AI Agent Methods ====================
+  async createAiConversation(conversation: InsertAiConversation): Promise<AiConversation> {
+    const [newConversation] = await db.insert(aiConversations).values(conversation).returning();
+    return newConversation;
+  }
+
+  async getAiConversations(): Promise<AiConversation[]> {
+    return await db.select().from(aiConversations).orderBy(desc(aiConversations.updatedAt));
+  }
+
+  async getAiConversation(id: number): Promise<AiConversation | undefined> {
+    const [conversation] = await db.select().from(aiConversations).where(eq(aiConversations.id, id));
+    return conversation || undefined;
+  }
+
+  async updateAiConversation(id: number, updates: Partial<InsertAiConversation>): Promise<AiConversation> {
+    const [updated] = await db.update(aiConversations)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(aiConversations.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteAiConversation(id: number): Promise<void> {
+    await db.delete(aiMessages).where(eq(aiMessages.conversationId, id));
+    await db.delete(aiConversations).where(eq(aiConversations.id, id));
+  }
+
+  async createAiMessage(message: InsertAiMessage): Promise<AiMessage> {
+    const [newMessage] = await db.insert(aiMessages).values(message).returning();
+    await db.update(aiConversations)
+      .set({ updatedAt: new Date() })
+      .where(eq(aiConversations.id, message.conversationId));
+    return newMessage;
+  }
+
+  async getAiMessages(conversationId: number): Promise<AiMessage[]> {
+    return await db.select().from(aiMessages)
+      .where(eq(aiMessages.conversationId, conversationId))
+      .orderBy(aiMessages.createdAt);
+  }
+
+  async getAiDatabaseContext(): Promise<string> {
+    const [supplierCount] = await db.select({ count: sql<number>`count(*)` }).from(suppliers);
+    const [priceListItemCount] = await db.select({ count: sql<number>`count(*)` }).from(priceListItems);
+    const [offerCount] = await db.select({ count: sql<number>`count(*)` }).from(offers);
+    const [orderCount] = await db.select({ count: sql<number>`count(*)` }).from(orders);
+    const [searchIndexCount] = await db.select({ count: sql<number>`count(*)` }).from(searchIndex);
+    const [productListCount] = await db.select({ count: sql<number>`count(*)` }).from(compstyleProductList);
+    const [totalStockCount] = await db.select({ count: sql<number>`count(*)` }).from(compstyleTotalStock);
+    const [transitCount] = await db.select({ count: sql<number>`count(*)` }).from(compstyleTransit);
+    const [salesOrderCount] = await db.select({ count: sql<number>`count(*)` }).from(compstyleSalesOrders);
+    const [purchaseOrderCount] = await db.select({ count: sql<number>`count(*)` }).from(compstylePurchaseOrders);
+    const [purchaseInvoiceCount] = await db.select({ count: sql<number>`count(*)` }).from(chipPurchaseInvoices);
+    const [salesInvoiceCount] = await db.select({ count: sql<number>`count(*)` }).from(chipSalesInvoices);
+
+    return `
+DATABASE CONTEXT FOR AI AGENT:
+
+=== SupHub (Supplier Management) ===
+- Suppliers: ${supplierCount.count} records (name, country, email, phone, whatsapp, reputation 1-10, categories, brands)
+- Price List Items: ${priceListItemCount.count} products from supplier price lists
+- Offers: ${offerCount.count} text offers from suppliers (via WhatsApp/email)
+- Orders: ${orderCount.count} purchase orders
+- Search Index: ${searchIndexCount.count} searchable products (from price lists and offers)
+
+=== CompStyle (Business Intelligence) ===
+- Product List: ${productListCount.count} products with SKU, stock, prices (retail USD/AMD, dealer prices), cost
+- Total Stock: ${totalStockCount.count} inventory items with pricing tiers
+- In Transit: ${transitCount.count} items on order/shipping
+- Sales Orders: ${salesOrderCount.count} customer sales
+- Purchase Orders: ${purchaseOrderCount.count} supplier purchases
+
+=== CHIP (Armenian Tax Invoices) ===
+- Purchase Invoices: ${purchaseInvoiceCount.count} received from suppliers (VAT 20%)
+- Sales Invoices: ${salesInvoiceCount.count} issued to customers (VAT 20%)
+
+AVAILABLE QUERIES:
+You can search suppliers, products, compare prices, analyze sales, check stock levels, find invoice data, etc.
+    `.trim();
   }
 }
 

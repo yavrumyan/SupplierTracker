@@ -20,8 +20,11 @@ import {
   insertChipPurchaseInvoiceSchema,
   insertChipPurchaseInvoiceItemSchema,
   insertChipSalesInvoiceSchema,
-  insertChipSalesInvoiceItemSchema
+  insertChipSalesInvoiceItemSchema,
+  insertAiConversationSchema,
+  insertAiMessageSchema
 } from "@shared/schema";
+import { generateAIResponse, type LLMProvider } from "./ai-service";
 import { z } from "zod";
 import multer from "multer";
 import path from "path";
@@ -3383,6 +3386,225 @@ print(json.dumps(result))
     
     return new Date();
   }
+
+  // ==================== AI Agent Routes ====================
+
+  // Get all conversations
+  app.get("/api/ai/conversations", async (req, res) => {
+    try {
+      const conversations = await storage.getAiConversations();
+      res.json(conversations);
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      res.status(500).json({ error: "Failed to fetch conversations" });
+    }
+  });
+
+  // Create new conversation
+  app.post("/api/ai/conversations", async (req, res) => {
+    try {
+      const conversation = await storage.createAiConversation({
+        title: req.body.title || "New Conversation",
+        llmProvider: req.body.llmProvider || "gemini",
+      });
+      res.json(conversation);
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+      res.status(500).json({ error: "Failed to create conversation" });
+    }
+  });
+
+  // Get conversation with messages
+  app.get("/api/ai/conversations/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const conversation = await storage.getAiConversation(id);
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+      const messages = await storage.getAiMessages(id);
+      res.json({ ...conversation, messages });
+    } catch (error) {
+      console.error("Error fetching conversation:", error);
+      res.status(500).json({ error: "Failed to fetch conversation" });
+    }
+  });
+
+  // Update conversation
+  app.put("/api/ai/conversations/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updated = await storage.updateAiConversation(id, req.body);
+      res.json(updated);
+    } catch (error) {
+      console.error("Error updating conversation:", error);
+      res.status(500).json({ error: "Failed to update conversation" });
+    }
+  });
+
+  // Delete conversation
+  app.delete("/api/ai/conversations/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteAiConversation(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+      res.status(500).json({ error: "Failed to delete conversation" });
+    }
+  });
+
+  // Configure multer for AI file uploads
+  const aiUploadDir = path.join(process.cwd(), 'uploads', 'ai');
+  if (!fs.existsSync(aiUploadDir)) {
+    fs.mkdirSync(aiUploadDir, { recursive: true });
+  }
+  const aiUpload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => cb(null, aiUploadDir),
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + file.originalname);
+      }
+    }),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  });
+
+  // Send message to AI
+  app.post("/api/ai/conversations/:id/messages", aiUpload.array('files', 5), async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.id);
+      const conversation = await storage.getAiConversation(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+
+      const { content, provider } = req.body;
+      const files = req.files as Express.Multer.File[] || [];
+
+      // Process attached files
+      let fileContents = "";
+      const attachments: Array<{filename: string; originalName: string; filePath: string; fileType: string}> = [];
+      
+      for (const file of files) {
+        attachments.push({
+          filename: file.filename,
+          originalName: file.originalname,
+          filePath: file.path,
+          fileType: file.mimetype,
+        });
+
+        // Read file contents for CSV/text files
+        if (file.mimetype === 'text/csv' || file.mimetype === 'text/plain') {
+          const fileContent = fs.readFileSync(file.path, 'utf-8');
+          fileContents += `\n\n=== File: ${file.originalname} ===\n${fileContent.substring(0, 10000)}`;
+        } else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 
+                   file.mimetype === 'application/vnd.ms-excel') {
+          // Handle Excel files
+          const workbook = XLSX.readFile(file.path);
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          const csvData = XLSX.utils.sheet_to_csv(firstSheet);
+          fileContents += `\n\n=== File: ${file.originalname} ===\n${csvData.substring(0, 10000)}`;
+        }
+      }
+
+      // Save user message
+      const userMessage = await storage.createAiMessage({
+        conversationId,
+        role: "user",
+        content,
+        attachments,
+      });
+
+      // Get conversation history
+      const history = await storage.getAiMessages(conversationId);
+      const chatHistory = history.slice(0, -1).map(m => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+      chatHistory.push({ role: "user", content });
+
+      // Generate AI response
+      const llmProvider = (provider || conversation.llmProvider || "gemini") as LLMProvider;
+      const aiResponse = await generateAIResponse(chatHistory, llmProvider, fileContents || undefined);
+
+      // Save AI response
+      const assistantMessage = await storage.createAiMessage({
+        conversationId,
+        role: "assistant",
+        content: aiResponse,
+      });
+
+      // Update conversation title if it's the first message
+      if (history.length <= 1) {
+        const title = content.substring(0, 50) + (content.length > 50 ? "..." : "");
+        await storage.updateAiConversation(conversationId, { title });
+      }
+
+      res.json({
+        userMessage,
+        assistantMessage,
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      res.status(500).json({ error: "Failed to send message", details: String(error) });
+    }
+  });
+
+  // Export conversation as text/CSV
+  app.get("/api/ai/conversations/:id/export", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const format = req.query.format as string || 'text';
+      
+      const conversation = await storage.getAiConversation(id);
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+      
+      const messages = await storage.getAiMessages(id);
+      
+      if (format === 'csv') {
+        let csv = 'Role,Content,Timestamp\n';
+        for (const msg of messages) {
+          const escapedContent = msg.content.replace(/"/g, '""').replace(/\n/g, ' ');
+          csv += `"${msg.role}","${escapedContent}","${msg.createdAt}"\n`;
+        }
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', `attachment; filename="conversation-${id}.csv"`);
+        res.send(csv);
+      } else {
+        let text = `Conversation: ${conversation.title}\n`;
+        text += `Created: ${conversation.createdAt}\n`;
+        text += `Provider: ${conversation.llmProvider}\n\n`;
+        text += '='.repeat(50) + '\n\n';
+        
+        for (const msg of messages) {
+          text += `[${msg.role.toUpperCase()}] ${new Date(msg.createdAt!).toLocaleString()}\n`;
+          text += msg.content + '\n\n';
+          text += '-'.repeat(30) + '\n\n';
+        }
+        
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="conversation-${id}.txt"`);
+        res.send(text);
+      }
+    } catch (error) {
+      console.error("Error exporting conversation:", error);
+      res.status(500).json({ error: "Failed to export conversation" });
+    }
+  });
+
+  // Get database context for AI
+  app.get("/api/ai/context", async (req, res) => {
+    try {
+      const context = await storage.getAiDatabaseContext();
+      res.json({ context });
+    } catch (error) {
+      console.error("Error fetching AI context:", error);
+      res.status(500).json({ error: "Failed to fetch context" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
