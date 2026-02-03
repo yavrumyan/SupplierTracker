@@ -3403,12 +3403,16 @@ print(json.dumps(result))
   // Create new conversation
   app.post("/api/ai/conversations", async (req, res) => {
     try {
-      const conversation = await storage.createAiConversation({
+      const validatedData = insertAiConversationSchema.parse({
         title: req.body.title || "New Conversation",
         llmProvider: req.body.llmProvider || "gemini",
       });
+      const conversation = await storage.createAiConversation(validatedData);
       res.json(conversation);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
       console.error("Error creating conversation:", error);
       res.status(500).json({ error: "Failed to create conversation" });
     }
@@ -3434,9 +3438,13 @@ print(json.dumps(result))
   app.put("/api/ai/conversations/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const updated = await storage.updateAiConversation(id, req.body);
+      const validatedData = insertAiConversationSchema.partial().parse(req.body);
+      const updated = await storage.updateAiConversation(id, validatedData);
       res.json(updated);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid data", details: error.errors });
+      }
       console.error("Error updating conversation:", error);
       res.status(500).json({ error: "Failed to update conversation" });
     }
@@ -3480,6 +3488,12 @@ print(json.dumps(result))
       }
 
       const { content, provider } = req.body;
+      
+      if (!content || typeof content !== 'string' || content.trim().length === 0) {
+        return res.status(400).json({ error: "Message content is required" });
+      }
+      
+      const validProvider = ["gemini", "openai", "claude"].includes(provider) ? provider : "gemini";
       const files = req.files as Express.Multer.File[] || [];
 
       // Process attached files
@@ -3525,7 +3539,7 @@ print(json.dumps(result))
       chatHistory.push({ role: "user", content });
 
       // Generate AI response
-      const llmProvider = (provider || conversation.llmProvider || "gemini") as LLMProvider;
+      const llmProvider = (validProvider || conversation.llmProvider || "gemini") as LLMProvider;
       const aiResponse = await generateAIResponse(chatHistory, llmProvider, fileContents || undefined);
 
       // Save AI response
