@@ -117,14 +117,29 @@ async function generateGeminiResponse(
     ? `${lastMessage.content}\n\n[DATABASE CONTEXT]${dataContext}`
     : lastMessage.content;
 
-  const result = await chat.sendMessage(enrichedQuery).catch(err => {
-    if (err.status === 429) {
-      throw new Error("Rate limit exceeded. Please try again in a minute. (Armenian tax authority server is busy)");
+  // Simple retry logic with delay
+  let retries = 3;
+  let delay = 2000;
+  
+  while (retries > 0) {
+    try {
+      const result = await chat.sendMessage(enrichedQuery);
+      const response = result.response;
+      return response.text();
+    } catch (err: any) {
+      if (err.status === 429 && retries > 1) {
+        retries--;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2; // Exponential backoff
+        continue;
+      }
+      if (err.status === 429) {
+        throw new Error("Rate limit exceeded. The AI service is currently busy. Please wait a minute and try again.");
+      }
+      throw err;
     }
-    throw err;
-  });
-  const response = result.response;
-  return response.text();
+  }
+  throw new Error("Failed to generate response after multiple attempts.");
 }
 
 function extractSearchKeywords(query: string): string[] {
