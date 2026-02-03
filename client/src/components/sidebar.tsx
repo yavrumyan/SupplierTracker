@@ -9,7 +9,8 @@ import {
   Settings, 
   Menu, 
   X,
-  Microchip
+  Microchip,
+  Bot
 } from "lucide-react";
 import { useState } from "react";
 import supHubLogo from "@/assets/SupHub_1752355359935.png";
@@ -42,6 +43,7 @@ const navigation = [
   { name: "Import Data", href: "/import", icon: FolderInput },
   { name: "CompStyle", href: "/compstyle", icon: CompStyleIcon },
   { name: "CHIP", href: "/chip", icon: ChipIcon },
+  { name: "AI Agent", href: "/ai-agent", icon: Bot },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
