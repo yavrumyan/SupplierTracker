@@ -112,8 +112,15 @@ export default function AIAgentPage() {
       setMessageInput("");
       setSelectedFiles([]);
     },
-    onError: (error) => {
-      toast({ title: "Error", description: "Failed to send message", variant: "destructive" });
+    onError: (error: any) => {
+      const message = error.message || "Failed to send message";
+      toast({ 
+        title: "Error", 
+        description: message.includes("Rate limit") 
+          ? "The AI is currently busy. Please wait a moment and try again." 
+          : "Failed to send message", 
+        variant: "destructive" 
+      });
     },
   });
 
@@ -262,7 +269,7 @@ export default function AIAgentPage() {
             <div className="flex items-center justify-between p-4 border-b border-slate-200">
               <div>
                 <h2 className="font-semibold text-slate-700">
-                  {currentConversation?.title || "Loading..."}
+                  {currentConversation?.title || (loadingMessages ? "Loading..." : "New Conversation")}
                 </h2>
                 <p className="text-xs text-slate-400">
                   Provider: {selectedProvider.charAt(0).toUpperCase() + selectedProvider.slice(1)}

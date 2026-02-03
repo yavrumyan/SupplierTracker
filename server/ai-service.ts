@@ -117,7 +117,12 @@ async function generateGeminiResponse(
     ? `${lastMessage.content}\n\n[DATABASE CONTEXT]${dataContext}`
     : lastMessage.content;
 
-  const result = await chat.sendMessage(enrichedQuery);
+  const result = await chat.sendMessage(enrichedQuery).catch(err => {
+    if (err.status === 429) {
+      throw new Error("Rate limit exceeded. Please try again in a minute. (Armenian tax authority server is busy)");
+    }
+    throw err;
+  });
   const response = result.response;
   return response.text();
 }
