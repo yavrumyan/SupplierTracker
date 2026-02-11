@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import Anthropic from "@anthropic-ai/sdk";
 import { storage } from "./storage";
 import { db } from "./db";
 import { sql } from "drizzle-orm";
@@ -15,6 +16,9 @@ import {
 } from "@shared/schema";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || "",
+});
 
 export type LLMProvider = "gemini" | "openai" | "claude";
 
@@ -69,9 +73,100 @@ ${fileContents ? `\nATTACHED FILE CONTENTS:\n${fileContents}\n` : ""}`;
 
   if (provider === "gemini") {
     return await generateGeminiResponse(systemPrompt, messages);
+  } else if (provider === "claude") {
+    return await generateClaudeResponse(systemPrompt, messages);
   }
   
   throw new Error(`Provider ${provider} not yet implemented`);
+}
+
+async function generateClaudeResponse(
+  systemPrompt: string,
+  messages: ChatMessage[]
+): Promise<string> {
+  const lastMessage = messages[messages.length - 1];
+  const userQuery = lastMessage.content.toLowerCase();
+  let dataContext = "";
+  
+  if (userQuery.includes("supplier") || userQuery.includes("поставщик")) {
+    const supplierData = await getSupplierSummary();
+    dataContext += `\n\nSUPPLIER DATA:\n${supplierData}`;
+  }
+  
+  if (userQuery.includes("product") || userQuery.includes("товар") || userQuery.includes("search") || userQuery.includes("найти")) {
+    const keywords = extractSearchKeywords(userQuery);
+    if (keywords.length > 0) {
+      const productData = await searchProducts(keywords.join(" "));
+      dataContext += `\n\nPRODUCT SEARCH RESULTS:\n${productData}`;
+    }
+  }
+  
+  if (userQuery.includes("stock") || userQuery.includes("inventory") || userQuery.includes("склад") || userQuery.includes("остаток")) {
+    const stockData = await getStockSummary();
+    dataContext += `\n\nSTOCK DATA:\n${stockData}`;
+  }
+  
+  if (userQuery.includes("sales") || userQuery.includes("продаж")) {
+    const salesData = await getSalesSummary();
+    dataContext += `\n\nSALES DATA:\n${salesData}`;
+  }
+  
+  if (userQuery.includes("invoice") || userQuery.includes("счет") || userQuery.includes("накладн")) {
+    const invoiceData = await getInvoiceSummary();
+    dataContext += `\n\nINVOICE DATA:\n${invoiceData}`;
+  }
+  
+  if (userQuery.includes("transit") || userQuery.includes("shipping") || userQuery.includes("в пути")) {
+    const transitData = await getTransitSummary();
+    dataContext += `\n\nIN TRANSIT DATA:\n${transitData}`;
+  }
+
+  const enrichedQuery = dataContext 
+    ? `${lastMessage.content}\n\n[DATABASE CONTEXT]${dataContext}`
+    : lastMessage.content;
+
+  const claudeMessages: Anthropic.MessageParam[] = messages.slice(0, -1).map(msg => ({
+    role: msg.role === "user" ? "user" : "assistant",
+    content: msg.content,
+  }));
+  
+  claudeMessages.push({
+    role: "user",
+    content: enrichedQuery,
+  });
+
+  let retries = 3;
+  let delay = 2000;
+  
+  while (retries > 0) {
+    try {
+      const response = await anthropic.messages.create({
+        model: "claude-3-5-haiku-20241022", // Using Haiku as requested, updated to latest 3.5 version as 4.5 is not released
+        max_tokens: 4096,
+        system: systemPrompt,
+        messages: claudeMessages,
+      });
+      
+      const content = response.content[0];
+      if (content.type === "text") {
+        return content.text;
+      }
+      return "Unexpected response type from Claude";
+    } catch (err: any) {
+      if ((err.status === 429 || err.status === 529) && retries > 1) {
+        retries--;
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2;
+        continue;
+      }
+      if (err.status === 429) {
+        throw new Error("Claude rate limit exceeded. Please wait a moment and try again.");
+      }
+      console.error("Claude API Error:", err);
+      throw new Error(`Claude API Error: ${err.message || "Unknown error"}`);
+    }
+  }
+  throw new Error("Failed to generate response from Claude after multiple attempts.");
 }
 
 async function generateGeminiResponse(

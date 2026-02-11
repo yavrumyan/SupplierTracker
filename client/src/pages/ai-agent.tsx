@@ -206,7 +206,7 @@ export default function AIAgentPage() {
             <SelectContent>
               <SelectItem value="gemini">Gemini 2.0 Flash</SelectItem>
               <SelectItem value="openai" disabled>OpenAI (Coming Soon)</SelectItem>
-              <SelectItem value="claude" disabled>Claude (Coming Soon)</SelectItem>
+              <SelectItem value="claude">Claude 3.5 Haiku</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -277,7 +277,7 @@ export default function AIAgentPage() {
                   {currentConversation?.title || (loadingMessages ? "Loading..." : "New Conversation")}
                 </h2>
                 <p className="text-xs text-slate-400">
-                  Provider: {selectedProvider.charAt(0).toUpperCase() + selectedProvider.slice(1)}
+                  Provider: {selectedProvider === "claude" ? "Claude 3.5 Haiku" : selectedProvider.charAt(0).toUpperCase() + selectedProvider.slice(1)}
                 </p>
               </div>
               <div className="flex gap-2">
