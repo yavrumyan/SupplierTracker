@@ -73,6 +73,17 @@ const storage_config = multer.diskStorage({
 
 const upload = multer({ storage: storage_config });
 
+function extractPriceFromText(line: string): { cleanedName: string; price: string | null; currency: string | null } {
+  const pattern = /(\d+(?:\.\d+)?)\$|\$(\d+(?:\.\d+)?)/;
+  const match = line.match(pattern);
+  if (match) {
+    const price = match[1] ?? match[2];
+    const cleanedName = line.replace(pattern, '').replace(/\s{2,}/g, ' ').trim();
+    return { cleanedName, price, currency: 'USD' };
+  }
+  return { cleanedName: line, price: null, currency: null };
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Removed cookie-parser middleware as it was for authentication
   // app.use(cookieParser());
@@ -356,6 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Try to extract product information from each line
           for (const line of lines) {
             if (line.length > 3) { // Lower threshold to catch more products
+              const { cleanedName, price, currency } = extractPriceFromText(line);
               const searchEntry = {
                 supplierId: supplierId,
                 sourceType: 'offer',
@@ -364,9 +376,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 category: null,
                 brand: null,
                 model: null,
-                productName: line, // Use the line as product name
-                price: null,
-                currency: null,
+                productName: cleanedName,
+                price: price,
+                currency: currency,
                 stock: null,
                 warranty: null,
                 notes: `Source: ${offer.source}` // Add source information
@@ -1378,6 +1390,7 @@ print(json.dumps(result))
 
         for (const line of lines) {
           if (line.length > 10) {
+            const { cleanedName, price, currency } = extractPriceFromText(line);
             const searchEntry = {
               supplierId: offer.supplierId,
               sourceType: 'offer',
@@ -1386,9 +1399,9 @@ print(json.dumps(result))
               category: null,
               brand: null,
               model: null,
-              productName: line,
-              price: null,
-              currency: null,
+              productName: cleanedName,
+              price: price,
+              currency: currency,
               stock: null,
               warranty: null,
               notes: `Source: ${offer.source}`
