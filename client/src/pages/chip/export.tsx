@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Download, ArrowLeft, Package, Loader2 } from "lucide-react";
+import { Download, ArrowLeft, Package, Loader2, Search } from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -16,9 +18,9 @@ const DATE_LABELS: Record<string, string> = {
   "1month": "Last 1 Month",
 };
 
-function buildSearchParams(supplier: string, source: string, dateAdded: string, limit: string) {
+function buildSearchParams(selectedSuppliers: string[], source: string, dateAdded: string, limit: string) {
   const params = new URLSearchParams();
-  if (supplier) params.set("supplier", supplier);
+  if (selectedSuppliers.length > 0) params.set("suppliers", selectedSuppliers.join(","));
   if (source) params.set("source", source);
   if (dateAdded) params.set("dateAdded", dateAdded);
   params.set("limit", limit);
@@ -74,12 +76,13 @@ function downloadCSV(content: string, filename: string) {
 
 export default function ChipExport() {
   const { toast } = useToast();
-  const [supplier, setSupplier] = useState("");
+  const [selectedSuppliers, setSelectedSuppliers] = useState<string[]>([]);
+  const [supplierSearch, setSupplierSearch] = useState("");
   const [source, setSource] = useState("");
   const [dateAdded, setDateAdded] = useState("");
   const [isExporting, setIsExporting] = useState(false);
 
-  const { data: suppliers = [] } = useQuery({
+  const { data: suppliersRaw = [] } = useQuery({
     queryKey: ["/api/suppliers"],
     queryFn: async () => {
       const res = await fetch("/api/suppliers");
@@ -88,9 +91,34 @@ export default function ChipExport() {
     },
   });
 
-  const countParams = buildSearchParams(supplier, source, dateAdded, "1");
+  const sortedSuppliers: any[] = useMemo(
+    () => [...suppliersRaw].sort((a: any, b: any) => a.name.localeCompare(b.name)),
+    [suppliersRaw]
+  );
+
+  const filteredSuppliers = useMemo(
+    () => sortedSuppliers.filter((s: any) =>
+      s.name.toLowerCase().includes(supplierSearch.toLowerCase())
+    ),
+    [sortedSuppliers, supplierSearch]
+  );
+
+  const allNames = sortedSuppliers.map((s: any) => s.name);
+  const allSelected = allNames.length > 0 && allNames.every(n => selectedSuppliers.includes(n));
+  const noneSelected = selectedSuppliers.length === 0;
+
+  const toggleSupplier = (name: string) => {
+    setSelectedSuppliers(prev =>
+      prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
+    );
+  };
+
+  const selectAll = () => setSelectedSuppliers(allNames);
+  const deselectAll = () => setSelectedSuppliers([]);
+
+  const countParams = buildSearchParams(selectedSuppliers, source, dateAdded, "1");
   const { data: countData, isLoading: isCountLoading } = useQuery({
-    queryKey: ["/api/search", "count", supplier, source, dateAdded],
+    queryKey: ["/api/search", "count-b2b", selectedSuppliers.join(","), source, dateAdded],
     queryFn: async () => {
       const res = await fetch(`/api/search?${countParams}`);
       if (!res.ok) throw new Error("Failed to fetch count");
@@ -104,7 +132,7 @@ export default function ChipExport() {
   const handleExport = async () => {
     setIsExporting(true);
     try {
-      const exportParams = buildSearchParams(supplier, source, dateAdded, "0");
+      const exportParams = buildSearchParams(selectedSuppliers, source, dateAdded, "0");
       const res = await fetch(`/api/search?${exportParams}`);
       if (!res.ok) throw new Error("Failed to fetch export data");
       const data = await res.json();
@@ -123,6 +151,12 @@ export default function ChipExport() {
       setIsExporting(false);
     }
   };
+
+  const supplierLabel = noneSelected
+    ? "All Suppliers"
+    : allSelected
+    ? "All Suppliers selected"
+    : `${selectedSuppliers.length} supplier${selectedSuppliers.length > 1 ? "s" : ""} selected`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -149,23 +183,65 @@ export default function ChipExport() {
           <CardHeader>
             <CardTitle className="text-base">Filters</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Supplier */}
+          <CardContent className="space-y-5">
+
+            {/* Supplier multi-select */}
             <div>
-              <Label className="text-sm font-medium text-slate-700 mb-1 block">Supplier</Label>
-              <Select value={supplier || "all"} onValueChange={(v) => setSupplier(v === "all" ? "" : v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Suppliers" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Suppliers</SelectItem>
-                  {[...suppliers]
-                    .sort((a: any, b: any) => a.name.localeCompare(b.name))
-                    .map((s: any) => (
-                      <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm font-medium text-slate-700">
+                  Supplier
+                  <span className="ml-2 text-xs font-normal text-slate-400">{supplierLabel}</span>
+                </Label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={selectAll}
+                    className="text-xs text-[#2AA448] hover:underline disabled:opacity-40"
+                    disabled={allSelected}
+                  >
+                    Select All
+                  </button>
+                  <span className="text-xs text-slate-300">|</span>
+                  <button
+                    onClick={deselectAll}
+                    className="text-xs text-slate-500 hover:underline disabled:opacity-40"
+                    disabled={noneSelected}
+                  >
+                    Deselect All
+                  </button>
+                </div>
+              </div>
+
+              {/* Search within suppliers */}
+              <div className="relative mb-2">
+                <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                <Input
+                  placeholder="Search suppliers..."
+                  className="pl-8 h-8 text-sm"
+                  value={supplierSearch}
+                  onChange={e => setSupplierSearch(e.target.value)}
+                />
+              </div>
+
+              {/* Checkbox list */}
+              <div className="border rounded-md overflow-y-auto max-h-52 bg-white">
+                {filteredSuppliers.length === 0 ? (
+                  <p className="text-sm text-slate-400 text-center py-4">No suppliers found</p>
+                ) : (
+                  filteredSuppliers.map((s: any) => (
+                    <label
+                      key={s.id}
+                      className="flex items-center gap-3 px-3 py-2 hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0"
+                    >
+                      <Checkbox
+                        checked={selectedSuppliers.includes(s.name)}
+                        onCheckedChange={() => toggleSupplier(s.name)}
+                        className="shrink-0"
+                      />
+                      <span className="text-sm text-slate-700 truncate">{s.name}</span>
+                    </label>
+                  ))
+                )}
+              </div>
             </div>
 
             {/* Source */}
@@ -222,9 +298,11 @@ export default function ChipExport() {
             </div>
 
             {/* Active filter summary */}
-            {(supplier || source || dateAdded) && (
+            {(!noneSelected || source || dateAdded) && (
               <div className="text-xs text-slate-500 mb-4 space-y-1">
-                {supplier && <p>• Supplier: <span className="font-medium text-slate-700">{supplier}</span></p>}
+                {!noneSelected && (
+                  <p>• Suppliers: <span className="font-medium text-slate-700">{supplierLabel}</span></p>
+                )}
                 {source && <p>• Source: <span className="font-medium text-slate-700">{source === "price_list" ? "Price List" : "Offer"}</span></p>}
                 {dateAdded && <p>• Date Added: <span className="font-medium text-slate-700">{DATE_LABELS[dateAdded]}</span></p>}
               </div>

@@ -148,6 +148,7 @@ export interface IStorage {
   deleteSearchIndexBySource(sourceType: string, sourceId: number): Promise<void>;
   searchProducts(query: string, filters: {
     supplier?: string;
+    suppliers?: string[];
     country?: string;
     category?: string;
     brand?: string;
@@ -612,6 +613,7 @@ export class DatabaseStorage implements IStorage {
 
   async searchProducts(query: string, filters: {
     supplier?: string;
+    suppliers?: string[];
     country?: string;
     category?: string;
     brand?: string;
@@ -660,7 +662,11 @@ export class DatabaseStorage implements IStorage {
     }
 
     // Apply filters
-    if (filters.supplier) {
+    if (filters.suppliers && filters.suppliers.length > 0) {
+      whereConditions.push(
+        or(...filters.suppliers.map(s => ilike(searchIndex.supplier, `%${s}%`)))
+      );
+    } else if (filters.supplier) {
       whereConditions.push(ilike(searchIndex.supplier, `%${filters.supplier}%`));
     }
 

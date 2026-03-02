@@ -580,7 +580,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         keyword3 = '',
         source = '',
         country = '',
-        supplier = '', 
+        supplier = '',
+        suppliers = '',
         category = '', 
         brand = '', 
         dateAdded = '',
@@ -588,8 +589,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         limit = '50'
       } = req.query;
 
+      const suppliersArray = (suppliers as string)
+        ? (suppliers as string).split(',').map(s => s.trim()).filter(Boolean)
+        : [];
+
       const filters = {
         supplier: supplier as string,
+        suppliers: suppliersArray,
         country: country as string,
         category: category as string,
         brand: brand as string,
