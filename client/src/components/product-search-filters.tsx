@@ -11,6 +11,7 @@ export interface ProductSearchFilters {
   keyword1?: string;
   keyword2?: string;
   keyword3?: string;
+  dateAdded?: string;
   source?: string;
   country?: string;
   supplier?: string;
@@ -108,7 +109,24 @@ export function ProductSearchFilters({ filters, onFiltersChange, onSearch }: Pro
         </div>
 
         {/* Filter controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
+          <div>
+            <Label className="text-sm font-medium text-slate-700">Date Added</Label>
+            <Select value={filters.dateAdded || "all"} onValueChange={(value) => handleFilterChange("dateAdded", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Dates" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Dates</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="3days">3 Days</SelectItem>
+                <SelectItem value="1week">1 Week</SelectItem>
+                <SelectItem value="2weeks">2 Weeks</SelectItem>
+                <SelectItem value="1month">1 Month</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div>
             <Label className="text-sm font-medium text-slate-700">Source</Label>
             <Select value={filters.source || "all"} onValueChange={(value) => handleFilterChange("source", value)}>

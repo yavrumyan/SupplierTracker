@@ -583,6 +583,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         supplier = '', 
         category = '', 
         brand = '', 
+        dateAdded = '',
         page = '1',
         limit = '50'
       } = req.query;
@@ -592,7 +593,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         country: country as string,
         category: category as string,
         brand: brand as string,
-        sourceType: source as string
+        sourceType: source as string,
+        dateAdded: dateAdded as string
       };
 
       // Remove empty filters

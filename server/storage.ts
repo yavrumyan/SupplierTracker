@@ -87,7 +87,7 @@ import {
   type InsertAiMessage
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, ilike, or, desc, inArray, sql } from "drizzle-orm";
+import { eq, and, ilike, or, desc, inArray, sql, gte } from "drizzle-orm";
 
 export interface IStorage {
   // User methods
@@ -152,6 +152,7 @@ export interface IStorage {
     category?: string;
     brand?: string;
     sourceType?: string;
+    dateAdded?: string;
   }): Promise<SearchIndex[]>;
 
   // Document methods
@@ -615,8 +616,29 @@ export class DatabaseStorage implements IStorage {
     category?: string;
     brand?: string;
     sourceType?: string;
+    dateAdded?: string;
   }): Promise<SearchIndex[]> {
     let whereConditions = [];
+
+    // Date Added filter
+    if (filters.dateAdded) {
+      const now = new Date();
+      let cutoff: Date;
+      if (filters.dateAdded === "today") {
+        cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (filters.dateAdded === "3days") {
+        cutoff = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+      } else if (filters.dateAdded === "1week") {
+        cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      } else if (filters.dateAdded === "2weeks") {
+        cutoff = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+      } else if (filters.dateAdded === "1month") {
+        cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      }
+      if (cutoff!) {
+        whereConditions.push(gte(searchIndex.createdAt, cutoff));
+      }
+    }
 
     // Triple keyword search with AND logic
     if (query) {

@@ -18,6 +18,7 @@ export default function SearchPage() {
   if (appliedFilters.keyword1) searchParams.append('keyword1', appliedFilters.keyword1);
   if (appliedFilters.keyword2) searchParams.append('keyword2', appliedFilters.keyword2);
   if (appliedFilters.keyword3) searchParams.append('keyword3', appliedFilters.keyword3);
+  if (appliedFilters.dateAdded) searchParams.append('dateAdded', appliedFilters.dateAdded);
   if (appliedFilters.source) searchParams.append('source', appliedFilters.source);
   if (appliedFilters.country) searchParams.append('country', appliedFilters.country);
   if (appliedFilters.supplier) searchParams.append('supplier', appliedFilters.supplier);
@@ -145,6 +146,11 @@ export default function SearchPage() {
                   <Badge variant="secondary" className="flex items-center gap-1">
                     <Search className="h-3 w-3" />
                     Keyword 3: "{appliedFilters.keyword3}"
+                  </Badge>
+                )}
+                {appliedFilters.dateAdded && (
+                  <Badge variant="secondary">
+                    Date Added: {{today: "Today", "3days": "Last 3 Days", "1week": "Last 1 Week", "2weeks": "Last 2 Weeks", "1month": "Last 1 Month"}[appliedFilters.dateAdded] || appliedFilters.dateAdded}
                   </Badge>
                 )}
                 {appliedFilters.source && (
