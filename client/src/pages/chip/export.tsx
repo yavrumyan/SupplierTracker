@@ -30,9 +30,8 @@ function buildSearchParams(selectedSuppliers: string[], source: string, dateAdde
 
 function toCSV(rows: any[]): string {
   const headers = [
-    "Supplier", "Source", "Brand", "Category", "Model",
-    "Product Name", "Price", "Currency", "Stock", "MOQ",
-    "Warranty", "Notes", "Date Added"
+    "Date", "Source", "Supplier", "Category", "Brand", "Model",
+    "Name", "Price", "Currency", "Stock", "MOQ", "Notes"
   ];
   const escape = (val: any) => {
     if (val == null) return "";
@@ -45,19 +44,18 @@ function toCSV(rows: any[]): string {
   const lines = [
     headers.join(","),
     ...rows.map(r => [
-      escape(r.supplier),
+      escape(r.createdAt ? new Date(r.createdAt).toLocaleDateString("en-GB") : ""),
       escape(r.sourceType === "price_list" ? "Price List" : r.sourceType === "offer" ? "Offer" : r.sourceType),
-      escape(r.brand),
+      escape(r.supplier),
       escape(r.category),
+      escape(r.brand),
       escape(r.model),
       escape(r.productName),
       escape(r.price),
       escape(r.currency),
       escape(r.stock),
       escape(r.moq),
-      escape(r.warranty),
       escape(r.notes),
-      escape(r.createdAt ? new Date(r.createdAt).toLocaleDateString("en-GB") : ""),
     ].join(","))
   ];
   return lines.join("\n");
@@ -327,7 +325,7 @@ export default function ChipExport() {
               )}
             </Button>
             <p className="text-xs text-slate-400 mt-2 text-center">
-              CSV includes: Supplier, Source, Brand, Category, Model, Product Name, Price, Currency, Stock, MOQ, Warranty, Notes, Date Added
+              CSV includes: Date, Source, Supplier, Category, Brand, Model, Name, Price, Currency, Stock, MOQ, Notes
             </p>
           </CardContent>
         </Card>
