@@ -74,12 +74,13 @@ const storage_config = multer.diskStorage({
 const upload = multer({ storage: storage_config });
 
 function extractPriceFromText(line: string): { cleanedName: string; price: string | null; currency: string | null } {
-  const pattern = /(\d+(?:\.\d+)?)\$|\$(\d+(?:\.\d+)?)/;
+  // Match numbers adjacent to $, allowing both . and , as decimal/thousands separators
+  const pattern = /(\d[\d,\.]*\d|\d)\$|\$(\d[\d,\.]*\d|\d)/;
   const match = line.match(pattern);
   if (match) {
-    const price = match[1] ?? match[2];
+    const raw = match[1] ?? match[2];
     const cleanedName = line.replace(pattern, '').replace(/\s{2,}/g, ' ').trim();
-    return { cleanedName, price, currency: 'USD' };
+    return { cleanedName, price: raw, currency: 'USD' };
   }
   return { cleanedName: line, price: null, currency: null };
 }
