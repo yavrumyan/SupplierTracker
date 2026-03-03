@@ -73,14 +73,28 @@ const storage_config = multer.diskStorage({
 
 const upload = multer({ storage: storage_config });
 
+function normalizePrice(raw: string): string {
+  // Comma followed by exactly 2 digits at the end → comma is decimal separator
+  if (/,\d{2}$/.test(raw)) {
+    return raw.replace(/\./g, '').replace(',', '.');
+  }
+  // Period followed by exactly 2 digits at the end → period is decimal separator
+  if (/\.\d{2}$/.test(raw)) {
+    return raw.replace(/,/g, '');
+  }
+  // Otherwise commas/periods are thousands separators — strip them
+  return raw.replace(/[,\.]/g, '');
+}
+
 function extractPriceFromText(line: string): { cleanedName: string; price: string | null; currency: string | null } {
   // Match numbers adjacent to $, allowing both . and , as decimal/thousands separators
   const pattern = /(\d[\d,\.]*\d|\d)\$|\$(\d[\d,\.]*\d|\d)/;
   const match = line.match(pattern);
   if (match) {
     const raw = match[1] ?? match[2];
+    const price = normalizePrice(raw);
     const cleanedName = line.replace(pattern, '').replace(/\s{2,}/g, ' ').trim();
-    return { cleanedName, price: raw, currency: 'USD' };
+    return { cleanedName, price, currency: 'USD' };
   }
   return { cleanedName: line, price: null, currency: null };
 }
