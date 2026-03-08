@@ -87,7 +87,7 @@ export default function Login() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#2AA448] hover:bg-[#228a3a] text-white gap-2"
+              className="w-full hover:bg-[#228a3a] text-white gap-2 bg-[#ea580c]"
             >
               {loading ? (
                 <>
