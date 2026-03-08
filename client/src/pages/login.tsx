@@ -43,7 +43,7 @@ export default function Login() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-sm shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="w-12 h-12 bg-[#2AA448] rounded-xl flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-[#ea580c]">
             <span className="text-white font-bold text-xl">S</span>
           </div>
           <CardTitle className="text-2xl font-bold text-slate-900">SupHub</CardTitle>
