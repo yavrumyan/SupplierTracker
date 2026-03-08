@@ -31,8 +31,9 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import XLSX from "xlsx";
-import { spawn } from "child_process";
 import archiver from "archiver";
+import { put, del } from "@vercel/blob";
+import { processPriceList } from "./excelProcessor";
 // Removed bcrypt and cookie-parser as they are related to authentication
 // import bcrypt from "bcrypt";
 // import cookieParser from "cookie-parser";
@@ -57,22 +58,24 @@ import {
 } from "@shared/schema";
 import { eq, and, sql, desc } from "drizzle-orm";
 
-// Configure multer for file uploads
-const storage_config = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(process.cwd(), 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// All uploads use memory storage — files are processed in-memory or sent to Vercel Blob
+const upload = multer({ storage: multer.memoryStorage() });
 
-const upload = multer({ storage: storage_config });
+// Helper: upload a buffer to Vercel Blob and return the public URL
+async function uploadToBlob(filename: string, buffer: Buffer, contentType?: string): Promise<string> {
+  const blob = await put(filename, buffer, {
+    access: "public",
+    contentType: contentType || "application/octet-stream",
+  });
+  return blob.url;
+}
+
+// Helper: delete a file from Vercel Blob (no-op if URL is not a Blob URL)
+async function deleteFromBlob(urlOrPath: string): Promise<void> {
+  if (urlOrPath && urlOrPath.startsWith("https://")) {
+    try { await del(urlOrPath); } catch { /* ignore if already gone */ }
+  }
+}
 
 function normalizePrice(raw: string): string {
   // Comma followed by exactly 2 digits at the end → comma is decimal separator
@@ -243,14 +246,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create price list file record
       const priceListFile = await storage.createPriceListFile({
         supplierId,
-        filename: file.filename,
+        filename: file.originalname,
         originalName: file.originalname,
-        filePath: file.path,
+        filePath: "",
         fileSize: file.size,
       });
 
       // Process Excel file and extract data
-      const workbook = XLSX.readFile(file.path);
+      const workbook = XLSX.read(file.buffer, { type: "buffer" });
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const data = XLSX.utils.sheet_to_json(worksheet);
@@ -660,19 +663,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Price list not found" });
       }
 
-      // Check if the file exists
-      if (!fs.existsSync(priceListFile.filePath)) {
-        return res.status(404).json({ error: "Price list file not found on disk" });
-      }
-
       // Get supplier information
       const supplier = await storage.getSupplier(supplierId);
       if (!supplier) {
         return res.status(404).json({ error: "Supplier not found" });
       }
 
-      // Read the CSV file content
-      const csvContent = fs.readFileSync(priceListFile.filePath, 'utf8');
+      // Read CSV content from Blob URL or local disk (legacy)
+      let csvContent: string;
+      if (priceListFile.filePath.startsWith("https://")) {
+        csvContent = await fetch(priceListFile.filePath).then(r => r.text());
+      } else if (fs.existsSync(priceListFile.filePath)) {
+        csvContent = fs.readFileSync(priceListFile.filePath, 'utf8');
+      } else {
+        return res.status(404).json({ error: "Price list file not found" });
+      }
 
       // Clear existing search index entries for this price list
       await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
@@ -795,10 +800,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No file uploaded" });
       }
 
+      const blobUrl = await uploadToBlob(`cost-calc/${supplierId}/${Date.now()}-${file.originalname}`, file.buffer, file.mimetype);
+
       const costFile = await storage.createCostCalculationFile({
         supplierId,
-        filename: file.filename,
-        filePath: file.path,
+        filename: file.originalname,
+        filePath: blobUrl,
       });
 
       res.status(201).json(costFile);
@@ -871,21 +878,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const allowedExtensions = ['.py', '.txt'];
       const fileExtension = path.extname(file.originalname).toLowerCase();
       if (!allowedExtensions.includes(fileExtension)) {
-        // Delete the uploaded file
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
         return res.status(400).json({ error: "Invalid file type. Only .py and .txt files are allowed." });
       }
 
-      // Read and validate the logic content
-      const logicContent = fs.readFileSync(file.path, 'utf8');
+      // Store the conversion logic as a Blob
+      const blobUrl = await uploadToBlob(`logic/${supplierId}/${Date.now()}-${file.originalname}`, file.buffer, "text/plain");
 
       // Store the conversion logic in the cost calculation files table for now
       const costFile = await storage.createCostCalculationFile({
         supplierId,
         filename: file.originalname,
-        filePath: file.path,
+        filePath: blobUrl,
       });
 
       res.status(201).json({ 
@@ -912,233 +915,109 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const allowedExtensions = ['.xlsx', '.xls', '.csv'];
       const fileExtension = path.extname(file.originalname).toLowerCase();
       if (!allowedExtensions.includes(fileExtension)) {
-        // Delete the uploaded file
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
         return res.status(400).json({ error: "Invalid file type. Only .xlsx, .xls, and .csv files are allowed." });
       }
 
       // Check if conversion logic exists for this supplier
       const conversionLogic = await storage.getCostCalculationFile(supplierId);
       if (!conversionLogic) {
-        // Delete the uploaded file
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
         return res.status(400).json({ error: "No conversion logic found. Please upload conversion logic first." });
       }
 
-      // Read the conversion logic
-      const logicContent = fs.readFileSync(conversionLogic.filePath, 'utf8');
+      // Read the conversion logic from Vercel Blob or local path
+      let logicContent = "";
+      try {
+        if (conversionLogic.filePath.startsWith("https://")) {
+          logicContent = await fetch(conversionLogic.filePath).then(r => r.text());
+        } else if (fs.existsSync(conversionLogic.filePath)) {
+          logicContent = fs.readFileSync(conversionLogic.filePath, "utf8");
+        }
+      } catch { /* use empty logic — auto-detect columns */ }
 
-      // Process the file using Python script
-      const pythonScript = path.join(process.cwd(), 'server', 'file_processor.py');
+      // Get supplier name for tagging
+      const supplierInfo = await storage.getSupplier(supplierId);
 
-      return new Promise((resolve, reject) => {
-        const python = spawn('python3', ['-c', `
-import sys
-import os
-sys.path.append('${path.join(process.cwd(), 'server')}')
-from file_processor import process_price_list
-import json
+      // Process with TypeScript processor (replaces Python)
+      const result = processPriceList(file.buffer, fileExtension, logicContent, supplierInfo?.name);
 
-file_path = sys.argv[1]
-logic_content = """${logicContent.replace(/"/g, '\\"')}"""
+      if (!result.success) {
+        return res.status(400).json({ error: result.error });
+      }
 
-result = process_price_list(file_path, logic_content)
-print(json.dumps(result))
-`, file.path]);
+      // Upload processed CSV to Vercel Blob
+      const processedFilename = `${Date.now()}_${result.outputFilename || 'converted_price_list.csv'}`;
+      const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
+      const contentBuffer = Buffer.from(result.csvContent!, "utf8");
+      const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
+      const blobUrl = await uploadToBlob(`price-lists/${supplierId}/${processedFilename}`, finalBuffer, "text/csv");
 
-        let output = '';
-        let errorOutput = '';
+      // Store the price list file in database
+      const priceListFile = await storage.createPriceListFile({
+        supplierId,
+        filename: processedFilename,
+        originalName: file.originalname,
+        filePath: blobUrl,
+        fileSize: file.size,
+      });
 
-        python.stdout.on('data', (data) => {
-          output += data.toString();
-        });
-
-        python.stderr.on('data', (data) => {
-          errorOutput += data.toString();
-        });
-
-        python.on('close', async (code) => {
-          try {
-            if (code !== 0) {
-              console.error("Python script error:", errorOutput);
-              console.error("Python script output:", output);
-              console.error("Python script exit code:", code);
-              // Delete the uploaded file
-              if (fs.existsSync(file.path)) {
-                fs.unlinkSync(file.path);
-              }
-              return res.status(500).json({ error: `Error processing file with conversion logic: ${errorOutput}` });
+      // Populate search index from processed CSV
+      try {
+        if (supplierInfo) {
+          await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
+          const csvLines = result.csvContent!.trim().split('\n');
+          const headers = csvLines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').replace(/^\uFEFF/, ''));
+          const headerMap: Record<string, string> = {
+            'Supplier': 'supplier', 'Category': 'category', 'Brand': 'brand',
+            'Model': 'model', 'Product Name': 'productName', 'Name': 'productName',
+            'Price': 'price', 'Currency': 'currency', 'Stock': 'stock',
+            'MOQ': 'moq', 'Warranty': 'warranty', 'Notes': 'notes'
+          };
+          const searchIndexEntries: any[] = [];
+          for (let i = 1; i < csvLines.length; i++) {
+            const line = csvLines[i].trim();
+            if (!line) continue;
+            const values: string[] = [];
+            let currentField = '', inQuotes = false;
+            for (const char of line) {
+              if (char === '"') { inQuotes = !inQuotes; }
+              else if (char === ',' && !inQuotes) { values.push(currentField.trim()); currentField = ''; }
+              else { currentField += char; }
             }
-
-            const result = JSON.parse(output);
-
-            if (!result.success) {
-              // Delete the uploaded file
-              if (fs.existsSync(file.path)) {
-                fs.unlinkSync(file.path);
-              }
-              return res.status(400).json({ error: result.error });
-            }
-
-            // Save the processed file to storage with UTF-8 encoding and BOM
-            const processedFilename = `${Date.now()}_${result.output_filename || 'converted_price_list.csv'}`;
-            const processedFilePath = path.join(path.dirname(file.path), processedFilename);
-
-            // Create buffer with UTF-8 BOM
-            const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
-            const contentBuffer = Buffer.from(result.csv_content, 'utf8');
-            const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
-
-            fs.writeFileSync(processedFilePath, finalBuffer);
-
-            // Store the price list file in database
-            const priceListFile = await storage.createPriceListFile({
-              supplierId,
-              filename: processedFilename,
-              originalName: file.originalname,
-              filePath: processedFilePath,
-              fileSize: file.size,
+            values.push(currentField.trim());
+            const row: Record<string, string> = {};
+            headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
+            const entry: any = {
+              supplierId, sourceType: 'price_list', sourceId: priceListFile.id,
+              supplier: supplierInfo.name, category: null, brand: null, model: null,
+              productName: null, price: null, currency: null, stock: null, moq: null,
+              warranty: null, notes: null
+            };
+            Object.keys(row).forEach(h => {
+              const f = headerMap[h];
+              if (f && row[h]) entry[f] = String(row[h]).trim();
             });
-
-            // Parse CSV content and populate search index
-            try {
-              const supplier = await storage.getSupplier(supplierId);
-              if (supplier) {
-                // Clear existing search index entries for this price list
-                await storage.deleteSearchIndexBySource('price_list', priceListFile.id);
-
-                // Parse CSV content properly
-                const csvLines = result.csv_content.trim().split('\n');
-                const headers = csvLines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').replace(/^\uFEFF/, ''));
-                const csvData = [];
-
-                for (let i = 1; i < csvLines.length; i++) {
-                  const line = csvLines[i].trim();
-                  if (!line) continue;
-
-                  // Parse CSV line respecting quoted fields
-                  const values = [];
-                  let currentField = '';
-                  let inQuotes = false;
-                  let j = 0;
-
-                  while (j < line.length) {
-                    const char = line[j];
-
-                    if (char === '"') {
-                      inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                      values.push(currentField.trim());
-                      currentField = '';
-                    } else {
-                      currentField += char;
-                    }
-                    j++;
-                  }
-                  values.push(currentField.trim()); // Add the last field
-
-                  // Create row object
-                  const row = {};
-                  headers.forEach((header, index) => {
-                    row[header] = values[index] || '';
-                  });
-                  csvData.push(row);
-                }
-
-                // Map CSV headers to search index fields
-                const headerMap = {
-                  'Supplier': 'supplier',
-                  'Category': 'category', 
-                  'Brand': 'brand',
-                  'Model': 'model',
-                  'Product Name': 'productName',
-                  'Name': 'productName',  // Handle both 'Product Name' and 'Name' headers
-                  'Price': 'price',
-                  'Currency': 'currency',
-                  'Stock': 'stock',
-                  'MOQ': 'moq',
-                  'Warranty': 'warranty',
-                  'Notes': 'notes'
-                };
-
-                const searchIndexEntries = [];
-
-                // Process each data row
-                for (const row of csvData) {
-                  const entry = {
-                    supplierId: supplierId,
-                    sourceType: 'price_list',
-                    sourceId: priceListFile.id,
-                    supplier: supplier.name,
-                    category: null,
-                    brand: null,
-                    model: null,
-                    productName: null,
-                    price: null,
-                    currency: null,
-                    stock: null,
-                    moq: null,
-                    warranty: null,
-                    notes: null
-                  };
-
-                  // Map CSV values to search index fields
-                  Object.keys(row).forEach((header) => {
-                    const fieldName = headerMap[header];
-                    if (fieldName && row[header]) {
-                      entry[fieldName] = String(row[header]).trim();
-                    }
-                  });
-
-                  searchIndexEntries.push(entry);
-                }
-
-                // Insert search index entries
-                if (searchIndexEntries.length > 0) {
-                  await storage.createSearchIndexEntries(searchIndexEntries);
-                }
-              }
-            } catch (searchIndexError) {
-              console.error("Error populating search index:", searchIndexError);
-              // Don't fail the upload if search index population fails
-            }
-
-            // Delete the original uploaded file
-            if (fs.existsSync(file.path)) {
-              fs.unlinkSync(file.path);
-            }
-
-            res.status(201).json({
-              success: true,
-              message: "Price list processed successfully",
-              file: priceListFile,
-              preview_html: result.preview_html,
-              row_count: result.row_count,
-              column_count: result.column_count,
-              columns: result.columns
-            });
-
-          } catch (error) {
-            console.error("Error processing result:", error);
-            // Delete the uploaded file
-            if (fs.existsSync(file.path)) {
-              fs.unlinkSync(file.path);
-            }
-            res.status(500).json({ error: "Failed to process file" });
+            searchIndexEntries.push(entry);
           }
-        });
+          if (searchIndexEntries.length > 0) {
+            await storage.createSearchIndexEntries(searchIndexEntries);
+          }
+        }
+      } catch (searchIndexError) {
+        console.error("Error populating search index:", searchIndexError);
+      }
+
+      res.status(201).json({
+        success: true,
+        message: "Price list processed successfully",
+        file: priceListFile,
+        preview_html: result.previewHtml,
+        row_count: result.rowCount,
+        column_count: result.columnCount,
+        columns: result.columns
       });
 
     } catch (error) {
       console.error("Error uploading price file:", error);
-      // Delete the uploaded file if it exists
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
       res.status(500).json({ error: "Failed to upload price list file" });
     }
   });
@@ -1156,24 +1035,24 @@ print(json.dumps(result))
         return res.status(404).json({ error: "File not found" });
       }
 
+      if (!file.filePath) {
+        return res.status(404).json({ error: "File no longer available" });
+      }
+
+      if (file.filePath.startsWith("https://")) {
+        // Redirect to Vercel Blob CDN
+        return res.redirect(file.filePath);
+      }
+
+      // Legacy: local file (pre-migration)
       if (!fs.existsSync(file.filePath)) {
         return res.status(404).json({ error: "File no longer exists on disk" });
       }
-
-      // Set proper headers for UTF-8 encoding
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
       res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
-
-      // Read file as binary and ensure proper UTF-8 encoding
       const fileBuffer = fs.readFileSync(file.filePath);
-      const fileContent = fileBuffer.toString('utf8');
-
-      // Add UTF-8 BOM for better compatibility
       const utf8BOM = Buffer.from([0xEF, 0xBB, 0xBF]);
-      const contentBuffer = Buffer.from(fileContent, 'utf8');
-      const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
-
-      res.send(finalBuffer);
+      res.send(Buffer.concat([utf8BOM, fileBuffer]));
     } catch (error) {
       console.error("Error downloading file:", error);
       res.status(500).json({ error: "Failed to download file" });
@@ -1194,19 +1073,16 @@ print(json.dumps(result))
       const allowedExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv'];
       const fileExtension = path.extname(file.originalname).toLowerCase();
       if (!allowedExtensions.includes(fileExtension)) {
-        // Delete the uploaded file
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
         return res.status(400).json({ error: "Invalid file type. Only PDF, DOC, DOCX, XLS, XLSX, TXT, and CSV files are allowed." });
       }
 
-      // Store the document in database
+      const blobUrl = await uploadToBlob(`documents/${supplierId}/${Date.now()}-${file.originalname}`, file.buffer, file.mimetype);
+
       const document = await storage.createDocument({
         supplierId,
-        filename: file.filename,
+        filename: file.originalname,
         originalName: file.originalname,
-        filePath: file.path,
+        filePath: blobUrl,
         fileSize: file.size,
         fileType: file.mimetype,
       });
@@ -1214,9 +1090,6 @@ print(json.dumps(result))
       res.status(201).json(document);
     } catch (error) {
       console.error("Error uploading document:", error);
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
       res.status(500).json({ error: "Failed to upload document" });
     }
   });
@@ -1244,17 +1117,21 @@ print(json.dumps(result))
         return res.status(404).json({ error: "Document not found" });
       }
 
+      if (!document.filePath) {
+        return res.status(404).json({ error: "Document file no longer available" });
+      }
+
+      if (document.filePath.startsWith("https://")) {
+        return res.redirect(document.filePath);
+      }
+
+      // Legacy: local file
       if (!fs.existsSync(document.filePath)) {
         return res.status(404).json({ error: "Document file no longer exists on disk" });
       }
-
-      // Set proper headers for download
       res.setHeader('Content-Type', document.fileType || 'application/octet-stream');
       res.setHeader('Content-Disposition', `attachment; filename="${document.originalName}"`);
-
-      // Stream the file
-      const fileStream = fs.createReadStream(document.filePath);
-      fileStream.pipe(res);
+      fs.createReadStream(document.filePath).pipe(res);
     } catch (error) {
       console.error("Error downloading document:", error);
       res.status(500).json({ error: "Failed to download document" });
@@ -1273,12 +1150,7 @@ print(json.dumps(result))
         return res.status(404).json({ error: "Document not found" });
       }
 
-      // Delete the physical file
-      if (fs.existsSync(document.filePath)) {
-        fs.unlinkSync(document.filePath);
-      }
-
-      // Delete from database
+      await deleteFromBlob(document.filePath);
       await storage.deleteDocument(documentId);
 
       res.status(204).send();
@@ -1301,10 +1173,7 @@ print(json.dumps(result))
         return res.status(404).json({ error: "Price list file not found" });
       }
 
-      // Delete the physical file
-      if (fs.existsSync(file.filePath)) {
-        fs.unlinkSync(file.filePath);
-      }
+      await deleteFromBlob(file.filePath);
 
       // Delete related search index entries
       await storage.deleteSearchIndexBySource('price_list', fileId);
@@ -1540,7 +1409,7 @@ print(json.dumps(result))
       }
 
       // Read and parse CSV
-      const csvContent = fs.readFileSync(file.path, 'utf8');
+      const csvContent = file.buffer.toString('utf8');
       const lines = csvContent.trim().split('\n').filter(line => line.trim());
 
       if (lines.length < 2) {
@@ -1605,9 +1474,6 @@ print(json.dumps(result))
         validRows++;
       }
 
-      // Clean up uploaded file
-      fs.unlinkSync(file.path);
-
       res.json({
         headers,
         rows: rows.slice(0, 10), // Only return first 10 rows for preview
@@ -1618,9 +1484,6 @@ print(json.dumps(result))
 
     } catch (error) {
       console.error("Preview error:", error);
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
       res.status(500).json({ error: "Failed to preview CSV file" });
     }
   });
@@ -1633,7 +1496,7 @@ print(json.dumps(result))
       }
 
       // Read and parse CSV
-      const csvContent = fs.readFileSync(file.path, 'utf8');
+      const csvContent = file.buffer.toString('utf8');
       const lines = csvContent.trim().split('\n').filter(line => line.trim());
 
       if (lines.length < 2) {
@@ -1686,9 +1549,6 @@ print(json.dumps(result))
       // Import suppliers (only new ones)
       const result = await storage.importSuppliers(suppliersToImport);
 
-      // Clean up uploaded file
-      fs.unlinkSync(file.path);
-
       // Add debugging info
       console.log('Import result:', result);
       if (result.errors.length > 0) {
@@ -1699,9 +1559,6 @@ print(json.dumps(result))
 
     } catch (error) {
       console.error("Import error:", error);
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
       res.status(500).json({ error: "Failed to import suppliers" });
     }
   });
@@ -1804,27 +1661,24 @@ print(json.dumps(result))
       // Get current transit item
       const transitData = await db.select().from(compstyleTransit).where(eq(compstyleTransit.id, transitId));
       if (transitData.length === 0) {
-        // Delete uploaded file
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
         return res.status(404).json({ error: "Transit order not found" });
       }
 
       const transit = transitData[0];
       const currentDocuments = transit.documents || [];
 
-      // Add new document to the list
+      const blobUrl = await uploadToBlob(`transit/${transitId}/${Date.now()}-${file.originalname}`, file.buffer, file.mimetype);
+      const uniqueFilename = `${Date.now()}-${file.originalname}`;
+
       const newDocument = {
-        filename: file.filename,
+        filename: uniqueFilename,
         originalName: file.originalname,
-        filePath: file.path,
+        filePath: blobUrl,
         uploadedAt: new Date().toISOString()
       };
 
       const updatedDocuments = [...currentDocuments, newDocument];
 
-      // Update transit item with new documents array
       const [updated] = await db.update(compstyleTransit)
         .set({ documents: updatedDocuments })
         .where(eq(compstyleTransit.id, transitId))
@@ -1833,9 +1687,6 @@ print(json.dumps(result))
       res.status(201).json(updated);
     } catch (error) {
       console.error("Error uploading transit document:", error);
-      if (req.file && fs.existsSync(req.file.path)) {
-        fs.unlinkSync(req.file.path);
-      }
       res.status(500).json({ error: "Failed to upload document" });
     }
   });
@@ -1859,13 +1710,20 @@ print(json.dumps(result))
         return res.status(404).json({ error: "Document not found" });
       }
 
+      if (!document.filePath) {
+        return res.status(404).json({ error: "Document file no longer available" });
+      }
+
+      if (document.filePath.startsWith("https://")) {
+        return res.redirect(document.filePath);
+      }
+
+      // Legacy: local file
       if (!fs.existsSync(document.filePath)) {
         return res.status(404).json({ error: "Document file no longer exists on disk" });
       }
-
       res.setHeader('Content-Disposition', `attachment; filename="${document.originalName}"`);
-      const fileStream = fs.createReadStream(document.filePath);
-      fileStream.pipe(res);
+      fs.createReadStream(document.filePath).pipe(res);
     } catch (error) {
       console.error("Error downloading transit document:", error);
       res.status(500).json({ error: "Failed to download document" });
@@ -1891,10 +1749,7 @@ print(json.dumps(result))
         return res.status(404).json({ error: "Document not found" });
       }
 
-      // Delete the physical file
-      if (fs.existsSync(document.filePath)) {
-        fs.unlinkSync(document.filePath);
-      }
+      await deleteFromBlob(document.filePath);
 
       // Remove document from array
       const updatedDocuments = documents.filter(d => d.filename !== filename);
@@ -2206,13 +2061,10 @@ print(json.dumps(result))
       }
 
       // Process Excel file
-      console.log("Processing file:", file.path);
-      console.log("XLSX object:", Object.keys(XLSX));
-
-      const workbook = XLSX.readFile(file.path);
+      const workbook = XLSX.read(file.buffer, { type: "buffer" });
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      
+
       // Convert to JSON with header row handling
       const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
       console.log("Parsed data rows:", rawData.length);
@@ -2255,9 +2107,6 @@ print(json.dumps(result))
             return res.status(400).json({ error: "Invalid file type" });
         }
 
-        // Clean up uploaded file
-        fs.unlinkSync(file.path);
-
         res.json({
           success: true,
           message: `File processed successfully`,
@@ -2267,10 +2116,6 @@ print(json.dumps(result))
         });
 
       } catch (processingError) {
-        // Clean up uploaded file on error
-        if (fs.existsSync(file.path)) {
-          fs.unlinkSync(file.path);
-        }
         throw processingError;
       }
 
@@ -2569,18 +2414,11 @@ print(json.dumps(result))
       // Find all records to delete for this order
       const recordsToDelete = existingRecords.filter(r => r.purchaseOrderNumber === orderNumber);
 
-      // Delete physical document files for all records in this order
+      // Delete Blob documents for all records in this order
       for (const record of recordsToDelete) {
         if (record.documents && Array.isArray(record.documents)) {
           for (const doc of record.documents) {
-            if (doc.filePath && fs.existsSync(doc.filePath)) {
-              try {
-                fs.unlinkSync(doc.filePath);
-                console.log(`Deleted document file: ${doc.originalName}`);
-              } catch (err) {
-                console.error(`Failed to delete document file: ${doc.filePath}`, err);
-              }
-            }
+            if (doc.filePath) await deleteFromBlob(doc.filePath);
           }
         }
         console.log(`Will delete item: ${record.productName.substring(0, 50)}... from order ${orderNumber}`);
@@ -3189,7 +3027,7 @@ print(json.dumps(result))
         return res.status(400).json({ error: "No file provided" });
       }
 
-      const fileContent = fs.readFileSync(req.file.path, 'utf-8');
+      const fileContent = req.file.buffer.toString('utf-8');
       const lines = fileContent.split('\n').map(line => line.trim()).filter(line => line);
 
       if (lines.length < 4) {
@@ -3325,8 +3163,6 @@ print(json.dumps(result))
         result = { imported: 0, skipped: 0, errors: errors.length > 0 ? errors : ["No valid invoices found in file"] };
       }
 
-      fs.unlinkSync(req.file.path);
-
       res.json({
         success: true,
         type: isReceived ? 'purchase' : 'sales',
@@ -3434,19 +3270,9 @@ print(json.dumps(result))
     }
   });
 
-  // Configure multer for AI file uploads
-  const aiUploadDir = path.join(process.cwd(), 'uploads', 'ai');
-  if (!fs.existsSync(aiUploadDir)) {
-    fs.mkdirSync(aiUploadDir, { recursive: true });
-  }
+  // AI file uploads use memory storage — content is extracted in-request, not persisted
   const aiUpload = multer({
-    storage: multer.diskStorage({
-      destination: (req, file, cb) => cb(null, aiUploadDir),
-      filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
-      }
-    }),
+    storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   });
 
@@ -3474,20 +3300,19 @@ print(json.dumps(result))
       
       for (const file of files) {
         attachments.push({
-          filename: file.filename,
+          filename: file.originalname,
           originalName: file.originalname,
-          filePath: file.path,
+          filePath: "",
           fileType: file.mimetype,
         });
 
-        // Read file contents for CSV/text files
+        // Read file contents from buffer for CSV/text files
         if (file.mimetype === 'text/csv' || file.mimetype === 'text/plain') {
-          const fileContent = fs.readFileSync(file.path, 'utf-8');
+          const fileContent = file.buffer.toString('utf-8');
           fileContents += `\n\n=== File: ${file.originalname} ===\n${fileContent.substring(0, 10000)}`;
-        } else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 
+        } else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
                    file.mimetype === 'application/vnd.ms-excel') {
-          // Handle Excel files
-          const workbook = XLSX.readFile(file.path);
+          const workbook = XLSX.read(file.buffer, { type: "buffer" });
           const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
           const csvData = XLSX.utils.sheet_to_csv(firstSheet);
           fileContents += `\n\n=== File: ${file.originalname} ===\n${csvData.substring(0, 10000)}`;
