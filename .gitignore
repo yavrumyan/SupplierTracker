@@ -4,3 +4,13 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Local & sensitive files
+.local/
+.claude/
+*.sql
+server/__pycache__/
+__pycache__/
+uploads/
+*.env
+.env*
