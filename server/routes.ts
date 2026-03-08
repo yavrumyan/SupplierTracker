@@ -1,5 +1,6 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import bcrypt from "bcrypt";
 import { storage } from "./storage";
 import { 
   insertSupplierSchema, 
@@ -103,124 +104,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Removed cookie-parser middleware as it was for authentication
   // app.use(cookieParser());
 
-  // Removed authentication middleware and endpoints
-  // const requireAuth = async (req: any, res: any, next: any) => {
-  //   const sessionId = req.cookies.sessionId;
-  //   if (!sessionId) {
-  //     return res.status(401).json({ error: "Not authenticated" });
-  //   }
+  // Auth middleware
+  const requireAuth = (req: any, res: Response, next: NextFunction) => {
+    if (!(req.session as any).userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    next();
+  };
 
-  //   try {
-  //     const [user] = await db.select().from(users).where(eq(users.id, sessionId));
-  //     if (!user) {
-  //       return res.status(401).json({ error: "Invalid session" });
-  //     }
-  //     req.user = user;
-  //     next();
-  //   } catch (error) {
-  //     res.status(500).json({ error: "Authentication error" });
-  //   }
-  // };
+  // Protect all /api/* routes except auth endpoints
+  app.use("/api", (req: any, res: Response, next: NextFunction) => {
+    if (req.path.startsWith("/auth/")) return next();
+    return requireAuth(req, res, next);
+  });
 
-  // Removed Register endpoint
-  // app.post("/api/auth/register", async (req, res) => {
-  //   try {
-  //     const { email, password, firstName, lastName } = req.body;
+  // Auth endpoints (public — no requireAuth)
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      if (!username || !password) {
+        return res.status(400).json({ error: "Username and password are required" });
+      }
+      const user = await storage.getUserByUsername(username);
+      if (!user) {
+        return res.status(401).json({ error: "Invalid username or password" });
+      }
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        return res.status(401).json({ error: "Invalid username or password" });
+      }
+      (req.session as any).userId = user.id;
+      res.json({ id: user.id, username: user.username });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
 
-  //     if (!email || !password) {
-  //       return res.status(400).json({ error: "Email and password are required" });
-  //     }
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy(() => {});
+    res.json({ message: "Logged out" });
+  });
 
-  //     // Check if user already exists
-  //     const [existingUser] = await db.select().from(users).where(eq(users.email, email));
-  //     if (existingUser) {
-  //       return res.status(400).json({ error: "User already exists" });
-  //     }
-
-  //     // Hash password
-  //     const hashedPassword = await bcrypt.hash(password, 10);
-  //     const userId = `user_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-
-  //     // Create user
-  //     const [newUser] = await db.insert(users).values({
-  //       id: userId,
-  //       email,
-  //       password: hashedPassword,
-  //       firstName: firstName || null,
-  //       lastName: lastName || null,
-  //       isApproved: true, // Auto-approve for now
-  //     }).returning();
-
-  //     // Set session cookie
-  //     res.cookie('sessionId', newUser.id, {
-  //       httpOnly: true,
-  //       secure: process.env.NODE_ENV === 'production',
-  //       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  //     });
-
-  //     res.json({
-  //       id: newUser.id,
-  //       email: newUser.email,
-  //       firstName: newUser.firstName,
-  //       lastName: newUser.lastName,
-  //     });
-  //   } catch (error) {
-  //     console.error("Registration error:", error);
-  //     res.status(500).json({ error: "Registration failed" });
-  //   }
-  // });
-
-  // Removed Login endpoint
-  // app.post("/api/auth/login", async (req, res) => {
-  //   try {
-  //     const { email, password } = req.body;
-
-  //     if (!email || !password) {
-  //       return res.status(400).json({ error: "Email and password are required" });
-  //     }
-
-  //     // Find user
-  //     const [user] = await db.select().from(users).where(eq(users.email, email));
-  //     if (!user) {
-  //       return res.status(401).json({ error: "Invalid credentials" });
-  //     }
-
-  //     // Verify password
-  //     const validPassword = await bcrypt.compare(password, user.password);
-  //     if (!validPassword) {
-  //       return res.status(401).json({ error: "Invalid credentials" });
-  //     }
-
-  //     // Set session cookie
-  //     res.cookie('sessionId', user.id, {
-  //       httpOnly: true,
-  //       secure: process.env.NODE_ENV === 'production',
-  //       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  //     });
-
-  //     res.json({
-  //       id: user.id,
-  //       email: user.email,
-  //       firstName: user.firstName,
-  //       lastName: user.lastName,
-  //     });
-  //   } catch (error) {
-  //     console.error("Login error:", error);
-  //     res.status(500).json({ error: "Login failed" });
-  //   }
-  // });
-
-  // Removed Logout endpoint
-  // app.post("/api/auth/logout", (req, res) => {
-  //   res.clearCookie('sessionId');
-  //   res.json({ message: "Logged out successfully" });
-  // });
-
-  // Removed Get current user endpoint
-  // app.get("/api/auth/me", requireAuth, (req: any, res) => {
-  //   const { password, ...userWithoutPassword } = req.user;
-  //   res.json(userWithoutPassword);
-  // });
+  app.get("/api/auth/me", async (req, res) => {
+    const userId = (req.session as any).userId;
+    if (!userId) return res.status(401).json({ error: "Not authenticated" });
+    try {
+      const user = await storage.getUser(userId);
+      if (!user) return res.status(401).json({ error: "User not found" });
+      res.json({ id: user.id, username: user.username });
+    } catch {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
 
   // Supplier routes
   app.get("/api/suppliers", async (req, res) => {

@@ -10,9 +10,11 @@ import {
   Menu, 
   X,
   Microchip,
-  Bot
+  Bot,
+  LogOut
 } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 import supHubLogo from "@/assets/SupHub_1752355359935.png";
 import chipLogo from "@assets/fbNew_1761515552324.png";
 
@@ -50,6 +52,7 @@ const navigation = [
 export function Sidebar() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <>
@@ -116,15 +119,26 @@ export function Sidebar() {
         </nav>
 
         {/* User Profile Section */}
-        <div className="px-4 py-6 border-t border-slate-200">
-          <div className="flex items-center">
-            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-medium">GY</span>
+        <div className="px-4 py-4 border-t border-slate-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shrink-0">
+                <span className="text-white text-sm font-medium">
+                  {user?.username?.slice(0, 2).toUpperCase() || "??"}
+                </span>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-slate-700">{user?.username || "User"}</p>
+                <p className="text-xs text-slate-500">Administrator</p>
+              </div>
             </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium text-slate-700">Greg</p>
-              <p className="text-xs text-slate-500">Administrator</p>
-            </div>
+            <button
+              onClick={logout}
+              title="Sign out"
+              className="p-1.5 rounded-md text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>

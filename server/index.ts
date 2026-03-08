@@ -1,10 +1,34 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
+import bcrypt from "bcrypt";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { storage } from "./storage";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const PgSession = connectPgSimple(session);
+
+app.use(
+  session({
+    store: new PgSession({
+      conString: process.env.DATABASE_URL,
+      tableName: "session",
+      createTableIfMissing: true,
+    }),
+    secret: process.env.SESSION_SECRET || "suphub-dev-secret-change-in-production",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  })
+);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -37,6 +61,22 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Auto-create admin user if no users exist
+  try {
+    const existingUser = await storage.getUserByUsername(
+      process.env.ADMIN_USERNAME || "admin"
+    );
+    if (!existingUser) {
+      const username = process.env.ADMIN_USERNAME || "admin";
+      const password = process.env.ADMIN_PASSWORD || "changeme";
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await storage.createUser({ username, password: hashedPassword });
+      log(`Admin user "${username}" created`);
+    }
+  } catch (err) {
+    console.error("Failed to seed admin user:", err);
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

@@ -1,10 +1,11 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Layout } from "@/components/layout";
 import { CategoriesBrandsProvider } from "@/lib/categories-brands-context";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
 
 import Home from "@/pages/home";
 import SupplierDetail from "@/pages/supplier-detail";
@@ -30,9 +31,24 @@ import ChipInvoiceImport from "@/pages/chip/invoice";
 import ChipExport from "@/pages/chip/export";
 import ChipInvoicesList from "@/pages/chip/invoices";
 import AIAgentPage from "@/pages/ai-agent";
+import Login from "@/pages/login";
 import NotFound from "@/pages/not-found";
 
-function Router() {
+function ProtectedApp() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="w-8 h-8 border-4 border-[#2AA448] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Redirect to="/login" />;
+  }
+
   return (
     <Layout>
       <Switch>
@@ -66,15 +82,32 @@ function Router() {
   );
 }
 
+function Router() {
+  const { user, loading } = useAuth();
+
+  return (
+    <Switch>
+      <Route path="/login">
+        {!loading && user ? <Redirect to="/" /> : <Login />}
+      </Route>
+      <Route>
+        <ProtectedApp />
+      </Route>
+    </Switch>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <CategoriesBrandsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </CategoriesBrandsProvider>
+      <AuthProvider>
+        <CategoriesBrandsProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </CategoriesBrandsProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

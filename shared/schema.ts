@@ -268,7 +268,7 @@ export type InsertSearchIndex = z.infer<typeof insertSearchIndexSchema>;
 export type Document = typeof documents.$inferSelect;
 export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 
-export const users = pgTable("users", {
+export const users = pgTable("auth_users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
