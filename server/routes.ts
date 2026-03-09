@@ -138,7 +138,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ error: "Invalid username or password" });
       }
       (req.session as any).userId = user.id;
-      res.json({ id: user.id, username: user.username });
+      // Explicitly save session before responding — critical on serverless (Vercel)
+      // where the Lambda may terminate before the async DB write completes.
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).json({ error: "Session save failed" });
+        }
+        res.json({ id: user.id, username: user.username });
+      });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ error: "Login failed" });

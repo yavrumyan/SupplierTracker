@@ -7,6 +7,10 @@ import { serveStatic, log } from "./vite";
 import { storage } from "./storage";
 
 const app = express();
+
+// Trust Vercel's reverse proxy so secure cookies and req.ip work correctly
+app.set("trust proxy", 1);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
