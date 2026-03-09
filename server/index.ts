@@ -60,44 +60,49 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
-  // Auto-create admin user if no users exist
-  try {
-    const existingUser = await storage.getUserByUsername(
-      process.env.ADMIN_USERNAME || "admin"
-    );
-    if (!existingUser) {
-      const username = process.env.ADMIN_USERNAME || "admin";
-      const password = process.env.ADMIN_PASSWORD || "changeme";
-      const hashedPassword = await bcrypt.hash(password, 10);
-      await storage.createUser({ username, password: hashedPassword });
-      log(`Admin user "${username}" created`);
-    }
-  } catch (err) {
-    console.error("Failed to seed admin user:", err);
+// Auto-create admin user if no users exist
+try {
+  const existingUser = await storage.getUserByUsername(
+    process.env.ADMIN_USERNAME || "admin"
+  );
+  if (!existingUser) {
+    const username = process.env.ADMIN_USERNAME || "admin";
+    const password = process.env.ADMIN_PASSWORD || "changeme";
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await storage.createUser({ username, password: hashedPassword });
+    log(`Admin user "${username}" created`);
   }
+} catch (err) {
+  console.error("Failed to seed admin user:", err);
+}
 
-  const server = await registerRoutes(app);
+const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
-  });
+  res.status(status).json({ message });
+  throw err;
+});
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+// importantly only setup vite in development and after
+// setting up all the other routes so the catch-all route
+// doesn't interfere with the other routes
+if (app.get("env") === "development") {
+  await setupVite(app, server);
+} else {
+  serveStatic(app);
+}
 
+// Local development only — Vercel does not use server.listen()
+// (Vercel auto-injects VERCEL=1 in the serverless environment)
+if (!process.env.VERCEL) {
   const port = parseInt(process.env.PORT || "5000");
   server.listen({ port, host: "0.0.0.0" }, () => {
     log(`serving on port ${port}`);
   });
-})();
+}
+
+// Export app as the Vercel serverless function handler
+export default app;
