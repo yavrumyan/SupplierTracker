@@ -3,7 +3,7 @@ import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import bcrypt from "bcrypt";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { serveStatic, log } from "./vite";
 import { storage } from "./storage";
 
 const app = express();
@@ -89,11 +89,14 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 // importantly only setup vite in development and after
 // setting up all the other routes so the catch-all route
 // doesn't interfere with the other routes
-if (app.get("env") === "development") {
+if (process.env.NODE_ENV !== "production") {
+  // Dynamic import keeps all vite/rollup deps out of the Lambda bundle.
+  // esbuild dead-code-eliminates this entire block when NODE_ENV=production.
+  const { setupVite } = await import("./vite");
   await setupVite(app, server);
 } else if (!process.env.VERCEL) {
-  // On Vercel, static files are served by CDN (dist/public via @vercel/static-build).
-  // Only run serveStatic for local production builds.
+  // On Vercel, static files are served by CDN.
+  // Only run serveStatic for local production builds (NODE_ENV=production, no VERCEL env).
   serveStatic(app);
 }
 
