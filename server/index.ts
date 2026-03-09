@@ -91,9 +91,9 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 // doesn't interfere with the other routes
 if (app.get("env") === "development") {
   await setupVite(app, server);
-} else if (!process.env.VERCEL) {
-  // On Vercel, static files are served by CDN from outputDirectory.
-  // Only run serveStatic for local production builds.
+} else {
+  // In production (local or Vercel), serve the built frontend.
+  // serveStatic() now searches multiple candidate paths and logs diagnostics.
   serveStatic(app);
 }
 

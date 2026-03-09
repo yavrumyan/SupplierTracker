@@ -68,19 +68,31 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  // Use process.cwd() so the path is correct regardless of where the compiled
-  // bundle lives (dist/index.js locally, /var/task/api/index.js on Vercel, etc.)
-  const distPath = path.resolve(process.cwd(), "dist", "public");
+  // Try multiple candidate paths to handle different runtime environments:
+  // - Vercel Lambda: /var/task/dist/public  (process.cwd() = /var/task)
+  // - Local prod:    <repo>/dist/public
+  const candidates = [
+    path.resolve(process.cwd(), "dist", "public"),
+    path.resolve(process.cwd(), "..", "dist", "public"),
+    path.resolve("/var/task", "dist", "public"),
+  ];
 
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
+  const distPath = candidates.find((p) => fs.existsSync(p));
+
+  console.log(`[serveStatic] cwd=${process.cwd()} candidates=${JSON.stringify(candidates)} found=${distPath}`);
+
+  if (!distPath) {
+    console.error(`[serveStatic] Could not find dist/public in any candidate path. Static files will not be served.`);
+    // Don't throw — return a helpful error for SPA routes instead of crashing the Lambda
+    app.use("*", (_req, res) => {
+      res.status(503).json({ message: "Frontend not built. Run: npm run build" });
+    });
+    return;
   }
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
+  // fall through to index.html if the file doesn't exist (SPA routing)
   app.use("*", (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
