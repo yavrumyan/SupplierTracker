@@ -1,13 +1,16 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/public",
-  "functions": {
-    "dist/index.js": {
-      "includeFiles": "dist/public/**"
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["dist/public/**"]
+      }
     }
-  },
+  ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/dist/index.js" },
+    { "src": "/api/(.*)", "dest": "/api/index.ts" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

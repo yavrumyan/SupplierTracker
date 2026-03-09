@@ -1,12 +1,7 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
-import viteConfig from "../vite.config";
-import { nanoid } from "nanoid";
-
-const viteLogger = createLogger();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -20,11 +15,12 @@ export function log(message: string, source = "express") {
 }
 
 export async function setupVite(app: Express, server: Server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true as const,
-  };
+  // Dynamic imports so vite (a devDependency) is never loaded in production
+  const { createServer: createViteServer, createLogger } = await import("vite");
+  const { default: viteConfig } = await import("../vite.config");
+  const { nanoid } = await import("nanoid");
+
+  const viteLogger = createLogger();
 
   const vite = await createViteServer({
     ...viteConfig,
@@ -36,7 +32,11 @@ export async function setupVite(app: Express, server: Server) {
         process.exit(1);
       },
     },
-    server: serverOptions,
+    server: {
+      middlewareMode: true,
+      hmr: { server },
+      allowedHosts: true as const,
+    },
     appType: "custom",
   });
 
@@ -52,7 +52,7 @@ export async function setupVite(app: Express, server: Server) {
         "index.html",
       );
 
-      // always reload the index.html file from disk incase it changes
+      // always reload the index.html file from disk in case it changes
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/main.tsx"`,
@@ -68,7 +68,9 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  // Use process.cwd() so the path is correct regardless of where the compiled
+  // bundle lives (dist/index.js locally, /var/task/api/index.js on Vercel, etc.)
+  const distPath = path.resolve(process.cwd(), "dist", "public");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
