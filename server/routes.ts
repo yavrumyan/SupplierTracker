@@ -32,6 +32,7 @@ import path from "path";
 import fs from "fs";
 import XLSX from "xlsx";
 import archiver from "archiver";
+import os from "os";
 import { put, del } from "@vercel/blob";
 import { processPriceList } from "./excelProcessor";
 // Removed bcrypt and cookie-parser as they are related to authentication
@@ -1299,7 +1300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const csvContent = csvHeader + csvRows.join('\n');
 
       // Create temporary directory for export
-      const exportDir = path.join(process.cwd(), 'temp-export');
+      const exportDir = path.join(os.tmpdir(), 'temp-export');
       if (!fs.existsSync(exportDir)) {
         fs.mkdirSync(exportDir, { recursive: true });
       }
