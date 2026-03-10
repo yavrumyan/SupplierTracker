@@ -262,9 +262,10 @@ function processSheetRows(
 
     if (supplierName && !outRow["Supplier"]) outRow["Supplier"] = supplierName;
 
-    // Skip rows without a valid numeric price
+    // Skip rows with empty price or zero price; keep text prices like "Call", "Soon"
     const priceVal = outRow["Price"];
-    if (!priceVal || isNaN(parseFloat(priceVal.replace(/[, ]/g, "")))) continue;
+    const priceNum = parseFloat(priceVal?.replace(/[, ]/g, "") ?? "");
+    if (!priceVal || priceNum === 0) continue;
 
     // Skip rows without a product name
     const nameVal = outRow["Name"] || outRow["Product Name"];
