@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { upload } from "@vercel/blob/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -324,10 +325,12 @@ export default function SupplierDetail() {
       });
       
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Upload failed');
+        let msg = "Upload failed";
+        try { const d = await response.json(); msg = d.error || msg; }
+        catch { msg = await response.text().catch(() => msg); }
+        throw new Error(msg);
       }
-      
+
       return response.json();
     },
     onSuccess: () => {
@@ -352,20 +355,36 @@ export default function SupplierDetail() {
 
   const uploadPriceMutation = useMutation({
     mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('price_file', file);
-      
-      const response = await fetch(`/api/suppliers/${supplierId}/upload-price`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
+      // Step 1: Upload file directly to Vercel Blob (no 4.5 MB Lambda limit)
+      const blob = await upload(
+        `price-uploads/${supplierId}/${Date.now()}-${file.name}`,
+        file,
+        {
+          access: "private",
+          handleUploadUrl: "/api/blob-upload-token",
+          multipart: true,
+          onUploadProgress: ({ percentage }) => {
+            setUploadProgress({ type: "price", progress: Math.round(percentage * 0.9) });
+          },
+        }
+      );
+
+      // Step 2: Ask the Lambda to fetch from Blob and run processPriceList
+      setUploadProgress({ type: "price", progress: 92 });
+      const response = await fetch(`/api/suppliers/${supplierId}/process-price-from-blob`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ blobUrl: blob.url, originalName: file.name }),
       });
-      
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Upload failed');
+        let msg = "Processing failed";
+        try { const d = await response.json(); msg = d.error || msg; }
+        catch { msg = await response.text().catch(() => msg); }
+        throw new Error(msg);
       }
-      
+
       return response.json();
     },
     onSuccess: (data) => {

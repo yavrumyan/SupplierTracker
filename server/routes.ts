@@ -34,6 +34,7 @@ import XLSX from "xlsx";
 import archiver from "archiver";
 import os from "os";
 import { put, del } from "@vercel/blob";
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { processPriceList } from "./excelProcessor";
 // Removed bcrypt and cookie-parser as they are related to authentication
 // import bcrypt from "bcrypt";
@@ -96,6 +97,42 @@ async function deleteFromBlob(urlOrPath: string): Promise<void> {
   }
 }
 
+// ── Client-side direct-to-Blob upload token endpoint ─────────────────────────
+// The browser calls this to get a short-lived token, then uploads the file
+// directly to Vercel Blob (bypassing the 4.5 MB Lambda body size limit).
+async function registerBlobUploadRoutes(app: Express) {
+  app.post("/api/blob-upload-token", async (req: Request, res: Response) => {
+    try {
+      const jsonResponse = await handleUpload({
+        body: req.body as HandleUploadBody,
+        request: req,
+        onBeforeGenerateToken: async (pathname) => {
+          const ext = path.extname(pathname).toLowerCase();
+          if (![".xlsx", ".xls", ".csv"].includes(ext)) {
+            throw new Error("Invalid file type. Only .xlsx, .xls, and .csv are allowed.");
+          }
+          return {
+            allowedContentTypes: [
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              "application/vnd.ms-excel",
+              "text/csv",
+              "application/octet-stream",
+            ],
+            maximumSizeInBytes: 100 * 1024 * 1024, // 100 MB
+            validUntil: Date.now() + 3_600_000,    // 1 hour
+          };
+        },
+        onUploadCompleted: async () => { /* no-op: processing triggered separately by client */ },
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      });
+      return res.json(jsonResponse);
+    } catch (err) {
+      console.error("blob-upload-token error:", err);
+      return res.status(400).json({ error: String(err) });
+    }
+  });
+}
+
 function normalizePrice(raw: string): string {
   // Comma followed by exactly 2 digits at the end → comma is decimal separator
   if (/,\d{2}$/.test(raw)) {
@@ -139,6 +176,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (req.path.startsWith("/auth/")) return next();
     return requireAuth(req, res, next);
   });
+
+  // Register blob client-upload token endpoint (auth-protected via the middleware above)
+  await registerBlobUploadRoutes(app);
 
   // Auth endpoints (public — no requireAuth)
   app.post("/api/auth/login", async (req, res) => {
@@ -1050,6 +1090,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error uploading price file:", error);
       res.status(500).json({ error: "Failed to upload price list file" });
+    }
+  });
+
+  // Process a price list file that was already uploaded directly to Vercel Blob by the client.
+  // Receives { blobUrl, originalName } in JSON body — no file size limit.
+  app.post("/api/suppliers/:id/process-price-from-blob", async (req, res) => {
+    try {
+      const supplierId = parseInt(req.params.id);
+      const { blobUrl, originalName } = req.body as { blobUrl: string; originalName: string };
+
+      if (!blobUrl || !originalName) {
+        return res.status(400).json({ error: "blobUrl and originalName are required" });
+      }
+
+      const fileExtension = path.extname(originalName).toLowerCase();
+      if (![".xlsx", ".xls", ".csv"].includes(fileExtension)) {
+        return res.status(400).json({ error: "Invalid file type. Only .xlsx, .xls, and .csv files are allowed." });
+      }
+
+      // Fetch the raw Excel/CSV file from Vercel Blob
+      const fileResp = await fetch(blobUrl, {
+        headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+      });
+      if (!fileResp.ok) throw new Error(`Failed to fetch uploaded file from Blob: ${fileResp.statusText}`);
+      const fileBuffer = Buffer.from(await fileResp.arrayBuffer());
+
+      // Get conversion logic for this supplier (same pattern as upload-price)
+      const conversionLogic = await storage.getCostCalculationFile(supplierId);
+      let logicContent = "";
+      if (conversionLogic) {
+        try {
+          if (conversionLogic.filePath.startsWith("https://")) {
+            const r = await fetch(conversionLogic.filePath, {
+              headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+            });
+            if (r.ok) logicContent = await r.text();
+          } else if (fs.existsSync(conversionLogic.filePath)) {
+            logicContent = fs.readFileSync(conversionLogic.filePath, "utf8");
+          }
+        } catch { /* fall through to heuristic auto-detection */ }
+      }
+
+      const supplierInfo = await storage.getSupplier(supplierId);
+      const result = processPriceList(fileBuffer, fileExtension, logicContent, supplierInfo?.name);
+
+      // Always delete the temporary upload blob regardless of processing outcome
+      await deleteFromBlob(blobUrl).catch(() => {});
+
+      if (!result.success) {
+        return res.status(400).json({ error: result.error });
+      }
+
+      // Upload processed CSV to Vercel Blob
+      const processedFilename = `${Date.now()}_${result.outputFilename || "converted_price_list.csv"}`;
+      const utf8BOM = Buffer.from([0xef, 0xbb, 0xbf]);
+      const contentBuffer = Buffer.from(result.csvContent!, "utf8");
+      const finalBuffer = Buffer.concat([utf8BOM, contentBuffer]);
+      const csvBlobUrl = await uploadToBlob(
+        `price-lists/${supplierId}/${processedFilename}`,
+        finalBuffer,
+        "text/csv"
+      );
+
+      // Store the price list file in the database
+      const priceListFile = await storage.createPriceListFile({
+        supplierId,
+        filename: processedFilename,
+        originalName,
+        filePath: csvBlobUrl,
+        fileSize: fileBuffer.length,
+      });
+
+      // Populate search index from processed CSV
+      try {
+        if (supplierInfo) {
+          await storage.deleteSearchIndexBySource("price_list", priceListFile.id);
+          const csvLines = result.csvContent!.trim().split("\n");
+          const headers = csvLines[0].split(",").map((h) => h.trim());
+          for (let i = 1; i < csvLines.length; i++) {
+            const line = csvLines[i].trim();
+            if (!line) continue;
+            const values = line.split(",").map((v) => v.trim());
+            const row: Record<string, string> = {};
+            headers.forEach((h, idx) => { row[h] = values[idx] || ""; });
+            await storage.createSearchIndexEntry({
+              source: "price_list",
+              sourceId: priceListFile.id,
+              supplierId,
+              productName: row["Name"] || row["Product"] || "",
+              category: row["Category"] || "",
+              brand: row["Brand"] || "",
+              price: row["Price"] || "",
+            });
+          }
+        }
+      } catch (searchIndexError) {
+        console.error("Error populating search index:", searchIndexError);
+      }
+
+      res.status(201).json({
+        success: true,
+        message: "Price list processed successfully",
+        file: priceListFile,
+        preview_html: result.previewHtml,
+        row_count: result.rowCount,
+        column_count: result.columnCount,
+        columns: result.columns,
+      });
+    } catch (error) {
+      console.error("Error in process-price-from-blob:", error);
+      res.status(500).json({ error: "Failed to process price list" });
     }
   });
 
