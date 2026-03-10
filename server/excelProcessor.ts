@@ -24,6 +24,8 @@ type ColumnMapping = Record<string, string>; // sourceCol → targetCol
  * Fields:
  *   header           – null → read all rows as plain arrays (no header row)
  *   skip_rows        – how many leading rows to discard
+ *   multi_sheet      – true → process ALL sheets in the workbook (not just the first)
+ *   category_from_sheet – true → use the sheet name as the Category field value
  *   section_col      – column index whose value marks a section-header row
  *   section_marker   – if section_col value contains this string (case-insensitive)
  *                      the row is a section/category header, not a product
@@ -48,6 +50,8 @@ interface CombineColConfig {
 interface SupHubConfig {
   header: null | number;
   skip_rows?: number;
+  multi_sheet?: boolean;         // process every sheet, not just the first
+  category_from_sheet?: boolean; // use sheet name as the Category field
   section_col?: number;
   section_marker?: string;
   category_col?: number;
@@ -140,16 +144,48 @@ function buildPreviewHtml(rows: Record<string, string>[], columns: string[]): st
 }
 
 /**
- * Process a price list that has no proper header row.
- * Uses SUPHUB_CONFIG to handle: skipping leading rows, detecting section
- * headers for category extraction, positional column mapping, combine_cols,
- * price cleaning, and enforced output column order.
+ * Build a ProcessResult from a processed data array.
  */
-function processWithConfig(
+function buildProcessResult(
+  processedData: Record<string, string>[],
+  outputCols?: string[]
+): ProcessResult {
+  if (processedData.length === 0) {
+    return { success: false, error: "No valid product rows found after applying SUPHUB_CONFIG" };
+  }
+
+  const outputColumns = Object.keys(processedData[0]);
+  const outputSheetObj = XLSX.utils.json_to_sheet(processedData);
+  const csvContent = XLSX.utils.sheet_to_csv(outputSheetObj);
+
+  return {
+    success: true,
+    csvContent,
+    outputFilename: "converted_price_list.csv",
+    rowCount: processedData.length,
+    columnCount: outputColumns.length,
+    columns: outputColumns,
+    previewHtml: buildPreviewHtml(processedData, outputColumns),
+  };
+}
+
+/**
+ * Core row-processing logic for a single sheet.
+ * Returns a plain data array so it can be called per-sheet for multi-sheet workbooks.
+ *
+ * @param sheet            XLSX worksheet to process
+ * @param config           Parsed SUPHUB_CONFIG
+ * @param supplierName     Optional supplier name override
+ * @param categoryOverride When set (e.g. sheet name), seeds currentCategory before
+ *                         processing begins. Overrides default_category but can still
+ *                         be replaced by in-sheet section headers if section_col is set.
+ */
+function processSheetRows(
   sheet: XLSX.WorkSheet,
   config: SupHubConfig,
-  supplierName?: string
-): ProcessResult {
+  supplierName?: string,
+  categoryOverride?: string
+): Record<string, string>[] {
   const allRows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, defval: "" });
 
   const skipRows      = config.skip_rows ?? 0;
@@ -161,7 +197,8 @@ function processWithConfig(
   const priceCleaner  = new Set(config.price_clean ?? []);
   const outputCols    = config.output_columns;
 
-  let currentCategory = config.default_category ?? "";
+  // categoryOverride (sheet name) takes precedence over default_category
+  let currentCategory = categoryOverride ?? config.default_category ?? "";
   const processedData: Record<string, string>[] = [];
 
   for (let i = skipRows; i < allRows.length; i++) {
@@ -243,23 +280,44 @@ function processWithConfig(
     }
   }
 
-  if (processedData.length === 0) {
-    return { success: false, error: "No valid product rows found after applying SUPHUB_CONFIG" };
+  return processedData;
+}
+
+/**
+ * Process a price list that has no proper header row — single sheet variant.
+ * Uses SUPHUB_CONFIG to handle: skipping leading rows, detecting section
+ * headers for category extraction, positional column mapping, combine_cols,
+ * price cleaning, and enforced output column order.
+ */
+function processWithConfig(
+  sheet: XLSX.WorkSheet,
+  config: SupHubConfig,
+  supplierName?: string
+): ProcessResult {
+  const data = processSheetRows(sheet, config, supplierName);
+  return buildProcessResult(data, config.output_columns);
+}
+
+/**
+ * Process a price list that has no proper header row — multi-sheet variant.
+ * Iterates ALL sheets in the workbook, optionally using the sheet name as
+ * the Category field, and concatenates all results into a single output.
+ */
+function processWithConfigMultiSheet(
+  workbook: XLSX.WorkBook,
+  config: SupHubConfig,
+  supplierName?: string
+): ProcessResult {
+  const allData: Record<string, string>[] = [];
+
+  for (const sheetName of workbook.SheetNames) {
+    const ws = workbook.Sheets[sheetName];
+    const categoryOverride = config.category_from_sheet ? sheetName : undefined;
+    const rows = processSheetRows(ws, config, supplierName, categoryOverride);
+    allData.push(...rows);
   }
 
-  const outputColumns = Object.keys(processedData[0]);
-  const outputSheetObj = XLSX.utils.json_to_sheet(processedData);
-  const csvContent = XLSX.utils.sheet_to_csv(outputSheetObj);
-
-  return {
-    success: true,
-    csvContent,
-    outputFilename: "converted_price_list.csv",
-    rowCount: processedData.length,
-    columnCount: outputColumns.length,
-    columns: outputColumns,
-    previewHtml: buildPreviewHtml(processedData, outputColumns),
-  };
+  return buildProcessResult(allData, config.output_columns);
 }
 
 /**
@@ -268,6 +326,8 @@ function processWithConfig(
  *
  * Supports three modes, tried in order:
  *  1. SUPHUB_CONFIG directive  – for non-standard layouts
+ *     1a. multi_sheet: true    – iterates every sheet, uses sheet name as Category
+ *     1b. (default)            – processes first non-empty sheet only
  *  2. Python regex extraction  – pd.DataFrame({'Target': df['Source']}) or column_mapping dict
  *  3. Heuristic auto-detection – regex-based column name matching
  */
@@ -285,6 +345,29 @@ export function processPriceList(
       workbook = XLSX.read(fileBuffer, { type: "buffer" });
     }
 
+    // ── Mode 1: SUPHUB_CONFIG ─────────────────────────────────────────────────
+    if (logicContent) {
+      const config = extractSupHubConfig(logicContent);
+      if (config && config.header === null) {
+        // 1a: multi-sheet — iterate ALL sheets and concatenate results
+        if (config.multi_sheet) {
+          return processWithConfigMultiSheet(workbook, config, supplierName);
+        }
+        // 1b: single-sheet — pick first non-empty sheet
+        let sheet: XLSX.WorkSheet | undefined;
+        for (const name of workbook.SheetNames) {
+          const s = workbook.Sheets[name];
+          if (XLSX.utils.sheet_to_json(s).length > 0) {
+            sheet = s;
+            break;
+          }
+        }
+        if (!sheet) sheet = workbook.Sheets[workbook.SheetNames[0]];
+        return processWithConfig(sheet, config, supplierName);
+      }
+    }
+
+    // ── Mode 2 & 3: header-row based processing ───────────────────────────────
     // Pick first non-empty sheet
     let sheet: XLSX.WorkSheet | undefined;
     for (const name of workbook.SheetNames) {
@@ -296,15 +379,6 @@ export function processPriceList(
     }
     if (!sheet) sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    // ── Mode 1: SUPHUB_CONFIG ─────────────────────────────────────────────────
-    if (logicContent) {
-      const config = extractSupHubConfig(logicContent);
-      if (config && config.header === null) {
-        return processWithConfig(sheet, config, supplierName);
-      }
-    }
-
-    // ── Mode 2 & 3: header-row based processing ───────────────────────────────
     const rawData = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: "" });
     if (rawData.length === 0) {
       return { success: false, error: "File is empty or contains no data" };
