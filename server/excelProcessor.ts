@@ -348,7 +348,7 @@ export function processPriceList(
     if (fileExtension === ".csv") {
       workbook = XLSX.read(fileBuffer.toString("utf8"), { type: "string" });
     } else {
-      workbook = XLSX.read(fileBuffer, { type: "buffer" });
+      workbook = XLSX.read(fileBuffer, { type: "buffer", cellStyles: true });
     }
 
     // ── Mode 1: SUPHUB_CONFIG ─────────────────────────────────────────────────
