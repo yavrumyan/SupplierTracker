@@ -37,7 +37,8 @@ interface SupHubConfig {
   section_col?: number;
   section_marker?: string;
   category_col?: number;
-  col_mapping?: Record<string, string>; // col index (as string) → target field
+  col_mapping?: Record<string, string>;  // col index (as string) → target field (1-to-1)
+  combine_cols?: Record<string, number[]>; // target field → [col indices to join with space]
   defaults?: Record<string, string>;
 }
 
@@ -160,10 +161,20 @@ function processWithConfig(
       }
     }
 
-    // Build output row from positional col_mapping
+    // Build output row from positional col_mapping and combine_cols
     const outRow: Record<string, string> = { ...defaults };
     if (currentCategory) outRow["Category"] = currentCategory;
 
+    // combine_cols: join multiple column values into one field (space-separated)
+    for (const [targetField, indices] of Object.entries(config.combine_cols ?? {})) {
+      const parts = indices
+        .filter((idx) => idx < row.length)
+        .map((idx) => String(row[idx] ?? "").trim())
+        .filter((v) => v !== "");
+      if (parts.length > 0) outRow[targetField] = parts.join(" ");
+    }
+
+    // col_mapping: single column → target field (1-to-1)
     for (const [colIdxStr, targetField] of Object.entries(colMapping)) {
       const idx = parseInt(colIdxStr, 10);
       if (idx < row.length) {
