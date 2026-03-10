@@ -202,7 +202,9 @@ function processSheetRows(
   const processedData: Record<string, string>[] = [];
 
   for (let i = skipRows; i < allRows.length; i++) {
-    const row = allRows[i] as unknown[];
+    const row = (allRows[i] as unknown[]).map((v) =>
+      typeof v === "string" ? v.replace(/\s+/g, " ").trim() : v
+    );
 
     // Skip completely empty rows
     if (row.every((v) => v === "" || v === null || v === undefined)) continue;
