@@ -14,6 +14,44 @@ export interface ProcessResult {
 type ColumnMapping = Record<string, string>; // sourceCol → targetCol
 
 /**
+ * SUPHUB_CONFIG: a JSON directive embedded as a comment at the top of a Python
+ * conversion script. Enables "raw-row" mode for price lists that don't have
+ * proper column headers (e.g. contact info in row 0, section headers mixed in).
+ *
+ * Example (paste at line 1 of the .py file):
+ *   # SUPHUB_CONFIG: {"header":null,"skip_rows":2,"section_col":4,"section_marker":"price","category_col":0,"col_mapping":{"0":"Product Name","1":"Model","3":"Notes","4":"Price","6":"Warranty"},"defaults":{"Supplier":"SPTECH","Currency":"USD","Stock":"1","MOQ":"NO"}}
+ *
+ * Fields:
+ *   header        – null  → read all rows as plain arrays (no header row)
+ *   skip_rows     – how many leading rows to discard (contact info etc.)
+ *   section_col   – column index whose value marks a section-header row
+ *   section_marker– if section_col value contains this string (case-insensitive)
+ *                   the row is treated as a section/category header, not a product
+ *   category_col  – column index that holds the category name in section rows
+ *   col_mapping   – { "colIndex": "Target Field Name", ... }
+ *   defaults      – fixed values added to every output row
+ */
+interface SupHubConfig {
+  header: null | number;
+  skip_rows?: number;
+  section_col?: number;
+  section_marker?: string;
+  category_col?: number;
+  col_mapping?: Record<string, string>; // col index (as string) → target field
+  defaults?: Record<string, string>;
+}
+
+function extractSupHubConfig(pythonCode: string): SupHubConfig | null {
+  const match = pythonCode.match(/^#\s*SUPHUB_CONFIG:\s*(.+)$/m);
+  if (!match) return null;
+  try {
+    return JSON.parse(match[1]) as SupHubConfig;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Parse a Python conversion script to extract column mappings.
  * Supports two common patterns used in the codebase:
  *  1. pd.DataFrame({'TargetCol': df['SourceCol'], ...})
@@ -84,12 +122,96 @@ function buildPreviewHtml(rows: Record<string, string>[], columns: string[]): st
 }
 
 /**
+ * Process a price list that has no proper header row.
+ * Uses SUPHUB_CONFIG to handle: skipping leading rows, detecting section
+ * headers for category extraction, and positional column mapping.
+ */
+function processWithConfig(
+  sheet: XLSX.WorkSheet,
+  config: SupHubConfig,
+  supplierName?: string
+): ProcessResult {
+  // Read all rows as raw arrays (no header interpretation)
+  const allRows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, defval: "" });
+
+  const skipRows = config.skip_rows ?? 0;
+  const sectionCol = config.section_col;
+  const sectionMarker = config.section_marker?.toLowerCase();
+  const categoryCol = config.category_col ?? 0;
+  const colMapping = config.col_mapping ?? {};
+  const defaults = config.defaults ?? {};
+
+  let currentCategory = "";
+  const processedData: Record<string, string>[] = [];
+
+  for (let i = skipRows; i < allRows.length; i++) {
+    const row = allRows[i] as unknown[];
+
+    // Skip completely empty rows
+    if (row.every((v) => v === "" || v === null || v === undefined)) continue;
+
+    // Detect section-header row (e.g. "VGA,,,,Price,,Warr.,,,,")
+    if (sectionCol !== undefined && sectionMarker !== undefined) {
+      const sectionVal = String(row[sectionCol] ?? "").toLowerCase().trim();
+      if (sectionVal.includes(sectionMarker)) {
+        const catVal = String(row[categoryCol] ?? "").trim();
+        if (catVal) currentCategory = catVal;
+        continue;
+      }
+    }
+
+    // Build output row from positional col_mapping
+    const outRow: Record<string, string> = { ...defaults };
+    if (currentCategory) outRow["Category"] = currentCategory;
+
+    for (const [colIdxStr, targetField] of Object.entries(colMapping)) {
+      const idx = parseInt(colIdxStr, 10);
+      if (idx < row.length) {
+        const val = String(row[idx] ?? "").trim();
+        if (val) outRow[targetField] = val;
+      }
+    }
+
+    if (supplierName && !outRow["Supplier"]) outRow["Supplier"] = supplierName;
+
+    // Skip rows without a valid numeric price
+    const priceVal = outRow["Price"];
+    if (!priceVal || isNaN(parseFloat(priceVal.replace(/[,$]/g, "")))) continue;
+
+    // Skip rows without a product name
+    const nameVal = outRow["Product Name"] || outRow["Name"];
+    if (!nameVal) continue;
+
+    processedData.push(outRow);
+  }
+
+  if (processedData.length === 0) {
+    return { success: false, error: "No valid product rows found after applying SUPHUB_CONFIG" };
+  }
+
+  const outputColumns = Object.keys(processedData[0]);
+  const outputSheet = XLSX.utils.json_to_sheet(processedData);
+  const csvContent = XLSX.utils.sheet_to_csv(outputSheet);
+
+  return {
+    success: true,
+    csvContent,
+    outputFilename: "converted_price_list.csv",
+    rowCount: processedData.length,
+    columnCount: outputColumns.length,
+    columns: outputColumns,
+    previewHtml: buildPreviewHtml(processedData, outputColumns),
+  };
+}
+
+/**
  * Process a price list file (Excel or CSV buffer) using an optional Python
  * conversion script for column mapping hints.
  *
- * This is the TypeScript replacement for server/file_processor.py.
- * It cannot exec arbitrary Python, but it extracts column mappings from
- * the stored Python script using regex and falls back to heuristic detection.
+ * Supports three modes, tried in order:
+ *  1. SUPHUB_CONFIG directive  – for non-standard layouts (no header row, section rows)
+ *  2. Python regex extraction  – pd.DataFrame({'Target': df['Source']}) or column_mapping dict
+ *  3. Heuristic auto-detection – regex-based column name matching
  */
 export function processPriceList(
   fileBuffer: Buffer,
@@ -116,6 +238,15 @@ export function processPriceList(
     }
     if (!sheet) sheet = workbook.Sheets[workbook.SheetNames[0]];
 
+    // ── Mode 1: SUPHUB_CONFIG (non-standard layouts) ──────────────────────────
+    if (logicContent) {
+      const config = extractSupHubConfig(logicContent);
+      if (config && config.header === null) {
+        return processWithConfig(sheet, config, supplierName);
+      }
+    }
+
+    // ── Mode 2 & 3: header-row based processing ───────────────────────────────
     const rawData = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: "" });
     if (rawData.length === 0) {
       return { success: false, error: "File is empty or contains no data" };
