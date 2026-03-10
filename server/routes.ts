@@ -696,10 +696,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Supplier not found" });
       }
 
-      // Read CSV content from Blob URL or local disk (legacy)
+      // Read CSV content from private Vercel Blob (requires auth token) or local disk (legacy)
       let csvContent: string;
       if (priceListFile.filePath.startsWith("https://")) {
-        csvContent = await fetch(priceListFile.filePath).then(r => r.text());
+        csvContent = await fetch(priceListFile.filePath, {
+          headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+        }).then(r => r.text());
       } else if (fs.existsSync(priceListFile.filePath)) {
         csvContent = fs.readFileSync(priceListFile.filePath, 'utf8');
       } else {
