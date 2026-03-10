@@ -200,8 +200,12 @@ function processSheetRows(
   // categoryOverride (sheet name) takes precedence over default_category
   let currentCategory = categoryOverride ?? config.default_category ?? "";
   const processedData: Record<string, string>[] = [];
+  const rowMeta = (sheet["!rows"] ?? []) as Array<{ hidden?: boolean } | undefined>;
 
   for (let i = skipRows; i < allRows.length; i++) {
+    // Skip rows hidden in the original Excel workbook
+    if (rowMeta[i]?.hidden) continue;
+
     const row = (allRows[i] as unknown[]).map((v) =>
       typeof v === "string" ? v.replace(/\s+/g, " ").trim() : v
     );
