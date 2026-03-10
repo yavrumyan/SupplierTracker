@@ -19,27 +19,44 @@ type ColumnMapping = Record<string, string>; // sourceCol → targetCol
  * proper column headers (e.g. contact info in row 0, section headers mixed in).
  *
  * Example (paste at line 1 of the .py file):
- *   # SUPHUB_CONFIG: {"header":null,"skip_rows":2,"section_col":4,"section_marker":"price","category_col":0,"col_mapping":{"0":"Product Name","1":"Model","3":"Notes","4":"Price","6":"Warranty"},"defaults":{"Supplier":"SPTECH","Currency":"USD","Stock":"1","MOQ":"NO"}}
+ *   # SUPHUB_CONFIG: { ... }
  *
  * Fields:
- *   header        – null  → read all rows as plain arrays (no header row)
- *   skip_rows     – how many leading rows to discard (contact info etc.)
- *   section_col   – column index whose value marks a section-header row
- *   section_marker– if section_col value contains this string (case-insensitive)
- *                   the row is treated as a section/category header, not a product
- *   category_col  – column index that holds the category name in section rows
- *   col_mapping   – { "colIndex": "Target Field Name", ... }
- *   defaults      – fixed values added to every output row
+ *   header           – null → read all rows as plain arrays (no header row)
+ *   skip_rows        – how many leading rows to discard
+ *   section_col      – column index whose value marks a section-header row
+ *   section_marker   – if section_col value contains this string (case-insensitive)
+ *                      the row is a section/category header, not a product
+ *   category_col     – column index that holds the category name in section rows
+ *   default_category – category to use before the first section header is seen
+ *   col_mapping      – { "colIndex": "Target Field", ... }  (1-to-1)
+ *   combine_cols     – { "Target Field": CombineColConfig, ... }
+ *                      CombineColConfig: { cols, sep?, filter? }
+ *                        cols   – array of column indices to join
+ *                        sep    – join separator (default " ")
+ *                        filter – lowercase values to skip when joining
+ *   price_clean      – array of field names to clean: strip "$", strip trailing ".0"
+ *   defaults         – fixed values added to every output row
+ *   output_columns   – enforce exact column order in the output CSV
  */
+interface CombineColConfig {
+  cols: number[];
+  sep?: string;      // default " "
+  filter?: string[]; // lowercase values to exclude when joining
+}
+
 interface SupHubConfig {
   header: null | number;
   skip_rows?: number;
   section_col?: number;
   section_marker?: string;
   category_col?: number;
-  col_mapping?: Record<string, string>;  // col index (as string) → target field (1-to-1)
-  combine_cols?: Record<string, number[]>; // target field → [col indices to join with space]
+  default_category?: string;
+  col_mapping?: Record<string, string>;
+  combine_cols?: Record<string, number[] | CombineColConfig>;
+  price_clean?: string[];
   defaults?: Record<string, string>;
+  output_columns?: string[];
 }
 
 function extractSupHubConfig(pythonCode: string): SupHubConfig | null {
@@ -125,24 +142,26 @@ function buildPreviewHtml(rows: Record<string, string>[], columns: string[]): st
 /**
  * Process a price list that has no proper header row.
  * Uses SUPHUB_CONFIG to handle: skipping leading rows, detecting section
- * headers for category extraction, and positional column mapping.
+ * headers for category extraction, positional column mapping, combine_cols,
+ * price cleaning, and enforced output column order.
  */
 function processWithConfig(
   sheet: XLSX.WorkSheet,
   config: SupHubConfig,
   supplierName?: string
 ): ProcessResult {
-  // Read all rows as raw arrays (no header interpretation)
   const allRows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, defval: "" });
 
-  const skipRows = config.skip_rows ?? 0;
-  const sectionCol = config.section_col;
+  const skipRows      = config.skip_rows ?? 0;
+  const sectionCol    = config.section_col;
   const sectionMarker = config.section_marker?.toLowerCase();
-  const categoryCol = config.category_col ?? 0;
-  const colMapping = config.col_mapping ?? {};
-  const defaults = config.defaults ?? {};
+  const categoryCol   = config.category_col ?? 0;
+  const colMapping    = config.col_mapping ?? {};
+  const defaults      = config.defaults ?? {};
+  const priceCleaner  = new Set(config.price_clean ?? []);
+  const outputCols    = config.output_columns;
 
-  let currentCategory = "";
+  let currentCategory = config.default_category ?? "";
   const processedData: Record<string, string>[] = [];
 
   for (let i = skipRows; i < allRows.length; i++) {
@@ -151,7 +170,7 @@ function processWithConfig(
     // Skip completely empty rows
     if (row.every((v) => v === "" || v === null || v === undefined)) continue;
 
-    // Detect section-header row (e.g. "VGA,,,,Price,,Warr.,,,,")
+    // Detect section-header row
     if (sectionCol !== undefined && sectionMarker !== undefined) {
       const sectionVal = String(row[sectionCol] ?? "").toLowerCase().trim();
       if (sectionVal.includes(sectionMarker)) {
@@ -161,20 +180,26 @@ function processWithConfig(
       }
     }
 
-    // Build output row from positional col_mapping and combine_cols
     const outRow: Record<string, string> = { ...defaults };
     if (currentCategory) outRow["Category"] = currentCategory;
 
-    // combine_cols: join multiple column values into one field (space-separated)
-    for (const [targetField, indices] of Object.entries(config.combine_cols ?? {})) {
-      const parts = indices
+    // combine_cols: join multiple columns into one field
+    for (const [targetField, colCfg] of Object.entries(config.combine_cols ?? {})) {
+      const cfg: CombineColConfig = Array.isArray(colCfg)
+        ? { cols: colCfg as number[], sep: " " }
+        : (colCfg as CombineColConfig);
+      const sep        = cfg.sep ?? " ";
+      const filterSet  = new Set((cfg.filter ?? []).map((f) => f.toLowerCase()));
+
+      const parts = cfg.cols
         .filter((idx) => idx < row.length)
         .map((idx) => String(row[idx] ?? "").trim())
-        .filter((v) => v !== "");
-      if (parts.length > 0) outRow[targetField] = parts.join(" ");
+        .filter((v) => v !== "" && !filterSet.has(v.toLowerCase()));
+
+      if (parts.length > 0) outRow[targetField] = parts.join(sep);
     }
 
-    // col_mapping: single column → target field (1-to-1)
+    // col_mapping: single column → target field
     for (const [colIdxStr, targetField] of Object.entries(colMapping)) {
       const idx = parseInt(colIdxStr, 10);
       if (idx < row.length) {
@@ -183,17 +208,39 @@ function processWithConfig(
       }
     }
 
+    // price_clean: strip "$", strip trailing ".0"
+    for (const field of priceCleaner) {
+      if (outRow[field] !== undefined) {
+        let p = outRow[field].replace(/\$/g, "").trim();
+        if (p.endsWith(".0")) p = p.slice(0, -2);
+        outRow[field] = p;
+      }
+    }
+
     if (supplierName && !outRow["Supplier"]) outRow["Supplier"] = supplierName;
 
     // Skip rows without a valid numeric price
     const priceVal = outRow["Price"];
-    if (!priceVal || isNaN(parseFloat(priceVal.replace(/[,$]/g, "")))) continue;
+    if (!priceVal || isNaN(parseFloat(priceVal.replace(/[, ]/g, "")))) continue;
 
     // Skip rows without a product name
-    const nameVal = outRow["Product Name"] || outRow["Name"];
+    const nameVal = outRow["Name"] || outRow["Product Name"];
     if (!nameVal) continue;
 
-    processedData.push(outRow);
+    // Enforce output column order
+    if (outputCols) {
+      const ordered: Record<string, string> = {};
+      for (const col of outputCols) {
+        ordered[col] = outRow[col] ?? "";
+      }
+      // Append any extra columns not listed in output_columns
+      for (const [k, v] of Object.entries(outRow)) {
+        if (!outputCols.includes(k)) ordered[k] = v;
+      }
+      processedData.push(ordered);
+    } else {
+      processedData.push(outRow);
+    }
   }
 
   if (processedData.length === 0) {
@@ -201,8 +248,8 @@ function processWithConfig(
   }
 
   const outputColumns = Object.keys(processedData[0]);
-  const outputSheet = XLSX.utils.json_to_sheet(processedData);
-  const csvContent = XLSX.utils.sheet_to_csv(outputSheet);
+  const outputSheetObj = XLSX.utils.json_to_sheet(processedData);
+  const csvContent = XLSX.utils.sheet_to_csv(outputSheetObj);
 
   return {
     success: true,
@@ -220,7 +267,7 @@ function processWithConfig(
  * conversion script for column mapping hints.
  *
  * Supports three modes, tried in order:
- *  1. SUPHUB_CONFIG directive  – for non-standard layouts (no header row, section rows)
+ *  1. SUPHUB_CONFIG directive  – for non-standard layouts
  *  2. Python regex extraction  – pd.DataFrame({'Target': df['Source']}) or column_mapping dict
  *  3. Heuristic auto-detection – regex-based column name matching
  */
@@ -249,7 +296,7 @@ export function processPriceList(
     }
     if (!sheet) sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    // ── Mode 1: SUPHUB_CONFIG (non-standard layouts) ──────────────────────────
+    // ── Mode 1: SUPHUB_CONFIG ─────────────────────────────────────────────────
     if (logicContent) {
       const config = extractSupHubConfig(logicContent);
       if (config && config.header === null) {
@@ -265,19 +312,16 @@ export function processPriceList(
 
     const headers = Object.keys(rawData[0]);
 
-    // Resolve column mapping: Python code first, then heuristic
     let mapping = extractMappingFromPython(logicContent);
     if (Object.keys(mapping).length === 0) {
       mapping = autoDetectMapping(headers);
     }
 
-    // Build processed rows
     const processedData: Record<string, string>[] = rawData.map((row) => {
       const out: Record<string, string> = {};
       for (const [src, tgt] of Object.entries(mapping)) {
         if (row[src] !== undefined) out[tgt] = String(row[src] ?? "");
       }
-      // Copy unmapped columns as-is
       for (const [col, val] of Object.entries(row)) {
         if (!mapping[col] && !Object.values(mapping).includes(col)) {
           out[col] = String(val ?? "");
