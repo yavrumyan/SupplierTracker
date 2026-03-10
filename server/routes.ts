@@ -62,13 +62,31 @@ import { eq, and, sql, desc } from "drizzle-orm";
 // All uploads use memory storage — files are processed in-memory or sent to Vercel Blob
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Helper: upload a buffer to Vercel Blob and return the public URL
+// Helper: upload a buffer to Vercel Blob and return the URL (private store)
 async function uploadToBlob(filename: string, buffer: Buffer, contentType?: string): Promise<string> {
   const blob = await put(filename, buffer, {
-    access: "public",
+    access: "private",
     contentType: contentType || "application/octet-stream",
+    token: process.env.BLOB_READ_WRITE_TOKEN,
   });
   return blob.url;
+}
+
+// Helper: fetch a private Vercel Blob by URL, streaming it to the response
+async function proxyBlobDownload(
+  blobUrl: string,
+  res: any,
+  filename: string,
+  contentType = "application/octet-stream"
+): Promise<void> {
+  const response = await fetch(blobUrl, {
+    headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+  });
+  if (!response.ok) throw new Error(`Blob fetch failed: ${response.status}`);
+  res.setHeader("Content-Type", contentType);
+  res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  res.send(buffer);
 }
 
 // Helper: delete a file from Vercel Blob (no-op if URL is not a Blob URL)
@@ -933,11 +951,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No conversion logic found. Please upload conversion logic first." });
       }
 
-      // Read the conversion logic from Vercel Blob or local path
+      // Read the conversion logic from Vercel Blob (private) or local path
       let logicContent = "";
       try {
         if (conversionLogic.filePath.startsWith("https://")) {
-          logicContent = await fetch(conversionLogic.filePath).then(r => r.text());
+          logicContent = await fetch(conversionLogic.filePath, {
+            headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+          }).then(r => r.text());
         } else if (fs.existsSync(conversionLogic.filePath)) {
           logicContent = fs.readFileSync(conversionLogic.filePath, "utf8");
         }
@@ -1049,8 +1069,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (file.filePath.startsWith("https://")) {
-        // Redirect to Vercel Blob CDN
-        return res.redirect(file.filePath);
+        // Proxy from private Vercel Blob store (requires auth token)
+        return await proxyBlobDownload(file.filePath, res, file.filename ?? file.originalName ?? "price_list.csv", "text/csv; charset=utf-8");
       }
 
       // Legacy: local file (pre-migration)
@@ -1131,7 +1151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (document.filePath.startsWith("https://")) {
-        return res.redirect(document.filePath);
+        return await proxyBlobDownload(document.filePath, res, document.originalName ?? "document", document.fileType ?? "application/octet-stream");
       }
 
       // Legacy: local file
@@ -1724,7 +1744,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (document.filePath.startsWith("https://")) {
-        return res.redirect(document.filePath);
+        return await proxyBlobDownload(document.filePath, res, document.originalName ?? filename, "application/octet-stream");
       }
 
       // Legacy: local file
